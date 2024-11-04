@@ -1002,16 +1002,6 @@
                                         ],
                                         "temperature_control": "ZONE_RESET"
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 0.0,
-                                        "energy_source_type": "NONE",
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "humidification_type": "OTHER",
-                                        "id": "Baseline System 7 (CHW VAV) HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 0.0,
-                                        "type": "NONE"
-                                    },
                                     "cooling_system": {
                                         "chilled_water_loop": "Chilled Water Loop (Secondary)",
                                         "design_sensible_cool_capacity": 71384.67002031794,
@@ -132555,10 +132545,10 @@
                         "operation": "CONTINUOUS",
                         "flow_control": "FIXED_FLOW",
                         "temperature_reset_type": "OUTSIDE_AIR_RESET",
-                        "outdoor_high_for_loop_supply_reset_temperature": 15.5555555555556,
-                        "outdoor_low_for_loop_supply_reset_temperature": 26.666666666666686,
-                        "loop_supply_temperature_at_outdoor_high": 6.666666666666686,
-                        "loop_supply_temperature_at_outdoor_low": 12.222222222222285
+                        "outdoor_high_for_loop_supply_reset_temperature": 26.666666666666686,
+                        "outdoor_low_for_loop_supply_reset_temperature": 15.5555555555556,
+                        "loop_supply_temperature_at_outdoor_high": 12.222222222222285,
+                        "loop_supply_temperature_at_outdoor_low": 6.666666666666686
                     },
                     "child_loops": [
                         {
@@ -132572,10 +132562,10 @@
                                 "operation": "CONTINUOUS",
                                 "flow_control": "VARIABLE_FLOW",
                                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
-                                "outdoor_high_for_loop_supply_reset_temperature": 15.5555555555556,
-                                "outdoor_low_for_loop_supply_reset_temperature": 26.666666666666686,
-                                "loop_supply_temperature_at_outdoor_high": 6.666666666666686,
-                                "loop_supply_temperature_at_outdoor_low": 12.222222222222285
+                                "outdoor_high_for_loop_supply_reset_temperature": 26.666666666666686,
+                                "outdoor_low_for_loop_supply_reset_temperature": 15.5555555555556,
+                                "loop_supply_temperature_at_outdoor_high": 12.222222222222285,
+                                "loop_supply_temperature_at_outdoor_low": 6.666666666666686
                             },
                             "child_loops": [],
                             "type": "COOLING",
@@ -132624,7 +132614,7 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop",
-                    "rated_capacity": -17466834446.21528,
+                    "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }
             ],
