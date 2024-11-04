@@ -2,7 +2,6 @@ from rpd_generator.bdl_structure.parent_node import ParentNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
-
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 HeatingSystemOptions = SchemaEnums.schema_enums["HeatingSystemOptions"]
 CoolingSystemOptions = SchemaEnums.schema_enums["CoolingSystemOptions"]
@@ -73,6 +72,17 @@ class System(ParentNode):
         BDL_SystemTypes.HP,
         BDL_SystemTypes.PTAC,
     ]
+    reheat_system_types = [
+        BDL_SystemTypes.PMZS,
+        BDL_SystemTypes.PVAVS,
+        BDL_SystemTypes.SZRH,
+        BDL_SystemTypes.VAVS,
+        BDL_SystemTypes.RHFS,
+        BDL_SystemTypes.PIU,
+        BDL_SystemTypes.IU,
+        BDL_SystemTypes.CBVAV,
+        BDL_SystemTypes.DOAS,
+    ]
     heat_type_map = {
         BDL_SystemHeatingTypes.NONE: HeatingSystemOptions.NONE,
         BDL_SystemHeatingTypes.ELECTRIC: HeatingSystemOptions.ELECTRIC_RESISTANCE,
@@ -124,35 +134,14 @@ class System(ParentNode):
         BDL_CoolControlOptions.COLDEST: FanSystemTemperatureControlOptions.ZONE_RESET,
         BDL_CoolControlOptions.SCHEDULED: FanSystemTemperatureControlOptions.SCHEDULED,
     }
-    system_heating_type_map = {
-        BDL_SystemTypes.PTAC: None,  # Mapping updated in populate_data_elements method  # Unavailable in DOE 2.3
-        BDL_SystemTypes.PSZ: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.PMZS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.PVAVS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.PVVT: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.HP: HeatingSystemOptions.HEAT_PUMP,
-        BDL_SystemTypes.SZRH: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.VAVS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.RHFS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.DDS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.MZS: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.PIU: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.FC: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.IU: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.UVT: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.UHT: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.RESYS2: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.CBVAV: None,  # Mapping updated in populate_data_elements method
-        BDL_SystemTypes.SUM: HeatingSystemOptions.NONE,
-        BDL_SystemTypes.DOAS: None,  # Mapping updated in populate_data_elements method
-    }
     system_cooling_type_map = {
         BDL_SystemTypes.PTAC: CoolingSystemOptions.DIRECT_EXPANSION,  # Unavailable in DOE 2.3
         BDL_SystemTypes.PSZ: CoolingSystemOptions.DIRECT_EXPANSION,
         BDL_SystemTypes.PMZS: CoolingSystemOptions.DIRECT_EXPANSION,
         BDL_SystemTypes.PVAVS: CoolingSystemOptions.DIRECT_EXPANSION,
         BDL_SystemTypes.PVVT: CoolingSystemOptions.DIRECT_EXPANSION,
-        BDL_SystemTypes.HP: CoolingSystemOptions.DIRECT_EXPANSION,  # IS WATER LOOP HEAT PUMP CONSIDERED DIRECT_EXPANSION???
+        BDL_SystemTypes.HP: CoolingSystemOptions.DIRECT_EXPANSION,
+        # IS WATER LOOP HEAT PUMP CONSIDERED DIRECT_EXPANSION???
         BDL_SystemTypes.SZRH: CoolingSystemOptions.FLUID_LOOP,
         BDL_SystemTypes.VAVS: CoolingSystemOptions.FLUID_LOOP,
         BDL_SystemTypes.RHFS: CoolingSystemOptions.FLUID_LOOP,
@@ -274,8 +263,7 @@ class System(ParentNode):
 
         self.sys_id = None
         self.system_data_structure = {}
-        self.terminal_data_structure = {}
-        # HVACSystem will be omitted when SYSTEM TYPE = SUM
+
         self.omit = False
         self.is_terminal = False
         self.is_zonal_system = False
@@ -443,20 +431,64 @@ class System(ParentNode):
 
     def populate_data_elements(self):
         """Populate data elements from the keyword_value pairs returned from model_input_reader."""
-        if self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE) == BDL_SystemTypes.SUM:
+        system_type = self.get_inp(BDL_SystemKeywords.TYPE)
+        if system_type == BDL_SystemTypes.SUM:
             self.omit = True
             return
-
-        if (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-            in self.zonal_system_types
-        ):
+        if system_type in self.zonal_system_types:
             self.is_zonal_system = True
             if not self.is_derived_system:
                 self.create_zonal_systems()
 
-        heat_source = self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_SOURCE)
+        cool_source = self.get_inp(BDL_SystemKeywords.COOL_SOURCE)
+        cool_type = self.cool_type_map.get(cool_source)
+        self.system_cooling_type_map.update(
+            {
+                BDL_SystemTypes.PIU: cool_type,
+                BDL_SystemTypes.DOAS: cool_type,
+            }
+        )
+        has_cool = self.system_cooling_type_map.get(
+            self.get_inp(BDL_SystemKeywords.TYPE)
+        ) not in [None, CoolingSystemOptions.NONE]
+        has_preheat = self.get_inp(BDL_SystemKeywords.PREHEAT_SOURCE) and self.get_inp(
+            BDL_SystemKeywords.PREHEAT_SOURCE
+        ) not in [None, BDL_SystemHeatingTypes.NONE]
+        heat_source = self.get_inp(BDL_SystemKeywords.HEAT_SOURCE)
         heat_type = self.heat_type_map.get(heat_source)
+        has_heat = heat_type not in [None, HeatingSystemOptions.NONE]
+        has_economizer = (
+            self.get_inp(BDL_SystemKeywords.OA_CONTROL)
+            and self.get_inp(BDL_SystemKeywords.OA_CONTROL)
+            != BDL_EconomizerOptions.FIXED
+        )
+        has_energy_recovery = (
+            self.get_inp(BDL_SystemKeywords.RECOVER_EXHAUST)
+            and self.get_inp(BDL_SystemKeywords.RECOVER_EXHAUST)
+            != BDL_EnergyRecoveryOptions.NO
+        )
+
+        self.is_terminal = (
+            len(self.children) == 1
+            and system_type not in self.reheat_system_types
+            and heat_type
+            in [
+                HeatingSystemOptions.FLUID_LOOP,
+                HeatingSystemOptions.NONE,
+            ]
+            and cool_type
+            in [
+                CoolingSystemOptions.FLUID_LOOP,
+                CoolingSystemOptions.NONE,
+            ]
+            and not has_preheat
+            and not has_economizer
+            and not has_energy_recovery
+        )
+        if self.is_terminal:
+            self.omit = True
+            return
+
         output_heat_type = self.BDL_output_heat_type_map.get(heat_source)
         self.BDL_output_system_heating_type_map.update(
             {
@@ -480,18 +512,8 @@ class System(ParentNode):
                 BDL_SystemTypes.DOAS: output_heat_type,
             }
         )
-
-        cool_source = self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_SOURCE)
-        cool_type = self.cool_type_map.get(cool_source)
         output_cool_type = self.BDL_output_cool_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-        )
-
-        self.system_cooling_type_map.update(
-            {
-                BDL_SystemTypes.PIU: cool_type,
-                BDL_SystemTypes.DOAS: cool_type,
-            }
+            self.get_inp(BDL_SystemKeywords.TYPE)
         )
         self.BDL_output_system_cooling_type_map.update(
             {
@@ -506,32 +528,25 @@ class System(ParentNode):
             self.get_inp(BDL_SystemKeywords.TYPE)
         )
 
-        # if the system type is FC with HW or no heat, this system is represented as terminal fan, heating, cooling
-        terminal_system_conditions = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.TYPE
-        ) == BDL_SystemTypes.FC and heat_type in [
-            HeatingSystemOptions.FLUID_LOOP,
-            HeatingSystemOptions.NONE,
-        ]
+        requests = self.get_output_requests()
+        output_data = self.get_output_data(requests)
+        for key in ["Cooling Capacity", "Heating Capacity"]:
+            if key in output_data:
+                output_data[key] = self.try_convert_units(
+                    output_data[key], "kBtu/hr", "Btu/hr"
+                )
 
-        if terminal_system_conditions:
-            self.is_terminal = True
-
-        else:
-            requests = self.get_output_requests()
-            output_data = self.get_output_data(requests)
-            for key in ["Cooling Capacity", "Heating Capacity"]:
-                if key in output_data:
-                    output_data[key] = self.try_convert_units(
-                        output_data[key], "kBtu/hr", "Btu/hr"
-                    )
-
-            self.populate_fan_system(output_data)
-            self.populate_fans(output_data)
-            self.populate_heating_system(output_data, heat_source)
+        self.populate_fan_system(output_data)
+        self.populate_fans(output_data)
+        if has_cool:
             self.populate_cooling_system(output_data)
+        if has_heat:
+            self.populate_heating_system(output_data, heat_source)
+        if has_preheat:
             self.populate_preheat_system(output_data)
+        if has_economizer:
             self.populate_air_economizer()
+        if has_energy_recovery:
             self.populate_air_energy_recovery()
 
     def get_output_requests(self):
@@ -1000,13 +1015,12 @@ class System(ParentNode):
 
         if self.is_zonal_system:
             self.heat_sys_is_sized_based_on_design_day = (
-                not self.keyword_value_pairs.get(BDL_SystemKeywords.HEATING_CAPACITY)
-                and all(
-                    not child.keyword_value_pairs.get(BDL_ZoneKeywords.MAX_HEAT_RATE)
-                    and not child.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.HEATING_CAPACITY
-                    )
-                    for child in self.children
+                not self.get_inp(BDL_SystemKeywords.HEATING_CAPACITY)
+                and not self.children[0].keyword_value_pairs.get(
+                    BDL_ZoneKeywords.MAX_HEAT_RATE
+                )
+                and not self.children[0].keyword_value_pairs.get(
+                    BDL_ZoneKeywords.HEATING_CAPACITY
                 )
             )
         else:
@@ -1093,13 +1107,12 @@ class System(ParentNode):
                 )
         if self.is_zonal_system:
             self.cool_sys_is_sized_based_on_design_day = (
-                not self.keyword_value_pairs.get(BDL_SystemKeywords.COOLING_CAPACITY)
-                and all(
-                    not child.keyword_value_pairs.get(BDL_ZoneKeywords.MAX_COOL_RATE)
-                    and not child.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.COOLING_CAPACITY
-                    )
-                    for child in self.children
+                not self.get_inp(BDL_SystemKeywords.COOLING_CAPACITY)
+                and not self.children[0].keyword_value_pairs.get(
+                    BDL_ZoneKeywords.MAX_COOL_RATE
+                )
+                and not self.children[0].keyword_value_pairs.get(
+                    BDL_ZoneKeywords.COOLING_CAPACITY
                 )
             )
         else:
@@ -1152,7 +1165,7 @@ class System(ParentNode):
         if self.fan_is_airflow_sized_based_on_design_day[0] is None:
             self.fan_is_airflow_sized_based_on_design_day[0] = (
                 # If any zone served by the system has assigned flow rates, the fan is not sized based on design day
-                any(
+                not any(
                     child_zone.keyword_value_pairs.get(BDL_ZoneKeywords.ASSIGNED_FLOW)
                     or child_zone.keyword_value_pairs.get(
                         BDL_ZoneKeywords.HASSIGNED_FLOW
