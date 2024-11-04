@@ -144,6 +144,15 @@ class BaseNode(Base):
         """
         return self.rmd.bdl_obj_instances.get(u_name, None)
 
+    def get_inp(self, keyword, default=None):
+        """
+        Return the value of the keyword from the keyword_value_pairs.
+        :param keyword: str
+        :param default: any
+        :return: value: str
+        """
+        return self.keyword_value_pairs.get(keyword, default)
+
     def get_output_data(self, requests):
         """
         Get data from the simulation output.
