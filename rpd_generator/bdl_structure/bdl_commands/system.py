@@ -1432,7 +1432,9 @@ class System(ParentNode):
             )
 
     def populate_fan_operation_during_occupied(self):
-        fan_sch_name = self.keyword_value_pairs.get(BDL_SystemKeywords.FAN_SCHEDULE)
+        fan_sch = self.rmd.bdl_obj_instances.get(
+            self.keyword_value_pairs.get(BDL_SystemKeywords.FAN_SCHEDULE)
+        )
 
         if (
             self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
@@ -1444,45 +1446,33 @@ class System(ParentNode):
             self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
             == BDL_SystemTypes.DOAS
         ):
-            fan_sch = self.rmd.bdl_obj_instances.get(fan_sch_name)
+
             if not fan_sch:
-                return FanSystemOperationOptions.INTERMITTENT
-            else:
                 return FanSystemOperationOptions.CONTINUOUS
+            elif all(value == -999 for value in fan_sch.hourly_values):
+                return FanSystemOperationOptions.CONTINUOUS
+
+            doas_occ_sch = self.get_doas_occ_sch()
+            all_occupied_off = True
+            all_occupied_on = True
+            for i, hour in enumerate(doas_occ_sch):
+                if hour == 1:
+                    value = fan_sch.hourly_values[i]
+                    if value not in [0, -1]:
+                        all_occupied_off = False
+                    if value not in [1, -999]:
+                        all_occupied_on = False
+            if all_occupied_off:
+                return FanSystemOperationOptions.KEEP_OFF
+            if all_occupied_on:
+                return FanSystemOperationOptions.CONTINUOUS
+            return FanSystemOperationOptions.OTHER
 
         elif self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE) in [
             BDL_SystemTypes.PTAC,
             BDL_SystemTypes.HP,
             BDL_SystemTypes.UVT,
-        ]:
-            if not self.fan_sys_minimum_outdoor_airflow:
-                return FanSystemOperationOptions.CYCLING
-
-            min_oa_sch_name = self.keyword_value_pairs.get(
-                BDL_SystemKeywords.MIN_AIR_SCH
-            )
-            fan_sch = self.rmd.bdl_obj_instances.get(fan_sch_name)
-            min_oa_sch = self.rmd.bdl_obj_instances.get(min_oa_sch_name)
-            if not min_oa_sch:
-                return FanSystemOperationOptions.CONTINUOUS
-            if not fan_sch:  # (and min_oa_sch)
-                min_oa_sch_values = min_oa_sch.hourly_values
-                if min_oa_sch_values:
-                    for i in range(len(min_oa_sch_values)):
-                        if min_oa_sch_values[i] == 0:
-                            return FanSystemOperationOptions.CYCLING
-                    return FanSystemOperationOptions.CONTINUOUS
-                return FanSystemOperationOptions.CYCLING
-            if fan_sch and min_oa_sch:
-                fan_sch_values = fan_sch.hourly_values
-                min_oa_sch_values = min_oa_sch.hourly_values
-                if fan_sch_values and min_oa_sch_values:
-                    for i in range(len(fan_sch_values)):
-                        if min_oa_sch_values[i] == 0 and fan_sch_values[i] in (1, -999):
-                            return FanSystemOperationOptions.CYCLING
-                    return FanSystemOperationOptions.CONTINUOUS
-
-        elif self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE) in [
+            BDL_SystemTypes.UHT,
             BDL_SystemTypes.PSZ,
             BDL_SystemTypes.PVVT,
             BDL_SystemTypes.RESYS2,
@@ -1491,12 +1481,76 @@ class System(ParentNode):
             BDL_SystemTypes.SZRH,
             BDL_SystemTypes.HP,
         ]:
-            return self.occupied_fan_operation_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.INDOOR_FAN_MODE)
-            )
+            has_one = False
+            has_neg_999 = False
+            is_all_0 = True
+
+            for value in fan_sch.hourly_values:
+                if is_all_0 and value != 0:
+                    is_all_0 = False
+                if value == 1:
+                    has_one = True
+                elif value == -999:
+                    has_neg_999 = True
+
+            # Handle special case where all fan schedule values are 0 so unoccupied/occupied cannot be distinguished
+            if is_all_0:
+                return self.unoccupied_fan_operation_map.get(
+                    self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                )
+
+            if not fan_sch:
+                return self.occupied_fan_operation_map.get(
+                    self.get_inp(BDL_SystemKeywords.INDOOR_FAN_MODE)
+                )
+
+            mixed_operation = has_one and has_neg_999
+            if mixed_operation:
+                return FanSystemOperationOptions.OTHER
+            if has_one:  # and not mixed_operation implied to reach here
+                return FanSystemOperationOptions.CONTINUOUS
+            if has_neg_999:  # and not mixed_operation implied to reach here
+                return FanSystemOperationOptions.CYCLING
 
         else:
-            return FanSystemOperationOptions.CONTINUOUS
+            # Handle special case where all fan schedule values are 0 so unoccupied/occupied cannot be distinguished
+            if all(value == 0 for value in fan_sch.hourly_values):
+                return self.unoccupied_fan_operation_map.get(
+                    self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                )
+
+            if any(value == -999 for value in fan_sch.hourly_values):
+                # TODO raise this error in a window of the GUI
+                raise ValueError(
+                    f"""Fan schedule {fan_sch.u_name} for system {self.u_name} is not allowed to have -999 values. These
+                    flags are not accurately supported by DOE 2.3 (see help text Volume 2: Dictionary > HVAC Components 
+                    > SYSTEM > Airside Control > Fan Availability)"""
+                )
+
+            return (
+                FanSystemOperationOptions.CONTINUOUS
+            )  # if there is no fan schedule or the fan schedule has 1s
+
+    def get_doas_occ_sch(self):
+        occupied_hours = [0] * 8760
+        systems_served = [
+            obj_inst
+            for obj_inst in self.rmd.bdl_obj_instances
+            if isinstance(obj_inst, System)
+            and obj_inst.get_inp(BDL_SystemKeywords.DOA_SYSTEM) == self.u_name
+        ]
+        system_fan_schedules = {
+            self.get_obj(system.get_inp(BDL_SystemKeywords.FAN_SCHEDULE))
+            for system in systems_served
+        }
+        for system_fan_schedule in system_fan_schedules:
+            occupied_hours = [
+                1 if hour == 1 else occ_hour
+                for occ_hour, hour in zip(
+                    occupied_hours, system_fan_schedule.hourly_values
+                )
+            ]
+        return occupied_hours
 
     def get_temperature_control(self):
         heat_control = self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_CONTROL)
