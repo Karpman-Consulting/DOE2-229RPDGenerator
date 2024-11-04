@@ -1481,10 +1481,14 @@ class System(ParentNode):
             BDL_SystemTypes.SZRH,
             BDL_SystemTypes.HP,
         ]:
+            if not fan_sch:
+                return self.occupied_fan_operation_map.get(
+                    self.get_inp(BDL_SystemKeywords.INDOOR_FAN_MODE)
+                )
+
             has_one = False
             has_neg_999 = False
             is_all_0 = True
-
             for value in fan_sch.hourly_values:
                 if is_all_0 and value != 0:
                     is_all_0 = False
@@ -1497,11 +1501,6 @@ class System(ParentNode):
             if is_all_0:
                 return self.unoccupied_fan_operation_map.get(
                     self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
-                )
-
-            if not fan_sch:
-                return self.occupied_fan_operation_map.get(
-                    self.get_inp(BDL_SystemKeywords.INDOOR_FAN_MODE)
                 )
 
             mixed_operation = has_one and has_neg_999
