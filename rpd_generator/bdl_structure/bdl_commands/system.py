@@ -269,9 +269,7 @@ class System(ParentNode):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         # On initialization the parent building segment is not known. It will be set in the GUI.
-        self.parent_building_segment = rmd.bdl_obj_instances.get(
-            "Default Building Segment", None
-        )
+        self.parent_building_segment = self.get_obj("Default Building Segment")
         self.rmd.system_names.append(u_name)
 
         self.sys_id = None
@@ -279,11 +277,8 @@ class System(ParentNode):
         self.terminal_data_structure = {}
         # HVACSystem will be omitted when SYSTEM TYPE = SUM
         self.omit = False
-        # HVACSystem data elements are not populated when SYSTEM TYPE = FC with HW or no heat
         self.is_terminal = False
-        # HVACSystems are derived from this eQUEST SYSTEM for each zone served beyond the first
         self.is_zonal_system = False
-        # HVACSystem is derived from a zonal system
         self.is_derived_system = False
         self.output_cool_type = None
         self.output_heat_type = None
@@ -463,28 +458,6 @@ class System(ParentNode):
         heat_source = self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_SOURCE)
         heat_type = self.heat_type_map.get(heat_source)
         output_heat_type = self.BDL_output_heat_type_map.get(heat_source)
-        self.system_heating_type_map.update(
-            {
-                BDL_SystemTypes.PTAC: heat_type,
-                BDL_SystemTypes.PSZ: heat_type,
-                BDL_SystemTypes.PMZS: heat_type,
-                BDL_SystemTypes.PVAVS: heat_type,
-                BDL_SystemTypes.PVVT: heat_type,
-                BDL_SystemTypes.SZRH: heat_type,
-                BDL_SystemTypes.VAVS: heat_type,
-                BDL_SystemTypes.RHFS: heat_type,
-                BDL_SystemTypes.DDS: heat_type,
-                BDL_SystemTypes.MZS: heat_type,
-                BDL_SystemTypes.PIU: heat_type,
-                BDL_SystemTypes.FC: heat_type,
-                BDL_SystemTypes.IU: heat_type,
-                BDL_SystemTypes.UVT: heat_type,
-                BDL_SystemTypes.UHT: heat_type,
-                BDL_SystemTypes.RESYS2: heat_type,
-                BDL_SystemTypes.CBVAV: heat_type,
-                BDL_SystemTypes.DOAS: heat_type,
-            }
-        )
         self.BDL_output_system_heating_type_map.update(
             {
                 BDL_SystemTypes.PTAC: output_heat_type,
@@ -526,12 +499,11 @@ class System(ParentNode):
                 BDL_SystemTypes.DOAS: output_cool_type,
             }
         )
-
         self.output_heat_type = self.BDL_output_system_heating_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
+            self.get_inp(BDL_SystemKeywords.TYPE)
         )
         self.output_cool_type = self.BDL_output_system_cooling_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
+            self.get_inp(BDL_SystemKeywords.TYPE)
         )
 
         # if the system type is FC with HW or no heat, this system is represented as terminal fan, heating, cooling
@@ -574,11 +546,9 @@ class System(ParentNode):
             "Supply Fan - Min Flow Ratio": (2201022, self.u_name, ""),
         }
 
-        return_or_relief = (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC) is not None
-            or self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_KW_FLOW)
-            is not None
-        )
+        return_or_relief = self.get_inp(
+            BDL_SystemKeywords.RETURN_STATIC
+        ) or self.get_inp(BDL_SystemKeywords.RETURN_KW_FLOW)
 
         if return_or_relief:
             requests["Return Fan - Airflow"] = (
@@ -592,10 +562,7 @@ class System(ParentNode):
                 "",
             )
 
-        if (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.DDS_TYPE)
-            == BDL_DualDuctFanOptions.DUAL_FAN
-        ):
+        if self.get_inp(BDL_SystemKeywords.DDS_TYPE) == BDL_DualDuctFanOptions.DUAL_FAN:
             requests["Heating Supply Fan - Airflow"] = (
                 2201034,
                 self.u_name,
@@ -934,24 +901,24 @@ class System(ParentNode):
     def populate_fan_system(self, output_data):
         self.fan_sys_id = self.u_name + " FanSys"
         self.fan_sys_has_fully_ducted_return = (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_AIR_PATH)
+            self.get_inp(BDL_SystemKeywords.RETURN_AIR_PATH)
             == BDL_ReturnAirPathOptions.DUCT
         )
         self.fan_sys_fan_control = self.supply_fan_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.FAN_CONTROL)
+            self.get_inp(BDL_SystemKeywords.FAN_CONTROL)
         )
         self.fan_sys_temperature_control = self.get_temperature_control()
         self.fan_sys_operation_during_unoccupied = (
             self.unoccupied_fan_operation_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
             )
         )
         self.fan_sys_demand_control_ventilation_control = self.dcv_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.MIN_OA_METHOD)
+            self.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
         )
-        cool_control = self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_CONTROL)
-        min_reset_t = self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_MIN_RESET_T)
-        max_reset_t = self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_MAX_RESET_T)
+        cool_control = self.get_inp(BDL_SystemKeywords.COOL_CONTROL)
+        min_reset_t = self.get_inp(BDL_SystemKeywords.COOL_MIN_RESET_T)
+        max_reset_t = self.get_inp(BDL_SystemKeywords.COOL_MAX_RESET_T)
         if (
             cool_control == BDL_CoolControlOptions.WARMEST
             and min_reset_t
@@ -973,7 +940,7 @@ class System(ParentNode):
             ) * self.try_float(supply_fan_airflow)
         self.fan_sys_operation_during_unoccupied = (
             self.unoccupied_fan_operation_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
             )
         )
         self.fan_sys_operation_during_occupied = (
@@ -983,33 +950,29 @@ class System(ParentNode):
     def populate_heating_system(self, output_data, heat_source):
         self.heat_sys_id = self.u_name + " HeatSys"
         self.heat_sys_type = self.heat_type_map.get(heat_source)
-        self.heat_sys_hot_water_loop = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.HW_LOOP
-        )
-        self.heat_sys_water_source_heat_pump_loop = self.keyword_value_pairs.get(
+        self.heat_sys_hot_water_loop = self.get_inp(BDL_SystemKeywords.HW_LOOP)
+        self.heat_sys_water_source_heat_pump_loop = self.get_inp(
             BDL_SystemKeywords.CW_LOOP
         )
         self.heat_sys_humidification_type = self.humidification_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.HUMIDIFIER_TYPE)
+            self.get_inp(BDL_SystemKeywords.HUMIDIFIER_TYPE)
         )
         self.heat_sys_heating_coil_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_SET_T)
+            self.get_inp(BDL_SystemKeywords.HEAT_SET_T)
         )
         self.heat_sys_heatpump_auxiliary_heat_type = self.heatpump_aux_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.HP_SUPP_SOURCE)
+            self.get_inp(BDL_SystemKeywords.HP_SUPP_SOURCE)
         )
         self.heat_sys_heatpump_auxiliary_heat_high_shutoff_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.MAX_HP_SUPP_T)
+            self.get_inp(BDL_SystemKeywords.MAX_HP_SUPP_T)
         )
         self.heat_sys_heatpump_low_shutoff_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.MIN_HP_T)
+            self.get_inp(BDL_SystemKeywords.MIN_HP_T)
         )
 
-        sizing_ratio = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.SIZING_RATIO)
-        )
+        sizing_ratio = self.try_float(self.get_inp(BDL_SystemKeywords.SIZING_RATIO))
         heat_sizing_ratio = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_SIZING_RATI)
+            self.get_inp(BDL_SystemKeywords.HEAT_SIZING_RATI)
         )
         if sizing_ratio is not None and heat_sizing_ratio is not None:
             self.heat_sys_oversizing_factor = max(
@@ -1017,9 +980,7 @@ class System(ParentNode):
             )
 
         self.heat_sys_rated_capacity = self.try_abs(
-            self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.HEATING_CAPACITY)
-            )
+            self.try_float(self.get_inp(BDL_SystemKeywords.HEATING_CAPACITY))
         )
         if not self.heat_sys_rated_capacity:
             self.heat_sys_rated_capacity = self.try_abs(
@@ -1049,16 +1010,16 @@ class System(ParentNode):
                 )
             )
         else:
-            self.heat_sys_is_sized_based_on_design_day = (
-                not self.keyword_value_pairs.get(BDL_SystemKeywords.HEATING_CAPACITY)
+            self.heat_sys_is_sized_based_on_design_day = not self.get_inp(
+                BDL_SystemKeywords.HEATING_CAPACITY
             )
 
         if self.heat_sys_type in [
             HeatingSystemOptions.FLUID_LOOP,
             HeatingSystemOptions.OTHER,
         ]:
-            loop_name = self.keyword_value_pairs.get(BDL_SystemKeywords.HW_LOOP)
-            loop = self.rmd.bdl_obj_instances.get(loop_name)
+            loop_name = self.get_inp(BDL_SystemKeywords.HW_LOOP)
+            loop = self.get_obj(loop_name)
             if loop:
                 self.heat_sys_energy_source_type = self.get_loop_energy_source(loop)
         elif self.heat_sys_type in [
@@ -1074,28 +1035,20 @@ class System(ParentNode):
     def populate_cooling_system(self, output_data):
         self.cool_sys_id = self.u_name + " CoolSys"
         self.cool_sys_type = self.system_cooling_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
+            self.get_inp(BDL_SystemKeywords.TYPE)
         )
-        self.cool_sys_chilled_water_loop = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.CHW_LOOP
-        )
-        self.cool_sys_condenser_water_loop = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.CW_LOOP
-        )
-        sizing_ratio = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.SIZING_RATIO)
-        )
+        self.cool_sys_chilled_water_loop = self.get_inp(BDL_SystemKeywords.CHW_LOOP)
+        self.cool_sys_condenser_water_loop = self.get_inp(BDL_SystemKeywords.CW_LOOP)
+        sizing_ratio = self.try_float(self.get_inp(BDL_SystemKeywords.SIZING_RATIO))
         cool_sizing_ratio = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_SIZING_RATI)
+            self.get_inp(BDL_SystemKeywords.COOL_SIZING_RATI)
         )
         if sizing_ratio is not None and cool_sizing_ratio is not None:
             self.cool_sys_oversizing_factor = max(
                 0, sizing_ratio * cool_sizing_ratio - 1
             )
         self.cool_sys_rated_total_cool_capacity = self.try_abs(
-            self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.COOLING_CAPACITY)
-            )
+            self.try_float(self.get_inp(BDL_SystemKeywords.COOLING_CAPACITY))
         )
         if not self.cool_sys_rated_total_cool_capacity:
             self.cool_sys_rated_total_cool_capacity = self.try_abs(
@@ -1106,7 +1059,7 @@ class System(ParentNode):
                 output_data.get("Cooling Capacity")
             )
         self.cool_sys_rated_sensible_cool_capacity = self.try_abs(
-            self.try_float(self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_SH_CAP))
+            self.try_float(self.get_inp(BDL_SystemKeywords.COOL_SH_CAP))
         )
         if not self.cool_sys_rated_sensible_cool_capacity:
             rated_shr = self.try_abs(output_data.get("Rated Cooling SHR"))
@@ -1150,38 +1103,33 @@ class System(ParentNode):
                 )
             )
         else:
-            self.cool_sys_is_sized_based_on_design_day = (
-                not self.keyword_value_pairs.get(BDL_SystemKeywords.COOLING_CAPACITY)
+            self.cool_sys_is_sized_based_on_design_day = not self.get_inp(
+                BDL_SystemKeywords.COOLING_CAPACITY
             )
 
     def populate_preheat_system(self, output_data):
         self.preheat_sys_id = self.u_name + " PreheatSys"
         self.preheat_sys_type = self.heat_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.PREHEAT_SOURCE)
+            self.get_inp(BDL_SystemKeywords.PREHEAT_SOURCE)
         )
         self.preheat_sys_rated_capacity = self.try_abs(
-            self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.PREHEAT_CAPACITY)
-            )
+            self.try_float(self.get_inp(BDL_SystemKeywords.PREHEAT_CAPACITY))
         )
         self.preheat_sys_design_capacity = self.try_abs(
             output_data.get("Design Preheat capacity")
         )
-        self.preheat_sys_is_sized_based_on_design_day = (
-            not self.keyword_value_pairs.get(BDL_SystemKeywords.PREHEAT_CAPACITY)
+        self.preheat_sys_is_sized_based_on_design_day = not self.get_inp(
+            BDL_SystemKeywords.PREHEAT_CAPACITY
         )
         self.preheat_sys_heating_coil_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.PREHEAT_T)
+            self.get_inp(BDL_SystemKeywords.PREHEAT_T)
         )
-        self.preheat_sys_hot_water_loop = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.PHW_LOOP
-        )
-
+        self.preheat_sys_hot_water_loop = self.get_inp(BDL_SystemKeywords.PHW_LOOP)
         if self.preheat_sys_type in [
             HeatingSystemOptions.FLUID_LOOP,
             HeatingSystemOptions.OTHER,
         ]:
-            loop = self.rmd.bdl_obj_instances.get(self.preheat_sys_hot_water_loop)
+            loop = self.get_obj(self.preheat_sys_hot_water_loop)
             if loop:
                 self.preheat_sys_energy_source_type = self.get_loop_energy_source(loop)
         elif self.preheat_sys_type in [
@@ -1199,7 +1147,7 @@ class System(ParentNode):
         self.fan_id[0] = self.u_name + " SupplyFan"
         self.fan_design_airflow[0] = output_data.get("Supply Fan - Airflow")
         self.fan_design_electric_power[0] = output_data.get("Supply Fan - Power")
-        if self.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_FLOW) is not None:
+        if self.get_inp(BDL_SystemKeywords.SUPPLY_FLOW) is not None:
             self.fan_is_airflow_sized_based_on_design_day[0] = False
         if self.fan_is_airflow_sized_based_on_design_day[0] is None:
             self.fan_is_airflow_sized_based_on_design_day[0] = (
@@ -1228,35 +1176,31 @@ class System(ParentNode):
             )
         self.fan_specification_method[0] = (
             FanSpecificationMethodOptions.DETAILED
-            if self.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_STATIC)
-            is not None
+            if self.get_inp(BDL_SystemKeywords.SUPPLY_STATIC) is not None
             else FanSpecificationMethodOptions.SIMPLE
         )
         self.fan_design_pressure_rise[0] = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_STATIC)
+            self.get_inp(BDL_SystemKeywords.SUPPLY_STATIC)
         )
         self.fan_motor_efficiency[0] = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_MTR_EFF)
+            self.get_inp(BDL_SystemKeywords.SUPPLY_MTR_EFF)
         )
         supply_mech_eff = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_MECH_EFF)
+            self.get_inp(BDL_SystemKeywords.SUPPLY_MECH_EFF)
         )
         if self.fan_motor_efficiency[0] and supply_mech_eff:
             self.fan_total_efficiency[0] = (
                 self.fan_motor_efficiency[0] * supply_mech_eff
             )
-
         # Determine if there is either a return or relief fan
         return_or_relief = (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC) is not None
-            or self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_KW_FLOW)
-            is not None
+            self.get_inp(BDL_SystemKeywords.RETURN_STATIC) is not None
+            or self.get_inp(BDL_SystemKeywords.RETURN_KW_FLOW) is not None
         )
-
         # If there is a return or relief fan and its location is set to RELIEF
         if (
             return_or_relief
-            and self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_FAN_LOC)
+            and self.get_inp(BDL_SystemKeywords.RETURN_FAN_LOC)
             == BDL_ReturnFanOptions.RELIEF
         ):
             self.fan_id[2] = self.u_name + " ReliefFan"
@@ -1264,27 +1208,25 @@ class System(ParentNode):
             self.fan_design_electric_power[2] = output_data.get(
                 "Return Fan - Power", None
             )
-            if self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_FLOW) is not None:
+            if self.get_inp(BDL_SystemKeywords.RETURN_FLOW) is not None:
                 self.fan_is_airflow_sized_based_on_design_day[2] = False
             if self.fan_is_airflow_sized_based_on_design_day[2] is None:
                 self.fan_is_airflow_sized_based_on_design_day[2] = (
                     self.fan_is_airflow_sized_based_on_design_day[0]
                 )
-
             self.fan_specification_method[2] = (
                 FanSpecificationMethodOptions.DETAILED
-                if self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC)
-                is not None
+                if self.get_inp(BDL_SystemKeywords.RETURN_STATIC) is not None
                 else FanSpecificationMethodOptions.SIMPLE
             )
             self.fan_design_pressure_rise[2] = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC)
+                self.get_inp(BDL_SystemKeywords.RETURN_STATIC)
             )
             self.fan_motor_efficiency[2] = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_MTR_EFF)
+                self.get_inp(BDL_SystemKeywords.RETURN_MTR_EFF)
             )
             return_mech_eff = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_MECH_EFF)
+                self.get_inp(BDL_SystemKeywords.RETURN_MECH_EFF)
             )
             if self.fan_motor_efficiency[2] and return_mech_eff:
                 self.fan_total_efficiency[2] = (
@@ -1296,7 +1238,7 @@ class System(ParentNode):
             self.fan_id[1] = self.u_name + " ReturnFan"
             self.fan_design_airflow[1] = output_data.get("Return Fan - Airflow", None)
             self.fan_design_electric_power[1] = output_data.get("Return Fan - Power")
-            if self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_FLOW) is not None:
+            if self.get_inp(BDL_SystemKeywords.RETURN_FLOW) is not None:
                 self.fan_is_airflow_sized_based_on_design_day[1] = False
             if self.fan_is_airflow_sized_based_on_design_day[1] is None:
                 self.fan_is_airflow_sized_based_on_design_day[1] = (
@@ -1305,38 +1247,30 @@ class System(ParentNode):
 
             self.fan_specification_method[1] = (
                 FanSpecificationMethodOptions.DETAILED
-                if self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC)
-                is not None
+                if self.get_inp(BDL_SystemKeywords.RETURN_STATIC) is not None
                 else FanSpecificationMethodOptions.SIMPLE
             )
             self.fan_design_pressure_rise[1] = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_STATIC)
+                self.get_inp(BDL_SystemKeywords.RETURN_STATIC)
             )
             self.fan_motor_efficiency[1] = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_MTR_EFF)
+                self.get_inp(BDL_SystemKeywords.RETURN_MTR_EFF)
             )
             return_mech_eff = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.RETURN_MECH_EFF)
+                self.get_inp(BDL_SystemKeywords.RETURN_MECH_EFF)
             )
             if self.fan_motor_efficiency[1] and return_mech_eff:
                 self.fan_total_efficiency[1] = (
                     self.fan_motor_efficiency[1] * return_mech_eff
                 )
-
         # If the system is a dual duct system and the dual duct fan option is dual fan, there is a heating supply fan
-        if (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.DDS_TYPE)
-            == BDL_DualDuctFanOptions.DUAL_FAN
-        ):
+        if self.get_inp(BDL_SystemKeywords.DDS_TYPE) == BDL_DualDuctFanOptions.DUAL_FAN:
             self.fan_id[3] = self.u_name + " HeatingSupplyFan"
             self.fan_design_airflow[3] = output_data.get("Heating Supply Fan - Airflow")
             self.fan_design_electric_power[3] = output_data.get(
                 "Heating Supply Fan - Power"
             )
-            if (
-                self.keyword_value_pairs.get(BDL_SystemKeywords.HSUPPLY_FLOW)
-                is not None
-            ):
+            if self.get_inp(BDL_SystemKeywords.HSUPPLY_FLOW) is not None:
                 self.fan_is_airflow_sized_based_on_design_day[3] = False
             if self.fan_is_airflow_sized_based_on_design_day[3] is None:
                 self.fan_is_airflow_sized_based_on_design_day[3] = (
@@ -1357,41 +1291,37 @@ class System(ParentNode):
                         for child_zone in self.children
                     )
                 )
-
             self.fan_specification_method[3] = (
                 FanSpecificationMethodOptions.DETAILED
-                if self.keyword_value_pairs.get(BDL_SystemKeywords.HSUPPLY_STATIC)
-                is not None
+                if self.get_inp(BDL_SystemKeywords.HSUPPLY_STATIC) is not None
                 else FanSpecificationMethodOptions.SIMPLE
             )
             self.fan_design_pressure_rise[3] = self.try_float(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.HSUPPLY_STATIC)
+                self.get_inp(BDL_SystemKeywords.HSUPPLY_STATIC)
             )
 
     def populate_air_economizer(self):
         self.air_econ_id = self.u_name + " AirEconomizer"
         self.air_econ_type = self.economizer_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.OA_CONTROL)
+            self.get_inp(BDL_SystemKeywords.OA_CONTROL)
         )
         self.air_econ_high_limit_shutoff_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ECONO_LIMIT_T)
+            self.get_inp(BDL_SystemKeywords.ECONO_LIMIT_T)
         )
         self.air_econ_is_integrated = (
             True
-            if self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_SOURCE)
+            if self.get_inp(BDL_SystemKeywords.COOL_SOURCE)
             == BDL_SystemCoolingTypes.CHILLED_WATER
             else not self.boolean_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.ECONO_LOCKOUT)
+                self.get_inp(BDL_SystemKeywords.ECONO_LOCKOUT)
             )
         )
 
     def populate_air_energy_recovery(self):
         self.air_energy_recovery_id = self.u_name + " AirEnergyRecovery"
-        recover_exhaust = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.RECOVER_EXHAUST
-        )
+        recover_exhaust = self.get_inp(BDL_SystemKeywords.RECOVER_EXHAUST)
         recovery_type = self.recovery_type_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_RECOVER_TYPE)
+            self.get_inp(BDL_SystemKeywords.ERV_RECOVER_TYPE)
         )
         self.has_recovery_map.update(
             {
@@ -1403,28 +1333,26 @@ class System(ParentNode):
         )
         self.air_energy_recovery_type = self.has_recovery_map.get(recover_exhaust)
         self.air_energy_recovery_energy_recovery_operation = self.er_operation_map.get(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_RUN_CTRL)
+            self.get_inp(BDL_SystemKeywords.ERV_RUN_CTRL)
         )
         self.air_energy_recovery_energy_recovery_supply_air_temperature_control = (
-            self.er_sat_control_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_TEMP_CTRL)
-            )
+            self.er_sat_control_map.get(self.get_inp(BDL_SystemKeywords.ERV_TEMP_CTRL))
         )
         self.air_energy_recovery_design_sensible_effectiveness = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_SENSIBLE_EFF)
+            self.get_inp(BDL_SystemKeywords.ERV_SENSIBLE_EFF)
         )
         self.air_energy_recovery_design_latent_effectiveness = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_LATENT_EFF)
+            self.get_inp(BDL_SystemKeywords.ERV_LATENT_EFF)
         )
         self.air_energy_recovery_outdoor_airflow = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_OA_FLOW)
+            self.get_inp(BDL_SystemKeywords.ERV_OA_FLOW)
         )
         if self.air_energy_recovery_outdoor_airflow is None:
             self.air_energy_recovery_outdoor_airflow = (
                 self.fan_sys_minimum_outdoor_airflow
             )
         self.air_energy_recovery_exhaust_airflow = self.try_float(
-            self.keyword_value_pairs.get(BDL_SystemKeywords.ERV_EXH_FLOW)
+            self.get_inp(BDL_SystemKeywords.ERV_EXH_FLOW)
         )
         if self.air_energy_recovery_exhaust_airflow is None:
             self.air_energy_recovery_exhaust_airflow = (
@@ -1432,25 +1360,18 @@ class System(ParentNode):
             )
 
     def populate_fan_operation_during_occupied(self):
-        fan_sch_name = self.keyword_value_pairs.get(BDL_SystemKeywords.FAN_SCHEDULE)
+        fan_sch = self.get_obj(self.get_inp(BDL_SystemKeywords.FAN_SCHEDULE))
 
-        if (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-            == BDL_SystemTypes.RESVVT
-        ):
+        if self.get_inp(BDL_SystemKeywords.TYPE) == BDL_SystemTypes.RESVVT:
             return FanSystemOperationOptions.CYCLING
 
-        elif (
-            self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-            == BDL_SystemTypes.DOAS
-        ):
-            fan_sch = self.rmd.bdl_obj_instances.get(fan_sch_name)
+        elif self.get_inp(BDL_SystemKeywords.TYPE) == BDL_SystemTypes.DOAS:
             if not fan_sch:
                 return FanSystemOperationOptions.INTERMITTENT
             else:
                 return FanSystemOperationOptions.CONTINUOUS
 
-        elif self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE) in [
+        elif self.get_inp(BDL_SystemKeywords.TYPE) in [
             BDL_SystemTypes.PTAC,
             BDL_SystemTypes.HP,
             BDL_SystemTypes.UVT,
@@ -1489,7 +1410,6 @@ class System(ParentNode):
             BDL_SystemTypes.EVAP_COOL,
             BDL_SystemTypes.FC,
             BDL_SystemTypes.SZRH,
-            BDL_SystemTypes.HP,
         ]:
             return self.occupied_fan_operation_map.get(
                 self.keyword_value_pairs.get(BDL_SystemKeywords.INDOOR_FAN_MODE)
@@ -1499,8 +1419,8 @@ class System(ParentNode):
             return FanSystemOperationOptions.CONTINUOUS
 
     def get_temperature_control(self):
-        heat_control = self.keyword_value_pairs.get(BDL_SystemKeywords.HEAT_CONTROL)
-        cool_control = self.keyword_value_pairs.get(BDL_SystemKeywords.COOL_CONTROL)
+        heat_control = self.get_inp(BDL_SystemKeywords.HEAT_CONTROL)
+        cool_control = self.get_inp(BDL_SystemKeywords.COOL_CONTROL)
 
         if not heat_control:
             return self.temperature_control_map.get(cool_control)
@@ -1518,24 +1438,22 @@ class System(ParentNode):
         """Get the energy source type for the loop. Used to populate the energy_source_type."""
         energy_source_set = set()
         for boiler_name in self.rmd.boiler_names:
-            boiler = self.rmd.bdl_obj_instances.get(boiler_name)
+            boiler = self.get_obj(boiler_name)
             if boiler.loop == loop.u_name:
                 energy_source_set.add(boiler.energy_source_type)
 
         for steam_meter_name in self.rmd.steam_meter_names:
-            steam_meter = self.rmd.bdl_obj_instances.get(steam_meter_name)
+            steam_meter = self.get_obj(steam_meter_name)
             if steam_meter.loop == loop.u_name:
                 energy_source_set.add(steam_meter.energy_source_type)
 
         for chiller_name in self.rmd.chiller_names:
-            chiller = self.rmd.bdl_obj_instances.get(chiller_name)
+            chiller = self.get_obj(chiller_name)
             if chiller.heat_recovery_loop == loop.u_name:
                 energy_source_set.add(EnergySourceOptions.ELECTRICITY)
 
         for domestic_water_heater_name in self.rmd.domestic_water_heater_names:
-            domestic_water_heater = self.rmd.bdl_obj_instances.get(
-                domestic_water_heater_name
-            )
+            domestic_water_heater = self.get_obj(domestic_water_heater_name)
             if domestic_water_heater.hot_water_loop == loop.u_name:
                 energy_source_set.add(domestic_water_heater.heater_fuel_type)
 
@@ -1546,18 +1464,16 @@ class System(ParentNode):
 
     def get_furnace_energy_source(self):
         """Get the energy source type for the furnace. Used to populate the energy_source_type."""
-        heat_fuel_meter_name = self.keyword_value_pairs.get(
-            BDL_SystemKeywords.HEAT_FUEL_METER
-        )
-        heat_fuel_meter = self.rmd.bdl_obj_instances.get(heat_fuel_meter_name)
+        heat_fuel_meter = self.get_obj(self.get_inp(BDL_SystemKeywords.HEAT_FUEL_METER))
         if heat_fuel_meter:
             return heat_fuel_meter.fuel_type
         else:
-            master_meters = self.rmd.bdl_obj_instances.get(self.rmd.master_meters)
+            master_meters = self.get_obj(self.rmd.master_meters)
             if master_meters:
-                heat_fuel_meter_name = master_meters.keyword_value_pairs.get(
-                    BDL_MasterMeterKeywords.HEAT_FUEL_METER
+                heat_fuel_meter = self.get_obj(
+                    master_meters.keyword_value_pairs.get(
+                        BDL_MasterMeterKeywords.HEAT_FUEL_METER
+                    )
                 )
-                heat_fuel_meter = self.rmd.bdl_obj_instances.get(heat_fuel_meter_name)
                 if heat_fuel_meter:
                     return heat_fuel_meter.fuel_type

@@ -48,9 +48,7 @@ class Zone(ChildNode):
         self.rmd.zone_names.append(u_name)
 
         # On initialization the parent building segment is not known. It will be set in the GUI.
-        self.parent_building_segment = rmd.bdl_obj_instances.get(
-            "Default Building Segment", None
-        )
+        self.parent_building_segment = self.get_obj("Default Building Segment")
 
         self.zone_data_structure = {}
 
@@ -178,22 +176,22 @@ class Zone(ChildNode):
         ]
 
         self.design_thermostat_cooling_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_ZoneKeywords.DESIGN_COOL_T)
+            self.get_inp(BDL_ZoneKeywords.DESIGN_COOL_T)
         )
-        self.thermostat_cooling_setpoint_schedule = self.keyword_value_pairs.get(
+        self.thermostat_cooling_setpoint_schedule = self.get_inp(
             BDL_ZoneKeywords.COOL_TEMP_SCH
         )
         self.design_thermostat_heating_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_ZoneKeywords.DESIGN_HEAT_T)
+            self.get_inp(BDL_ZoneKeywords.DESIGN_HEAT_T)
         )
-        self.thermostat_heating_setpoint_schedule = self.keyword_value_pairs.get(
+        self.thermostat_heating_setpoint_schedule = self.get_inp(
             BDL_ZoneKeywords.HEAT_TEMP_SCH
         )
-        self.exhaust_airflow_rate_multiplier_schedule = self.keyword_value_pairs.get(
+        self.exhaust_airflow_rate_multiplier_schedule = self.get_inp(
             BDL_ZoneKeywords.EXHAUST_FAN_SCH
         )
 
-        # if the zone is served by a SUM system don't populate the data elements
+        # if the zone is served by a SUM system don't populate the data elements below
         if (
             self.parent.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
             == BDL_SystemTypes.SUM
@@ -240,7 +238,7 @@ class Zone(ChildNode):
         if not has_doas:
             self.terminals_minimum_outdoor_airflow[0] = minimum_outdoor_airflow
             self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.MIN_AIR_SCH)
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
             )
 
         # Populate Baseboard Terminal data elements if applicable
@@ -251,18 +249,18 @@ class Zone(ChildNode):
             self.terminals_has_demand_control_ventilation[1] = False
             self.terminals_cooling_capacity[1] = 0.0
             self.terminals_heating_source[1] = self.heat_source_map.get(
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.BASEBOARD_SOURCE)
+                self.get_inp(BDL_ZoneKeywords.BASEBOARD_SOURCE)
             )
             self.terminals_heating_from_loop[1] = self.parent.keyword_value_pairs.get(
                 BDL_SystemKeywords.BBRD_LOOP
             )
-            self.terminals_heating_capacity[1] = self.keyword_value_pairs.get(
+            self.terminals_heating_capacity[1] = self.get_inp(
                 BDL_ZoneKeywords.BASEBOARD_RATING
             )
 
         # Populate DOAS Terminal data elements if applicable
         if has_doas:
-            doas_system = self.rmd.bdl_obj_instances.get(
+            doas_system = self.get_obj(
                 self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
             )
             self.terminals_id[2] = self.u_name + " DOASTerminal"
@@ -270,14 +268,14 @@ class Zone(ChildNode):
             self.terminals_heating_capacity[2] = 0.0
             self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
             self.terminals_minimum_outdoor_airflow_multiplier_schedule[2] = (
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.MIN_AIR_SCH)
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
             )
             self.terminals_primary_airflow[2] = minimum_outdoor_airflow
             self.terminals_minimum_airflow[2] = minimum_outdoor_airflow
             if (
                 doas_system.fan_sys_fan_control
                 == FanSystemSupplyFanControlOptions.CONSTANT
-                or self.keyword_value_pairs.get(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
+                or self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
             ):
                 self.terminals_type[2] = TerminalOptions.CONSTANT_AIR_VOLUME
             # TODO: Account for zone minimum air flow schedule(s)
@@ -293,9 +291,9 @@ class Zone(ChildNode):
                 )
             )
             self.terminals_is_fan_first_stage_heat[0] = self.is_fan_first_stage_map.get(
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.ZONE_FAN_RUN)
+                self.get_inp(BDL_ZoneKeywords.ZONE_FAN_RUN)
             )
-            if self.keyword_value_pairs.get(BDL_ZoneKeywords.ZONE_FAN_FLOW):
+            if self.get_inp(BDL_ZoneKeywords.ZONE_FAN_FLOW):
                 self.terminal_fan_is_airflow_sized_based_on_design_day = False
             self.terminal_fan_specification_method = (
                 FanSpecificationMethodOptions.SIMPLE
@@ -321,18 +319,15 @@ class Zone(ChildNode):
             self.zone_exhaust_fan_id = self.u_name + " EF"
             self.zone_exhaust_fan_design_airflow = exhaust_airflow
             self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
-            if (
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_STATIC)
-                is not None
-            ):
+            if self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC) is not None:
                 self.zone_exhaust_fan_specification_method = (
                     FanSpecificationMethodOptions.DETAILED
                 )
                 self.zone_exhaust_fan_design_pressure_rise = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_STATIC)
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC)
                 )
                 self.zone_exhaust_fan_total_efficiency = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_EFF)
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_EFF)
                 )
                 zone_fan_power = output_data.get(
                     "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
@@ -351,7 +346,7 @@ class Zone(ChildNode):
                     FanSpecificationMethodOptions.SIMPLE
                 )
                 zone_ef_power_per_flow = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
                 )
                 self.zone_exhaust_fan_design_electric_power = (
                     zone_ef_power_per_flow * exhaust_airflow
@@ -464,7 +459,7 @@ class Zone(ChildNode):
             ),
         }
 
-        if self.keyword_value_pairs.get(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+        if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
             BDL_TerminalTypes.SERIES_PIU,
             BDL_TerminalTypes.PARALLEL_PIU,
         ]:
