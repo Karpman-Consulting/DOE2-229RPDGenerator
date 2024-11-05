@@ -270,6 +270,8 @@ class BDLEnums:
                 "TANK-VOLUME",
                 "AQUASTAT-SETPT-T",
                 "DHW-LOOP",
+                "ELEC-INPUT-RATIO",
+                "HEAT-INPUT-RATIO",
             ]
         ),
         "DoorKeywords": _ListEnum(
