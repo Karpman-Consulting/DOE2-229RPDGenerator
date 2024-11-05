@@ -1286,6 +1286,16 @@ class System(ParentNode):
             self.fan_design_pressure_rise[3] = self.try_float(
                 self.get_inp(BDL_SystemKeywords.HSUPPLY_STATIC)
             )
+            self.fan_motor_efficiency[3] = self.try_float(
+                self.get_inp(BDL_SystemKeywords.HSUPPLY_MTR_EFF)
+            )
+            hsupply_mech_eff = self.try_float(
+                self.get_inp(BDL_SystemKeywords.HSUPPLY_MECH_EFF)
+            )
+            if self.fan_motor_efficiency[3] and hsupply_mech_eff:
+                self.fan_total_efficiency[3] = (
+                    self.fan_motor_efficiency[3] * hsupply_mech_eff
+                )
 
     def populate_air_economizer(self):
         self.air_econ_id = self.u_name + " AirEconomizer"
