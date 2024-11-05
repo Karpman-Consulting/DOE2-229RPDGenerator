@@ -1,4 +1,9 @@
 {
     "name": "Test Case E-3 Specifications",
-    "json-test-key-paths": []
+    "json-test-key-paths": [
+        {
+        "json-key-path": "$.weather.climate_zone",
+        "compare-value": true
+        }
+    ]
 }
