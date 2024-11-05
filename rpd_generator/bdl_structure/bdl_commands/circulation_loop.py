@@ -643,10 +643,10 @@ class CirculationLoop(BaseNode):
 
         for circulation_loop_name in self.rmd.circulation_loop_names:
             circulation_loop = self.get_obj(circulation_loop_name)
-            primary_loop = circulation_loop.keyword_value_pairs.get(
+            primary_loop = circulation_loop.get_inp(
                 BDL_CirculationLoopKeywords.PRIMARY_LOOP
             )
-            valve_type = circulation_loop.keyword_value_pairs.get(
+            valve_type = circulation_loop.get_inp(
                 BDL_CirculationLoopKeywords.VALVE_TYPE_2ND
             )
             if (
@@ -658,24 +658,16 @@ class CirculationLoop(BaseNode):
         for system_name in self.rmd.system_names:
             system = self.get_obj(system_name)
             if loop_type == BDL_CirculationLoopTypes.CHW:
-                cooling_loop = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.CHW_LOOP
-                )
-                valve_type = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.CHW_VALVE_TYPE
-                )
+                cooling_loop = system.get_inp(BDL_SystemKeywords.CHW_LOOP)
+                valve_type = system.get_inp(BDL_SystemKeywords.CHW_VALVE_TYPE)
                 if (
                     cooling_loop == self.u_name
                     and valve_type == BDL_SystemCoolingValveTypes.TWO_WAY
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.HW:
-                heating_loop = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.HW_LOOP
-                )
-                valve_type = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.HW_VALVE_TYPE
-                )
+                heating_loop = system.get_inp(BDL_SystemKeywords.HW_LOOP)
+                valve_type = system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE)
                 if (
                     heating_loop == self.u_name
                     and valve_type == BDL_SystemHeatingValveTypes.TWO_WAY
@@ -684,18 +676,10 @@ class CirculationLoop(BaseNode):
             elif loop_type == BDL_CirculationLoopTypes.CW:
                 pass
             elif loop_type == BDL_CirculationLoopTypes.PIPE2:
-                cooling_loop = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.CHW_LOOP
-                )
-                heating_loop = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.HW_LOOP
-                )
-                cooling_valve_type = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.CHW_VALVE_TYPE
-                )
-                heating_valve_type = system.keyword_value_pairs.get(
-                    BDL_SystemKeywords.HW_VALVE_TYPE
-                )
+                cooling_loop = system.get_inp(BDL_SystemKeywords.CHW_LOOP)
+                heating_loop = system.get_inp(BDL_SystemKeywords.HW_LOOP)
+                cooling_valve_type = system.get_inp(BDL_SystemKeywords.CHW_VALVE_TYPE)
+                heating_valve_type = system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE)
                 if (
                     cooling_loop == self.u_name
                     and cooling_valve_type == BDL_SystemCoolingValveTypes.TWO_WAY
@@ -712,20 +696,16 @@ class CirculationLoop(BaseNode):
         for zone_name in self.rmd.zone_names:
             zone = self.get_obj(zone_name)
             if loop_type == BDL_CirculationLoopTypes.CHW:
-                cooling_loop = zone.keyword_value_pairs.get(BDL_ZoneKeywords.CHW_LOOP)
-                valve_type = zone.keyword_value_pairs.get(
-                    BDL_ZoneKeywords.CHW_VALVE_TYPE
-                )
+                cooling_loop = zone.get_inp(BDL_ZoneKeywords.CHW_LOOP)
+                valve_type = zone.get_inp(BDL_ZoneKeywords.CHW_VALVE_TYPE)
                 if (
                     cooling_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.HW:
-                heating_loop = zone.keyword_value_pairs.get(BDL_ZoneKeywords.HW_LOOP)
-                valve_type = zone.keyword_value_pairs.get(
-                    BDL_ZoneKeywords.HW_VALVE_TYPE
-                )
+                heating_loop = zone.get_inp(BDL_ZoneKeywords.HW_LOOP)
+                valve_type = zone.get_inp(BDL_ZoneKeywords.HW_VALVE_TYPE)
                 if (
                     heating_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
@@ -735,22 +715,18 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.CW,
                 BDL_CirculationLoopTypes.WLHP,
             ]:
-                condensing_loop = zone.keyword_value_pairs.get(BDL_ZoneKeywords.CW_LOOP)
-                has_valve = zone.keyword_value_pairs.get(BDL_ZoneKeywords.CW_VALVE)
+                condensing_loop = zone.get_inp(BDL_ZoneKeywords.CW_LOOP)
+                has_valve = zone.get_inp(BDL_ZoneKeywords.CW_VALVE)
                 if (
                     condensing_loop == self.u_name
                     and has_valve == BDL_ZoneCondenserValveOptions.YES
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.PIPE2:
-                heating_loop = zone.keyword_value_pairs.get(BDL_ZoneKeywords.HW_LOOP)
-                cooling_loop = zone.keyword_value_pairs.get(BDL_ZoneKeywords.CHW_LOOP)
-                heating_valve_type = zone.keyword_value_pairs.get(
-                    BDL_ZoneKeywords.HW_VALVE_TYPE
-                )
-                cooling_valve_type = zone.keyword_value_pairs.get(
-                    BDL_ZoneKeywords.CHW_VALVE_TYPE
-                )
+                heating_loop = zone.get_inp(BDL_ZoneKeywords.HW_LOOP)
+                cooling_loop = zone.get_inp(BDL_ZoneKeywords.CHW_LOOP)
+                heating_valve_type = zone.get_inp(BDL_ZoneKeywords.HW_VALVE_TYPE)
+                cooling_valve_type = zone.get_inp(BDL_ZoneKeywords.CHW_VALVE_TYPE)
                 if (
                     heating_loop == self.u_name
                     and heating_valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
@@ -765,52 +741,34 @@ class CirculationLoop(BaseNode):
         for chiller_name in self.rmd.chiller_names:
             chiller = self.get_obj(chiller_name)
             if loop_type == BDL_CirculationLoopTypes.CHW:
-                cooling_loop = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CHW_LOOP
-                )
-                valve_type = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CHW_FLOW_CTRL
-                )
+                cooling_loop = chiller.get_inp(BDL_ChillerKeywords.CHW_LOOP)
+                valve_type = chiller.get_inp(BDL_ChillerKeywords.CHW_FLOW_CTRL)
                 if (
                     cooling_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.HW:
-                heating_loop = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.HTREC_LOOP
-                )
-                valve_type = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.HTREC_FLOW_CTRL
-                )
+                heating_loop = chiller.get_inp(BDL_ChillerKeywords.HTREC_LOOP)
+                valve_type = chiller.get_inp(BDL_ChillerKeywords.HTREC_FLOW_CTRL)
                 if (
                     heating_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.CW:
-                condensing_loop = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CW_LOOP
-                )
-                valve_type = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CW_FLOW_CTRL
-                )
+                condensing_loop = chiller.get_inp(BDL_ChillerKeywords.CW_LOOP)
+                valve_type = chiller.get_inp(BDL_ChillerKeywords.CW_FLOW_CTRL)
                 if (
                     condensing_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.PIPE2:
-                cooling_loop = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CHW_LOOP
-                )
-                heating_loop = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.HTREC_LOOP
-                )
-                cooling_valve_type = chiller.keyword_value_pairs.get(
-                    BDL_ChillerKeywords.CHW_FLOW_CTRL
-                )
-                heating_valve_type = chiller.keyword_value_pairs.get(
+                cooling_loop = chiller.get_inp(BDL_ChillerKeywords.CHW_LOOP)
+                heating_loop = chiller.get_inp(BDL_ChillerKeywords.HTREC_LOOP)
+                cooling_valve_type = chiller.get_inp(BDL_ChillerKeywords.CHW_FLOW_CTRL)
+                heating_valve_type = chiller.get_inp(
                     BDL_ChillerKeywords.HTREC_FLOW_CTRL
                 )
                 if (
@@ -839,12 +797,8 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.PIPE2,
                 BDL_CirculationLoopTypes.WLHP,
             ]:
-                heating_loop = boiler.keyword_value_pairs.get(
-                    BDL_BoilerKeywords.HW_LOOP
-                )
-                valve_type = boiler.keyword_value_pairs.get(
-                    BDL_BoilerKeywords.HW_FLOW_CTRL
-                )
+                heating_loop = boiler.get_inp(BDL_BoilerKeywords.HW_LOOP)
+                valve_type = boiler.get_inp(BDL_BoilerKeywords.HW_FLOW_CTRL)
                 if (
                     heating_loop == self.u_name
                     and valve_type == BDL_FlowControlOptions.VARIABLE_FLOW
@@ -865,10 +819,10 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.CW,
                 BDL_CirculationLoopTypes.WLHP,
             ]:
-                condensing_loop = heat_rejection.keyword_value_pairs.get(
+                condensing_loop = heat_rejection.get_inp(
                     BDL_HeatRejectionKeywords.CW_LOOP
                 )
-                valve_type = heat_rejection.keyword_value_pairs.get(
+                valve_type = heat_rejection.get_inp(
                     BDL_HeatRejectionKeywords.CW_FLOW_CTRL
                 )
                 if (
@@ -890,10 +844,10 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.CW,
                 BDL_CirculationLoopTypes.WLHP,
             ]:
-                condensing_loop = ground_loop_hx.keyword_value_pairs.get(
+                condensing_loop = ground_loop_hx.get_inp(
                     BDL_GroundLoopHXKeywords.CIRCULATION_LOOP
                 )
-                valve_type = ground_loop_hx.keyword_value_pairs.get(
+                valve_type = ground_loop_hx.get_inp(
                     BDL_GroundLoopHXKeywords.HX_FLOW_CTRL
                 )
                 if (
@@ -907,9 +861,7 @@ class CirculationLoop(BaseNode):
     def is_loop_operation_continuous(self):
         for system_name in self.rmd.system_names:
             system = self.get_obj(system_name)
-            system_fan_schedule = system.keyword_value_pairs.get(
-                BDL_SystemKeywords.FAN_SCHEDULE
-            )
+            system_fan_schedule = system.get_inp(BDL_SystemKeywords.FAN_SCHEDULE)
             if system_fan_schedule:
                 if self.is_operation_schedule_continuous(system_fan_schedule):
                     return True
@@ -933,7 +885,7 @@ class CirculationLoop(BaseNode):
         sequence = []
         for i in range(1, 6):  # Loop through BOILERS_1 to BOILERS_5
             load_range_key = getattr(BDL_EquipCtrlKeywords, f"BOILERS_{i}")
-            load_range_seq = equip_ctrl.keyword_value_pairs.get(load_range_key)
+            load_range_seq = equip_ctrl.get_inp(load_range_key)
 
             if not load_range_seq:
                 continue

@@ -73,7 +73,7 @@ class Window(ChildNode):
                 )
 
         if (
-            self.parent.keyword_value_pairs.get(BDL_ExteriorWallKeywords.LOCATION)
+            self.parent.get_inp(BDL_ExteriorWallKeywords.LOCATION)
             == BDL_WallLocationOptions.TOP
         ):
             self.classification = SubsurfaceClassificationOptions.SKYLIGHT

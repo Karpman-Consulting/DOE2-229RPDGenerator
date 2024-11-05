@@ -105,7 +105,7 @@ class DomesticWaterHeater(BaseNode):
             if fuel_meter is None:
                 master_meters = self.get_obj(self.rmd.master_meters)
                 if master_meters:
-                    dhw_fuel_meter_name = master_meters.keyword_value_pairs.get(
+                    dhw_fuel_meter_name = master_meters.get_inp(
                         BDL_MasterMeterKeywords.DHW_FUEL_METER
                     )
                     dhw_fuel_meter = self.get_obj(dhw_fuel_meter_name)

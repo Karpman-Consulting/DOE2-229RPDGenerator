@@ -169,9 +169,7 @@ class Zone(ChildNode):
             None,
             BDL_BaseboardControlOptions.NONE,
         ]
-        has_doas = bool(
-            self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
-        )
+        has_doas = bool(self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM))
         is_piu = self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
             BDL_TerminalTypes.SERIES_PIU,
             BDL_TerminalTypes.PARALLEL_PIU,
@@ -194,10 +192,7 @@ class Zone(ChildNode):
         )
 
         # if the zone is served by a SUM system don't populate the data elements below
-        if (
-            self.parent.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-            == BDL_SystemTypes.SUM
-        ):
+        if self.parent.get_inp(BDL_SystemKeywords.TYPE) == BDL_SystemTypes.SUM:
             return
 
         requests = self.get_output_requests()
@@ -220,7 +215,7 @@ class Zone(ChildNode):
                 self.parent.u_name
             )
             self.terminals_heating_source[0] = self.heat_source_map.get(
-                self.parent.keyword_value_pairs.get(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
+                self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
             )
             self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
             self.terminals_primary_airflow[0] = supply_airflow
@@ -256,7 +251,7 @@ class Zone(ChildNode):
             self.terminals_heating_source[1] = self.heat_source_map.get(
                 self.get_inp(BDL_ZoneKeywords.BASEBOARD_SOURCE)
             )
-            self.terminals_heating_from_loop[1] = self.parent.keyword_value_pairs.get(
+            self.terminals_heating_from_loop[1] = self.parent.get_inp(
                 BDL_SystemKeywords.BBRD_LOOP
             )
             self.terminals_heating_capacity[1] = self.get_inp(
@@ -266,7 +261,7 @@ class Zone(ChildNode):
         # Populate DOAS Terminal data elements if applicable
         if has_doas:
             doas_system = self.get_obj(
-                self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
+                self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM)
             )
             self.terminals_id[2] = self.u_name + " DOASTerminal"
             self.terminals_cooling_capacity[2] = 0.0
@@ -333,36 +328,24 @@ class Zone(ChildNode):
                 )
                 self.terminal_fan_specification_method = (
                     FanSpecificationMethodOptions.DETAILED
-                    if self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.SUPPLY_STATIC
-                    )
-                    is not None
+                    if self.parent.get_inp(BDL_SystemKeywords.SUPPLY_STATIC) is not None
                     else FanSpecificationMethodOptions.SIMPLE
                 )
                 self.terminal_fan_design_pressure_rise = self.try_float(
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.SUPPLY_STATIC
-                    )
+                    self.parent.get_inp(BDL_SystemKeywords.SUPPLY_STATIC)
                 )
                 self.terminal_fan_motor_efficiency = self.try_float(
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.SUPPLY_MTR_EFF
-                    )
+                    self.parent.get_inp(BDL_SystemKeywords.SUPPLY_MTR_EFF)
                 )
                 supply_mech_eff = self.try_float(
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.SUPPLY_MECH_EFF
-                    )
+                    self.parent.get_inp(BDL_SystemKeywords.SUPPLY_MECH_EFF)
                 )
                 if self.terminal_fan_motor_efficiency and supply_mech_eff:
                     self.terminal_fan_total_efficiency = (
                         self.terminal_fan_motor_efficiency * supply_mech_eff
                     )
 
-            if (
-                self.parent.keyword_value_pairs.get(BDL_SystemKeywords.SUPPLY_FLOW)
-                is not None
-            ):
+            if self.parent.get_inp(BDL_SystemKeywords.SUPPLY_FLOW) is not None:
                 self.terminal_fan_is_airflow_sized_based_on_design_day = False
             if self.terminal_fan_is_airflow_sized_based_on_design_day is None:
                 self.terminal_fan_is_airflow_sized_based_on_design_day = (
@@ -381,11 +364,7 @@ class Zone(ChildNode):
 
             # Terminal Heating/Cooling Capacity uses the same output_data keywords whether the parent is zonal or not
             self.terminals_heating_capacity[0] = self.try_abs(
-                self.try_float(
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.HEATING_CAPACITY
-                    )
-                )
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.HEATING_CAPACITY))
             )
             if not self.terminals_heating_capacity[0]:
                 self.terminals_heating_capacity[0] = self.try_abs(
@@ -396,11 +375,7 @@ class Zone(ChildNode):
                     output_data.get("Heating Capacity")
                 )
             self.terminals_cooling_capacity[0] = self.try_abs(
-                self.try_float(
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.COOLING_CAPACITY
-                    )
-                )
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.COOLING_CAPACITY))
             )
             if not self.terminals_cooling_capacity[0]:
                 self.terminals_cooling_capacity[0] = self.try_abs(

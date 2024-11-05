@@ -75,10 +75,10 @@ class ExteriorWall(ChildNode, ParentNode):
             self.classification = SurfaceClassificationOptions.WALL
 
         parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.keyword_value_pairs.get(BDL_FloorKeywords.AZIMUTH)
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
         parent_space_azimuth = self.parent.try_float(
-            self.parent.keyword_value_pairs.get(BDL_SpaceKeywords.AZIMUTH)
+            self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AZIMUTH))
         self.azimuth = (
@@ -112,9 +112,7 @@ class ExteriorWall(ChildNode, ParentNode):
         construction = self.get_obj(self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION))
         if construction is not None:
             self.absorptance_solar_exterior = self.try_float(
-                construction.keyword_value_pairs.get(
-                    BDL_ConstructionKeywords.ABSORPTANCE
-                )
+                construction.get_inp(BDL_ConstructionKeywords.ABSORPTANCE)
             )
 
     # def get_output_requests(self):

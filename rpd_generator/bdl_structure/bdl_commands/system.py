@@ -1016,12 +1016,8 @@ class System(ParentNode):
         if self.is_zonal_system:
             self.heat_sys_is_sized_based_on_design_day = (
                 not self.get_inp(BDL_SystemKeywords.HEATING_CAPACITY)
-                and not self.children[0].keyword_value_pairs.get(
-                    BDL_ZoneKeywords.MAX_HEAT_RATE
-                )
-                and not self.children[0].keyword_value_pairs.get(
-                    BDL_ZoneKeywords.HEATING_CAPACITY
-                )
+                and not self.children[0].get_inp(BDL_ZoneKeywords.MAX_HEAT_RATE)
+                and not self.children[0].get_inp(BDL_ZoneKeywords.HEATING_CAPACITY)
             )
         else:
             self.heat_sys_is_sized_based_on_design_day = not self.get_inp(
@@ -1108,12 +1104,8 @@ class System(ParentNode):
         if self.is_zonal_system:
             self.cool_sys_is_sized_based_on_design_day = (
                 not self.get_inp(BDL_SystemKeywords.COOLING_CAPACITY)
-                and not self.children[0].keyword_value_pairs.get(
-                    BDL_ZoneKeywords.MAX_COOL_RATE
-                )
-                and not self.children[0].keyword_value_pairs.get(
-                    BDL_ZoneKeywords.COOLING_CAPACITY
-                )
+                and not self.children[0].get_inp(BDL_ZoneKeywords.MAX_COOL_RATE)
+                and not self.children[0].get_inp(BDL_ZoneKeywords.COOLING_CAPACITY)
             )
         else:
             self.cool_sys_is_sized_based_on_design_day = not self.get_inp(
@@ -1166,24 +1158,14 @@ class System(ParentNode):
             self.fan_is_airflow_sized_based_on_design_day[0] = (
                 # If any zone served by the system has assigned flow rates, the fan is not sized based on design day
                 not any(
-                    child_zone.keyword_value_pairs.get(BDL_ZoneKeywords.ASSIGNED_FLOW)
-                    or child_zone.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.HASSIGNED_FLOW
-                    )
-                    or child_zone.keyword_value_pairs.get(BDL_ZoneKeywords.FLOW_AREA)
-                    or child_zone.keyword_value_pairs.get(BDL_ZoneKeywords.HFLOW_AREA)
-                    or child_zone.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.AIR_CHANGES_HR
-                    )
-                    or child_zone.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.HAIR_CHANGES_HR
-                    )
-                    or child_zone.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.MIN_FLOW_AREA
-                    )
-                    or child_zone.keyword_value_pairs.get(
-                        BDL_ZoneKeywords.HMIN_FLOW_AREA
-                    )
+                    child_zone.get_inp(BDL_ZoneKeywords.ASSIGNED_FLOW)
+                    or child_zone.get_inp(BDL_ZoneKeywords.HASSIGNED_FLOW)
+                    or child_zone.get_inp(BDL_ZoneKeywords.FLOW_AREA)
+                    or child_zone.get_inp(BDL_ZoneKeywords.HFLOW_AREA)
+                    or child_zone.get_inp(BDL_ZoneKeywords.AIR_CHANGES_HR)
+                    or child_zone.get_inp(BDL_ZoneKeywords.HAIR_CHANGES_HR)
+                    or child_zone.get_inp(BDL_ZoneKeywords.MIN_FLOW_AREA)
+                    or child_zone.get_inp(BDL_ZoneKeywords.HMIN_FLOW_AREA)
                     for child_zone in self.children
                 )
             )
@@ -1289,18 +1271,10 @@ class System(ParentNode):
                 self.fan_is_airflow_sized_based_on_design_day[3] = (
                     # If any zone served by the system has assigned flow rates, the fan is not sized based on design day
                     any(
-                        child_zone.keyword_value_pairs.get(
-                            BDL_ZoneKeywords.HASSIGNED_FLOW
-                        )
-                        or child_zone.keyword_value_pairs.get(
-                            BDL_ZoneKeywords.HFLOW_AREA
-                        )
-                        or child_zone.keyword_value_pairs.get(
-                            BDL_ZoneKeywords.HAIR_CHANGES_HR
-                        )
-                        or child_zone.keyword_value_pairs.get(
-                            BDL_ZoneKeywords.HMIN_FLOW_AREA
-                        )
+                        child_zone.get_inp(BDL_ZoneKeywords.HASSIGNED_FLOW)
+                        or child_zone.get_inp(BDL_ZoneKeywords.HFLOW_AREA)
+                        or child_zone.get_inp(BDL_ZoneKeywords.HAIR_CHANGES_HR)
+                        or child_zone.get_inp(BDL_ZoneKeywords.HMIN_FLOW_AREA)
                         for child_zone in self.children
                     )
                 )
@@ -1392,9 +1366,7 @@ class System(ParentNode):
             if not self.fan_sys_minimum_outdoor_airflow:
                 return FanSystemOperationOptions.CYCLING
 
-            min_oa_sch_name = self.keyword_value_pairs.get(
-                BDL_SystemKeywords.MIN_AIR_SCH
-            )
+            min_oa_sch_name = self.get_inp(BDL_SystemKeywords.MIN_AIR_SCH)
             fan_sch = self.rmd.bdl_obj_instances.get(fan_sch_name)
             min_oa_sch = self.rmd.bdl_obj_instances.get(min_oa_sch_name)
             if not min_oa_sch:
@@ -1416,7 +1388,7 @@ class System(ParentNode):
                             return FanSystemOperationOptions.CYCLING
                     return FanSystemOperationOptions.CONTINUOUS
 
-        elif self.keyword_value_pairs.get(BDL_SystemKeywords.TYPE) in [
+        elif self.get_inp(BDL_SystemKeywords.TYPE) in [
             BDL_SystemTypes.PSZ,
             BDL_SystemTypes.PVVT,
             BDL_SystemTypes.RESYS2,
@@ -1425,7 +1397,7 @@ class System(ParentNode):
             BDL_SystemTypes.SZRH,
         ]:
             return self.occupied_fan_operation_map.get(
-                self.keyword_value_pairs.get(BDL_SystemKeywords.INDOOR_FAN_MODE)
+                self.get_inp(BDL_SystemKeywords.INDOOR_FAN_MODE)
             )
 
         else:
@@ -1484,9 +1456,7 @@ class System(ParentNode):
             master_meters = self.get_obj(self.rmd.master_meters)
             if master_meters:
                 heat_fuel_meter = self.get_obj(
-                    master_meters.keyword_value_pairs.get(
-                        BDL_MasterMeterKeywords.HEAT_FUEL_METER
-                    )
+                    master_meters.get_inp(BDL_MasterMeterKeywords.HEAT_FUEL_METER)
                 )
                 if heat_fuel_meter:
                     return heat_fuel_meter.fuel_type

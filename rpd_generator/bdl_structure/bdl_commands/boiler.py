@@ -73,9 +73,7 @@ class Boiler(BaseNode):
             master_meters = self.get_obj(self.rmd.master_meters)
             if master_meters:
                 heat_fuel_meter = self.get_obj(
-                    master_meters.keyword_value_pairs.get(
-                        BDL_MasterMeterKeywords.HEAT_FUEL_METER
-                    )
+                    master_meters.get_inp(BDL_MasterMeterKeywords.HEAT_FUEL_METER)
                 )
                 if heat_fuel_meter:
                     fuel_type = heat_fuel_meter.fuel_type
@@ -264,12 +262,7 @@ class Boiler(BaseNode):
         hw_loop_equip_ctrls = []
         for equip_ctrl_name in self.rmd.equip_ctrl_names:
             equip_ctrl = self.get_obj(equip_ctrl_name)
-            if (
-                equip_ctrl.keyword_value_pairs.get(
-                    BDL_EquipCtrlKeywords.CIRCULATION_LOOP
-                )
-                == self.loop
-            ):
+            if equip_ctrl.get_inp(BDL_EquipCtrlKeywords.CIRCULATION_LOOP) == self.loop:
                 hw_loop_equip_ctrls.append(equip_ctrl)
 
         if len(hw_loop_equip_ctrls) > 1:
