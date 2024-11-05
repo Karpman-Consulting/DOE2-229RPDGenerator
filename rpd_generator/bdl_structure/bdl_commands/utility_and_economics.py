@@ -54,7 +54,7 @@ class FuelMeter(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate data elements for FuelMeter object."""
-        fuel_meter_type = self.keyword_value_pairs.get(BDL_FuelMeterKeywords.TYPE)
+        fuel_meter_type = self.get_inp(BDL_FuelMeterKeywords.TYPE)
         self.fuel_type = self.fuel_type_map.get(fuel_meter_type)
 
 
@@ -116,9 +116,7 @@ class SteamMeter(BaseNode):
 
     def populate_data_elements(self):
         """Populate data elements for ExternalFluidSource object."""
-        self.loop = self.keyword_value_pairs.get(
-            BDL_SteamAndCHWaterMeterKeywords.CIRCULATION_LOOP
-        )
+        self.loop = self.get_inp(BDL_SteamAndCHWaterMeterKeywords.CIRCULATION_LOOP)
 
     def populate_data_group(self):
         """Populate schema structure for ExternalFluidSource object."""
@@ -165,9 +163,7 @@ class CHWMeter(BaseNode):
 
     def populate_data_elements(self):
         """Populate data elements for ExternalFluidSource object."""
-        self.loop = self.keyword_value_pairs.get(
-            BDL_SteamAndCHWaterMeterKeywords.CIRCULATION_LOOP
-        )
+        self.loop = self.get_inp(BDL_SteamAndCHWaterMeterKeywords.CIRCULATION_LOOP)
 
     def populate_data_group(self):
         """Populate schema structure for ExternalFluidSource object."""

@@ -60,13 +60,11 @@ class Window(ChildNode):
 
     def populate_data_elements(self):
         """Populate data elements for window object."""
-        height = self.try_float(self.keyword_value_pairs.get(BDL_WindowKeywords.HEIGHT))
-        width = self.try_float(self.keyword_value_pairs.get(BDL_WindowKeywords.WIDTH))
+        height = self.try_float(self.get_inp(BDL_WindowKeywords.HEIGHT))
+        width = self.try_float(self.get_inp(BDL_WindowKeywords.WIDTH))
         if height is not None and width is not None:
             self.glazed_area = height * width
-            frame_width = self.try_float(
-                self.keyword_value_pairs.get(BDL_WindowKeywords.FRAME_WIDTH)
-            )
+            frame_width = self.try_float(self.get_inp(BDL_WindowKeywords.FRAME_WIDTH))
             if frame_width is None or frame_width == 0.0:
                 self.opaque_area = 0
             else:
@@ -75,38 +73,32 @@ class Window(ChildNode):
                 )
 
         if (
-            self.parent.keyword_value_pairs.get(BDL_ExteriorWallKeywords.LOCATION)
+            self.parent.get_inp(BDL_ExteriorWallKeywords.LOCATION)
             == BDL_WallLocationOptions.TOP
         ):
             self.classification = SubsurfaceClassificationOptions.SKYLIGHT
         else:
             self.classification = SubsurfaceClassificationOptions.WINDOW
 
-        glass_type_name = self.keyword_value_pairs.get(BDL_WindowKeywords.GLASS_TYPE)
-        glass_type = self.rmd.bdl_obj_instances.get(glass_type_name)
+        glass_type_name = self.get_inp(BDL_WindowKeywords.GLASS_TYPE)
+        glass_type = self.get_obj(glass_type_name)
         if glass_type is not None:
             self.u_factor = glass_type.u_factor
             self.visible_transmittance = glass_type.visible_transmittance
             if glass_type.shading_coefficient is not None:
                 self.solar_heat_gain_coefficient = glass_type.shading_coefficient / 1.15
 
-        left_fin_depth = self.try_float(
-            self.keyword_value_pairs.get(BDL_WindowKeywords.LEFT_FIN_D)
-        )
-        right_fin_depth = self.try_float(
-            self.keyword_value_pairs.get(BDL_WindowKeywords.RIGHT_FIN_D)
-        )
+        left_fin_depth = self.try_float(self.get_inp(BDL_WindowKeywords.LEFT_FIN_D))
+        right_fin_depth = self.try_float(self.get_inp(BDL_WindowKeywords.RIGHT_FIN_D))
         if left_fin_depth not in [None, 0.0] or right_fin_depth not in [None, 0.0]:
             self.has_shading_sidefins = True
-        overhang_depth = self.keyword_value_pairs.get(BDL_WindowKeywords.OVERHANG_D)
+        overhang_depth = self.get_inp(BDL_WindowKeywords.OVERHANG_D)
         if overhang_depth not in [None, 0.0]:
             self.depth_of_overhang = overhang_depth
             self.has_shading_overhang = True
 
-        shade_schedule = self.keyword_value_pairs.get(
-            BDL_WindowKeywords.SHADING_SCHEDULE
-        )
-        shade_type = self.keyword_value_pairs.get(BDL_WindowKeywords.WIN_SHADE_TYPE)
+        shade_schedule = self.get_inp(BDL_WindowKeywords.SHADING_SCHEDULE)
+        shade_type = self.get_inp(BDL_WindowKeywords.WIN_SHADE_TYPE)
         if shade_type is not None:
             adjustable_shade = shade_type.startswith("MOVABLE-")
             if shade_schedule is not None and adjustable_shade:
@@ -153,5 +145,5 @@ class Window(ChildNode):
 
     def insert_to_rpd(self, rmd):
         """Insert window object into the rpd data structure."""
-        surface = rmd.bdl_obj_instances.get(self.parent.u_name)
+        surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.window_data_structure)

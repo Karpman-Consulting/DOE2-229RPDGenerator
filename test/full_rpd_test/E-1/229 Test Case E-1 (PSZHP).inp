@@ -1301,7 +1301,6 @@ SET-DEFAULT FOR ZONE
    ..
 "Perimeter Zone 1 (South)" = ZONE            
    TYPE             = CONDITIONED
-   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
@@ -1346,7 +1345,6 @@ SET-DEFAULT FOR ZONE
    ..
 "Perimeter Zone 2 (East)" = ZONE            
    TYPE             = CONDITIONED
-   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
@@ -1391,7 +1389,6 @@ SET-DEFAULT FOR ZONE
    ..
 "Perimeter Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
-   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
@@ -1436,7 +1433,6 @@ SET-DEFAULT FOR ZONE
    ..
 "Perimeter Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
-   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
@@ -1481,7 +1477,6 @@ SET-DEFAULT FOR ZONE
    ..
 "Core Zone 1 (Core)" = ZONE            
    TYPE             = CONDITIONED
-   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75

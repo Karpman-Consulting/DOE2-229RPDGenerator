@@ -57,22 +57,14 @@ class BelowGradeWall(ChildNode):
     def populate_data_elements(self):
         """Populate data elements for below grade wall object."""
 
-        self.area = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.AREA)
-        )
+        self.area = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.AREA))
         if self.area is None:
-            height = self.try_float(
-                self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.HEIGHT)
-            )
-            width = self.try_float(
-                self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.WIDTH)
-            )
+            height = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.HEIGHT))
+            width = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.WIDTH))
             if height is not None and width is not None:
                 self.area = height * width
 
-        self.tilt = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.TILT)
-        )
+        self.tilt = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.TILT))
         if self.tilt is not None and self.tilt < self.CEILING_TILT_THRESHOLD:
             self.classification = SurfaceClassificationOptions.CEILING
         elif self.tilt is not None and self.tilt >= self.FLOOR_TILT_THRESHOLD:
@@ -81,13 +73,13 @@ class BelowGradeWall(ChildNode):
             self.classification = SurfaceClassificationOptions.WALL
 
         parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.keyword_value_pairs.get(BDL_FloorKeywords.AZIMUTH)
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
         parent_space_azimuth = self.parent.try_float(
-            self.parent.keyword_value_pairs.get(BDL_SpaceKeywords.AZIMUTH)
+            self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.AZIMUTH)
+            self.get_inp(BDL_UndergroundWallKeywords.AZIMUTH)
         )
         self.azimuth = (
             self.rmd.building_azimuth
@@ -101,15 +93,15 @@ class BelowGradeWall(ChildNode):
         self.adjacent_to = SurfaceAdjacencyOptions.GROUND
 
         self.does_cast_shade = self.boolean_map.get(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.SHADING_SURFACE)
+            self.get_inp(BDL_UndergroundWallKeywords.SHADING_SURFACE)
         )
 
         self.absorptance_solar_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.INSIDE_SOL_ABS)
+            self.get_inp(BDL_UndergroundWallKeywords.INSIDE_SOL_ABS)
         )
 
         reflectance_visible_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.INSIDE_VIS_REFL)
+            self.get_inp(BDL_UndergroundWallKeywords.INSIDE_VIS_REFL)
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
@@ -118,7 +110,7 @@ class BelowGradeWall(ChildNode):
     #     requests = {}
     #     if (
     #         self.area is None
-    #         and self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.LOCATION)
+    #         and self.get_inp(BDL_UndergroundWallKeywords.LOCATION)
     #         == BDL_WallLocationOptions.TOP
     #     ):
     #         requests["Roof Area"] = (1105003, "", self.u_name)
@@ -126,8 +118,8 @@ class BelowGradeWall(ChildNode):
 
     def populate_data_group(self):
         """Populate schema structure for below grade wall object."""
-        self.construction = self.rmd.bdl_obj_instances.get(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.CONSTRUCTION)
+        self.construction = self.get_obj(
+            self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
         ).construction_data_structure
 
         optical_property_attributes = [

@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           10/18/2024    13:59:44  BDL RUN   2
+                           10/26/2024    20:08:24  BDL RUN   2
 
 
 
@@ -2480,18 +2480,18 @@
 -INPUT - -                                              VALUES           =                      80.0600 F
      * 475 * "OA Reset Day" = DAY-SCHEDULE-PD
      * 476 *    TYPE             = RESET-TEMP
-     * 477 *    OUTSIDE-HI       = 60
-     * 478 *    OUTSIDE-LO       = 80
-     * 479 *    SUPPLY-HI        = 44
-     * 480 *    SUPPLY-LO        = 54
+     * 477 *    OUTSIDE-HI       = 80
+     * 478 *    OUTSIDE-LO       = 60
+     * 479 *    SUPPLY-HI        = 54
+     * 480 *    SUPPLY-LO        = 44
      * 481 *    ..
 
 -NOTE- - -         DATA FOR     OA Reset Day
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = RESET-TEMP
--INPUT - -                                              OUTSIDE-HI       =                      60.0000 F
--INPUT - -                                              OUTSIDE-LO       =                      80.0000 F
--INPUT - -                                              SUPPLY-HI        =                      44.0000 F
--INPUT - -                                              SUPPLY-LO        =                      54.0000 F
+-INPUT - -                                              OUTSIDE-HI       =                      80.0000 F
+-INPUT - -                                              OUTSIDE-LO       =                      60.0000 F
+-INPUT - -                                              SUPPLY-HI        =                      54.0000 F
+-INPUT - -                                              SUPPLY-LO        =                      44.0000 F
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  DAY-HOURS        =                       1.0000
 -DEFAULT -                                              DAY-HOURS        =                      24.0000
      * 482 * "Fan Sched Saturday" = DAY-SCHEDULE-PD
@@ -8580,7 +8580,7 @@
             wall and floor, a delayed wall and ceiling, or a delayed ceiling and
             floor for custom weighting factors to be calculated. ASHRAE
             weighting factors with floor weight of 70 lb/ft2 (342 kg/m2) will be
-            used for this space.229 Test Case 1 updated                                                                   10/18/2024    13:59:44  BDL  RUN 2
+            used for this space.229 Test Case 1 updated                                                                   10/26/2024    20:08:24  BDL  RUN 2
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
