@@ -93,14 +93,11 @@ class DomesticWaterHeater(BaseNode):
         self.heater_type = self.heater_type_map.get(
             self.get_inp(BDL_DWHeaterKeywords.TYPE)
         )
-
         if self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.ELEC:
             self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
-
         else:
             fuel_meter_ref = self.get_inp(BDL_DWHeaterKeywords.FUEL_METER)
             fuel_meter = self.get_obj(fuel_meter_ref)
-
             # If the fuel meter is not found, then it must be a MasterMeter.
             if fuel_meter is None:
                 master_meters = self.get_obj(self.rmd.master_meters)
@@ -113,13 +110,10 @@ class DomesticWaterHeater(BaseNode):
                         self.heater_fuel_type = dhw_fuel_meter.fuel_type
             else:
                 self.heater_fuel_type = fuel_meter.fuel_type
-
         self.distribution_system = self.get_inp(BDL_DWHeaterKeywords.DHW_LOOP)
-
         self.rated_capacity = self.try_abs(
             self.try_float(output_data.get("DW Heaters - Design Parameters - Capacity"))
         )
-
         loop = self.get_obj(self.distribution_system)
         loop_stpt = None
         if loop is not None:
@@ -129,16 +123,20 @@ class DomesticWaterHeater(BaseNode):
             self.setpoint_temperature = max(loop_stpt, tank_stpt)
         elif tank_stpt is None:
             self.setpoint_temperature = loop_stpt
-
         self.storage_capacity = self.try_float(
             self.get_inp(BDL_DWHeaterKeywords.TANK_VOLUME)
         )
-
         self.location = self.location_map.get(
             self.get_inp(BDL_DWHeaterKeywords.LOCATION)
         )
-
         self.location_zone = self.get_inp(BDL_DWHeaterKeywords.ZONE_NAME)
+        self.thermal_efficiency = 1 / (
+            (self.try_float(self.get_inp(BDL_DWHeaterKeywords.HEAT_INPUT_RATIO)) or 1.0)
+            * (
+                self.try_float(self.get_inp(BDL_DWHeaterKeywords.ELEC_INPUT_RATIO))
+                or 1.0
+            )
+        )
 
     def get_output_requests(self):
         """Get the output requests for the domestic water heater object."""
