@@ -210,98 +210,6 @@ class Zone(ChildNode):
 
         # Populate MainTerminal data elements
         self.terminals_id[0] = self.u_name + " MainTerminal"
-        if not self.parent.is_terminal:
-            self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
-                self.parent.u_name
-            )
-            self.terminals_heating_source[0] = self.heat_source_map.get(
-                self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
-            )
-            self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
-            self.terminals_primary_airflow[0] = supply_airflow
-            self.terminals_heating_capacity[0] = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
-            )
-            self.terminals_cooling_capacity[0] = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
-            )
-            self.terminals_cooling_source[0] = (
-                CoolingSourceOptions.CHILLED_WATER
-                if self.terminals_cooling_capacity[0]
-                else None
-            )
-            if supply_airflow is not None and minimum_airflow_ratio is not None:
-                self.terminals_minimum_airflow[0] = (
-                    supply_airflow * minimum_airflow_ratio
-                )
-
-        if not has_doas:
-            self.terminals_minimum_outdoor_airflow[0] = minimum_outdoor_airflow
-            self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
-                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
-            )
-
-        # Populate Baseboard Terminal data elements if applicable
-        if has_baseboard:
-            self.terminals_id[1] = self.u_name + " BaseboardTerminal"
-            self.terminals_type[1] = TerminalOptions.BASEBOARD
-            self.terminals_is_supply_ducted[1] = False
-            self.terminals_has_demand_control_ventilation[1] = False
-            self.terminals_cooling_capacity[1] = 0.0
-            self.terminals_heating_source[1] = self.heat_source_map.get(
-                self.get_inp(BDL_ZoneKeywords.BASEBOARD_SOURCE)
-            )
-            self.terminals_heating_from_loop[1] = self.parent.get_inp(
-                BDL_SystemKeywords.BBRD_LOOP
-            )
-            self.terminals_heating_capacity[1] = self.get_inp(
-                BDL_ZoneKeywords.BASEBOARD_RATING
-            )
-
-        # Populate DOAS Terminal data elements if applicable
-        if has_doas:
-            doas_system = self.get_obj(
-                self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM)
-            )
-            self.terminals_id[2] = self.u_name + " DOASTerminal"
-            self.terminals_cooling_capacity[2] = 0.0
-            self.terminals_heating_capacity[2] = 0.0
-            self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
-            self.terminals_minimum_outdoor_airflow_multiplier_schedule[2] = (
-                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
-            )
-            self.terminals_primary_airflow[2] = minimum_outdoor_airflow
-            self.terminals_minimum_airflow[2] = minimum_outdoor_airflow
-            if (
-                doas_system
-                and doas_system.fan_sys_fan_control
-                == FanSystemSupplyFanControlOptions.CONSTANT
-                or self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
-            ):
-                self.terminals_type[2] = TerminalOptions.CONSTANT_AIR_VOLUME
-            # TODO: Account for zone minimum air flow schedule(s)
-            else:
-                self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
-
-        # Only populate MainTerminal Fan data elements here if the zone TERMINAL-TYPE is SERIES-PIU or PARALLEL-PIU
-        if is_piu:
-            self.terminal_fan_id = self.u_name + " MainTerminal Fan"
-            self.terminal_fan_design_airflow = self.try_float(
-                output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
-                )
-            )
-            self.terminals_is_fan_first_stage_heat[0] = self.is_fan_first_stage_map.get(
-                self.get_inp(BDL_ZoneKeywords.ZONE_FAN_RUN)
-            )
-            if self.get_inp(BDL_ZoneKeywords.ZONE_FAN_FLOW):
-                self.terminal_fan_is_airflow_sized_based_on_design_day = False
-            self.terminal_fan_specification_method = (
-                FanSpecificationMethodOptions.SIMPLE
-            )
-            self.terminal_fan_design_electric_power = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW"
-            )
 
         # Only populate MainTerminal Fan data elements here if the parent system is_terminal is True
         # (Systems that allow PIU terminals cannot be terminal)
@@ -389,6 +297,99 @@ class Zone(ChildNode):
                 CoolingSourceOptions.CHILLED_WATER
                 if self.terminals_cooling_capacity[0]
                 else None
+            )
+
+        if not self.parent.is_terminal:
+            self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
+                self.parent.u_name
+            )
+            self.terminals_heating_source[0] = self.heat_source_map.get(
+                self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
+            )
+            self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
+            self.terminals_primary_airflow[0] = supply_airflow
+            self.terminals_heating_capacity[0] = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
+            )
+            self.terminals_cooling_capacity[0] = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
+            )
+            self.terminals_cooling_source[0] = (
+                CoolingSourceOptions.CHILLED_WATER
+                if self.terminals_cooling_capacity[0]
+                else None
+            )
+            if supply_airflow is not None and minimum_airflow_ratio is not None:
+                self.terminals_minimum_airflow[0] = (
+                    supply_airflow * minimum_airflow_ratio
+                )
+
+        # Only populate MainTerminal Fan data elements here if the zone TERMINAL-TYPE is SERIES-PIU or PARALLEL-PIU
+        if is_piu:
+            self.terminal_fan_id = self.u_name + " MainTerminal Fan"
+            self.terminal_fan_design_airflow = self.try_float(
+                output_data.get(
+                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
+                )
+            )
+            self.terminals_is_fan_first_stage_heat[0] = self.is_fan_first_stage_map.get(
+                self.get_inp(BDL_ZoneKeywords.ZONE_FAN_RUN)
+            )
+            if self.get_inp(BDL_ZoneKeywords.ZONE_FAN_FLOW):
+                self.terminal_fan_is_airflow_sized_based_on_design_day = False
+            self.terminal_fan_specification_method = (
+                FanSpecificationMethodOptions.SIMPLE
+            )
+            self.terminal_fan_design_electric_power = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW"
+            )
+
+        # Populate DOAS Terminal data elements if applicable
+        if has_doas:
+            doas_system = self.get_obj(
+                self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM)
+            )
+            self.terminals_id[2] = self.u_name + " DOASTerminal"
+            self.terminals_cooling_capacity[2] = 0.0
+            self.terminals_heating_capacity[2] = 0.0
+            self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
+            self.terminals_minimum_outdoor_airflow_multiplier_schedule[2] = (
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
+            )
+            self.terminals_primary_airflow[2] = minimum_outdoor_airflow
+            self.terminals_minimum_airflow[2] = minimum_outdoor_airflow
+            if (
+                doas_system
+                and doas_system.fan_sys_fan_control
+                == FanSystemSupplyFanControlOptions.CONSTANT
+                or self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
+            ):
+                self.terminals_type[2] = TerminalOptions.CONSTANT_AIR_VOLUME
+            # TODO: Account for zone minimum air flow schedule(s)
+            else:
+                self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
+
+        if not has_doas:
+            self.terminals_minimum_outdoor_airflow[0] = minimum_outdoor_airflow
+            self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
+            )
+
+        # Populate Baseboard Terminal data elements if applicable
+        if has_baseboard:
+            self.terminals_id[1] = self.u_name + " BaseboardTerminal"
+            self.terminals_type[1] = TerminalOptions.BASEBOARD
+            self.terminals_is_supply_ducted[1] = False
+            self.terminals_has_demand_control_ventilation[1] = False
+            self.terminals_cooling_capacity[1] = 0.0
+            self.terminals_heating_source[1] = self.heat_source_map.get(
+                self.get_inp(BDL_ZoneKeywords.BASEBOARD_SOURCE)
+            )
+            self.terminals_heating_from_loop[1] = self.parent.get_inp(
+                BDL_SystemKeywords.BBRD_LOOP
+            )
+            self.terminals_heating_capacity[1] = self.get_inp(
+                BDL_ZoneKeywords.BASEBOARD_RATING
             )
 
         if exhaust_airflow is not None and exhaust_airflow > 0:
