@@ -1,0 +1,173 @@
+; Key to building component name storage
+;
+;   KeyID    BDL Command
+;   ---------------------------
+;   2001     COMPONENT-COST  
+;   2005     UTILITY-RATE    
+;   2006     BLOCK-CHARGE    
+;   2007     RATCHET         
+;   2010     SYSTEM          
+;   2019     ZONE            
+;   2020     EXTERIOR-WALL   
+;   2040     UNDERGROUND-WALL
+;   2046     INTERIOR-WALL   
+;   2050     WINDOW          
+;   2055     DOOR            
+;   2061     PUMP            
+;   2062     CIRCULATION-LOOP
+;   2063     CHILLER         
+;   2064     BOILER          
+;   2065     DW-HEATER       
+;   2066     HEAT-REJECTION  
+;   2068     ELEC-GENERATOR  
+;   2069     THERMAL-STORAGE 
+;   2070     SPACE           
+;   2082     CONDENSING-UNIT 
+;   2085     ELEC-METER      
+;   2086     FUEL-METER      
+;   2087     STEAM-METER     
+;   2088     CHW-METER       
+;   2091     MATERIALS-COST  
+;   2092     GROUND-LOOP-HX  
+
+
+KEYOBJ,  2001,  "Component Cost",  0
+
+
+KEYOBJ,  2005,  "Utility Rate",  2
+      "Custom Elec Rate",  3
+      "Custom Gas Rate",  4
+
+
+KEYOBJ,  2006,  "Block Charge",  0
+
+
+KEYOBJ,  2007,  "Ratchet",  0
+
+
+KEYOBJ,  2010,  "System",  1
+      "CW VAV",  28
+
+
+KEYOBJ,  2019,  "Zone",  5
+      "BL1 S Zone (fG.z1)",  1
+      "BL1 E Zone (fG.z2)",  1
+      "BL1 N Zone (fG.z3)",  1
+      "BL1 W Zone (fG.z4)",  1
+      "BL1 Cor Zone (fG.z5)",  1
+
+
+KEYOBJ,  2020,  "Exterior Wall",  9
+      "BL1 South Wall (G.S1.E1)",  -1
+      "BL1 Roof (G.S1.E2)",  -1
+      "BL1 East Wall (G.E2.E3)",  -1
+      "BL1 Roof (G.E2.E4)",  -1
+      "BL1 North Wall (G.N3.E5)",  -1
+      "BL1 Roof (G.N3.E6)",  -1
+      "BL1 West Wall (G.W4.E7)",  -1
+      "BL1 Roof (G.W4.E8)",  -1
+      "BL1 Roof (G.C5.E9)",  -1
+
+
+KEYOBJ,  2040,  "Underground Wall",  5
+      "BL1 Flr (G.S1.U1)",  -1
+      "BL1 Flr (G.E2.U2)",  -1
+      "BL1 Flr (G.N3.U3)",  -1
+      "BL1 Flr (G.W4.U4)",  -1
+      "BL1 Flr (G.C5.U5)",  -1
+
+
+KEYOBJ,  2046,  "Interior Wall",  8
+      "BL1 NE Wall (G.S1.I1)",  -1
+      "BL1 North Wall (G.S1.I2)",  -1
+      "BL1 NW Wall (G.S1.I3)",  -1
+      "BL1 NW Wall (G.E2.I4)",  -1
+      "BL1 West Wall (G.E2.I5)",  -1
+      "BL1 SW Wall (G.N3.I6)",  -1
+      "BL1 South Wall (G.N3.I7)",  -1
+      "BL1 East Wall (G.W4.I8)",  -1
+
+
+KEYOBJ,  2050,  "Window",  10
+      "BL1 South Win (G.S1.E1.W1)",  -1
+      "BL1 South Win (G.S1.E1.W2)",  -1
+      "BL1 South Win (G.S1.E1.W3)",  -1
+      "BL1 East Win (G.E2.E3.W1)",  -1
+      "BL1 East Win (G.E2.E3.W2)",  -1
+      "BL1 North Win (G.N3.E5.W1)",  -1
+      "BL1 North Win (G.N3.E5.W2)",  -1
+      "BL1 North Win (G.N3.E5.W3)",  -1
+      "BL1 West Win (G.W4.E7.W1)",  -1
+      "BL1 West Win (G.W4.E7.W2)",  -1
+
+
+KEYOBJ,  2055,  "Door",  6
+      "BL1 South Door (G.S1.E1.D1)",  -1
+      "BL1 South Door (G.S1.E1.D2)",  -1
+      "BL1 East Door (G.E2.E3.D1)",  -1
+      "BL1 North Door (G.N3.E5.D1)",  -1
+      "BL1 North Door (G.N3.E5.D2)",  -1
+      "BL1 West Door (G.W4.E7.D1)",  -1
+
+
+KEYOBJ,  2061,  "Pump",  1
+      "Hot Water Pumps",  -1
+
+
+KEYOBJ,  2062,  "Circulation Loop",  2
+      "DHW Plant 1 Loop (1)",  8
+      "Hot Water Loop",  4
+
+
+KEYOBJ,  2063,  "Chiller",  0
+
+
+KEYOBJ,  2064,  "Boiler",  1
+      "Boiler 1",  2
+
+
+KEYOBJ,  2065,  "DW Heater",  1
+      "DHW Plant 1 Wtr Htr (1)",  1
+
+
+KEYOBJ,  2066,  "Heat Rejection",  0
+
+
+KEYOBJ,  2068,  "Elec Generator",  0
+
+
+KEYOBJ,  2069,  "Thermal Storage",  0
+
+
+KEYOBJ,  2070,  "Space",  5
+      "BL1 South Perim Spc (G.S1)",  -1
+      "BL1 East Perim Spc (G.E2)",  -1
+      "BL1 North Perim Spc (G.N3)",  -1
+      "BL1 West Perim Spc (G.W4)",  -1
+      "BL1 Core Spc (G.C5)",  -1
+
+
+KEYOBJ,  2082,  "Condensing Unit",  0
+
+
+KEYOBJ,  2085,  "Elec Meter",  1
+      "EM1",  1
+
+
+KEYOBJ,  2086,  "Fuel Meter",  1
+      "FM1",  1
+
+
+KEYOBJ,  2087,  "Steam Meter",  0
+
+
+KEYOBJ,  2088,  "CHW Meter",  0
+
+
+KEYOBJ,  2091,  "Materials Cost",  0
+
+
+KEYOBJ,  2092,  "Ground Loop HX",  0
+
+
+END
