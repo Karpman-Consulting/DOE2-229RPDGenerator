@@ -1437,7 +1437,6 @@ class System(ParentNode):
             )  # if there is no fan schedule or the fan schedule has 1s
 
     def get_doas_occ_sch(self):
-        occupied_hours = [0] * 8760
         systems_served = [
             obj_inst
             for obj_inst in self.rmd.bdl_obj_instances
@@ -1448,13 +1447,12 @@ class System(ParentNode):
             self.get_obj(system.get_inp(BDL_SystemKeywords.FAN_SCHEDULE))
             for system in systems_served
         }
-        for system_fan_schedule in system_fan_schedules:
-            occupied_hours = [
-                1 if hour == 1 else occ_hour
-                for occ_hour, hour in zip(
-                    occupied_hours, system_fan_schedule.hourly_values
-                )
-            ]
+        occupied_hours = [
+            1 if any(hour == 1 for hour in hours) else 0
+            for hours in zip(
+                *(schedule.hourly_values for schedule in system_fan_schedules)
+            )
+        ]
         return occupied_hours
 
     def get_temperature_control(self):
