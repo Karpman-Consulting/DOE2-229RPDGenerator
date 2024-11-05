@@ -4,6 +4,7 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 
 HeatingSourceOptions = SchemaEnums.schema_enums["HeatingSourceOptions"]
+CoolingSourceOptions = SchemaEnums.schema_enums["CoolingSourceOptions"]
 TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
 FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
     "FanSystemSupplyFanControlOptions"
@@ -229,6 +230,11 @@ class Zone(ChildNode):
             self.terminals_cooling_capacity[0] = output_data.get(
                 "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
             )
+            self.terminals_cooling_source[0] = (
+                CoolingSourceOptions.CHILLED_WATER
+                if self.terminals_cooling_capacity[0]
+                else None
+            )
             if supply_airflow is not None and minimum_airflow_ratio is not None:
                 self.terminals_minimum_airflow[0] = (
                     supply_airflow * minimum_airflow_ratio
@@ -404,6 +410,11 @@ class Zone(ChildNode):
                 self.terminals_cooling_capacity[0] = self.try_abs(
                     output_data.get("Cooling Capacity")
                 )
+            self.terminals_cooling_source[0] = (
+                CoolingSourceOptions.CHILLED_WATER
+                if self.terminals_cooling_capacity[0]
+                else None
+            )
 
         if exhaust_airflow is not None and exhaust_airflow > 0:
             self.zone_exhaust_fan_id = self.u_name + " EF"
