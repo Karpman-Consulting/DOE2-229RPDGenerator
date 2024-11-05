@@ -1223,12 +1223,6 @@
                                         "rated_sensible_cool_capacity": 67244.46015444728,
                                         "rated_total_cool_capacity": 90627.20395138889,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "energy_source_type": "NONE",
-                                        "id": "Baseline System 4 (South) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1296,12 +1290,6 @@
                                         "rated_sensible_cool_capacity": 48814.48542349977,
                                         "rated_total_cool_capacity": 65788.62133916667,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "energy_source_type": "NONE",
-                                        "id": "Baseline System 4 (East) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1369,12 +1357,6 @@
                                         "rated_sensible_cool_capacity": 56990.210878776394,
                                         "rated_total_cool_capacity": 76807.27085444445,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "energy_source_type": "NONE",
-                                        "id": "Baseline System 4 (North) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1442,12 +1424,6 @@
                                         "rated_sensible_cool_capacity": 49425.96086280243,
                                         "rated_total_cool_capacity": 66612.72356590278,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "energy_source_type": "NONE",
-                                        "id": "Baseline System 4 (West) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1515,12 +1491,6 @@
                                         "rated_sensible_cool_capacity": 101867.34015124636,
                                         "rated_total_cool_capacity": 137289.40927875,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "energy_source_type": "NONE",
-                                        "id": "Baseline System 4 (Core) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 }
                             ]
@@ -106735,7 +106705,7 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop",
-                    "rated_capacity": -17466834446.21528,
+                    "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }
             ],

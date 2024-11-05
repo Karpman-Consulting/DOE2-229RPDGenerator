@@ -135,6 +135,12 @@ class RulesetModelDescription(Base):
         self.output_instance_unmet_load_hours_cooling = output_data.get(
             "Unmet Cooling Load Hours"
         )
+        self.output_instance_building_peak_cooling_load = output_data.get(
+            "Building Peak Cooling Load"
+        )
+        self.output_instance_building_peak_heating_load = output_data.get(
+            "Building Peak Heating Load"
+        )
         energy_source_types = set()
         energy_source_results = {
             "Consumption": {
@@ -199,9 +205,7 @@ class RulesetModelDescription(Base):
         for fuel_meter_name in self.fuel_meter_names:
             fuel_meter = self.bdl_obj_instances.get(fuel_meter_name)
             if fuel_meter:
-                energy_source_types.add(
-                    fuel_meter.keyword_value_pairs.get(BDL_FuelMeterKeywords.TYPE)
-                )
+                energy_source_types.add(fuel_meter.get_inp(BDL_FuelMeterKeywords.TYPE))
         if self.steam_meter_names:
             energy_source_types.add(EnergySourceOptions.PURCHASED_HOT_WATER)
         if self.chilled_water_meter_names:
@@ -212,7 +216,7 @@ class RulesetModelDescription(Base):
                 for generator_name in self.elec_generator_names
             ]
             if any(
-                generator.keyword_value_pairs.get(BDL_ElecGeneratorKeywords.TYPE)
+                generator.get_inp(BDL_ElecGeneratorKeywords.TYPE)
                 == BDL_ElecGeneratorTypes.PV_ARRAY
                 for generator in generators
             ):
@@ -597,9 +601,9 @@ class RulesetModelDescription(Base):
                 source_results["Consumption"]["site_energy_use"] = sum(
                     output_data.get(f"Elec (meter {generator_name}) - Elec Use")
                     for generator_name in self.elec_generator_names
-                    if self.bdl_obj_instances.get(
-                        generator_name
-                    ).keyword_value_pairs.get(BDL_ElecGeneratorKeywords.TYPE)
+                    if self.bdl_obj_instances.get(generator_name).get_inp(
+                        BDL_ElecGeneratorKeywords.TYPE
+                    )
                     == BDL_ElecGeneratorTypes.PV_ARRAY
                 )
                 if len(self.elec_generator_names) == 1:
@@ -613,9 +617,7 @@ class RulesetModelDescription(Base):
                     fuel_meter = self.bdl_obj_instances.get(fuel_meter_name)
                     if (
                         fuel_meter
-                        and fuel_meter.keyword_value_pairs.get(
-                            BDL_FuelMeterKeywords.TYPE
-                        )
+                        and fuel_meter.get_inp(BDL_FuelMeterKeywords.TYPE)
                         == energy_source
                     ):
                         source_results["Consumption"][
@@ -826,6 +828,16 @@ class RulesetModelDescription(Base):
             ),
             "Unmet Heating Load Hours": (
                 2001023,
+                "",
+                "",
+            ),
+            "Building Peak Cooling Load": (
+                1003003,
+                "",
+                "",
+            ),
+            "Building Peak Heating Load": (
+                1003005,
                 "",
                 "",
             ),
@@ -1805,9 +1817,7 @@ class RulesetModelDescription(Base):
             elec_generator = self.bdl_obj_instances[elec_generator_name]
             if (
                 elec_generator
-                and elec_generator.keyword_value_pairs.get(
-                    BDL_ElecGeneratorKeywords.TYPE
-                )
+                and elec_generator.get_inp(BDL_ElecGeneratorKeywords.TYPE)
                 == BDL_ElecGeneratorTypes.PV_ARRAY
             ):
                 requests[f"PV Array {elec_generator_name} - Energy"] = (

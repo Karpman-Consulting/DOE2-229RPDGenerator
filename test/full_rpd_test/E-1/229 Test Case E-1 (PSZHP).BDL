@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           10/18/2024    13:59:44  BDL RUN   1
+                           10/26/2024    20:08:24  BDL RUN   1
 
 
 
@@ -6632,17 +6632,15 @@
 -USER DEF-                                              ERV-TEMP-CTRL    = FIXED-SETPT
      *1302 * "Perimeter Zone 1 (South)" = ZONE
      *1303 *    TYPE             = CONDITIONED
-     *1304 *    ASSIGNED-FLOW    = 2000
-     *1305 *    DESIGN-HEAT-T    = 70
-     *1306 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1307 *    DESIGN-COOL-T    = 75
-     *1308 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1309 *    SPACE            = "Perimeter Space 1 (South)"
-     *1310 *    ..
+     *1304 *    DESIGN-HEAT-T    = 70
+     *1305 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1306 *    DESIGN-COOL-T    = 75
+     *1307 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1308 *    SPACE            = "Perimeter Space 1 (South)"
+     *1309 *    ..
 
 -NOTE- - -         DATA FOR     Perimeter Zone 1 (South)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
--INPUT - -                                              ASSIGNED-FLOW    =                    2000.0000 CFM
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
 -INPUT - -                                              HEAT-TEMP-SCH    = Heating Setpoint Annual
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
@@ -6704,46 +6702,46 @@
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1311 * "Baseline System 4 (East)" = SYSTEM
-     *1312 *    TYPE             = PSZ
-     *1313 *    HEAT-SOURCE      = HEAT-PUMP
-     *1314 *    ZONE-HEAT-SOURCE = NONE
-     *1315 *    BASEBOARD-SOURCE = NONE
-     *1316 *    HEAT-SIZING-RATI = 1.25
-     *1317 *    COOL-SIZING-RATI = 1.15
-     *1318 *    HUMIDIFIER-TYPE  = NONE
-     *1319 *    MAX-SUPPLY-T     = 90
-     *1320 *    HEAT-SET-T       = 90
-     *1321 *    MIN-SUPPLY-T     = 55
-     *1322 *    COOL-SET-T       = 55
-     *1323 *    MAX-HUMIDITY     = 100
+     *1310 * "Baseline System 4 (East)" = SYSTEM
+     *1311 *    TYPE             = PSZ
+     *1312 *    HEAT-SOURCE      = HEAT-PUMP
+     *1313 *    ZONE-HEAT-SOURCE = NONE
+     *1314 *    BASEBOARD-SOURCE = NONE
+     *1315 *    HEAT-SIZING-RATI = 1.25
+     *1316 *    COOL-SIZING-RATI = 1.15
+     *1317 *    HUMIDIFIER-TYPE  = NONE
+     *1318 *    MAX-SUPPLY-T     = 90
+     *1319 *    HEAT-SET-T       = 90
+     *1320 *    MIN-SUPPLY-T     = 55
+     *1321 *    COOL-SET-T       = 55
+     *1322 *    MAX-HUMIDITY     = 100
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.8000E+02
-     *1324 *    MIN-HUMIDITY     = 0
-     *1325 *    ECONO-LOCKOUT    = NO
-     *1326 *    OA-CONTROL       = DUAL-TEMP
-     *1327 *    RECOVER-EXHAUST  = RELIEF-ONLY
-     *1328 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-     *1329 *    SUPPLY-KW/FLOW   = 0.0003
-     *1330 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-     *1331 *    COOLING-EIR      = {1/3.1}
-     *1332 *    CRANKCASE-HEAT   = 0
-     *1333 *    HEATING-EIR      = {1/3.1}
-     *1334 *    MIN-HP-T         = -10
-     *1335 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
-     *1336 *    CONTROL-ZONE     = "Perimeter Zone 2 (East)"
-     *1337 *    ERV-SENSIBLE-EFF = 0.5
-     *1338 *    ERV-SEN-FILM-EXP = 1
-     *1339 *    ERV-LATENT-EFF   = 0.5
-     *1340 *    ERV-LAT-FILM-RES = 0.0001
-     *1341 *    ERV-LAT-FILM-EXP = 0.0001
-     *1342 *    OA-HEAT-SETPT-T  = 75
+     *1323 *    MIN-HUMIDITY     = 0
+     *1324 *    ECONO-LOCKOUT    = NO
+     *1325 *    OA-CONTROL       = DUAL-TEMP
+     *1326 *    RECOVER-EXHAUST  = RELIEF-ONLY
+     *1327 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+     *1328 *    SUPPLY-KW/FLOW   = 0.0003
+     *1329 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
+     *1330 *    COOLING-EIR      = {1/3.1}
+     *1331 *    CRANKCASE-HEAT   = 0
+     *1332 *    HEATING-EIR      = {1/3.1}
+     *1333 *    MIN-HP-T         = -10
+     *1334 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
+     *1335 *    CONTROL-ZONE     = "Perimeter Zone 2 (East)"
+     *1336 *    ERV-SENSIBLE-EFF = 0.5
+     *1337 *    ERV-SEN-FILM-EXP = 1
+     *1338 *    ERV-LATENT-EFF   = 0.5
+     *1339 *    ERV-LAT-FILM-RES = 0.0001
+     *1340 *    ERV-LAT-FILM-EXP = 0.0001
+     *1341 *    OA-HEAT-SETPT-T  = 75
 -CAUTION-------------------------- == --------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.7000E+02
-     *1343 *    OA-COOL-SETPT-T  = 75
-     *1344 *    ERV-CAP-CTRL     = BYPASS-OA
-     *1345 *    SUPPLY-MTR-CLASS = HI-EFF
-     *1346 *    ..
+     *1342 *    OA-COOL-SETPT-T  = 75
+     *1343 *    ERV-CAP-CTRL     = BYPASS-OA
+     *1344 *    SUPPLY-MTR-CLASS = HI-EFF
+     *1345 *    ..
 
 -NOTE- - -         DATA FOR     Baseline System 4 (East)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
@@ -7128,19 +7126,17 @@
 -USER DEF-                                              ERV-RECOVER-TYPE = ENTHALPY-HX
 -USER DEF-                                              ERV-RUN-CTRL     = WHEN-MIN-OA
 -USER DEF-                                              ERV-TEMP-CTRL    = FIXED-SETPT
-     *1347 * "Perimeter Zone 2 (East)" = ZONE
-     *1348 *    TYPE             = CONDITIONED
-     *1349 *    ASSIGNED-FLOW    = 2000
-     *1350 *    DESIGN-HEAT-T    = 70
-     *1351 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1352 *    DESIGN-COOL-T    = 75
-     *1353 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1354 *    SPACE            = "Perimeter Space 2 (East)"
-     *1355 *    ..
+     *1346 * "Perimeter Zone 2 (East)" = ZONE
+     *1347 *    TYPE             = CONDITIONED
+     *1348 *    DESIGN-HEAT-T    = 70
+     *1349 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1350 *    DESIGN-COOL-T    = 75
+     *1351 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1352 *    SPACE            = "Perimeter Space 2 (East)"
+     *1353 *    ..
 
 -NOTE- - -         DATA FOR     Perimeter Zone 2 (East)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
--INPUT - -                                              ASSIGNED-FLOW    =                    2000.0000 CFM
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
 -INPUT - -                                              HEAT-TEMP-SCH    = Heating Setpoint Annual
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
@@ -7202,46 +7198,46 @@
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1356 * "Baseline System 4 (North)" = SYSTEM
-     *1357 *    TYPE             = PSZ
-     *1358 *    HEAT-SOURCE      = HEAT-PUMP
-     *1359 *    ZONE-HEAT-SOURCE = NONE
-     *1360 *    BASEBOARD-SOURCE = NONE
-     *1361 *    HEAT-SIZING-RATI = 1.25
-     *1362 *    COOL-SIZING-RATI = 1.15
-     *1363 *    HUMIDIFIER-TYPE  = NONE
-     *1364 *    MAX-SUPPLY-T     = 90
-     *1365 *    HEAT-SET-T       = 90
-     *1366 *    MIN-SUPPLY-T     = 55
-     *1367 *    COOL-SET-T       = 55
-     *1368 *    MAX-HUMIDITY     = 100
+     *1354 * "Baseline System 4 (North)" = SYSTEM
+     *1355 *    TYPE             = PSZ
+     *1356 *    HEAT-SOURCE      = HEAT-PUMP
+     *1357 *    ZONE-HEAT-SOURCE = NONE
+     *1358 *    BASEBOARD-SOURCE = NONE
+     *1359 *    HEAT-SIZING-RATI = 1.25
+     *1360 *    COOL-SIZING-RATI = 1.15
+     *1361 *    HUMIDIFIER-TYPE  = NONE
+     *1362 *    MAX-SUPPLY-T     = 90
+     *1363 *    HEAT-SET-T       = 90
+     *1364 *    MIN-SUPPLY-T     = 55
+     *1365 *    COOL-SET-T       = 55
+     *1366 *    MAX-HUMIDITY     = 100
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.8000E+02
-     *1369 *    MIN-HUMIDITY     = 0
-     *1370 *    ECONO-LOCKOUT    = NO
-     *1371 *    OA-CONTROL       = DUAL-TEMP
-     *1372 *    RECOVER-EXHAUST  = RELIEF-ONLY
-     *1373 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-     *1374 *    SUPPLY-KW/FLOW   = 0.0003
-     *1375 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-     *1376 *    COOLING-EIR      = {1/3.1}
-     *1377 *    CRANKCASE-HEAT   = 0
-     *1378 *    HEATING-EIR      = {1/3.1}
-     *1379 *    MIN-HP-T         = -10
-     *1380 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
-     *1381 *    CONTROL-ZONE     = "Perimeter Zone 3 (North)"
-     *1382 *    ERV-SENSIBLE-EFF = 0.5
-     *1383 *    ERV-SEN-FILM-EXP = 1
-     *1384 *    ERV-LATENT-EFF   = 0.5
-     *1385 *    ERV-LAT-FILM-RES = 0.0001
-     *1386 *    ERV-LAT-FILM-EXP = 0.0001
-     *1387 *    OA-HEAT-SETPT-T  = 75
+     *1367 *    MIN-HUMIDITY     = 0
+     *1368 *    ECONO-LOCKOUT    = NO
+     *1369 *    OA-CONTROL       = DUAL-TEMP
+     *1370 *    RECOVER-EXHAUST  = RELIEF-ONLY
+     *1371 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+     *1372 *    SUPPLY-KW/FLOW   = 0.0003
+     *1373 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
+     *1374 *    COOLING-EIR      = {1/3.1}
+     *1375 *    CRANKCASE-HEAT   = 0
+     *1376 *    HEATING-EIR      = {1/3.1}
+     *1377 *    MIN-HP-T         = -10
+     *1378 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
+     *1379 *    CONTROL-ZONE     = "Perimeter Zone 3 (North)"
+     *1380 *    ERV-SENSIBLE-EFF = 0.5
+     *1381 *    ERV-SEN-FILM-EXP = 1
+     *1382 *    ERV-LATENT-EFF   = 0.5
+     *1383 *    ERV-LAT-FILM-RES = 0.0001
+     *1384 *    ERV-LAT-FILM-EXP = 0.0001
+     *1385 *    OA-HEAT-SETPT-T  = 75
 -CAUTION-------------------------- == --------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.7000E+02
-     *1388 *    OA-COOL-SETPT-T  = 75
-     *1389 *    ERV-CAP-CTRL     = BYPASS-OA
-     *1390 *    SUPPLY-MTR-CLASS = HI-EFF
-     *1391 *    ..
+     *1386 *    OA-COOL-SETPT-T  = 75
+     *1387 *    ERV-CAP-CTRL     = BYPASS-OA
+     *1388 *    SUPPLY-MTR-CLASS = HI-EFF
+     *1389 *    ..
 
 -NOTE- - -         DATA FOR     Baseline System 4 (North)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
@@ -7626,19 +7622,17 @@
 -USER DEF-                                              ERV-RECOVER-TYPE = ENTHALPY-HX
 -USER DEF-                                              ERV-RUN-CTRL     = WHEN-MIN-OA
 -USER DEF-                                              ERV-TEMP-CTRL    = FIXED-SETPT
-     *1392 * "Perimeter Zone 3 (North)" = ZONE
-     *1393 *    TYPE             = CONDITIONED
-     *1394 *    ASSIGNED-FLOW    = 2000
-     *1395 *    DESIGN-HEAT-T    = 70
-     *1396 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1397 *    DESIGN-COOL-T    = 75
-     *1398 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1399 *    SPACE            = "Perimeter Space 3 (North)"
-     *1400 *    ..
+     *1390 * "Perimeter Zone 3 (North)" = ZONE
+     *1391 *    TYPE             = CONDITIONED
+     *1392 *    DESIGN-HEAT-T    = 70
+     *1393 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1394 *    DESIGN-COOL-T    = 75
+     *1395 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1396 *    SPACE            = "Perimeter Space 3 (North)"
+     *1397 *    ..
 
 -NOTE- - -         DATA FOR     Perimeter Zone 3 (North)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
--INPUT - -                                              ASSIGNED-FLOW    =                    2000.0000 CFM
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
 -INPUT - -                                              HEAT-TEMP-SCH    = Heating Setpoint Annual
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
@@ -7700,46 +7694,46 @@
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1401 * "Baseline System 4 (West)" = SYSTEM
-     *1402 *    TYPE             = PSZ
-     *1403 *    HEAT-SOURCE      = HEAT-PUMP
-     *1404 *    ZONE-HEAT-SOURCE = NONE
-     *1405 *    BASEBOARD-SOURCE = NONE
-     *1406 *    HEAT-SIZING-RATI = 1.25
-     *1407 *    COOL-SIZING-RATI = 1.15
-     *1408 *    HUMIDIFIER-TYPE  = NONE
-     *1409 *    MAX-SUPPLY-T     = 90
-     *1410 *    HEAT-SET-T       = 90
-     *1411 *    MIN-SUPPLY-T     = 55
-     *1412 *    COOL-SET-T       = 55
-     *1413 *    MAX-HUMIDITY     = 100
+     *1398 * "Baseline System 4 (West)" = SYSTEM
+     *1399 *    TYPE             = PSZ
+     *1400 *    HEAT-SOURCE      = HEAT-PUMP
+     *1401 *    ZONE-HEAT-SOURCE = NONE
+     *1402 *    BASEBOARD-SOURCE = NONE
+     *1403 *    HEAT-SIZING-RATI = 1.25
+     *1404 *    COOL-SIZING-RATI = 1.15
+     *1405 *    HUMIDIFIER-TYPE  = NONE
+     *1406 *    MAX-SUPPLY-T     = 90
+     *1407 *    HEAT-SET-T       = 90
+     *1408 *    MIN-SUPPLY-T     = 55
+     *1409 *    COOL-SET-T       = 55
+     *1410 *    MAX-HUMIDITY     = 100
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.8000E+02
-     *1414 *    MIN-HUMIDITY     = 0
-     *1415 *    ECONO-LOCKOUT    = NO
-     *1416 *    OA-CONTROL       = DUAL-TEMP
-     *1417 *    RECOVER-EXHAUST  = RELIEF-ONLY
-     *1418 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-     *1419 *    SUPPLY-KW/FLOW   = 0.0003
-     *1420 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-     *1421 *    COOLING-EIR      = {1/3.1}
-     *1422 *    CRANKCASE-HEAT   = 0
-     *1423 *    HEATING-EIR      = {1/3.1}
-     *1424 *    MIN-HP-T         = -10
-     *1425 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
-     *1426 *    CONTROL-ZONE     = "Perimeter Zone 4 (West)"
-     *1427 *    ERV-SENSIBLE-EFF = 0.5
-     *1428 *    ERV-SEN-FILM-EXP = 1
-     *1429 *    ERV-LATENT-EFF   = 0.5
-     *1430 *    ERV-LAT-FILM-RES = 0.0001
-     *1431 *    ERV-LAT-FILM-EXP = 0.0001
-     *1432 *    OA-HEAT-SETPT-T  = 75
+     *1411 *    MIN-HUMIDITY     = 0
+     *1412 *    ECONO-LOCKOUT    = NO
+     *1413 *    OA-CONTROL       = DUAL-TEMP
+     *1414 *    RECOVER-EXHAUST  = RELIEF-ONLY
+     *1415 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+     *1416 *    SUPPLY-KW/FLOW   = 0.0003
+     *1417 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
+     *1418 *    COOLING-EIR      = {1/3.1}
+     *1419 *    CRANKCASE-HEAT   = 0
+     *1420 *    HEATING-EIR      = {1/3.1}
+     *1421 *    MIN-HP-T         = -10
+     *1422 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
+     *1423 *    CONTROL-ZONE     = "Perimeter Zone 4 (West)"
+     *1424 *    ERV-SENSIBLE-EFF = 0.5
+     *1425 *    ERV-SEN-FILM-EXP = 1
+     *1426 *    ERV-LATENT-EFF   = 0.5
+     *1427 *    ERV-LAT-FILM-RES = 0.0001
+     *1428 *    ERV-LAT-FILM-EXP = 0.0001
+     *1429 *    OA-HEAT-SETPT-T  = 75
 -CAUTION-------------------------- == --------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.7000E+02
-     *1433 *    OA-COOL-SETPT-T  = 75
-     *1434 *    ERV-CAP-CTRL     = BYPASS-OA
-     *1435 *    SUPPLY-MTR-CLASS = HI-EFF
-     *1436 *    ..
+     *1430 *    OA-COOL-SETPT-T  = 75
+     *1431 *    ERV-CAP-CTRL     = BYPASS-OA
+     *1432 *    SUPPLY-MTR-CLASS = HI-EFF
+     *1433 *    ..
 
 -NOTE- - -         DATA FOR     Baseline System 4 (West)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
@@ -8124,19 +8118,17 @@
 -USER DEF-                                              ERV-RECOVER-TYPE = ENTHALPY-HX
 -USER DEF-                                              ERV-RUN-CTRL     = WHEN-MIN-OA
 -USER DEF-                                              ERV-TEMP-CTRL    = FIXED-SETPT
-     *1437 * "Perimeter Zone 4 (West)" = ZONE
-     *1438 *    TYPE             = CONDITIONED
-     *1439 *    ASSIGNED-FLOW    = 2000
-     *1440 *    DESIGN-HEAT-T    = 70
-     *1441 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1442 *    DESIGN-COOL-T    = 75
-     *1443 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1444 *    SPACE            = "Perimeter Space 4 (West)"
-     *1445 *    ..
+     *1434 * "Perimeter Zone 4 (West)" = ZONE
+     *1435 *    TYPE             = CONDITIONED
+     *1436 *    DESIGN-HEAT-T    = 70
+     *1437 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1438 *    DESIGN-COOL-T    = 75
+     *1439 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1440 *    SPACE            = "Perimeter Space 4 (West)"
+     *1441 *    ..
 
 -NOTE- - -         DATA FOR     Perimeter Zone 4 (West)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
--INPUT - -                                              ASSIGNED-FLOW    =                    2000.0000 CFM
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
 -INPUT - -                                              HEAT-TEMP-SCH    = Heating Setpoint Annual
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
@@ -8198,46 +8190,46 @@
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1446 * "Baseline System 4 (Core)" = SYSTEM
-     *1447 *    TYPE             = PSZ
-     *1448 *    HEAT-SOURCE      = HEAT-PUMP
-     *1449 *    ZONE-HEAT-SOURCE = NONE
-     *1450 *    BASEBOARD-SOURCE = NONE
-     *1451 *    HEAT-SIZING-RATI = 1.25
-     *1452 *    COOL-SIZING-RATI = 1.15
-     *1453 *    HUMIDIFIER-TYPE  = NONE
-     *1454 *    MAX-SUPPLY-T     = 90
-     *1455 *    HEAT-SET-T       = 90
-     *1456 *    MIN-SUPPLY-T     = 55
-     *1457 *    COOL-SET-T       = 55
-     *1458 *    MAX-HUMIDITY     = 100
+     *1442 * "Baseline System 4 (Core)" = SYSTEM
+     *1443 *    TYPE             = PSZ
+     *1444 *    HEAT-SOURCE      = HEAT-PUMP
+     *1445 *    ZONE-HEAT-SOURCE = NONE
+     *1446 *    BASEBOARD-SOURCE = NONE
+     *1447 *    HEAT-SIZING-RATI = 1.25
+     *1448 *    COOL-SIZING-RATI = 1.15
+     *1449 *    HUMIDIFIER-TYPE  = NONE
+     *1450 *    MAX-SUPPLY-T     = 90
+     *1451 *    HEAT-SET-T       = 90
+     *1452 *    MIN-SUPPLY-T     = 55
+     *1453 *    COOL-SET-T       = 55
+     *1454 *    MAX-HUMIDITY     = 100
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.8000E+02
-     *1459 *    MIN-HUMIDITY     = 0
-     *1460 *    ECONO-LOCKOUT    = NO
-     *1461 *    OA-CONTROL       = DUAL-TEMP
-     *1462 *    RECOVER-EXHAUST  = RELIEF-ONLY
-     *1463 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-     *1464 *    SUPPLY-KW/FLOW   = 0.0003
-     *1465 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-     *1466 *    COOLING-EIR      = {1/3.1}
-     *1467 *    CRANKCASE-HEAT   = 0
-     *1468 *    HEATING-EIR      = {1/3.1}
-     *1469 *    MIN-HP-T         = -10
-     *1470 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
-     *1471 *    CONTROL-ZONE     = "Core Zone 1 (Core)"
-     *1472 *    ERV-SENSIBLE-EFF = 0.5
-     *1473 *    ERV-SEN-FILM-EXP = 1
-     *1474 *    ERV-LATENT-EFF   = 0.5
-     *1475 *    ERV-LAT-FILM-RES = 0.0001
-     *1476 *    ERV-LAT-FILM-EXP = 0.0001
-     *1477 *    OA-HEAT-SETPT-T  = 75
+     *1455 *    MIN-HUMIDITY     = 0
+     *1456 *    ECONO-LOCKOUT    = NO
+     *1457 *    OA-CONTROL       = DUAL-TEMP
+     *1458 *    RECOVER-EXHAUST  = RELIEF-ONLY
+     *1459 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+     *1460 *    SUPPLY-KW/FLOW   = 0.0003
+     *1461 *    NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
+     *1462 *    COOLING-EIR      = {1/3.1}
+     *1463 *    CRANKCASE-HEAT   = 0
+     *1464 *    HEATING-EIR      = {1/3.1}
+     *1465 *    MIN-HP-T         = -10
+     *1466 *    HUMIDIFIER-LOC   = IN-AIR-HANDLER
+     *1467 *    CONTROL-ZONE     = "Core Zone 1 (Core)"
+     *1468 *    ERV-SENSIBLE-EFF = 0.5
+     *1469 *    ERV-SEN-FILM-EXP = 1
+     *1470 *    ERV-LATENT-EFF   = 0.5
+     *1471 *    ERV-LAT-FILM-RES = 0.0001
+     *1472 *    ERV-LAT-FILM-EXP = 0.0001
+     *1473 *    OA-HEAT-SETPT-T  = 75
 -CAUTION-------------------------- == --------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.7000E+02
-     *1478 *    OA-COOL-SETPT-T  = 75
-     *1479 *    ERV-CAP-CTRL     = BYPASS-OA
-     *1480 *    SUPPLY-MTR-CLASS = HI-EFF
-     *1481 *    ..
+     *1474 *    OA-COOL-SETPT-T  = 75
+     *1475 *    ERV-CAP-CTRL     = BYPASS-OA
+     *1476 *    SUPPLY-MTR-CLASS = HI-EFF
+     *1477 *    ..
 
 -NOTE- - -         DATA FOR     Baseline System 4 (Core)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
@@ -8622,19 +8614,17 @@
 -USER DEF-                                              ERV-RECOVER-TYPE = ENTHALPY-HX
 -USER DEF-                                              ERV-RUN-CTRL     = WHEN-MIN-OA
 -USER DEF-                                              ERV-TEMP-CTRL    = FIXED-SETPT
-     *1482 * "Core Zone 1 (Core)" = ZONE
-     *1483 *    TYPE             = CONDITIONED
-     *1484 *    ASSIGNED-FLOW    = 2000
-     *1485 *    DESIGN-HEAT-T    = 70
-     *1486 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1487 *    DESIGN-COOL-T    = 75
-     *1488 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1489 *    SPACE            = "Core Space 1 (Core)"
-     *1490 *    ..
+     *1478 * "Core Zone 1 (Core)" = ZONE
+     *1479 *    TYPE             = CONDITIONED
+     *1480 *    DESIGN-HEAT-T    = 70
+     *1481 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1482 *    DESIGN-COOL-T    = 75
+     *1483 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1484 *    SPACE            = "Core Space 1 (Core)"
+     *1485 *    ..
 
 -NOTE- - -         DATA FOR     Core Zone 1 (Core)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
--INPUT - -                                              ASSIGNED-FLOW    =                    2000.0000 CFM
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
 -INPUT - -                                              HEAT-TEMP-SCH    = Heating Setpoint Annual
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
@@ -8696,51 +8686,51 @@
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1491 *  
-     *1492 *  
-     *1493 * $ *********************************************************
-     *1494 * $ **                                                     **
-     *1495 * $ **                Metering & Misc HVAC                 **
-     *1496 * $ **                                                     **
-     *1497 * $ *********************************************************
+     *1486 *  
+     *1487 *  
+     *1488 * $ *********************************************************
+     *1489 * $ **                                                     **
+     *1490 * $ **                Metering & Misc HVAC                 **
+     *1491 * $ **                                                     **
+     *1492 * $ *********************************************************
+     *1493 *  
+     *1494 * $ ---------------------------------------------------------
+     *1495 * $              Equipment Controls
+     *1496 * $ ---------------------------------------------------------
+     *1497 *  
      *1498 *  
-     *1499 * $ ---------------------------------------------------------
-     *1500 * $              Equipment Controls
-     *1501 * $ ---------------------------------------------------------
-     *1502 *  
+     *1499 *  
+     *1500 * $ ---------------------------------------------------------
+     *1501 * $              Load Management
+     *1502 * $ ---------------------------------------------------------
      *1503 *  
      *1504 *  
-     *1505 * $ ---------------------------------------------------------
-     *1506 * $              Load Management
-     *1507 * $ ---------------------------------------------------------
-     *1508 *  
-     *1509 *  
-     *1510 *  
-     *1511 * $ *********************************************************
-     *1512 * $ **                                                     **
-     *1513 * $ **                    Utility Rates                    **
-     *1514 * $ **                                                     **
-     *1515 * $ *********************************************************
+     *1505 *  
+     *1506 * $ *********************************************************
+     *1507 * $ **                                                     **
+     *1508 * $ **                    Utility Rates                    **
+     *1509 * $ **                                                     **
+     *1510 * $ *********************************************************
+     *1511 *  
+     *1512 * $ ---------------------------------------------------------
+     *1513 * $              Ratchets
+     *1514 * $ ---------------------------------------------------------
+     *1515 *  
      *1516 *  
-     *1517 * $ ---------------------------------------------------------
-     *1518 * $              Ratchets
-     *1519 * $ ---------------------------------------------------------
-     *1520 *  
+     *1517 *  
+     *1518 * $ ---------------------------------------------------------
+     *1519 * $              Block Charges
+     *1520 * $ ---------------------------------------------------------
      *1521 *  
      *1522 *  
-     *1523 * $ ---------------------------------------------------------
-     *1524 * $              Block Charges
-     *1525 * $ ---------------------------------------------------------
-     *1526 *  
+     *1523 *  
+     *1524 * $ ---------------------------------------------------------
+     *1525 * $              Utility Rates
+     *1526 * $ ---------------------------------------------------------
      *1527 *  
-     *1528 *  
-     *1529 * $ ---------------------------------------------------------
-     *1530 * $              Utility Rates
-     *1531 * $ ---------------------------------------------------------
-     *1532 *  
-     *1533 * "Custom Elec Rate" = UTILITY-RATE
-     *1534 *    TYPE             = ELECTRICITY
-     *1535 *    ..
+     *1528 * "Custom Elec Rate" = UTILITY-RATE
+     *1529 *    TYPE             = ELECTRICITY
+     *1530 *    ..
 
 -NOTE- - -         DATA FOR     Custom Elec Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = ELECTRICITY
@@ -8765,9 +8755,9 @@
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      15.0000 MINUTES
 -DEFAULT -                                              BUY/SELL-MODE    = BUY/SELL
-     *1536 * "Custom Gas Rate" = UTILITY-RATE
-     *1537 *    TYPE             = NATURAL-GAS
-     *1538 *    ..
+     *1531 * "Custom Gas Rate" = UTILITY-RATE
+     *1532 *    TYPE             = NATURAL-GAS
+     *1533 *    ..
 
 -NOTE- - -         DATA FOR     Custom Gas Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = NATURAL-GAS
@@ -8789,54 +8779,54 @@
 -DEFAULT -                                              PCT-TAXES-APPLY  = BASE
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      60.0000 MINUTES
-     *1539 *  
-     *1540 *  
-     *1541 * $ *********************************************************
-     *1542 * $ **                                                     **
-     *1543 * $ **                 Output Reporting                    **
-     *1544 * $ **                                                     **
-     *1545 * $ *********************************************************
-     *1546 *  
-     *1547 * $ ---------------------------------------------------------
-     *1548 * $              Loads Non-Hourly Reporting
-     *1549 * $ ---------------------------------------------------------
-     *1550 *  
-     *1551 * LOADS-REPORT
-     *1552 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1553 *    SUMMARY          = ( ALL-SUMMARY )
-     *1554 *    ..
+     *1534 *  
+     *1535 *  
+     *1536 * $ *********************************************************
+     *1537 * $ **                                                     **
+     *1538 * $ **                 Output Reporting                    **
+     *1539 * $ **                                                     **
+     *1540 * $ *********************************************************
+     *1541 *  
+     *1542 * $ ---------------------------------------------------------
+     *1543 * $              Loads Non-Hourly Reporting
+     *1544 * $ ---------------------------------------------------------
+     *1545 *  
+     *1546 * LOADS-REPORT
+     *1547 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1548 *    SUMMARY          = ( ALL-SUMMARY )
+     *1549 *    ..
 
 -NOTE- - -         DATA FOR     LOADS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1550 *  
+     *1551 *  
+     *1552 * $ ---------------------------------------------------------
+     *1553 * $              Systems Non-Hourly Reporting
+     *1554 * $ ---------------------------------------------------------
      *1555 *  
-     *1556 *  
-     *1557 * $ ---------------------------------------------------------
-     *1558 * $              Systems Non-Hourly Reporting
-     *1559 * $ ---------------------------------------------------------
-     *1560 *  
-     *1561 * SYSTEMS-REPORT
-     *1562 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1563 *    SUMMARY          = ( ALL-SUMMARY )
-     *1564 *    ..
+     *1556 * SYSTEMS-REPORT
+     *1557 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1558 *    SUMMARY          = ( ALL-SUMMARY )
+     *1559 *    ..
 
 -NOTE- - -         DATA FOR     SYSTEMS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1560 *  
+     *1561 *  
+     *1562 * $ ---------------------------------------------------------
+     *1563 * $              Plant Non-Hourly Reporting
+     *1564 * $ ---------------------------------------------------------
      *1565 *  
-     *1566 *  
-     *1567 * $ ---------------------------------------------------------
-     *1568 * $              Plant Non-Hourly Reporting
-     *1569 * $ ---------------------------------------------------------
-     *1570 *  
-     *1571 * PLANT-REPORT
-     *1572 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1573 *    SUMMARY          = ( ALL-SUMMARY )
-     *1574 *    ..
+     *1566 * PLANT-REPORT
+     *1567 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1568 *    SUMMARY          = ( ALL-SUMMARY )
+     *1569 *    ..
 
 -NOTE- - -         DATA FOR     PLANT-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -8845,16 +8835,16 @@
 -INPUT - -                                              SUMMARY          = BEPS
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1570 *  
+     *1571 *  
+     *1572 * $ ---------------------------------------------------------
+     *1573 * $              Economics Non-Hourly Reporting
+     *1574 * $ ---------------------------------------------------------
      *1575 *  
-     *1576 *  
-     *1577 * $ ---------------------------------------------------------
-     *1578 * $              Economics Non-Hourly Reporting
-     *1579 * $ ---------------------------------------------------------
-     *1580 *  
-     *1581 * ECONOMICS-REPORT
-     *1582 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1583 *    SUMMARY          = ( ALL-SUMMARY )
-     *1584 *    ..
+     *1576 * ECONOMICS-REPORT
+     *1577 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1578 *    SUMMARY          = ( ALL-SUMMARY )
+     *1579 *    ..
 
 -NOTE- - -         DATA FOR     ECONOMICS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -8862,15 +8852,15 @@
 -INPUT - -                                              SUMMARY          = ES-D
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1580 *  
+     *1581 *  
+     *1582 * $ ---------------------------------------------------------
+     *1583 * $              Hourly Reporting
+     *1584 * $ ---------------------------------------------------------
      *1585 *  
      *1586 *  
-     *1587 * $ ---------------------------------------------------------
-     *1588 * $              Hourly Reporting
-     *1589 * $ ---------------------------------------------------------
-     *1590 *  
-     *1591 *  
-     *1592 * "Hourly Report" = HOURLY-REPORT
-     *1593 *    LIBRARY-ENTRY "Hourly Report"
+     *1587 * "Hourly Report" = HOURLY-REPORT
+     *1588 *    LIBRARY-ENTRY "Hourly Report"
 -NOTE- - - ------------------ =============== ------------------------------------------------THIS ITEM HAS BEEN FETCHED FROM LIBRARY 
      *   1 * $LIBRARY-ENTRY Hourly Report                   HOURLY-REPORT   Hourly Reports
      *   2 *    REPORT-SCHEDULE = "Hourly Report Schedule"
@@ -9006,7 +8996,7 @@
 -LIBRARY -                                              DAY              =                      31.0000
 -LIBRARY -                                              WEEK-SCHEDULES   = Hourly Report Week Sched
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  PHOTOCELL-CTRL   = NONE
-     *1594 *    ..
+     *1589 *    ..
 
 -NOTE- - -         DATA FOR     Hourly Report
 -LIBRARY - - - - - - - - - - - - - - - - - - - - - - -  REPORT-SCHEDULE  = Hourly Report Schedule
@@ -9025,20 +9015,20 @@
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
+     *1590 *  
+     *1591 *  
+     *1592 * $ ---------------------------------------------------------
+     *1593 * $              THE END
+     *1594 * $ ---------------------------------------------------------
      *1595 *  
-     *1596 *  
-     *1597 * $ ---------------------------------------------------------
-     *1598 * $              THE END
-     *1599 * $ ---------------------------------------------------------
-     *1600 *  
-     *1601 * END ..
+     *1596 * END ..
 *WARNING**************************************************************************************
 *WARNING***SPACE Perimeter Space 4 (West) has 0 delayed walls, 1 delayed
             floors and 0 delayed ceilings. There should be at least a delayed
             wall and floor, a delayed wall and ceiling, or a delayed ceiling and
             floor for custom weighting factors to be calculated. ASHRAE
             weighting factors with floor weight of 70 lb/ft2 (342 kg/m2) will be
-            used for this space.                                                                                          10/18/2024    13:59:44  BDL  RUN 1
+            used for this space.                                                                                          10/26/2024    20:08:24  BDL  RUN 1
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -9100,5 +9090,5 @@ P1          -1.17946         -1.19835         -1.15651         -0.87000         
 P2           0.29794          0.30962          0.21468          0.00000          0.32625
 -CAUTION--------------------------------------------------------------------------------------NO HEATING EQUIPMENT HAS BEEN DEFINED   
 -CAUTION--------------------------------------------------------------------------------------NO COOLING EQUIPMENT HAS BEEN DEFINED   
-     *1602 * COMPUTE ..
-     *1603 * STOP ..
+     *1597 * COMPUTE ..
+     *1598 * STOP ..

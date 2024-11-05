@@ -42,15 +42,13 @@ class Construction(BaseNode):
 
     def populate_data_elements(self):
         """Populate data elements for construction object."""
-        layer_reference = self.keyword_value_pairs.get(BDL_ConstructionKeywords.LAYERS)
-        layer = (
-            self.rmd.bdl_obj_instances.get(layer_reference) if layer_reference else None
-        )
+        layer_reference = self.get_inp(BDL_ConstructionKeywords.LAYERS)
+        layer = self.get_obj(layer_reference) if layer_reference else None
         self.material_references = layer.material_references if layer else []
 
         any_detailed_materials = False
         for material_reference in self.material_references:
-            material = self.rmd.bdl_obj_instances.get(material_reference)
+            material = self.get_obj(material_reference)
             if material:
                 if material.material_type == BDL_MaterialTypes.PROPERTIES:
                     any_detailed_materials = True
@@ -66,20 +64,20 @@ class Construction(BaseNode):
             == SurfaceConstructionInputOptions.SIMPLIFIED
         ):
             simplified_material = {"id": "Simplified Material"}
-            # u_value = self.try_float(self.keyword_value_pairs.get(BDL_ConstructionKeywords.U_VALUE))
+            # u_value = self.try_float(self.get_inp(BDL_ConstructionKeywords.U_VALUE))
             # if u_value:
             #     overall_r_value = 1 / u_value
             #     r_excl_air_films = overall_r_value - 0.68 - 0.68
             #     simplified_material["r_value"] = overall_r_value
             self.primary_layers.append(simplified_material)
 
-        # self.u_factor = self.try_float(self.keyword_value_pairs.get("U-VALUE"))
+        # self.u_factor = self.try_float(self.get_inp("U-VALUE"))
 
     def populate_data_group(self):
         """Populate schema structure for construction object."""
 
         for material_reference in self.material_references:
-            material = self.rmd.bdl_obj_instances.get(material_reference)
+            material = self.get_obj(material_reference)
             if material:
                 self.primary_layers.append(material.material_data_structure)
 

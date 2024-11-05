@@ -29,26 +29,24 @@ class DaySchedulePD(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate data elements that originate from eQUEST's DAY-SCHEDULE-PD command"""
-        day_sch_type = self.keyword_value_pairs.get(BDL_DayScheduleKeywords.TYPE)
+        day_sch_type = self.get_inp(BDL_DayScheduleKeywords.TYPE)
         if day_sch_type in Schedule.supported_hourly_schedules:
-            day_sch_values_list = self.keyword_value_pairs.get(
-                BDL_DayScheduleKeywords.VALUES
-            )
+            day_sch_values_list = self.get_inp(BDL_DayScheduleKeywords.VALUES)
             day_sch_values_list = [self.try_float(val) for val in day_sch_values_list]
             self.hourly_values = day_sch_values_list
 
         elif day_sch_type == BDL_ScheduleTypes.RESET_TEMP:
             self.outdoor_high_for_loop_supply_reset_temperature = self.try_float(
-                self.keyword_value_pairs.get(BDL_DayScheduleKeywords.OUTSIDE_HI)
+                self.get_inp(BDL_DayScheduleKeywords.OUTSIDE_HI)
             )
             self.outdoor_low_for_loop_supply_reset_temperature = self.try_float(
-                self.keyword_value_pairs.get(BDL_DayScheduleKeywords.OUTSIDE_LO)
+                self.get_inp(BDL_DayScheduleKeywords.OUTSIDE_LO)
             )
             self.loop_supply_temperature_at_outdoor_high = self.try_float(
-                self.keyword_value_pairs.get(BDL_DayScheduleKeywords.SUPPLY_HI)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_HI)
             )
             self.loop_supply_temperature_at_outdoor_low = self.try_float(
-                self.keyword_value_pairs.get(BDL_DayScheduleKeywords.SUPPLY_LO)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_LO)
             )
 
 
@@ -72,13 +70,11 @@ class WeekSchedulePD(BaseDefinition):
 
     def populate_data_elements(self):
         """Create lists of length 12, including Mon-Sun, Holidays and then 4 design day schedules"""
-        wk_sch_type = self.keyword_value_pairs.get(BDL_WeekScheduleKeywords.TYPE)
+        wk_sch_type = self.get_inp(BDL_WeekScheduleKeywords.TYPE)
         if wk_sch_type in Schedule.supported_hourly_schedules:
-            day_schedule_names = self.keyword_value_pairs.get(
-                BDL_WeekScheduleKeywords.DAY_SCHEDULES
-            )
+            day_schedule_names = self.get_inp(BDL_WeekScheduleKeywords.DAY_SCHEDULES)
             self.day_type_hourly_values = [
-                self.rmd.bdl_obj_instances[day_sch_name].hourly_values
+                self.get_obj(day_sch_name).hourly_values
                 for day_sch_name in day_schedule_names
             ]
 
@@ -89,16 +85,14 @@ class WeekSchedulePD(BaseDefinition):
                 "day_type_supply_highs": "loop_supply_temperature_at_outdoor_high",
                 "day_type_supply_lows": "loop_supply_temperature_at_outdoor_low",
             }
-            day_schedule_names = self.keyword_value_pairs.get(
-                BDL_WeekScheduleKeywords.DAY_SCHEDULES
-            )
+            day_schedule_names = self.get_inp(BDL_WeekScheduleKeywords.DAY_SCHEDULES)
 
             for attr_name, field_name in attributes.items():
                 setattr(
                     self,
                     attr_name,
                     [
-                        getattr(self.rmd.bdl_obj_instances[day_sch_name], field_name)
+                        getattr(self.get_obj(day_sch_name), field_name)
                         for day_sch_name in day_schedule_names
                     ],
                 )
@@ -155,7 +149,7 @@ class Schedule(BaseNode):
     def populate_data_elements(self):
 
         # Get the type of schedule
-        ann_sch_type = self.keyword_value_pairs.get(BDL_ScheduleKeywords.TYPE)
+        ann_sch_type = self.get_inp(BDL_ScheduleKeywords.TYPE)
 
         # There are no hourly values for temperature and ratio reset schedules so ignore those types
         if ann_sch_type in [
@@ -166,27 +160,21 @@ class Schedule(BaseNode):
 
             # Get the month value where a new week-schedule begins
             ann_months = (
-                self.keyword_value_pairs.get(BDL_ScheduleKeywords.MONTH)
-                if isinstance(
-                    self.keyword_value_pairs.get(BDL_ScheduleKeywords.MONTH), list
-                )
-                else [self.keyword_value_pairs.get(BDL_ScheduleKeywords.MONTH)]
+                self.get_inp(BDL_ScheduleKeywords.MONTH)
+                if isinstance(self.get_inp(BDL_ScheduleKeywords.MONTH), list)
+                else [self.get_inp(BDL_ScheduleKeywords.MONTH)]
             )
             ann_months = [int(float(val)) for val in ann_months]
 
             # Get the day value where a new week-schedule begins
             ann_days = (
-                self.keyword_value_pairs.get(BDL_ScheduleKeywords.DAY)
-                if isinstance(
-                    self.keyword_value_pairs.get(BDL_ScheduleKeywords.DAY), list
-                )
-                else [self.keyword_value_pairs.get(BDL_ScheduleKeywords.DAY)]
+                self.get_inp(BDL_ScheduleKeywords.DAY)
+                if isinstance(self.get_inp(BDL_ScheduleKeywords.DAY), list)
+                else [self.get_inp(BDL_ScheduleKeywords.DAY)]
             )
             ann_days = [int(float(val)) for val in ann_days]
 
-            week_schedules = [
-                self.keyword_value_pairs.get(BDL_ScheduleKeywords.WEEK_SCHEDULES)
-            ]
+            week_schedules = [self.get_inp(BDL_ScheduleKeywords.WEEK_SCHEDULES)]
 
             # Create a list to hold the index where there is a change in week schedule based on mo/day in ann sch
             schedule_change_indices = [
@@ -205,9 +193,7 @@ class Schedule(BaseNode):
                     if day_index in schedule_change_indices and day_index != LAST_DAY:
                         wk_sch_index += 1
 
-                    wk_schedule_pd = self.rmd.bdl_obj_instances[
-                        week_schedules[wk_sch_index]
-                    ]
+                    wk_schedule_pd = self.get_obj(week_schedules[wk_sch_index])
                     hourly_values.extend(
                         wk_schedule_pd.day_type_hourly_values[day_type - 1]
                     )
@@ -223,9 +209,7 @@ class Schedule(BaseNode):
                     if day_index in schedule_change_indices and day_index != LAST_DAY:
                         wk_sch_index += 1
 
-                    wk_schedule_pd = self.rmd.bdl_obj_instances[
-                        week_schedules[wk_sch_index]
-                    ]
+                    wk_schedule_pd = self.get_obj(week_schedules[wk_sch_index])
                     outdoor_high_for_loop_supply_reset_temperature.add(
                         wk_schedule_pd.day_type_outside_highs[day_type - 1]
                     )

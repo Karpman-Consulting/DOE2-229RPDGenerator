@@ -10,7 +10,7 @@ from rpd_generator.utilities import validate_configuration
 
 def process_test_input_files():
     validate_configuration.find_equest_installation()
-    test_directory = Path(__file__).parents[1] / "test"
+    test_directory = Path(__file__).parents[1] / "test" / "full_rpd_test"
     test_inp_files = list(test_directory.rglob("*.inp"))
 
     with tempfile.TemporaryDirectory() as temp_dir:

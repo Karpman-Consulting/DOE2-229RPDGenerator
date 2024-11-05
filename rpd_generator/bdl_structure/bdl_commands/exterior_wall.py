@@ -59,22 +59,14 @@ class ExteriorWall(ChildNode, ParentNode):
 
     def populate_data_elements(self):
         """Populate data elements for exterior wall object."""
-        self.area = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.AREA)
-        )
+        self.area = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AREA))
         if self.area is None:
-            height = self.try_float(
-                self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.HEIGHT)
-            )
-            width = self.try_float(
-                self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.WIDTH)
-            )
+            height = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.HEIGHT))
+            width = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.WIDTH))
             if height is not None and width is not None:
                 self.area = height * width
 
-        self.tilt = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.TILT)
-        )
+        self.tilt = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.TILT))
         if self.tilt is not None and self.tilt < self.CEILING_TILT_THRESHOLD:
             self.classification = SurfaceClassificationOptions.CEILING
         elif self.tilt is not None and self.tilt >= self.FLOOR_TILT_THRESHOLD:
@@ -83,14 +75,12 @@ class ExteriorWall(ChildNode, ParentNode):
             self.classification = SurfaceClassificationOptions.WALL
 
         parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.keyword_value_pairs.get(BDL_FloorKeywords.AZIMUTH)
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
         parent_space_azimuth = self.parent.try_float(
-            self.parent.keyword_value_pairs.get(BDL_SpaceKeywords.AZIMUTH)
+            self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
-        surface_azimuth = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.AZIMUTH)
-        )
+        surface_azimuth = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AZIMUTH))
         self.azimuth = (
             self.rmd.building_azimuth
             + parent_floor_azimuth
@@ -102,38 +92,34 @@ class ExteriorWall(ChildNode, ParentNode):
 
         self.adjacent_to = SurfaceAdjacencyOptions.EXTERIOR
         self.does_cast_shade = self.boolean_map.get(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.SHADING_SURFACE)
+            self.get_inp(BDL_ExteriorWallKeywords.SHADING_SURFACE)
         )
 
         self.absorptance_thermal_exterior = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.OUTSIDE_EMISS)
+            self.get_inp(BDL_ExteriorWallKeywords.OUTSIDE_EMISS)
         )
 
         self.absorptance_solar_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.INSIDE_SOL_ABS)
+            self.get_inp(BDL_ExteriorWallKeywords.INSIDE_SOL_ABS)
         )
 
         reflectance_visible_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.INSIDE_VIS_REFL)
+            self.get_inp(BDL_ExteriorWallKeywords.INSIDE_VIS_REFL)
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
 
-        construction = self.rmd.bdl_obj_instances.get(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.CONSTRUCTION)
-        )
+        construction = self.get_obj(self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION))
         if construction is not None:
             self.absorptance_solar_exterior = self.try_float(
-                construction.keyword_value_pairs.get(
-                    BDL_ConstructionKeywords.ABSORPTANCE
-                )
+                construction.get_inp(BDL_ConstructionKeywords.ABSORPTANCE)
             )
 
     # def get_output_requests(self):
     #     requests = {}
     #     if (
     #         self.area is None
-    #         and self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.LOCATION)
+    #         and self.get_inp(BDL_ExteriorWallKeywords.LOCATION)
     #         == BDL_WallLocationOptions.TOP
     #     ):
     #         requests["Roof Area"] = (1104008, "", self.u_name)
@@ -141,9 +127,7 @@ class ExteriorWall(ChildNode, ParentNode):
 
     def populate_data_group(self):
         """Populate schema structure for exterior wall object."""
-        construction = self.rmd.bdl_obj_instances.get(
-            self.keyword_value_pairs.get(BDL_ExteriorWallKeywords.CONSTRUCTION)
-        )
+        construction = self.get_obj(self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION))
         self.construction = construction.construction_data_structure
 
         optical_property_attributes = [

@@ -70,28 +70,20 @@ class InteriorWall(
     def populate_data_elements(self):
         """Populate data elements for interior wall object."""
         self.adjacent_to = self.adjacency_map.get(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.INT_WALL_TYPE)
+            self.get_inp(BDL_InteriorWallKeywords.INT_WALL_TYPE)
         )
         if self.adjacent_to is None:
             self.omit = True
             return
 
-        self.area = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.AREA)
-        )
+        self.area = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AREA))
         if self.area is None:
-            height = self.try_float(
-                self.keyword_value_pairs.get(BDL_InteriorWallKeywords.HEIGHT)
-            )
-            width = self.try_float(
-                self.keyword_value_pairs.get(BDL_InteriorWallKeywords.WIDTH)
-            )
+            height = self.try_float(self.get_inp(BDL_InteriorWallKeywords.HEIGHT))
+            width = self.try_float(self.get_inp(BDL_InteriorWallKeywords.WIDTH))
             if height is not None and width is not None:
                 self.area = height * width
 
-        self.tilt = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.TILT)
-        )
+        self.tilt = self.try_float(self.get_inp(BDL_InteriorWallKeywords.TILT))
         if self.tilt is not None and self.tilt < self.CEILING_TILT_THRESHOLD:
             self.classification = SurfaceClassificationOptions.CEILING
         elif self.tilt is not None and self.tilt >= self.FLOOR_TILT_THRESHOLD:
@@ -100,14 +92,12 @@ class InteriorWall(
             self.classification = SurfaceClassificationOptions.WALL
 
         parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.keyword_value_pairs.get(BDL_FloorKeywords.AZIMUTH)
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
         parent_space_azimuth = self.parent.try_float(
-            self.parent.keyword_value_pairs.get(BDL_SpaceKeywords.AZIMUTH)
+            self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
-        surface_azimuth = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.AZIMUTH)
-        )
+        surface_azimuth = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AZIMUTH))
         self.azimuth = (
             self.rmd.building_azimuth
             + parent_floor_azimuth
@@ -119,29 +109,29 @@ class InteriorWall(
 
         if self.adjacent_to == SurfaceAdjacencyOptions.INTERIOR:
             self.adjacent_zone = self.rmd.space_map[
-                self.keyword_value_pairs.get(BDL_InteriorWallKeywords.NEXT_TO)
+                self.get_inp(BDL_InteriorWallKeywords.NEXT_TO)
             ].u_name
 
         self.does_cast_shade = self.boolean_map.get(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.SHADING_SURFACE)
+            self.get_inp(BDL_InteriorWallKeywords.SHADING_SURFACE)
         )
 
         self.absorptance_solar_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[0]
+            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[0]
         )
 
         self.absorptance_solar_exterior = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[1]
+            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[1]
         )
 
         reflectance_visible_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[0]
+            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[0]
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
 
         reflectance_visible_exterior = self.try_float(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[1]
+            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[1]
         )
         if reflectance_visible_exterior is not None:
             self.absorptance_visible_exterior = 1 - reflectance_visible_exterior
@@ -150,7 +140,7 @@ class InteriorWall(
     #     requests = {}
     #     if (
     #         self.area is None
-    #         and self.keyword_value_pairs.get(BDL_InteriorWallKeywords.LOCATION)
+    #         and self.get_inp(BDL_InteriorWallKeywords.LOCATION)
     #         == BDL_WallLocationOptions.TOP
     #     ):
     #         requests["Roof Area"] = (1106006, "", self.u_name)
@@ -158,8 +148,8 @@ class InteriorWall(
 
     def populate_data_group(self):
         """Populate schema structure for interior wall object."""
-        self.construction = self.rmd.bdl_obj_instances.get(
-            self.keyword_value_pairs.get(BDL_InteriorWallKeywords.CONSTRUCTION)
+        self.construction = self.get_obj(
+            self.get_inp(BDL_InteriorWallKeywords.CONSTRUCTION)
         ).construction_data_structure
 
         optical_property_attributes = [
