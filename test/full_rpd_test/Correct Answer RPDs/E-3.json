@@ -261,6 +261,15 @@
                                             "minimum_airflow": 141.6,
                                             "minimum_outdoor_airflow": 94.4,
                                             "heating_capacity": 8792.1321
+                                        },
+                                        {
+                                            "id": "Baseboard  - Terminal for Core Zone 1",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD",
+                                            "heating_source": "HOT_WATER",
+                                            "heating_from_loop": "Boiler Loop 1",
+                                            "supply_design_heating_setpoint_temperature": 32.2,
+                                            "heating_capacity": 1758.42642
                                         }
                                     ],
                                     "spaces": [
@@ -514,6 +523,15 @@
                                             "minimum_airflow": 141.6,
                                             "minimum_outdoor_airflow": 94.4,
                                             "heating_capacity": 8792.1321
+                                        },
+                                        {
+                                            "id": "Baseboard  - Terminal for Prm Zone 1 (South)",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD",
+                                            "heating_source": "HOT_WATER",
+                                            "heating_from_loop": "Boiler Loop 1",
+                                            "supply_design_heating_setpoint_temperature": 32.2,
+                                            "heating_capacity": 1758.42642
                                         }
                                     ],
                                     "spaces": [
@@ -736,6 +754,15 @@
                                             "minimum_airflow": 141.6,
                                             "minimum_outdoor_airflow": 94.4,
                                             "heating_capacity": 8792.1321
+                                        },
+                                        {
+                                            "id": "Baseboard  - Terminal for Prm Zone 2 (East)",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD",
+                                            "heating_source": "HOT_WATER",
+                                            "heating_from_loop": "Boiler Loop 1",
+                                            "supply_design_heating_setpoint_temperature": 32.2,
+                                            "heating_capacity": 1758.42642
                                         }
                                     ],
                                     "spaces": [
@@ -969,6 +996,15 @@
                                             "minimum_airflow": 141.6,
                                             "minimum_outdoor_airflow": 94.4,
                                             "heating_capacity": 8792.1321
+                                        },
+                                        {
+                                            "id": "Baseboard  - Terminal for Prm Zone 3 (North)",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD",
+                                            "heating_source": "HOT_WATER",
+                                            "heating_from_loop": "Boiler Loop 1",
+                                            "supply_design_heating_setpoint_temperature": 32.2,
+                                            "heating_capacity": 1758.42642
                                         }
                                     ],
                                     "spaces": [
@@ -1164,6 +1200,15 @@
                                             "minimum_airflow": 141.6,
                                             "minimum_outdoor_airflow": 94.4,
                                             "heating_capacity": 8792.1321
+                                        },
+                                        {
+                                            "id": "Baseboard  - Terminal for Prm Zone 4 (West)",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD",
+                                            "heating_source": "HOT_WATER",
+                                            "heating_from_loop": "Boiler Loop 1",
+                                            "supply_design_heating_setpoint_temperature": 32.2,
+                                            "heating_capacity": 1758.42642
                                         }
                                     ],
                                     "spaces": [
