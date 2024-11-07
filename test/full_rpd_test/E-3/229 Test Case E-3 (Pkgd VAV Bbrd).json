@@ -11,13 +11,13 @@
                             "id": "Default Building Segment",
                             "zones": [
                                 {
-                                    "id": "BL1 S Zone (fG.z1)",
+                                    "id": "Prm Zone 1 (South) Zn",
                                     "spaces": [
                                         {
-                                            "id": "BL1 South Perim Spc (G.S1)",
+                                            "id": "Prm Space 1 (South)",
                                             "interior_lighting": [
                                                 {
-                                                    "id": "BL1 South Perim Spc (G.S1) IntLtg0",
+                                                    "id": "Prm Space 1 (South) IntLtg0",
                                                     "lighting_multiplier_schedule": "Lighting Schedule",
                                                     "power_per_area": 11.033008177127465
                                                 }
@@ -25,7 +25,7 @@
                                             "miscellaneous_equipment": [
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 South Perim Spc (G.S1) MiscEqp1",
+                                                    "id": "Prm Space 1 (South) MiscEqp1",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1674.0,
@@ -33,7 +33,7 @@
                                                 },
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 South Perim Spc (G.S1) MiscEqp2",
+                                                    "id": "Prm Space 1 (South) MiscEqp2",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Elevator Annual",
                                                     "power": 8213.76,
@@ -50,10 +50,10 @@
                                     ],
                                     "surfaces": [
                                         {
-                                            "id": "BL1 South Wall (G.S1.E1)",
+                                            "id": "Perimeter Space 1 Ext Wall",
                                             "subsurfaces": [
                                                 {
-                                                    "id": "BL1 South Win (G.S1.E1.W1)",
+                                                    "id": "South Window 1",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -62,7 +62,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 South Win (G.S1.E1.W2)",
+                                                    "id": "South Window 2",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -71,7 +71,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 South Win (G.S1.E1.W3)",
+                                                    "id": "South Window 3",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -80,12 +80,12 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 South Door (G.S1.E1.D1)",
+                                                    "id": "South Door 1",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 },
                                                 {
-                                                    "id": "BL1 South Door (G.S1.E1.D2)",
+                                                    "id": "South Door 2",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 }
@@ -128,7 +128,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 South Wall (G.S1.E1) OpticalProps",
+                                                "id": "Perimeter Space 1 Ext Wall OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -142,7 +142,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Roof (G.S1.E2)",
+                                            "id": "Perimeter Space 1 Roof",
                                             "subsurfaces": [],
                                             "construction": {
                                                 "id": "Roof Type 1",
@@ -175,7 +175,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 Roof (G.S1.E2) OpticalProps",
+                                                "id": "Perimeter Space 1 Roof OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -188,7 +188,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Flr (G.S1.U1)",
+                                            "id": "Perimeter Space 1 Slab on Grade",
                                             "construction": {
                                                 "id": "Slab-on-grade Type 1",
                                                 "primary_layers": [
@@ -222,17 +222,17 @@
                                             "heating_capacity": -7.225921667599148,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
-                                            "id": "BL1 S Zone (fG.z1) MainTerminal",
+                                            "id": "Prm Zone 1 (South) Zn MainTerminal",
                                             "minimum_airflow": 722.0333266461842,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 722.0333266461842,
-                                            "served_by_heating_ventilating_air_conditioning_system": "CW VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
                                         "flow_rate": 0.11411689176575998,
-                                        "id": "BL1 South Perim Spc (G.S1) Infil",
+                                        "id": "Prm Space 1 (South) Infil",
                                         "modeling_method": "WEATHER_DRIVEN"
                                     },
                                     "volume": 821.6416207134719,
@@ -242,13 +242,13 @@
                                     "thermostat_heating_setpoint_schedule": "Heating Setpoint Annual"
                                 },
                                 {
-                                    "id": "BL1 E Zone (fG.z2)",
+                                    "id": "Prm Zone 2 (East) Zn",
                                     "spaces": [
                                         {
-                                            "id": "BL1 East Perim Spc (G.E2)",
+                                            "id": "Prm Space 2 (East)",
                                             "interior_lighting": [
                                                 {
-                                                    "id": "BL1 East Perim Spc (G.E2) IntLtg0",
+                                                    "id": "Prm Space 2 (East) IntLtg0",
                                                     "lighting_multiplier_schedule": "Lighting Schedule",
                                                     "power_per_area": 11.033008177127465
                                                 }
@@ -256,7 +256,7 @@
                                             "miscellaneous_equipment": [
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 East Perim Spc (G.E2) MiscEqp1",
+                                                    "id": "Prm Space 2 (East) MiscEqp1",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1059.75,
@@ -264,7 +264,7 @@
                                                 },
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 East Perim Spc (G.E2) MiscEqp2",
+                                                    "id": "Prm Space 2 (East) MiscEqp2",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Elevator Annual",
                                                     "power": 5199.84,
@@ -281,10 +281,10 @@
                                     ],
                                     "surfaces": [
                                         {
-                                            "id": "BL1 East Wall (G.E2.E3)",
+                                            "id": "Perimeter Space 2 Ext Wall",
                                             "subsurfaces": [
                                                 {
-                                                    "id": "BL1 East Win (G.E2.E3.W1)",
+                                                    "id": "East Window 1",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
@@ -293,7 +293,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 East Win (G.E2.E3.W2)",
+                                                    "id": "East Window 2",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
@@ -302,7 +302,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 East Door (G.E2.E3.D1)",
+                                                    "id": "East Door 1",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 }
@@ -339,7 +339,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 East Wall (G.E2.E3) OpticalProps",
+                                                "id": "Perimeter Space 2 Ext Wall OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -353,7 +353,7 @@
                                             "does_cast_shade": true
                                         },
                                         {
-                                            "id": "BL1 Roof (G.E2.E4)",
+                                            "id": "Perimeter Space 2 Roof",
                                             "subsurfaces": [],
                                             "construction": {
                                                 "id": "Roof Type 1--1",
@@ -386,7 +386,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 Roof (G.E2.E4) OpticalProps",
+                                                "id": "Perimeter Space 2 Roof OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -399,7 +399,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Flr (G.E2.U2)",
+                                            "id": "Perimeter Space 2 Slab on Grade",
                                             "construction": {
                                                 "id": "Slab-on-grade Type 1--1",
                                                 "primary_layers": [
@@ -433,17 +433,17 @@
                                             "heating_capacity": -4.728704121822781,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
-                                            "id": "BL1 E Zone (fG.z2) MainTerminal",
+                                            "id": "Prm Zone 2 (East) Zn MainTerminal",
                                             "minimum_airflow": 472.50468339096074,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 472.50468339096074,
-                                            "served_by_heating_ventilating_air_conditioning_system": "CW VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
                                         "flow_rate": 0.056083072102018544,
-                                        "id": "BL1 East Perim Spc (G.E2) Infil",
+                                        "id": "Prm Space 2 (East) Infil",
                                         "modeling_method": "CONSTANT"
                                     },
                                     "volume": 520.1521550484479,
@@ -453,13 +453,13 @@
                                     "thermostat_heating_setpoint_schedule": "Heating Setpoint Annual"
                                 },
                                 {
-                                    "id": "BL1 N Zone (fG.z3)",
+                                    "id": "Prm Zone 3 (North)",
                                     "spaces": [
                                         {
-                                            "id": "BL1 North Perim Spc (G.N3)",
+                                            "id": "Prm Space 3 (North)",
                                             "interior_lighting": [
                                                 {
-                                                    "id": "BL1 North Perim Spc (G.N3) IntLtg0",
+                                                    "id": "Prm Space 3 (North) IntLtg0",
                                                     "lighting_multiplier_schedule": "Lighting Schedule",
                                                     "power_per_area": 11.033008177127465
                                                 }
@@ -467,7 +467,7 @@
                                             "miscellaneous_equipment": [
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 North Perim Spc (G.N3) MiscEqp1",
+                                                    "id": "Prm Space 3 (North) MiscEqp1",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1674.0,
@@ -475,7 +475,7 @@
                                                 },
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 North Perim Spc (G.N3) MiscEqp2",
+                                                    "id": "Prm Space 3 (North) MiscEqp2",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Elevator Annual",
                                                     "power": 8213.76,
@@ -492,10 +492,10 @@
                                     ],
                                     "surfaces": [
                                         {
-                                            "id": "BL1 North Wall (G.N3.E5)",
+                                            "id": "Perimeter Space 3 Ext Wall",
                                             "subsurfaces": [
                                                 {
-                                                    "id": "BL1 North Win (G.N3.E5.W1)",
+                                                    "id": "North Window 1",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -504,7 +504,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 North Win (G.N3.E5.W2)",
+                                                    "id": "North Window 2",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -513,7 +513,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 North Win (G.N3.E5.W3)",
+                                                    "id": "North Window 3",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
@@ -522,12 +522,12 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 North Door (G.N3.E5.D1)",
+                                                    "id": "North Door 1",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 },
                                                 {
-                                                    "id": "BL1 North Door (G.N3.E5.D2)",
+                                                    "id": "North Door 2",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 }
@@ -545,7 +545,7 @@
                                                 "surface_construction_input_option": "SIMPLIFIED"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 North Wall (G.N3.E5) OpticalProps",
+                                                "id": "Perimeter Space 3 Ext Wall OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -559,7 +559,7 @@
                                             "does_cast_shade": true
                                         },
                                         {
-                                            "id": "BL1 Roof (G.N3.E6)",
+                                            "id": "Perimeter Space 3 Roof",
                                             "subsurfaces": [],
                                             "construction": {
                                                 "id": "Roof Type 2",
@@ -589,7 +589,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 Roof (G.N3.E6) OpticalProps",
+                                                "id": "Perimeter Space 3 Roof OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -602,7 +602,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Flr (G.N3.U3)",
+                                            "id": "Perimeter Space 3 Slab on Grade",
                                             "construction": {
                                                 "id": "Slab-on-grade Type 2",
                                                 "primary_layers": [
@@ -643,17 +643,17 @@
                                             "heating_capacity": -6.86152470574273,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
-                                            "id": "BL1 N Zone (fG.z3) MainTerminal",
+                                            "id": "Prm Zone 3 (North) MainTerminal",
                                             "minimum_airflow": 685.6217633303435,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 685.6217633303435,
-                                            "served_by_heating_ventilating_air_conditioning_system": "CW VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
                                         "flow_rate": 0.08058408203151357,
-                                        "id": "BL1 North Perim Spc (G.N3) Infil",
+                                        "id": "Prm Space 3 (North) Infil",
                                         "modeling_method": "CONSTANT_SCHEDULED",
                                         "multiplier_schedule": "ZG0-S1 (PSZ) P-Inf Sch"
                                     },
@@ -664,13 +664,13 @@
                                     "thermostat_heating_setpoint_schedule": "Heating Setpoint Annual"
                                 },
                                 {
-                                    "id": "BL1 W Zone (fG.z4)",
+                                    "id": "Prm Zone 4 (West)",
                                     "spaces": [
                                         {
-                                            "id": "BL1 West Perim Spc (G.W4)",
+                                            "id": "Prm Space 4 (West)",
                                             "interior_lighting": [
                                                 {
-                                                    "id": "BL1 West Perim Spc (G.W4) IntLtg0",
+                                                    "id": "Prm Space 4 (West) IntLtg0",
                                                     "lighting_multiplier_schedule": "Lighting Schedule",
                                                     "power_per_area": 11.033008177127465
                                                 }
@@ -678,7 +678,7 @@
                                             "miscellaneous_equipment": [
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 West Perim Spc (G.W4) MiscEqp1",
+                                                    "id": "Prm Space 4 (West) MiscEqp1",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1059.75,
@@ -686,7 +686,7 @@
                                                 },
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 West Perim Spc (G.W4) MiscEqp2",
+                                                    "id": "Prm Space 4 (West) MiscEqp2",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Elevator Annual",
                                                     "power": 5199.84,
@@ -703,10 +703,10 @@
                                     ],
                                     "surfaces": [
                                         {
-                                            "id": "BL1 West Wall (G.W4.E7)",
+                                            "id": "Perimeter Space 4 Ext Wall",
                                             "subsurfaces": [
                                                 {
-                                                    "id": "BL1 West Win (G.W4.E7.W1)",
+                                                    "id": "West Window 1",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
@@ -715,7 +715,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 West Win (G.W4.E7.W2)",
+                                                    "id": "West Window 2",
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
@@ -724,7 +724,7 @@
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
-                                                    "id": "BL1 West Door (G.W4.E7.D1)",
+                                                    "id": "West Door 1",
                                                     "classification": "DOOR",
                                                     "opaque_area": 1.9509638399999998
                                                 }
@@ -742,7 +742,7 @@
                                                 "surface_construction_input_option": "SIMPLIFIED"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 West Wall (G.W4.E7) OpticalProps",
+                                                "id": "Perimeter Space 4 Ext Wall OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -756,7 +756,7 @@
                                             "does_cast_shade": true
                                         },
                                         {
-                                            "id": "BL1 Roof (G.W4.E8)",
+                                            "id": "Perimeter Space 4 Roof",
                                             "subsurfaces": [],
                                             "construction": {
                                                 "id": "Roof Type 3",
@@ -771,7 +771,7 @@
                                                 "surface_construction_input_option": "SIMPLIFIED"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 Roof (G.W4.E8) OpticalProps",
+                                                "id": "Perimeter Space 4 Roof OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -784,7 +784,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Flr (G.W4.U4)",
+                                            "id": "Perimeter Space 4 Slab on Grade",
                                             "construction": {
                                                 "id": "Slab-on-grade Type 2--1",
                                                 "primary_layers": [
@@ -825,17 +825,17 @@
                                             "heating_capacity": -7.367276515112983,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
-                                            "id": "BL1 W Zone (fG.z4) MainTerminal",
+                                            "id": "Prm Zone 4 (West) MainTerminal",
                                             "minimum_airflow": 736.1578171975497,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 736.1578171975497,
-                                            "served_by_heating_ventilating_air_conditioning_system": "CW VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
                                         "flow_rate": 0.05368236984794879,
-                                        "id": "BL1 West Perim Spc (G.W4) Infil",
+                                        "id": "Prm Space 4 (West) Infil",
                                         "modeling_method": "CONSTANT_SCHEDULED",
                                         "multiplier_schedule": "ZG0-S1 (PSZ) P-Inf Sch"
                                     },
@@ -846,13 +846,13 @@
                                     "thermostat_heating_setpoint_schedule": "Heating Setpoint Annual"
                                 },
                                 {
-                                    "id": "BL1 Cor Zone (fG.z5)",
+                                    "id": "Core Zone 1",
                                     "spaces": [
                                         {
-                                            "id": "BL1 Core Spc (G.C5)",
+                                            "id": "Core Space 1",
                                             "interior_lighting": [
                                                 {
-                                                    "id": "BL1 Core Spc (G.C5) IntLtg0",
+                                                    "id": "Core Space 1 IntLtg0",
                                                     "lighting_multiplier_schedule": "Lighting Schedule",
                                                     "power_per_area": 11.033008177127465
                                                 }
@@ -860,7 +860,7 @@
                                             "miscellaneous_equipment": [
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 Core Spc (G.C5) MiscEqp1",
+                                                    "id": "Core Space 1 MiscEqp1",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 7947.719999999999,
@@ -868,7 +868,7 @@
                                                 },
                                                 {
                                                     "energy_type": "ELECTRICITY",
-                                                    "id": "BL1 Core Spc (G.C5) MiscEqp2",
+                                                    "id": "Core Space 1 MiscEqp2",
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Elevator Annual",
                                                     "power": 38996.8128,
@@ -885,7 +885,7 @@
                                     ],
                                     "surfaces": [
                                         {
-                                            "id": "BL1 Roof (G.C5.E9)",
+                                            "id": "Core Space 1 Roof",
                                             "subsurfaces": [],
                                             "construction": {
                                                 "id": "Roof Type 1--2",
@@ -918,7 +918,7 @@
                                                 "surface_construction_input_option": "LAYERS"
                                             },
                                             "optical_properties": {
-                                                "id": "BL1 Roof (G.C5.E9) OpticalProps",
+                                                "id": "Core Space 1 Roof OpticalProps",
                                                 "absorptance_thermal_exterior": 0.9,
                                                 "absorptance_solar_exterior": 0.7,
                                                 "absorptance_solar_interior": 0.7,
@@ -931,7 +931,7 @@
                                             "does_cast_shade": false
                                         },
                                         {
-                                            "id": "BL1 Flr (G.C5.U5)",
+                                            "id": "Core Space 1 Slab on Grade",
                                             "construction": {
                                                 "id": "Slab-on-grade Type 1--2",
                                                 "primary_layers": [
@@ -964,16 +964,16 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "heating_source": "HOT_WATER",
-                                            "id": "BL1 Cor Zone (fG.z5) MainTerminal",
+                                            "id": "Core Zone 1 MainTerminal",
                                             "minimum_airflow": 94.39264150991457,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 2103.3142052583366,
-                                            "served_by_heating_ventilating_air_conditioning_system": "CW VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
-                                        "id": "BL1 Core Spc (G.C5) Infil"
+                                        "id": "Core Space 1 Infil"
                                     },
                                     "volume": 3900.942503194408,
                                     "design_thermostat_cooling_setpoint": 23.888888888888914,
@@ -984,11 +984,11 @@
                             ],
                             "heating_ventilating_air_conditioning_systems": [
                                 {
-                                    "id": "CW VAV",
+                                    "id": "Pkgd VAV",
                                     "fan_system": {
                                         "air_economizer": {
                                             "high_limit_shutoff_temperature": 21.111111111111143,
-                                            "id": "CW VAV AirEconomizer",
+                                            "id": "Pkgd VAV AirEconomizer",
                                             "is_integrated": true,
                                             "type": "TEMPERATURE"
                                         },
@@ -997,7 +997,7 @@
                                             "energy_recovery_operation": "WHEN_FANS_ON",
                                             "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
                                             "exhaust_airflow": 424.75269887999985,
-                                            "id": "CW VAV AirEnergyRecovery",
+                                            "id": "Pkgd VAV AirEnergyRecovery",
                                             "outdoor_airflow": 471.94744319999984,
                                             "type": "SENSIBLE_HEAT_WHEEL"
                                         },
@@ -1005,7 +1005,7 @@
                                         "exhaust_fans": [],
                                         "fan_control": "VARIABLE_SPEED_DRIVE",
                                         "has_fully_ducted_return": true,
-                                        "id": "CW VAV FanSys",
+                                        "id": "Pkgd VAV FanSys",
                                         "minimum_airflow": 1415.8896727839528,
                                         "minimum_outdoor_airflow": 471.9632125399846,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -1016,7 +1016,7 @@
                                                 "design_airflow": 4247.668941741898,
                                                 "design_electric_power": 4225.3522872924805,
                                                 "design_pressure_rise": 871.8112083333333,
-                                                "id": "CW VAV ReturnFan",
+                                                "id": "Pkgd VAV ReturnFan",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "DETAILED"
@@ -1027,7 +1027,7 @@
                                                 "design_airflow": 4719.632055071848,
                                                 "design_electric_power": 5346.895694732666,
                                                 "design_pressure_rise": 1021.2645583333332,
-                                                "id": "CW VAV SupplyFan",
+                                                "id": "Pkgd VAV SupplyFan",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "motor_efficiency": 0.9,
                                                 "output_validation_points": [],
@@ -1041,7 +1041,7 @@
                                         "design_total_cool_capacity": 85396.1135798611,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "CW VAV CoolSys",
+                                        "id": "Pkgd VAV CoolSys",
                                         "is_sized_based_on_design_day": false,
                                         "rated_sensible_cool_capacity": 65236.731779019035,
                                         "rated_total_cool_capacity": 87921.33333333333,
@@ -1051,7 +1051,7 @@
                                         "energy_source_type": "NATURAL_GAS",
                                         "heating_coil_setpoint": 10.000000000000057,
                                         "hot_water_loop": "Hot Water Loop",
-                                        "id": "CW VAV PreheatSys",
+                                        "id": "Pkgd VAV PreheatSys",
                                         "is_sized_based_on_design_day": false,
                                         "rated_capacity": 43960.666666666664,
                                         "type": "FLUID_LOOP"
@@ -106291,7 +106291,7 @@
                         "id": "DHW Plant 1 Wtr Htr (1) Tank",
                         "storage_capacity": 169.25535900000003,
                         "location": "IN_ZONE",
-                        "location_zone": "BL1 Cor Zone (fG.z5)"
+                        "location_zone": "Core Zone 1"
                     },
                     "solar_thermal_systems": [],
                     "compressor_capacity_validation_points": [],
@@ -106353,109 +106353,19 @@
                     "unmet_load_hours_cooling": 1073.0,
                     "annual_source_results": [
                         {
-                            "id": "ELECTRICITY",
-                            "energy_source": "ELECTRICITY",
-                            "annual_consumption": 218823.671875,
-                            "annual_demand": 89.55985260009766
-                        },
-                        {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
                             "annual_consumption": 464.60015869140625,
                             "annual_demand": 60327.21484375
+                        },
+                        {
+                            "id": "ELECTRICITY",
+                            "energy_source": "ELECTRICITY",
+                            "annual_consumption": 218823.671875,
+                            "annual_demand": 89.55985260009766
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "ELECTRICITY - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 45050.78125,
-                            "annual_site_coincident_demand": 17.41742706298828,
-                            "annual_site_non_coincident_demand": 17.41742706298828,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 148609.328125,
-                            "annual_site_coincident_demand": 56.955657958984375,
-                            "annual_site_non_coincident_demand": 56.955657958984375,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 9384.1162109375,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 21.11256980895996,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 9811.380859375,
-                            "annual_site_coincident_demand": 12.89748764038086,
-                            "annual_site_non_coincident_demand": 20.272733688354492,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 1239.869140625,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.40240156650543213,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 4728.1396484375,
-                            "annual_site_coincident_demand": 2.2892837524414062,
-                            "annual_site_non_coincident_demand": 9.42681884765625,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "NATURAL-GAS - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -106544,6 +106454,96 @@
                             "annual_site_energy_use": 216.85440063476562,
                             "annual_site_coincident_demand": 4588.89306640625,
                             "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 45050.78125,
+                            "annual_site_coincident_demand": 17.41742706298828,
+                            "annual_site_non_coincident_demand": 17.41742706298828,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 148609.328125,
+                            "annual_site_coincident_demand": 56.955657958984375,
+                            "annual_site_non_coincident_demand": 56.955657958984375,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 9384.1162109375,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 21.11256980895996,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 9811.380859375,
+                            "annual_site_coincident_demand": 12.89748764038086,
+                            "annual_site_non_coincident_demand": 20.272733688354492,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 1239.869140625,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.40240156650543213,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 4728.1396484375,
+                            "annual_site_coincident_demand": 2.2892837524414062,
+                            "annual_site_non_coincident_demand": 9.42681884765625,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
                             "is_regulated": true
                         }
                     ]

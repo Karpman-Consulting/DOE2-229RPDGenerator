@@ -726,16 +726,16 @@ SET-DEFAULT FOR SPACE
    EQUIPMENT-W/AREA = ( &D, 3.68 )
    ..
 
-"BL1 Ground Flr" = FLOOR           
+"Floor 1" = FLOOR           
    AZIMUTH          = 360
    POLYGON          = "BL1 Floor Polygon"
    SHAPE            = POLYGON
    FLOOR-HEIGHT     = 13
    AREA             = 17867
    SPACE-HEIGHT     = 13
-   C-DIAGRAM-DATA   = *Bldg Envelope & Loads 1 Diag Data*
+   C-DIAGRAM-DATA   = *Detailed UI DiagData*
    ..
-"BL1 South Perim Spc (G.S1)" = SPACE           
+"Prm Space 1 (South)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
@@ -758,14 +758,14 @@ SET-DEFAULT FOR SPACE
    C-SUB-SRC-KW     = ( 0, 0, 0 )
    C-ACTIVITY-DESC  = *Office (Executive/Private)*
    ..
-"BL1 South Wall (G.S1.E1)" = EXTERIOR-WALL   
+"Perimeter Space 1 Ext Wall" = EXTERIOR-WALL   
    CONSTRUCTION     = "Exterior Wall Type 1"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
    LOCATION         = SPACE-V1
    INSIDE-EMISS     = 0.9
    ..
-"BL1 South Win (G.S1.E1.W1)" = WINDOW          
+"South Window 1" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 0
@@ -774,7 +774,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 South Win (G.S1.E1.W2)" = WINDOW          
+"South Window 2" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 55.81
@@ -783,7 +783,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 South Win (G.S1.E1.W3)" = WINDOW          
+"South Window 3" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 111.71
@@ -792,19 +792,19 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 South Door (G.S1.E1.D1)" = DOOR            
+"South Door 1" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 52.4
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 South Door (G.S1.E1.D2)" = DOOR            
+"South Door 2" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 108.3
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 Roof (G.S1.E2)" = EXTERIOR-WALL   
+"Perimeter Space 1 Roof" = EXTERIOR-WALL   
    CONSTRUCTION     = "Roof Type 1"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -812,33 +812,33 @@ SET-DEFAULT FOR SPACE
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"BL1 NE Wall (G.S1.I1)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 East Perim Spc (G.E2)"
+"Perimeter Space 1 NE Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Prm Space 2 (East)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"BL1 North Wall (G.S1.I2)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 Core Spc (G.C5)"
+"Perimeter Space 1 North Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V3
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"BL1 NW Wall (G.S1.I3)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 West Perim Spc (G.W4)"
+"Perimeter Space 1 NW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Prm Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V4
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"BL1 Flr (G.S1.U1)" = UNDERGROUND-WALL
+"Perimeter Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"BL1 East Perim Spc (G.E2)" = SPACE           
+"Prm Space 2 (East)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
@@ -860,7 +860,7 @@ SET-DEFAULT FOR SPACE
    C-SUB-SRC-KW     = ( 0, 0, 0 )
    C-ACTIVITY-DESC  = *Office (Executive/Private)*
    ..
-"BL1 East Wall (G.E2.E3)" = EXTERIOR-WALL   
+"Perimeter Space 2 Ext Wall" = EXTERIOR-WALL   
    CONSTRUCTION     = "Exterior Wall Type 2"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -868,7 +868,7 @@ SET-DEFAULT FOR SPACE
    SHADING-SURFACE  = YES
    INSIDE-EMISS     = 0.9
    ..
-"BL1 East Win (G.E2.E3.W1)" = WINDOW          
+"East Window 1" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 0
@@ -877,7 +877,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 101.2
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 East Win (G.E2.E3.W2)" = WINDOW          
+"East Window 2" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 105.2
@@ -886,13 +886,13 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 4
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 East Door (G.E2.E3.D1)" = DOOR            
+"East Door 1" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 101.7
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 Roof (G.E2.E4)" = EXTERIOR-WALL   
+"Perimeter Space 2 Roof" = EXTERIOR-WALL   
    CONSTRUCTION     = "Roof Type 1"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -900,26 +900,26 @@ SET-DEFAULT FOR SPACE
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"BL1 NW Wall (G.E2.I4)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 North Perim Spc (G.N3)"
+"Perimeter Space 2 NW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Prm Space 3 (North)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"BL1 West Wall (G.E2.I5)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 Core Spc (G.C5)"
+"Perimeter Space 2 West Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V3
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"BL1 Flr (G.E2.U2)" = UNDERGROUND-WALL
+"Perimeter Space 2 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"BL1 North Perim Spc (G.N3)" = SPACE           
+"Prm Space 3 (North)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -942,7 +942,7 @@ SET-DEFAULT FOR SPACE
    C-SUB-SRC-KW     = ( 0, 0, 0 )
    C-ACTIVITY-DESC  = *Office (Executive/Private)*
    ..
-"BL1 North Wall (G.N3.E5)" = EXTERIOR-WALL   
+"Perimeter Space 3 Ext Wall" = EXTERIOR-WALL   
    CONSTRUCTION     = "Exterior Wall Type 3"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -950,7 +950,7 @@ SET-DEFAULT FOR SPACE
    SHADING-SURFACE  = YES
    INSIDE-EMISS     = 0.9
    ..
-"BL1 North Win (G.N3.E5.W1)" = WINDOW          
+"North Window 1" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 0
@@ -959,7 +959,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 North Win (G.N3.E5.W2)" = WINDOW          
+"North Window 2" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 55.9
@@ -968,7 +968,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 North Win (G.N3.E5.W3)" = WINDOW          
+"North Window 3" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 111.71
@@ -977,19 +977,19 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 51.9
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 North Door (G.N3.E5.D1)" = DOOR            
+"North Door 1" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 52.4
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 North Door (G.N3.E5.D2)" = DOOR            
+"North Door 2" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 108.3
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 Roof (G.N3.E6)" = EXTERIOR-WALL   
+"Perimeter Space 3 Roof" = EXTERIOR-WALL   
    CONSTRUCTION     = "Roof Type 2"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -997,22 +997,22 @@ SET-DEFAULT FOR SPACE
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"BL1 SW Wall (G.N3.I6)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 West Perim Spc (G.W4)"
+"Perimeter Space 2 SW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Prm Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
    LOCATION         = SPACE-V2
    ..
-"BL1 South Wall (G.N3.I7)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 Core Spc (G.C5)"
+"Perimeter Space 2 South Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    LOCATION         = SPACE-V3
    ..
-"BL1 Flr (G.N3.U3)" = UNDERGROUND-WALL
+"Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"BL1 West Perim Spc (G.W4)" = SPACE           
+"Prm Space 4 (West)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -1035,7 +1035,7 @@ SET-DEFAULT FOR SPACE
    C-SUB-SRC-KW     = ( 0, 0, 0 )
    C-ACTIVITY-DESC  = *Office (Executive/Private)*
    ..
-"BL1 West Wall (G.W4.E7)" = EXTERIOR-WALL   
+"Perimeter Space 4 Ext Wall" = EXTERIOR-WALL   
    CONSTRUCTION     = "Exterior Wall Type 3"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -1043,7 +1043,7 @@ SET-DEFAULT FOR SPACE
    SHADING-SURFACE  = YES
    INSIDE-EMISS     = 0.9
    ..
-"BL1 West Win (G.W4.E7.W1)" = WINDOW          
+"West Window 1" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 0
@@ -1052,7 +1052,7 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 101.2
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 West Win (G.W4.E7.W2)" = WINDOW          
+"West Window 2" = WINDOW          
    GLASS-TYPE       = "BL1 Window Type #1 GT"
    FRAME-WIDTH      = 0
    X                = 105.2
@@ -1061,13 +1061,13 @@ SET-DEFAULT FOR SPACE
    WIDTH            = 4
    FRAME-CONDUCT    = 2.781
    ..
-"BL1 West Door (G.W4.E7.D1)" = DOOR            
+"West Door 1" = DOOR            
    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
    X                = 101.7
    HEIGHT           = 7
    WIDTH            = 3
    ..
-"BL1 Roof (G.W4.E8)" = EXTERIOR-WALL   
+"Perimeter Space 4 Roof" = EXTERIOR-WALL   
    CONSTRUCTION     = "Roof Type 3"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -1075,17 +1075,17 @@ SET-DEFAULT FOR SPACE
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"BL1 East Wall (G.W4.I8)" = INTERIOR-WALL   
-   NEXT-TO          = "BL1 Core Spc (G.C5)"
+"Perimeter Space 4 East Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    LOCATION         = SPACE-V3
    ..
-"BL1 Flr (G.W4.U4)" = UNDERGROUND-WALL
+"Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"BL1 Core Spc (G.C5)" = SPACE           
+"Core Space 1" = SPACE           
    X                = 15
    Y                = 15
    SHAPE            = POLYGON
@@ -1107,7 +1107,7 @@ SET-DEFAULT FOR SPACE
    C-SUB-SRC-KW     = ( 0, 0, 0 )
    C-ACTIVITY-DESC  = *Office (Executive/Private)*
    ..
-"BL1 Roof (G.C5.E9)" = EXTERIOR-WALL   
+"Core Space 1 Roof" = EXTERIOR-WALL   
    CONSTRUCTION     = "Roof Type 1"
    INSIDE-SOL-ABS   = 0.7
    INSIDE-VIS-REFL  = 0.3
@@ -1115,7 +1115,7 @@ SET-DEFAULT FOR SPACE
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"BL1 Flr (G.C5.U5)" = UNDERGROUND-WALL
+"Core Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
@@ -1238,7 +1238,7 @@ $ ---------------------------------------------------------
    HIR-FPLR         = "DW-Gas-Pilotless-HIR-fPLR"
    TANK-UA          = 1.86322
    LOCATION         = ZONE
-   ZONE-NAME        = "BL1 Cor Zone (fG.z5)"
+   ZONE-NAME        = "Core Zone 1"
    DHW-LOOP         = "DHW Plant 1 Loop (1)"
    C-ENERGY-FACTOR  = 0.535037
    C-TANK-EXT-RVAL  = 12
@@ -1336,7 +1336,6 @@ SET-DEFAULT FOR SYSTEM
    HP-SUPP-SOURCE   = HOT-WATER
    MIN-HP-T         = 90
    MAX-HP-SUPP-T    = 90
-   DESICCANT        = LIQ-VENT-AIR-1
    ..
 SET-DEFAULT FOR SYSTEM          
    TYPE = DOAS
@@ -1350,7 +1349,7 @@ SET-DEFAULT FOR ZONE
    OA-FLOW/AREA     = ( 0.12 )
    ..
 
-"CW VAV" = SYSTEM          
+"Pkgd VAV" = SYSTEM          
    TYPE             = PVVT
    HEAT-SOURCE      = NONE
    ZONE-HEAT-SOURCE = HOT-WATER
@@ -1381,7 +1380,7 @@ SET-DEFAULT FOR ZONE
    EVAP-PCC-EFF     = 1.2
    PREHEAT-CAPACITY = -150000
    ZONE-HW-LOOP     = "Hot Water Loop"
-   CONTROL-ZONE     = "BL1 Cor Zone (fG.z5)"
+   CONTROL-ZONE     = "Core Zone 1"
    ERV-RECOVER-TYPE = SENSIBLE-WHEEL
    ERV-OA-FLOW      = 1000
    ERV-EXH-FLOW     = 900
@@ -1397,7 +1396,7 @@ SET-DEFAULT FOR ZONE
    RHT-SIZING-METHO = MAX-SUPPLY-T
    DOAS-ATTACHED-TO = MIXED-AIR
    ..
-"BL1 S Zone (fG.z1)" = ZONE            
+"Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
    FLOW/AREA        = 0.5
    DESIGN-HEAT-T    = 70
@@ -1405,10 +1404,10 @@ SET-DEFAULT FOR ZONE
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   SPACE            = "BL1 South Perim Spc (G.S1)"
+   SPACE            = "Prm Space 1 (South)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"BL1 E Zone (fG.z2)" = ZONE            
+"Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
    FLOW/AREA        = 0.5
    DESIGN-HEAT-T    = 70
@@ -1416,10 +1415,10 @@ SET-DEFAULT FOR ZONE
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   SPACE            = "BL1 East Perim Spc (G.E2)"
+   SPACE            = "Prm Space 2 (East)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"BL1 N Zone (fG.z3)" = ZONE            
+"Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
    FLOW/AREA        = 0.5
    DESIGN-HEAT-T    = 70
@@ -1427,10 +1426,10 @@ SET-DEFAULT FOR ZONE
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   SPACE            = "BL1 North Perim Spc (G.N3)"
+   SPACE            = "Prm Space 3 (North)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"BL1 W Zone (fG.z4)" = ZONE            
+"Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
    FLOW/AREA        = 0.5
    DESIGN-HEAT-T    = 70
@@ -1438,10 +1437,10 @@ SET-DEFAULT FOR ZONE
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   SPACE            = "BL1 West Perim Spc (G.W4)"
+   SPACE            = "Prm Space 4 (West)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"BL1 Cor Zone (fG.z5)" = ZONE            
+"Core Zone 1" = ZONE            
    TYPE             = CONDITIONED
    FLOW/AREA        = 0.5
    DESIGN-HEAT-T    = 70
@@ -1449,7 +1448,7 @@ SET-DEFAULT FOR ZONE
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   SPACE            = "BL1 Core Spc (G.C5)"
+   SPACE            = "Core Space 1"
    AUX-HEAT-RATIO   = 0.7
    OUTSIDE-AIR-FLOW = ( 200 )
    ..

@@ -46,68 +46,68 @@ KEYOBJ,  2007,  "Ratchet",  0
 
 
 KEYOBJ,  2010,  "System",  1
-      "CW VAV",  28
+      "Pkgd VAV",  28
 
 
 KEYOBJ,  2019,  "Zone",  5
-      "BL1 S Zone (fG.z1)",  1
-      "BL1 E Zone (fG.z2)",  1
-      "BL1 N Zone (fG.z3)",  1
-      "BL1 W Zone (fG.z4)",  1
-      "BL1 Cor Zone (fG.z5)",  1
+      "Prm Zone 1 (South) Zn",  1
+      "Prm Zone 2 (East) Zn",  1
+      "Prm Zone 3 (North)",  1
+      "Prm Zone 4 (West)",  1
+      "Core Zone 1",  1
 
 
 KEYOBJ,  2020,  "Exterior Wall",  9
-      "BL1 South Wall (G.S1.E1)",  -1
-      "BL1 Roof (G.S1.E2)",  -1
-      "BL1 East Wall (G.E2.E3)",  -1
-      "BL1 Roof (G.E2.E4)",  -1
-      "BL1 North Wall (G.N3.E5)",  -1
-      "BL1 Roof (G.N3.E6)",  -1
-      "BL1 West Wall (G.W4.E7)",  -1
-      "BL1 Roof (G.W4.E8)",  -1
-      "BL1 Roof (G.C5.E9)",  -1
+      "Perimeter Space 1 Ext Wall",  -1
+      "Perimeter Space 1 Roof",  -1
+      "Perimeter Space 2 Ext Wall",  -1
+      "Perimeter Space 2 Roof",  -1
+      "Perimeter Space 3 Ext Wall",  -1
+      "Perimeter Space 3 Roof",  -1
+      "Perimeter Space 4 Ext Wall",  -1
+      "Perimeter Space 4 Roof",  -1
+      "Core Space 1 Roof",  -1
 
 
 KEYOBJ,  2040,  "Underground Wall",  5
-      "BL1 Flr (G.S1.U1)",  -1
-      "BL1 Flr (G.E2.U2)",  -1
-      "BL1 Flr (G.N3.U3)",  -1
-      "BL1 Flr (G.W4.U4)",  -1
-      "BL1 Flr (G.C5.U5)",  -1
+      "Perimeter Space 1 Slab on Grade",  -1
+      "Perimeter Space 2 Slab on Grade",  -1
+      "Perimeter Space 3 Slab on Grade",  -1
+      "Perimeter Space 4 Slab on Grade",  -1
+      "Core Space 1 Slab on Grade",  -1
 
 
 KEYOBJ,  2046,  "Interior Wall",  8
-      "BL1 NE Wall (G.S1.I1)",  -1
-      "BL1 North Wall (G.S1.I2)",  -1
-      "BL1 NW Wall (G.S1.I3)",  -1
-      "BL1 NW Wall (G.E2.I4)",  -1
-      "BL1 West Wall (G.E2.I5)",  -1
-      "BL1 SW Wall (G.N3.I6)",  -1
-      "BL1 South Wall (G.N3.I7)",  -1
-      "BL1 East Wall (G.W4.I8)",  -1
+      "Perimeter Space 1 NE Wall",  -1
+      "Perimeter Space 1 North Wall",  -1
+      "Perimeter Space 1 NW Wall",  -1
+      "Perimeter Space 2 NW Wall",  -1
+      "Perimeter Space 2 West Wall",  -1
+      "Perimeter Space 2 SW Wall",  -1
+      "Perimeter Space 2 South Wall",  -1
+      "Perimeter Space 4 East Wall",  -1
 
 
 KEYOBJ,  2050,  "Window",  10
-      "BL1 South Win (G.S1.E1.W1)",  -1
-      "BL1 South Win (G.S1.E1.W2)",  -1
-      "BL1 South Win (G.S1.E1.W3)",  -1
-      "BL1 East Win (G.E2.E3.W1)",  -1
-      "BL1 East Win (G.E2.E3.W2)",  -1
-      "BL1 North Win (G.N3.E5.W1)",  -1
-      "BL1 North Win (G.N3.E5.W2)",  -1
-      "BL1 North Win (G.N3.E5.W3)",  -1
-      "BL1 West Win (G.W4.E7.W1)",  -1
-      "BL1 West Win (G.W4.E7.W2)",  -1
+      "South Window 1",  -1
+      "South Window 2",  -1
+      "South Window 3",  -1
+      "East Window 1",  -1
+      "East Window 2",  -1
+      "North Window 1",  -1
+      "North Window 2",  -1
+      "North Window 3",  -1
+      "West Window 1",  -1
+      "West Window 2",  -1
 
 
 KEYOBJ,  2055,  "Door",  6
-      "BL1 South Door (G.S1.E1.D1)",  -1
-      "BL1 South Door (G.S1.E1.D2)",  -1
-      "BL1 East Door (G.E2.E3.D1)",  -1
-      "BL1 North Door (G.N3.E5.D1)",  -1
-      "BL1 North Door (G.N3.E5.D2)",  -1
-      "BL1 West Door (G.W4.E7.D1)",  -1
+      "South Door 1",  -1
+      "South Door 2",  -1
+      "East Door 1",  -1
+      "North Door 1",  -1
+      "North Door 2",  -1
+      "West Door 1",  -1
 
 
 KEYOBJ,  2061,  "Pump",  1
@@ -140,11 +140,11 @@ KEYOBJ,  2069,  "Thermal Storage",  0
 
 
 KEYOBJ,  2070,  "Space",  5
-      "BL1 South Perim Spc (G.S1)",  -1
-      "BL1 East Perim Spc (G.E2)",  -1
-      "BL1 North Perim Spc (G.N3)",  -1
-      "BL1 West Perim Spc (G.W4)",  -1
-      "BL1 Core Spc (G.C5)",  -1
+      "Prm Space 1 (South)",  -1
+      "Prm Space 2 (East)",  -1
+      "Prm Space 3 (North)",  -1
+      "Prm Space 4 (West)",  -1
+      "Core Space 1",  -1
 
 
 KEYOBJ,  2082,  "Condensing Unit",  0

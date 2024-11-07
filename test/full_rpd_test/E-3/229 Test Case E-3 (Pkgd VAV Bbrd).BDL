@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           11/05/2024    10:09:48  BDL RUN   3
+                           11/07/2024    14:25:09  BDL RUN   3
 
 
 
@@ -3233,32 +3233,32 @@
      * 726 *    EQUIPMENT-W/AREA = ( &D, 3.68 )
      * 727 *    ..
      * 728 *  
-     * 729 * "BL1 Ground Flr" = FLOOR
+     * 729 * "Floor 1" = FLOOR
      * 730 *    AZIMUTH          = 360
      * 731 *    POLYGON          = "BL1 Floor Polygon"
      * 732 *    SHAPE            = POLYGON
      * 733 *    FLOOR-HEIGHT     = 13
      * 734 *    AREA             = 17867
      * 735 *    SPACE-HEIGHT     = 13
-     * 736 *    C-DIAGRAM-DATA   = *Bldg Envelope & Loads 1 Diag Data*
+     * 736 *    C-DIAGRAM-DATA   = *Detailed UI DiagData*
      * 737 *    ..
 
--NOTE- - -         DATA FOR     BL1 Ground Flr
+-NOTE- - -         DATA FOR     Floor 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  AZIMUTH          =                     360.0000 DEGREES
 -INPUT - -                                              POLYGON          = BL1 Floor Polygon
 -INPUT - -                                              SHAPE            = POLYGON
 -INPUT - -                                              FLOOR-HEIGHT     =                      13.0000 FT
 -INPUT - -                                              AREA             =                   17867.0000 SQFT
 -INPUT - -                                              SPACE-HEIGHT     =                      13.0000 FT
--INPUT - -                                              C-DIAGRAM-DATA   = Bldg Envelope & Loads 1 Diag Dat
--INPUT - -                                              C-DIAGRAM-DATA   = a
+-INPUT - -                                              C-DIAGRAM-DATA   = Detailed UI DiagData
+-INPUT - -                                              C-DIAGRAM-DATA   =
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  MULTIPLIER       =                       1.0000
 -DEFAULT -                                              X                =                       0.0000 FT
 -DEFAULT -                                              Y                =                       0.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
 -DEFAULT -                                              VOLUME           =                  232271.0000 CUFT
 -DEFAULT -                                              C-DISPLAY-PERIM  =                       0.0000 FT
-     * 738 * "BL1 South Perim Spc (G.S1)" = SPACE
+     * 738 * "Prm Space 1 (South)" = SPACE
      * 739 *    SHAPE            = POLYGON
      * 740 *    ZONE-TYPE        = CONDITIONED
      * 741 *    INF-METHOD       = AIR-CHANGE
@@ -3282,7 +3282,7 @@
      * 759 *    C-ACTIVITY-DESC  = *Office (Executive/Private)*
      * 760 *    ..
 
--NOTE- - -         DATA FOR     BL1 South Perim Spc (G.S1)
+-NOTE- - -         DATA FOR     Prm Space 1 (South)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  SHAPE            = POLYGON
 -INPUT - -                                              ZONE-TYPE        = CONDITIONED
 -INPUT - -                                              INF-METHOD       = AIR-CHANGE
@@ -3483,7 +3483,7 @@
 -DEFAULT -                                              *DISP-LIGHT-KW   =                       4.4300 KW
 -DEFAULT -                                              *DISP-LIGHT-W/AR =                       0.0000 W/SQFT
 -DEFAULT -                                              *DISP-EQUIP-KW   =                       0.0000 KW
-     * 761 * "BL1 South Wall (G.S1.E1)" = EXTERIOR-WALL
+     * 761 * "Perimeter Space 1 Ext Wall" = EXTERIOR-WALL
      * 762 *    CONSTRUCTION     = "Exterior Wall Type 1"
      * 763 *    INSIDE-SOL-ABS   = 0.7
      * 764 *    INSIDE-VIS-REFL  = 0.3
@@ -3491,7 +3491,7 @@
      * 766 *    INSIDE-EMISS     = 0.9
      * 767 *    ..
 
--NOTE- - -         DATA FOR     BL1 South Wall (G.S1.E1)
+-NOTE- - -         DATA FOR     Perimeter Space 1 Ext Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Exterior Wall Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -3531,7 +3531,7 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     * 768 * "BL1 South Win (G.S1.E1.W1)" = WINDOW
+     * 768 * "South Window 1" = WINDOW
      * 769 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 770 *    FRAME-WIDTH      = 0
      * 771 *    X                = 0
@@ -3607,7 +3607,7 @@
 -LIBRARY -                                              WEEK-SCHEDULES   = Dirt Win WK
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  PHOTOCELL-CTRL   = NONE
 
--NOTE- - -         DATA FOR     BL1 South Win (G.S1.E1.W1)
+-NOTE- - -         DATA FOR     South Window 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                       0.0000 FT
@@ -3653,7 +3653,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 777 * "BL1 South Win (G.S1.E1.W2)" = WINDOW
+     * 777 * "South Window 2" = WINDOW
      * 778 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 779 *    FRAME-WIDTH      = 0
      * 780 *    X                = 55.81
@@ -3663,7 +3663,7 @@
      * 784 *    FRAME-CONDUCT    = 2.781
      * 785 *    ..
 
--NOTE- - -         DATA FOR     BL1 South Win (G.S1.E1.W2)
+-NOTE- - -         DATA FOR     South Window 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                      55.8100 FT
@@ -3709,7 +3709,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 786 * "BL1 South Win (G.S1.E1.W3)" = WINDOW
+     * 786 * "South Window 3" = WINDOW
      * 787 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 788 *    FRAME-WIDTH      = 0
      * 789 *    X                = 111.71
@@ -3719,7 +3719,7 @@
      * 793 *    FRAME-CONDUCT    = 2.781
      * 794 *    ..
 
--NOTE- - -         DATA FOR     BL1 South Win (G.S1.E1.W3)
+-NOTE- - -         DATA FOR     South Window 3
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                     111.7100 FT
@@ -3765,7 +3765,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 795 * "BL1 South Door (G.S1.E1.D1)" = DOOR
+     * 795 * "South Door 1" = DOOR
      * 796 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
 -NOTE- - - ----------------------- ======================== ----------------------------------THIS ITEM HAS BEEN FETCHED FROM LIBRARY 
      * 797 *    X                = 52.4
@@ -3790,7 +3790,7 @@
 -DEFAULT -                                              C-FURRING-RVAL   =                       0.0000 HR-SQFT-F /BTU
 -DEFAULT -                                              C-C-U            =                       1.0000 BTU/HR-SQFT-F
 
--NOTE- - -         DATA FOR     BL1 South Door (G.S1.E1.D1)
+-NOTE- - -         DATA FOR     South Door 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                      52.4000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -3805,14 +3805,14 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     * 801 * "BL1 South Door (G.S1.E1.D2)" = DOOR
+     * 801 * "South Door 2" = DOOR
      * 802 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
      * 803 *    X                = 108.3
      * 804 *    HEIGHT           = 7
      * 805 *    WIDTH            = 3
      * 806 *    ..
 
--NOTE- - -         DATA FOR     BL1 South Door (G.S1.E1.D2)
+-NOTE- - -         DATA FOR     South Door 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                     108.3000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -3827,7 +3827,7 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     * 807 * "BL1 Roof (G.S1.E2)" = EXTERIOR-WALL
+     * 807 * "Perimeter Space 1 Roof" = EXTERIOR-WALL
      * 808 *    CONSTRUCTION     = "Roof Type 1"
      * 809 *    INSIDE-SOL-ABS   = 0.7
      * 810 *    INSIDE-VIS-REFL  = 0.3
@@ -3838,7 +3838,7 @@
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1000E+01
      * 814 *    ..
 
--NOTE- - -         DATA FOR     BL1 Roof (G.S1.E2)
+-NOTE- - -         DATA FOR     Perimeter Space 1 Roof
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Roof Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -3877,8 +3877,8 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     * 815 * "BL1 NE Wall (G.S1.I1)" = INTERIOR-WALL
-     * 816 *    NEXT-TO          = "BL1 East Perim Spc (G.E2)"
+     * 815 * "Perimeter Space 1 NE Wall" = INTERIOR-WALL
+     * 816 *    NEXT-TO          = "Prm Space 2 (East)"
      * 817 *    CONSTRUCTION     = "BL1 IWall Construction"
      * 818 *    INSIDE-SOL-ABS   = ( 0.7 )
      * 819 *    LOCATION         = SPACE-V2
@@ -3886,8 +3886,8 @@
      * 821 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 NE Wall (G.S1.I1)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 East Perim Spc (G.E2)
+-NOTE- - -         DATA FOR     Perimeter Space 1 NE Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Prm Space 2 (East)
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.5000
@@ -3907,8 +3907,8 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 822 * "BL1 North Wall (G.S1.I2)" = INTERIOR-WALL
-     * 823 *    NEXT-TO          = "BL1 Core Spc (G.C5)"
+     * 822 * "Perimeter Space 1 North Wall" = INTERIOR-WALL
+     * 823 *    NEXT-TO          = "Core Space 1"
      * 824 *    CONSTRUCTION     = "BL1 IWall Construction"
      * 825 *    INSIDE-SOL-ABS   = ( 0.7 )
      * 826 *    LOCATION         = SPACE-V3
@@ -3916,8 +3916,8 @@
      * 828 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 North Wall (G.S1.I2)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 Core Spc (G.C5)
+-NOTE- - -         DATA FOR     Perimeter Space 1 North Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.5000
@@ -3937,8 +3937,8 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 829 * "BL1 NW Wall (G.S1.I3)" = INTERIOR-WALL
-     * 830 *    NEXT-TO          = "BL1 West Perim Spc (G.W4)"
+     * 829 * "Perimeter Space 1 NW Wall" = INTERIOR-WALL
+     * 830 *    NEXT-TO          = "Prm Space 4 (West)"
      * 831 *    CONSTRUCTION     = "BL1 IWall Construction"
      * 832 *    INSIDE-SOL-ABS   = ( 0.7 )
      * 833 *    LOCATION         = SPACE-V4
@@ -3946,8 +3946,8 @@
      * 835 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 NW Wall (G.S1.I3)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 West Perim Spc (G.W4)
+-NOTE- - -         DATA FOR     Perimeter Space 1 NW Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Prm Space 4 (West)
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.5000
@@ -3967,13 +3967,13 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 836 * "BL1 Flr (G.S1.U1)" = UNDERGROUND-WALL
+     * 836 * "Perimeter Space 1 Slab on Grade" = UNDERGROUND-WALL
      * 837 *    CONSTRUCTION     = "Slab-on-grade Type 1"
      * 838 *    INSIDE-SOL-ABS   = 0.7
      * 839 *    LOCATION         = BOTTOM
      * 840 *    ..
 
--NOTE- - -         DATA FOR     BL1 Flr (G.S1.U1)
+-NOTE- - -         DATA FOR     Perimeter Space 1 Slab on Grade
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Slab-on-grade Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              LOCATION         = BOTTOM
@@ -3989,7 +3989,7 @@
 -DEFAULT -                                              C-TYPE           =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 841 * "BL1 East Perim Spc (G.E2)" = SPACE
+     * 841 * "Prm Space 2 (East)" = SPACE
      * 842 *    SHAPE            = POLYGON
      * 843 *    ZONE-TYPE        = CONDITIONED
      * 844 *    INF-METHOD       = AIR-CHANGE
@@ -4012,7 +4012,7 @@
      * 861 *    C-ACTIVITY-DESC  = *Office (Executive/Private)*
      * 862 *    ..
 
--NOTE- - -         DATA FOR     BL1 East Perim Spc (G.E2)
+-NOTE- - -         DATA FOR     Prm Space 2 (East)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  SHAPE            = POLYGON
 -INPUT - -                                              ZONE-TYPE        = CONDITIONED
 -INPUT - -                                              INF-METHOD       = AIR-CHANGE
@@ -4213,7 +4213,7 @@
 -DEFAULT -                                              *DISP-LIGHT-KW   =                       4.4300 KW
 -DEFAULT -                                              *DISP-LIGHT-W/AR =                       0.0000 W/SQFT
 -DEFAULT -                                              *DISP-EQUIP-KW   =                       0.0000 KW
-     * 863 * "BL1 East Wall (G.E2.E3)" = EXTERIOR-WALL
+     * 863 * "Perimeter Space 2 Ext Wall" = EXTERIOR-WALL
      * 864 *    CONSTRUCTION     = "Exterior Wall Type 2"
      * 865 *    INSIDE-SOL-ABS   = 0.7
      * 866 *    INSIDE-VIS-REFL  = 0.3
@@ -4222,7 +4222,7 @@
      * 869 *    INSIDE-EMISS     = 0.9
      * 870 *    ..
 
--NOTE- - -         DATA FOR     BL1 East Wall (G.E2.E3)
+-NOTE- - -         DATA FOR     Perimeter Space 2 Ext Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Exterior Wall Type 2
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -4262,7 +4262,7 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     * 871 * "BL1 East Win (G.E2.E3.W1)" = WINDOW
+     * 871 * "East Window 1" = WINDOW
      * 872 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 873 *    FRAME-WIDTH      = 0
      * 874 *    X                = 0
@@ -4272,7 +4272,7 @@
      * 878 *    FRAME-CONDUCT    = 2.781
      * 879 *    ..
 
--NOTE- - -         DATA FOR     BL1 East Win (G.E2.E3.W1)
+-NOTE- - -         DATA FOR     East Window 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                       0.0000 FT
@@ -4318,7 +4318,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 880 * "BL1 East Win (G.E2.E3.W2)" = WINDOW
+     * 880 * "East Window 2" = WINDOW
      * 881 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 882 *    FRAME-WIDTH      = 0
      * 883 *    X                = 105.2
@@ -4328,7 +4328,7 @@
      * 887 *    FRAME-CONDUCT    = 2.781
      * 888 *    ..
 
--NOTE- - -         DATA FOR     BL1 East Win (G.E2.E3.W2)
+-NOTE- - -         DATA FOR     East Window 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                     105.2000 FT
@@ -4374,14 +4374,14 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 889 * "BL1 East Door (G.E2.E3.D1)" = DOOR
+     * 889 * "East Door 1" = DOOR
      * 890 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
      * 891 *    X                = 101.7
      * 892 *    HEIGHT           = 7
      * 893 *    WIDTH            = 3
      * 894 *    ..
 
--NOTE- - -         DATA FOR     BL1 East Door (G.E2.E3.D1)
+-NOTE- - -         DATA FOR     East Door 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                     101.7000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -4396,7 +4396,7 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     * 895 * "BL1 Roof (G.E2.E4)" = EXTERIOR-WALL
+     * 895 * "Perimeter Space 2 Roof" = EXTERIOR-WALL
      * 896 *    CONSTRUCTION     = "Roof Type 1"
      * 897 *    INSIDE-SOL-ABS   = 0.7
      * 898 *    INSIDE-VIS-REFL  = 0.3
@@ -4407,7 +4407,7 @@
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1000E+01
      * 902 *    ..
 
--NOTE- - -         DATA FOR     BL1 Roof (G.E2.E4)
+-NOTE- - -         DATA FOR     Perimeter Space 2 Roof
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Roof Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -4446,8 +4446,8 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     * 903 * "BL1 NW Wall (G.E2.I4)" = INTERIOR-WALL
-     * 904 *    NEXT-TO          = "BL1 North Perim Spc (G.N3)"
+     * 903 * "Perimeter Space 2 NW Wall" = INTERIOR-WALL
+     * 904 *    NEXT-TO          = "Prm Space 3 (North)"
      * 905 *    CONSTRUCTION     = "BL1 IWall Construction"
      * 906 *    INSIDE-SOL-ABS   = ( 0.7 )
      * 907 *    LOCATION         = SPACE-V2
@@ -4455,8 +4455,8 @@
      * 909 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 NW Wall (G.E2.I4)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 North Perim Spc (G.N3)
+-NOTE- - -         DATA FOR     Perimeter Space 2 NW Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Prm Space 3 (North)
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.5000
@@ -4476,8 +4476,8 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 910 * "BL1 West Wall (G.E2.I5)" = INTERIOR-WALL
-     * 911 *    NEXT-TO          = "BL1 Core Spc (G.C5)"
+     * 910 * "Perimeter Space 2 West Wall" = INTERIOR-WALL
+     * 911 *    NEXT-TO          = "Core Space 1"
      * 912 *    CONSTRUCTION     = "BL1 IWall Construction"
      * 913 *    INSIDE-SOL-ABS   = ( 0.7 )
      * 914 *    LOCATION         = SPACE-V3
@@ -4485,8 +4485,8 @@
      * 916 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 West Wall (G.E2.I5)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 Core Spc (G.C5)
+-NOTE- - -         DATA FOR     Perimeter Space 2 West Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.5000
@@ -4506,13 +4506,13 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 917 * "BL1 Flr (G.E2.U2)" = UNDERGROUND-WALL
+     * 917 * "Perimeter Space 2 Slab on Grade" = UNDERGROUND-WALL
      * 918 *    CONSTRUCTION     = "Slab-on-grade Type 1"
      * 919 *    INSIDE-SOL-ABS   = 0.7
      * 920 *    LOCATION         = BOTTOM
      * 921 *    ..
 
--NOTE- - -         DATA FOR     BL1 Flr (G.E2.U2)
+-NOTE- - -         DATA FOR     Perimeter Space 2 Slab on Grade
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Slab-on-grade Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              LOCATION         = BOTTOM
@@ -4528,7 +4528,7 @@
 -DEFAULT -                                              C-TYPE           =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     * 922 * "BL1 North Perim Spc (G.N3)" = SPACE
+     * 922 * "Prm Space 3 (North)" = SPACE
      * 923 *    SHAPE            = POLYGON
      * 924 *    ZONE-TYPE        = CONDITIONED
      * 925 *    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -4552,7 +4552,7 @@
      * 943 *    C-ACTIVITY-DESC  = *Office (Executive/Private)*
      * 944 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Perim Spc (G.N3)
+-NOTE- - -         DATA FOR     Prm Space 3 (North)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  SHAPE            = POLYGON
 -INPUT - -                                              ZONE-TYPE        = CONDITIONED
 -INPUT - -                                              INF-SCHEDULE     = ZG0-S1 (PSZ) P-Inf Sch
@@ -4754,7 +4754,7 @@
 -DEFAULT -                                              *DISP-LIGHT-KW   =                       4.4300 KW
 -DEFAULT -                                              *DISP-LIGHT-W/AR =                       0.0000 W/SQFT
 -DEFAULT -                                              *DISP-EQUIP-KW   =                       0.0000 KW
-     * 945 * "BL1 North Wall (G.N3.E5)" = EXTERIOR-WALL
+     * 945 * "Perimeter Space 3 Ext Wall" = EXTERIOR-WALL
      * 946 *    CONSTRUCTION     = "Exterior Wall Type 3"
      * 947 *    INSIDE-SOL-ABS   = 0.7
      * 948 *    INSIDE-VIS-REFL  = 0.3
@@ -4763,7 +4763,7 @@
      * 951 *    INSIDE-EMISS     = 0.9
      * 952 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Wall (G.N3.E5)
+-NOTE- - -         DATA FOR     Perimeter Space 3 Ext Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Exterior Wall Type 3
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -4803,7 +4803,7 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     * 953 * "BL1 North Win (G.N3.E5.W1)" = WINDOW
+     * 953 * "North Window 1" = WINDOW
      * 954 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 955 *    FRAME-WIDTH      = 0
      * 956 *    X                = 0
@@ -4813,7 +4813,7 @@
      * 960 *    FRAME-CONDUCT    = 2.781
      * 961 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Win (G.N3.E5.W1)
+-NOTE- - -         DATA FOR     North Window 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                       0.0000 FT
@@ -4859,7 +4859,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 962 * "BL1 North Win (G.N3.E5.W2)" = WINDOW
+     * 962 * "North Window 2" = WINDOW
      * 963 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 964 *    FRAME-WIDTH      = 0
      * 965 *    X                = 55.9
@@ -4869,7 +4869,7 @@
      * 969 *    FRAME-CONDUCT    = 2.781
      * 970 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Win (G.N3.E5.W2)
+-NOTE- - -         DATA FOR     North Window 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                      55.9000 FT
@@ -4915,7 +4915,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 971 * "BL1 North Win (G.N3.E5.W3)" = WINDOW
+     * 971 * "North Window 3" = WINDOW
      * 972 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      * 973 *    FRAME-WIDTH      = 0
      * 974 *    X                = 111.71
@@ -4925,7 +4925,7 @@
      * 978 *    FRAME-CONDUCT    = 2.781
      * 979 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Win (G.N3.E5.W3)
+-NOTE- - -         DATA FOR     North Window 3
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                     111.7100 FT
@@ -4971,14 +4971,14 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     * 980 * "BL1 North Door (G.N3.E5.D1)" = DOOR
+     * 980 * "North Door 1" = DOOR
      * 981 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
      * 982 *    X                = 52.4
      * 983 *    HEIGHT           = 7
      * 984 *    WIDTH            = 3
      * 985 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Door (G.N3.E5.D1)
+-NOTE- - -         DATA FOR     North Door 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                      52.4000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -4993,14 +4993,14 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     * 986 * "BL1 North Door (G.N3.E5.D2)" = DOOR
+     * 986 * "North Door 2" = DOOR
      * 987 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
      * 988 *    X                = 108.3
      * 989 *    HEIGHT           = 7
      * 990 *    WIDTH            = 3
      * 991 *    ..
 
--NOTE- - -         DATA FOR     BL1 North Door (G.N3.E5.D2)
+-NOTE- - -         DATA FOR     North Door 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                     108.3000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -5015,7 +5015,7 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     * 992 * "BL1 Roof (G.N3.E6)" = EXTERIOR-WALL
+     * 992 * "Perimeter Space 3 Roof" = EXTERIOR-WALL
      * 993 *    CONSTRUCTION     = "Roof Type 2"
      * 994 *    INSIDE-SOL-ABS   = 0.7
      * 995 *    INSIDE-VIS-REFL  = 0.3
@@ -5026,7 +5026,7 @@
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1000E+01
      * 999 *    ..
 
--NOTE- - -         DATA FOR     BL1 Roof (G.N3.E6)
+-NOTE- - -         DATA FOR     Perimeter Space 3 Roof
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Roof Type 2
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -5065,15 +5065,15 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     *1000 * "BL1 SW Wall (G.N3.I6)" = INTERIOR-WALL
-     *1001 *    NEXT-TO          = "BL1 West Perim Spc (G.W4)"
+     *1000 * "Perimeter Space 2 SW Wall" = INTERIOR-WALL
+     *1001 *    NEXT-TO          = "Prm Space 4 (West)"
      *1002 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1003 *    LOCATION         = SPACE-V2
      *1004 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 SW Wall (G.N3.I6)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 West Perim Spc (G.W4)
+-NOTE- - -         DATA FOR     Perimeter Space 2 SW Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Prm Space 4 (West)
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              LOCATION         = SPACE-V2
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                     275.7716 SQFT
@@ -5093,15 +5093,15 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     *1005 * "BL1 South Wall (G.N3.I7)" = INTERIOR-WALL
-     *1006 *    NEXT-TO          = "BL1 Core Spc (G.C5)"
+     *1005 * "Perimeter Space 2 South Wall" = INTERIOR-WALL
+     *1006 *    NEXT-TO          = "Core Space 1"
      *1007 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1008 *    LOCATION         = SPACE-V3
      *1009 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 South Wall (G.N3.I7)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 Core Spc (G.C5)
+-NOTE- - -         DATA FOR     Perimeter Space 2 South Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              LOCATION         = SPACE-V3
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1739.4000 SQFT
@@ -5121,13 +5121,13 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     *1010 * "BL1 Flr (G.N3.U3)" = UNDERGROUND-WALL
+     *1010 * "Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
      *1011 *    CONSTRUCTION     = "Slab-on-grade Type 2"
      *1012 *    INSIDE-SOL-ABS   = 0.7
      *1013 *    LOCATION         = BOTTOM
      *1014 *    ..
 
--NOTE- - -         DATA FOR     BL1 Flr (G.N3.U3)
+-NOTE- - -         DATA FOR     Perimeter Space 3 Slab on Grade
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Slab-on-grade Type 2
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              LOCATION         = BOTTOM
@@ -5143,7 +5143,7 @@
 -DEFAULT -                                              C-TYPE           =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     *1015 * "BL1 West Perim Spc (G.W4)" = SPACE
+     *1015 * "Prm Space 4 (West)" = SPACE
      *1016 *    SHAPE            = POLYGON
      *1017 *    ZONE-TYPE        = CONDITIONED
      *1018 *    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -5167,7 +5167,7 @@
      *1036 *    C-ACTIVITY-DESC  = *Office (Executive/Private)*
      *1037 *    ..
 
--NOTE- - -         DATA FOR     BL1 West Perim Spc (G.W4)
+-NOTE- - -         DATA FOR     Prm Space 4 (West)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  SHAPE            = POLYGON
 -INPUT - -                                              ZONE-TYPE        = CONDITIONED
 -INPUT - -                                              INF-SCHEDULE     = ZG0-S1 (PSZ) P-Inf Sch
@@ -5369,7 +5369,7 @@
 -DEFAULT -                                              *DISP-LIGHT-KW   =                       4.4300 KW
 -DEFAULT -                                              *DISP-LIGHT-W/AR =                       0.0000 W/SQFT
 -DEFAULT -                                              *DISP-EQUIP-KW   =                       0.0000 KW
-     *1038 * "BL1 West Wall (G.W4.E7)" = EXTERIOR-WALL
+     *1038 * "Perimeter Space 4 Ext Wall" = EXTERIOR-WALL
      *1039 *    CONSTRUCTION     = "Exterior Wall Type 3"
      *1040 *    INSIDE-SOL-ABS   = 0.7
      *1041 *    INSIDE-VIS-REFL  = 0.3
@@ -5378,7 +5378,7 @@
      *1044 *    INSIDE-EMISS     = 0.9
      *1045 *    ..
 
--NOTE- - -         DATA FOR     BL1 West Wall (G.W4.E7)
+-NOTE- - -         DATA FOR     Perimeter Space 4 Ext Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Exterior Wall Type 3
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -5418,7 +5418,7 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     *1046 * "BL1 West Win (G.W4.E7.W1)" = WINDOW
+     *1046 * "West Window 1" = WINDOW
      *1047 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      *1048 *    FRAME-WIDTH      = 0
      *1049 *    X                = 0
@@ -5428,7 +5428,7 @@
      *1053 *    FRAME-CONDUCT    = 2.781
      *1054 *    ..
 
--NOTE- - -         DATA FOR     BL1 West Win (G.W4.E7.W1)
+-NOTE- - -         DATA FOR     West Window 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                       0.0000 FT
@@ -5474,7 +5474,7 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     *1055 * "BL1 West Win (G.W4.E7.W2)" = WINDOW
+     *1055 * "West Window 2" = WINDOW
      *1056 *    GLASS-TYPE       = "BL1 Window Type #1 GT"
      *1057 *    FRAME-WIDTH      = 0
      *1058 *    X                = 105.2
@@ -5484,7 +5484,7 @@
      *1062 *    FRAME-CONDUCT    = 2.781
      *1063 *    ..
 
--NOTE- - -         DATA FOR     BL1 West Win (G.W4.E7.W2)
+-NOTE- - -         DATA FOR     West Window 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  GLASS-TYPE       = BL1 Window Type #1 GT
 -INPUT - -                                              FRAME-WIDTH      =                       0.0000 FT
 -INPUT - -                                              X                =                     105.2000 FT
@@ -5530,14 +5530,14 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
 -DEFAULT -                                              C-EXEMPT         =                       0.0000
-     *1064 * "BL1 West Door (G.W4.E7.D1)" = DOOR
+     *1064 * "West Door 1" = DOOR
      *1065 *    CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
      *1066 *    X                = 101.7
      *1067 *    HEIGHT           = 7
      *1068 *    WIDTH            = 3
      *1069 *    ..
 
--NOTE- - -         DATA FOR     BL1 West Door (G.W4.E7.D1)
+-NOTE- - -         DATA FOR     West Door 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Sgl Lyr Unins Mtl Door
 -INPUT - -                                              X                =                     101.7000 FT
 -INPUT - -                                              HEIGHT           =                       7.0000 FT
@@ -5552,7 +5552,7 @@
 -DEFAULT -                                              DR-SH-SPEC-REFL  =                       0.1000
 -DEFAULT -                                              DR-SH-REFL-ROUGH =                       0.5000
 -DEFAULT -                                              SHADING-REPORT   = NO
-     *1070 * "BL1 Roof (G.W4.E8)" = EXTERIOR-WALL
+     *1070 * "Perimeter Space 4 Roof" = EXTERIOR-WALL
      *1071 *    CONSTRUCTION     = "Roof Type 3"
      *1072 *    INSIDE-SOL-ABS   = 0.7
      *1073 *    INSIDE-VIS-REFL  = 0.3
@@ -5563,7 +5563,7 @@
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1000E+01
      *1077 *    ..
 
--NOTE- - -         DATA FOR     BL1 Roof (G.W4.E8)
+-NOTE- - -         DATA FOR     Perimeter Space 4 Roof
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Roof Type 3
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -5602,15 +5602,15 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     *1078 * "BL1 East Wall (G.W4.I8)" = INTERIOR-WALL
-     *1079 *    NEXT-TO          = "BL1 Core Spc (G.C5)"
+     *1078 * "Perimeter Space 4 East Wall" = INTERIOR-WALL
+     *1079 *    NEXT-TO          = "Core Space 1"
      *1080 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1081 *    LOCATION         = SPACE-V3
      *1082 *    ..
 -CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
--NOTE- - -         DATA FOR     BL1 East Wall (G.W4.I8)
--INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = BL1 Core Spc (G.C5)
+-NOTE- - -         DATA FOR     Perimeter Space 4 East Wall
+-INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
 -INPUT - -                                              CONSTRUCTION     = BL1 IWall Construction
 -INPUT - -                                              LOCATION         = SPACE-V3
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1029.6000 SQFT
@@ -5630,13 +5630,13 @@
 -DEFAULT -                                              C-EXISTING       =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     *1083 * "BL1 Flr (G.W4.U4)" = UNDERGROUND-WALL
+     *1083 * "Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
      *1084 *    CONSTRUCTION     = "Slab-on-grade Type 2"
      *1085 *    INSIDE-SOL-ABS   = 0.7
      *1086 *    LOCATION         = BOTTOM
      *1087 *    ..
 
--NOTE- - -         DATA FOR     BL1 Flr (G.W4.U4)
+-NOTE- - -         DATA FOR     Perimeter Space 4 Slab on Grade
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Slab-on-grade Type 2
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              LOCATION         = BOTTOM
@@ -5652,7 +5652,7 @@
 -DEFAULT -                                              C-TYPE           =                       0.0000
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
-     *1088 * "BL1 Core Spc (G.C5)" = SPACE
+     *1088 * "Core Space 1" = SPACE
      *1089 *    X                = 15
      *1090 *    Y                = 15
      *1091 *    SHAPE            = POLYGON
@@ -5675,7 +5675,7 @@
      *1108 *    C-ACTIVITY-DESC  = *Office (Executive/Private)*
      *1109 *    ..
 
--NOTE- - -         DATA FOR     BL1 Core Spc (G.C5)
+-NOTE- - -         DATA FOR     Core Space 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  X                =                      15.0000 FT
 -INPUT - -                                              Y                =                      15.0000 FT
 -INPUT - -                                              SHAPE            = POLYGON
@@ -5875,7 +5875,7 @@
 -DEFAULT -                                              *DISP-LIGHT-KW   =                       4.4300 KW
 -DEFAULT -                                              *DISP-LIGHT-W/AR =                       0.0000 W/SQFT
 -DEFAULT -                                              *DISP-EQUIP-KW   =                       0.0000 KW
-     *1110 * "BL1 Roof (G.C5.E9)" = EXTERIOR-WALL
+     *1110 * "Core Space 1 Roof" = EXTERIOR-WALL
      *1111 *    CONSTRUCTION     = "Roof Type 1"
      *1112 *    INSIDE-SOL-ABS   = 0.7
      *1113 *    INSIDE-VIS-REFL  = 0.3
@@ -5886,7 +5886,7 @@
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1000E+01
      *1117 *    ..
 
--NOTE- - -         DATA FOR     BL1 Roof (G.C5.E9)
+-NOTE- - -         DATA FOR     Core Space 1 Roof
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Roof Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
@@ -5925,13 +5925,13 @@
 -DEFAULT -                                              C-C-FORMA        =                       0.0000
 -DEFAULT -                                              C-C-AREA         =                       0.0000 SQFT
 -DEFAULT -                                              C-C-CUBIERTA     =                       0.0000
-     *1118 * "BL1 Flr (G.C5.U5)" = UNDERGROUND-WALL
+     *1118 * "Core Space 1 Slab on Grade" = UNDERGROUND-WALL
      *1119 *    CONSTRUCTION     = "Slab-on-grade Type 1"
      *1120 *    INSIDE-SOL-ABS   = 0.7
      *1121 *    LOCATION         = BOTTOM
      *1122 *    ..
 
--NOTE- - -         DATA FOR     BL1 Flr (G.C5.U5)
+-NOTE- - -         DATA FOR     Core Space 1 Slab on Grade
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  CONSTRUCTION     = Slab-on-grade Type 1
 -INPUT - -                                              INSIDE-SOL-ABS   =                       0.7000
 -INPUT - -                                              LOCATION         = BOTTOM
@@ -6425,7 +6425,7 @@
 -NOTE- - - ----------------------- =========================== -------------------------------THIS ITEM HAS BEEN FETCHED FROM LIBRARY 
      *1239 *    TANK-UA          = 1.86322
      *1240 *    LOCATION         = ZONE
-     *1241 *    ZONE-NAME        = "BL1 Cor Zone (fG.z5)"
+     *1241 *    ZONE-NAME        = "Core Zone 1"
      *1242 *    DHW-LOOP         = "DHW Plant 1 Loop (1)"
      *1243 *    C-ENERGY-FACTOR  = 0.535037
      *1244 *    C-TANK-EXT-RVAL  = 12
@@ -6450,7 +6450,7 @@
 -INPUT - -                                              HIR-FPLR         = DW-Gas-Pilotless-HIR-fPLR
 -INPUT - -                                              TANK-UA          =                       1.8632 BTU/HR-F
 -INPUT - -                                              LOCATION         = ZONE
--INPUT - -                                              ZONE-NAME        = BL1 Cor Zone (fG.z5)
+-INPUT - -                                              ZONE-NAME        = Core Zone 1
 -INPUT - -                                              DHW-LOOP         = DHW Plant 1 Loop (1)
 -INPUT - -                                              C-ENERGY-FACTOR  =                       0.5350
 -INPUT - -                                              C-TANK-EXT-RVAL  =                      12.0000 HR-SQFT-F /BTU
@@ -6562,67 +6562,66 @@
      *1338 *    MAX-HP-SUPP-T    = 90
 -CAUTION-------------------------- == --------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.7000E+02
-     *1339 *    DESICCANT        = LIQ-VENT-AIR-1
-     *1340 *    ..
-     *1341 * SET-DEFAULT FOR SYSTEM
-     *1342 *    TYPE = DOAS
-     *1343 *    HUMIDIFIER-TYPE  = STEAM
-     *1344 *    ..
-     *1345 *  
-     *1346 * SET-DEFAULT FOR ZONE
-     *1347 *    TYPE = CONDITIONED
-     *1348 *    ZONE-FAN-KW/FLOW = 0.0007457
-     *1349 *    ZONE-FAN-RATIO   = 0.8
-     *1350 *    OA-FLOW/AREA     = ( 0.12 )
-     *1351 *    ..
-     *1352 *  
-     *1353 * "CW VAV" = SYSTEM
-     *1354 *    TYPE             = PVVT
-     *1355 *    HEAT-SOURCE      = NONE
-     *1356 *    ZONE-HEAT-SOURCE = HOT-WATER
-     *1357 *    PREHEAT-SOURCE   = HOT-WATER
-     *1358 *    HUMIDIFIER-TYPE  = NONE
-     *1359 *    MAX-SUPPLY-T     = 90
-     *1360 *    COOL-SET-T       = 60
-     *1361 *    ECONO-LIMIT-T    = 70
-     *1362 *    ECONO-LOCKOUT    = NO
-     *1363 *    PREHEAT-T        = 50
-     *1364 *    MIN-OA-METHOD    = DCV-RETURN-SENSOR
-     *1365 *    SUPPLY-FLOW      = 10000
-     *1366 *    RETURN-FLOW      = 9000
-     *1367 *    RECOVER-EXHAUST  = EXHAUST-ONLY
-     *1368 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-     *1369 *    FAN-CONTROL      = SPEED
-     *1370 *    SUPPLY-STATIC    = 4.1
-     *1371 *    SUPPLY-MECH-EFF  = 1
-     *1372 *    RETURN-STATIC    = 3.5
-     *1373 *    REHEAT-DELTA-T   = 20
-     *1374 *    HW-VALVE-TYPE    = TWO-WAY
-     *1375 *    HW-LOOP          = "Hot Water Loop"
-     *1376 *    PHW-LOOP         = "Hot Water Loop"
-     *1377 *    COOLING-CAPACITY = 300000
-     *1378 *    HEATING-CAPACITY = -24000
-     *1379 *    HP-SUPP-HT-CAP   = -6000
-     *1380 *    MIN-SUPPLY-SCH   = "Cooling Setpoint Annual"
-     *1381 *    EVAP-PCC-EFF     = 1.2
-     *1382 *    PREHEAT-CAPACITY = -150000
-     *1383 *    ZONE-HW-LOOP     = "Hot Water Loop"
-     *1384 *    CONTROL-ZONE     = "BL1 Cor Zone (fG.z5)"
-     *1385 *    ERV-RECOVER-TYPE = SENSIBLE-WHEEL
-     *1386 *    ERV-OA-FLOW      = 1000
-     *1387 *    ERV-EXH-FLOW     = 900
-     *1388 *    ERV-SENSIBLE-EFF = 0.8
-     *1389 *    ERV-TEMP-CTRL    = FIXED-SETPT
-     *1390 *    OA-HEAT-SETPT-T  = 55
-     *1391 *    OA-COOL-SETPT-T  = 90
-     *1392 *    ERV-CAP-CTRL     = MODULATE-HX
-     *1393 *    ERV-FANS         = SELF-CONTAINED
-     *1394 *    SUPPLY-MTR-EFF   = 0.9
-     *1395 *    PREHEAT-LOCN     = MIXED-AIR
-     *1396 *    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
-     *1397 *    RHT-SIZING-METHO = MAX-SUPPLY-T
-     *1398 *    DOAS-ATTACHED-TO = MIXED-AIR
-     *1399 *    ..
+     *1339 *    ..
+     *1340 * SET-DEFAULT FOR SYSTEM
+     *1341 *    TYPE = DOAS
+     *1342 *    HUMIDIFIER-TYPE  = STEAM
+     *1343 *    ..
+     *1344 *  
+     *1345 * SET-DEFAULT FOR ZONE
+     *1346 *    TYPE = CONDITIONED
+     *1347 *    ZONE-FAN-KW/FLOW = 0.0007457
+     *1348 *    ZONE-FAN-RATIO   = 0.8
+     *1349 *    OA-FLOW/AREA     = ( 0.12 )
+     *1350 *    ..
+     *1351 *  
+     *1352 * "Pkgd VAV" = SYSTEM
+     *1353 *    TYPE             = PVVT
+     *1354 *    HEAT-SOURCE      = NONE
+     *1355 *    ZONE-HEAT-SOURCE = HOT-WATER
+     *1356 *    PREHEAT-SOURCE   = HOT-WATER
+     *1357 *    HUMIDIFIER-TYPE  = NONE
+     *1358 *    MAX-SUPPLY-T     = 90
+     *1359 *    COOL-SET-T       = 60
+     *1360 *    ECONO-LIMIT-T    = 70
+     *1361 *    ECONO-LOCKOUT    = NO
+     *1362 *    PREHEAT-T        = 50
+     *1363 *    MIN-OA-METHOD    = DCV-RETURN-SENSOR
+     *1364 *    SUPPLY-FLOW      = 10000
+     *1365 *    RETURN-FLOW      = 9000
+     *1366 *    RECOVER-EXHAUST  = EXHAUST-ONLY
+     *1367 *    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+     *1368 *    FAN-CONTROL      = SPEED
+     *1369 *    SUPPLY-STATIC    = 4.1
+     *1370 *    SUPPLY-MECH-EFF  = 1
+     *1371 *    RETURN-STATIC    = 3.5
+     *1372 *    REHEAT-DELTA-T   = 20
+     *1373 *    HW-VALVE-TYPE    = TWO-WAY
+     *1374 *    HW-LOOP          = "Hot Water Loop"
+     *1375 *    PHW-LOOP         = "Hot Water Loop"
+     *1376 *    COOLING-CAPACITY = 300000
+     *1377 *    HEATING-CAPACITY = -24000
+     *1378 *    HP-SUPP-HT-CAP   = -6000
+     *1379 *    MIN-SUPPLY-SCH   = "Cooling Setpoint Annual"
+     *1380 *    EVAP-PCC-EFF     = 1.2
+     *1381 *    PREHEAT-CAPACITY = -150000
+     *1382 *    ZONE-HW-LOOP     = "Hot Water Loop"
+     *1383 *    CONTROL-ZONE     = "Core Zone 1"
+     *1384 *    ERV-RECOVER-TYPE = SENSIBLE-WHEEL
+     *1385 *    ERV-OA-FLOW      = 1000
+     *1386 *    ERV-EXH-FLOW     = 900
+     *1387 *    ERV-SENSIBLE-EFF = 0.8
+     *1388 *    ERV-TEMP-CTRL    = FIXED-SETPT
+     *1389 *    OA-HEAT-SETPT-T  = 55
+     *1390 *    OA-COOL-SETPT-T  = 90
+     *1391 *    ERV-CAP-CTRL     = MODULATE-HX
+     *1392 *    ERV-FANS         = SELF-CONTAINED
+     *1393 *    SUPPLY-MTR-EFF   = 0.9
+     *1394 *    PREHEAT-LOCN     = MIXED-AIR
+     *1395 *    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+     *1396 *    RHT-SIZING-METHO = MAX-SUPPLY-T
+     *1397 *    DOAS-ATTACHED-TO = MIXED-AIR
+     *1398 *    ..
      *   1 * $LIBRARY-ENTRY PVVT-Cool-Cap-fEWB&OAT          CURVE-FIT       Pkgd VVVT
      *   2 *   TYPE=BI-QUADRATIC-T COEF=( 0.87403018,-0.00114160, 0.00017110,
      *   3 *                             -0.00295700, 0.00001018,-0.00005917)
@@ -6761,7 +6760,7 @@
 -DEFAULT -                                              COEFFICIENTS     =                       0.0000
 -DEFAULT -                                              COEFFICIENTS     =                       0.0000
 
--NOTE- - -         DATA FOR     CW VAV
+-NOTE- - -         DATA FOR     Pkgd VAV
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PVVT
 -INPUT - -                                              HEAT-SOURCE      = NONE
 -INPUT - -                                              ZONE-HEAT-SOURCE = HOT-WATER
@@ -6792,7 +6791,7 @@
 -INPUT - -                                              EVAP-PCC-EFF     =                       1.2000 BTU/BTU
 -INPUT - -                                              PREHEAT-CAPACITY =                 -150000.0000 BTU/HR
 -INPUT - -                                              ZONE-HW-LOOP     = Hot Water Loop
--INPUT - -                                              CONTROL-ZONE     = BL1 Cor Zone (fG.z5)
+-INPUT - -                                              CONTROL-ZONE     = Core Zone 1
 -INPUT - -                                              ERV-RECOVER-TYPE = SENSIBLE-WHEEL
 -INPUT - -                                              ERV-OA-FLOW      =                    1000.0000 CFM
 -INPUT - -                                              ERV-EXH-FLOW     =                     900.0000 CFM
@@ -7168,19 +7167,19 @@
 -USER DEF-                                              HP-SUPP-SOURCE   = HOT-WATER
 -USER DEF-                                              MIN-HP-T         =                      90.0000 F
 -USER DEF-                                              MAX-HP-SUPP-T    =                      90.0000 F
-     *1400 * "BL1 S Zone (fG.z1)" = ZONE
-     *1401 *    TYPE             = CONDITIONED
-     *1402 *    FLOW/AREA        = 0.5
-     *1403 *    DESIGN-HEAT-T    = 70
-     *1404 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1405 *    DESIGN-COOL-T    = 75
-     *1406 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1407 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1408 *    SPACE            = "BL1 South Perim Spc (G.S1)"
-     *1409 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1410 *    ..
+     *1399 * "Prm Zone 1 (South) Zn" = ZONE
+     *1400 *    TYPE             = CONDITIONED
+     *1401 *    FLOW/AREA        = 0.5
+     *1402 *    DESIGN-HEAT-T    = 70
+     *1403 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1404 *    DESIGN-COOL-T    = 75
+     *1405 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1406 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1407 *    SPACE            = "Prm Space 1 (South)"
+     *1408 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1409 *    ..
 
--NOTE- - -         DATA FOR     BL1 S Zone (fG.z1)
+-NOTE- - -         DATA FOR     Prm Zone 1 (South) Zn
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
 -INPUT - -                                              FLOW/AREA        =                       0.5000 CFM/SQFT
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
@@ -7188,7 +7187,7 @@
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
 -INPUT - -                                              COOL-TEMP-SCH    = Cooling Setpoint Annual
 -INPUT - -                                              THERMOSTAT-TYPE  = REVERSE-ACTION
--INPUT - -                                              SPACE            = BL1 South Perim Spc (G.S1)
+-INPUT - -                                              SPACE            = Prm Space 1 (South)
 -INPUT - -                                              OUTSIDE-AIR-FLOW =                     200.0000 CFM
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  MIN-FLOW-RATIO   =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              MULTIPLIER       =                       1.0000 FRAC.OR MULT.
@@ -7253,19 +7252,19 @@
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  ZONE-FAN-KW/FLOW =                       0.0007 KW/CFM
 -USER DEF-                                              ZONE-FAN-RATIO   =                       0.8000 FRAC.OR MULT.
 -USER DEF-                                              OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1411 * "BL1 E Zone (fG.z2)" = ZONE
-     *1412 *    TYPE             = CONDITIONED
-     *1413 *    FLOW/AREA        = 0.5
-     *1414 *    DESIGN-HEAT-T    = 70
-     *1415 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1416 *    DESIGN-COOL-T    = 75
-     *1417 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1418 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1419 *    SPACE            = "BL1 East Perim Spc (G.E2)"
-     *1420 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1421 *    ..
+     *1410 * "Prm Zone 2 (East) Zn" = ZONE
+     *1411 *    TYPE             = CONDITIONED
+     *1412 *    FLOW/AREA        = 0.5
+     *1413 *    DESIGN-HEAT-T    = 70
+     *1414 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1415 *    DESIGN-COOL-T    = 75
+     *1416 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1417 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1418 *    SPACE            = "Prm Space 2 (East)"
+     *1419 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1420 *    ..
 
--NOTE- - -         DATA FOR     BL1 E Zone (fG.z2)
+-NOTE- - -         DATA FOR     Prm Zone 2 (East) Zn
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
 -INPUT - -                                              FLOW/AREA        =                       0.5000 CFM/SQFT
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
@@ -7273,7 +7272,7 @@
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
 -INPUT - -                                              COOL-TEMP-SCH    = Cooling Setpoint Annual
 -INPUT - -                                              THERMOSTAT-TYPE  = REVERSE-ACTION
--INPUT - -                                              SPACE            = BL1 East Perim Spc (G.E2)
+-INPUT - -                                              SPACE            = Prm Space 2 (East)
 -INPUT - -                                              OUTSIDE-AIR-FLOW =                     200.0000 CFM
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  MIN-FLOW-RATIO   =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              MULTIPLIER       =                       1.0000 FRAC.OR MULT.
@@ -7338,19 +7337,19 @@
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  ZONE-FAN-KW/FLOW =                       0.0007 KW/CFM
 -USER DEF-                                              ZONE-FAN-RATIO   =                       0.8000 FRAC.OR MULT.
 -USER DEF-                                              OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1422 * "BL1 N Zone (fG.z3)" = ZONE
-     *1423 *    TYPE             = CONDITIONED
-     *1424 *    FLOW/AREA        = 0.5
-     *1425 *    DESIGN-HEAT-T    = 70
-     *1426 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1427 *    DESIGN-COOL-T    = 75
-     *1428 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1429 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1430 *    SPACE            = "BL1 North Perim Spc (G.N3)"
-     *1431 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1432 *    ..
+     *1421 * "Prm Zone 3 (North)" = ZONE
+     *1422 *    TYPE             = CONDITIONED
+     *1423 *    FLOW/AREA        = 0.5
+     *1424 *    DESIGN-HEAT-T    = 70
+     *1425 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1426 *    DESIGN-COOL-T    = 75
+     *1427 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1428 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1429 *    SPACE            = "Prm Space 3 (North)"
+     *1430 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1431 *    ..
 
--NOTE- - -         DATA FOR     BL1 N Zone (fG.z3)
+-NOTE- - -         DATA FOR     Prm Zone 3 (North)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
 -INPUT - -                                              FLOW/AREA        =                       0.5000 CFM/SQFT
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
@@ -7358,7 +7357,7 @@
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
 -INPUT - -                                              COOL-TEMP-SCH    = Cooling Setpoint Annual
 -INPUT - -                                              THERMOSTAT-TYPE  = REVERSE-ACTION
--INPUT - -                                              SPACE            = BL1 North Perim Spc (G.N3)
+-INPUT - -                                              SPACE            = Prm Space 3 (North)
 -INPUT - -                                              OUTSIDE-AIR-FLOW =                     200.0000 CFM
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  MIN-FLOW-RATIO   =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              MULTIPLIER       =                       1.0000 FRAC.OR MULT.
@@ -7423,19 +7422,19 @@
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  ZONE-FAN-KW/FLOW =                       0.0007 KW/CFM
 -USER DEF-                                              ZONE-FAN-RATIO   =                       0.8000 FRAC.OR MULT.
 -USER DEF-                                              OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1433 * "BL1 W Zone (fG.z4)" = ZONE
-     *1434 *    TYPE             = CONDITIONED
-     *1435 *    FLOW/AREA        = 0.5
-     *1436 *    DESIGN-HEAT-T    = 70
-     *1437 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1438 *    DESIGN-COOL-T    = 75
-     *1439 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1440 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1441 *    SPACE            = "BL1 West Perim Spc (G.W4)"
-     *1442 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1443 *    ..
+     *1432 * "Prm Zone 4 (West)" = ZONE
+     *1433 *    TYPE             = CONDITIONED
+     *1434 *    FLOW/AREA        = 0.5
+     *1435 *    DESIGN-HEAT-T    = 70
+     *1436 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1437 *    DESIGN-COOL-T    = 75
+     *1438 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1439 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1440 *    SPACE            = "Prm Space 4 (West)"
+     *1441 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1442 *    ..
 
--NOTE- - -         DATA FOR     BL1 W Zone (fG.z4)
+-NOTE- - -         DATA FOR     Prm Zone 4 (West)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
 -INPUT - -                                              FLOW/AREA        =                       0.5000 CFM/SQFT
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
@@ -7443,7 +7442,7 @@
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
 -INPUT - -                                              COOL-TEMP-SCH    = Cooling Setpoint Annual
 -INPUT - -                                              THERMOSTAT-TYPE  = REVERSE-ACTION
--INPUT - -                                              SPACE            = BL1 West Perim Spc (G.W4)
+-INPUT - -                                              SPACE            = Prm Space 4 (West)
 -INPUT - -                                              OUTSIDE-AIR-FLOW =                     200.0000 CFM
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  MIN-FLOW-RATIO   =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              MULTIPLIER       =                       1.0000 FRAC.OR MULT.
@@ -7508,20 +7507,20 @@
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  ZONE-FAN-KW/FLOW =                       0.0007 KW/CFM
 -USER DEF-                                              ZONE-FAN-RATIO   =                       0.8000 FRAC.OR MULT.
 -USER DEF-                                              OA-FLOW/AREA     =                       0.1200 CFM/SQFT
-     *1444 * "BL1 Cor Zone (fG.z5)" = ZONE
-     *1445 *    TYPE             = CONDITIONED
-     *1446 *    FLOW/AREA        = 0.5
-     *1447 *    DESIGN-HEAT-T    = 70
-     *1448 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1449 *    DESIGN-COOL-T    = 75
-     *1450 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1451 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1452 *    SPACE            = "BL1 Core Spc (G.C5)"
-     *1453 *    AUX-HEAT-RATIO   = 0.7
-     *1454 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1455 *    ..
+     *1443 * "Core Zone 1" = ZONE
+     *1444 *    TYPE             = CONDITIONED
+     *1445 *    FLOW/AREA        = 0.5
+     *1446 *    DESIGN-HEAT-T    = 70
+     *1447 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1448 *    DESIGN-COOL-T    = 75
+     *1449 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1450 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1451 *    SPACE            = "Core Space 1"
+     *1452 *    AUX-HEAT-RATIO   = 0.7
+     *1453 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1454 *    ..
 
--NOTE- - -         DATA FOR     BL1 Cor Zone (fG.z5)
+-NOTE- - -         DATA FOR     Core Zone 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
 -INPUT - -                                              FLOW/AREA        =                       0.5000 CFM/SQFT
 -INPUT - -                                              DESIGN-HEAT-T    =                      70.0000 F
@@ -7529,7 +7528,7 @@
 -INPUT - -                                              DESIGN-COOL-T    =                      75.0000 F
 -INPUT - -                                              COOL-TEMP-SCH    = Cooling Setpoint Annual
 -INPUT - -                                              THERMOSTAT-TYPE  = REVERSE-ACTION
--INPUT - -                                              SPACE            = BL1 Core Spc (G.C5)
+-INPUT - -                                              SPACE            = Core Space 1
 -INPUT - -                                              AUX-HEAT-RATIO   =                       0.7000 FRAC.OR MULT.
 -INPUT - -                                              OUTSIDE-AIR-FLOW =                     200.0000 CFM
 -DEFAULT -                                              MULTIPLIER       =                       1.0000 FRAC.OR MULT.
@@ -7588,51 +7587,51 @@
 -USER DEF- - - - - - - - - - - - - - - - - - - - - - -  ZONE-FAN-KW/FLOW =                       0.0007 KW/CFM
 -USER DEF-                                              ZONE-FAN-RATIO   =                       0.8000 FRAC.OR MULT.
 -USER DEF-                                              OA-FLOW/AREA     =                       0.1200 CFM/SQFT
+     *1455 *  
      *1456 *  
-     *1457 *  
-     *1458 * $ *********************************************************
-     *1459 * $ **                                                     **
-     *1460 * $ **                Metering & Misc HVAC                 **
-     *1461 * $ **                                                     **
-     *1462 * $ *********************************************************
-     *1463 *  
-     *1464 * $ ---------------------------------------------------------
-     *1465 * $              Equipment Controls
-     *1466 * $ ---------------------------------------------------------
+     *1457 * $ *********************************************************
+     *1458 * $ **                                                     **
+     *1459 * $ **                Metering & Misc HVAC                 **
+     *1460 * $ **                                                     **
+     *1461 * $ *********************************************************
+     *1462 *  
+     *1463 * $ ---------------------------------------------------------
+     *1464 * $              Equipment Controls
+     *1465 * $ ---------------------------------------------------------
+     *1466 *  
      *1467 *  
      *1468 *  
-     *1469 *  
-     *1470 * $ ---------------------------------------------------------
-     *1471 * $              Load Management
-     *1472 * $ ---------------------------------------------------------
+     *1469 * $ ---------------------------------------------------------
+     *1470 * $              Load Management
+     *1471 * $ ---------------------------------------------------------
+     *1472 *  
      *1473 *  
      *1474 *  
-     *1475 *  
-     *1476 * $ *********************************************************
-     *1477 * $ **                                                     **
-     *1478 * $ **                    Utility Rates                    **
-     *1479 * $ **                                                     **
-     *1480 * $ *********************************************************
-     *1481 *  
-     *1482 * $ ---------------------------------------------------------
-     *1483 * $              Ratchets
-     *1484 * $ ---------------------------------------------------------
+     *1475 * $ *********************************************************
+     *1476 * $ **                                                     **
+     *1477 * $ **                    Utility Rates                    **
+     *1478 * $ **                                                     **
+     *1479 * $ *********************************************************
+     *1480 *  
+     *1481 * $ ---------------------------------------------------------
+     *1482 * $              Ratchets
+     *1483 * $ ---------------------------------------------------------
+     *1484 *  
      *1485 *  
      *1486 *  
-     *1487 *  
-     *1488 * $ ---------------------------------------------------------
-     *1489 * $              Block Charges
-     *1490 * $ ---------------------------------------------------------
+     *1487 * $ ---------------------------------------------------------
+     *1488 * $              Block Charges
+     *1489 * $ ---------------------------------------------------------
+     *1490 *  
      *1491 *  
      *1492 *  
-     *1493 *  
-     *1494 * $ ---------------------------------------------------------
-     *1495 * $              Utility Rates
-     *1496 * $ ---------------------------------------------------------
-     *1497 *  
-     *1498 * "Custom Elec Rate" = UTILITY-RATE
-     *1499 *    TYPE             = ELECTRICITY
-     *1500 *    ..
+     *1493 * $ ---------------------------------------------------------
+     *1494 * $              Utility Rates
+     *1495 * $ ---------------------------------------------------------
+     *1496 *  
+     *1497 * "Custom Elec Rate" = UTILITY-RATE
+     *1498 *    TYPE             = ELECTRICITY
+     *1499 *    ..
 
 -NOTE- - -         DATA FOR     Custom Elec Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = ELECTRICITY
@@ -7657,9 +7656,9 @@
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      15.0000 MINUTES
 -DEFAULT -                                              BUY/SELL-MODE    = BUY/SELL
-     *1501 * "Custom Gas Rate" = UTILITY-RATE
-     *1502 *    TYPE             = NATURAL-GAS
-     *1503 *    ..
+     *1500 * "Custom Gas Rate" = UTILITY-RATE
+     *1501 *    TYPE             = NATURAL-GAS
+     *1502 *    ..
 
 -NOTE- - -         DATA FOR     Custom Gas Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = NATURAL-GAS
@@ -7681,54 +7680,54 @@
 -DEFAULT -                                              PCT-TAXES-APPLY  = BASE
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      60.0000 MINUTES
+     *1503 *  
      *1504 *  
-     *1505 *  
-     *1506 * $ *********************************************************
-     *1507 * $ **                                                     **
-     *1508 * $ **                 Output Reporting                    **
-     *1509 * $ **                                                     **
-     *1510 * $ *********************************************************
-     *1511 *  
-     *1512 * $ ---------------------------------------------------------
-     *1513 * $              Loads Non-Hourly Reporting
-     *1514 * $ ---------------------------------------------------------
-     *1515 *  
-     *1516 * LOADS-REPORT
-     *1517 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1518 *    SUMMARY          = ( ALL-SUMMARY )
-     *1519 *    ..
+     *1505 * $ *********************************************************
+     *1506 * $ **                                                     **
+     *1507 * $ **                 Output Reporting                    **
+     *1508 * $ **                                                     **
+     *1509 * $ *********************************************************
+     *1510 *  
+     *1511 * $ ---------------------------------------------------------
+     *1512 * $              Loads Non-Hourly Reporting
+     *1513 * $ ---------------------------------------------------------
+     *1514 *  
+     *1515 * LOADS-REPORT
+     *1516 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1517 *    SUMMARY          = ( ALL-SUMMARY )
+     *1518 *    ..
 
 -NOTE- - -         DATA FOR     LOADS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1519 *  
      *1520 *  
-     *1521 *  
-     *1522 * $ ---------------------------------------------------------
-     *1523 * $              Systems Non-Hourly Reporting
-     *1524 * $ ---------------------------------------------------------
-     *1525 *  
-     *1526 * SYSTEMS-REPORT
-     *1527 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1528 *    SUMMARY          = ( ALL-SUMMARY )
-     *1529 *    ..
+     *1521 * $ ---------------------------------------------------------
+     *1522 * $              Systems Non-Hourly Reporting
+     *1523 * $ ---------------------------------------------------------
+     *1524 *  
+     *1525 * SYSTEMS-REPORT
+     *1526 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1527 *    SUMMARY          = ( ALL-SUMMARY )
+     *1528 *    ..
 
 -NOTE- - -         DATA FOR     SYSTEMS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1529 *  
      *1530 *  
-     *1531 *  
-     *1532 * $ ---------------------------------------------------------
-     *1533 * $              Plant Non-Hourly Reporting
-     *1534 * $ ---------------------------------------------------------
-     *1535 *  
-     *1536 * PLANT-REPORT
-     *1537 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1538 *    SUMMARY          = ( ALL-SUMMARY )
-     *1539 *    ..
+     *1531 * $ ---------------------------------------------------------
+     *1532 * $              Plant Non-Hourly Reporting
+     *1533 * $ ---------------------------------------------------------
+     *1534 *  
+     *1535 * PLANT-REPORT
+     *1536 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1537 *    SUMMARY          = ( ALL-SUMMARY )
+     *1538 *    ..
 
 -NOTE- - -         DATA FOR     PLANT-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -7737,16 +7736,16 @@
 -INPUT - -                                              SUMMARY          = BEPS
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1539 *  
      *1540 *  
-     *1541 *  
-     *1542 * $ ---------------------------------------------------------
-     *1543 * $              Economics Non-Hourly Reporting
-     *1544 * $ ---------------------------------------------------------
-     *1545 *  
-     *1546 * ECONOMICS-REPORT
-     *1547 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1548 *    SUMMARY          = ( ALL-SUMMARY )
-     *1549 *    ..
+     *1541 * $ ---------------------------------------------------------
+     *1542 * $              Economics Non-Hourly Reporting
+     *1543 * $ ---------------------------------------------------------
+     *1544 *  
+     *1545 * ECONOMICS-REPORT
+     *1546 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1547 *    SUMMARY          = ( ALL-SUMMARY )
+     *1548 *    ..
 
 -NOTE- - -         DATA FOR     ECONOMICS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -7754,15 +7753,15 @@
 -INPUT - -                                              SUMMARY          = ES-D
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
+     *1549 *  
      *1550 *  
-     *1551 *  
-     *1552 * $ ---------------------------------------------------------
-     *1553 * $              Hourly Reporting
-     *1554 * $ ---------------------------------------------------------
+     *1551 * $ ---------------------------------------------------------
+     *1552 * $              Hourly Reporting
+     *1553 * $ ---------------------------------------------------------
+     *1554 *  
      *1555 *  
-     *1556 *  
-     *1557 * "Hourly Report" = HOURLY-REPORT
-     *1558 *    LIBRARY-ENTRY "Hourly Report"
+     *1556 * "Hourly Report" = HOURLY-REPORT
+     *1557 *    LIBRARY-ENTRY "Hourly Report"
 -NOTE- - - ------------------ =============== ------------------------------------------------THIS ITEM HAS BEEN FETCHED FROM LIBRARY 
      *   1 * $LIBRARY-ENTRY Hourly Report                   HOURLY-REPORT   Hourly Reports
      *   2 *    REPORT-SCHEDULE = "Hourly Report Schedule"
@@ -7807,7 +7806,7 @@
 -LIBRARY -                                              VARIABLE-LIST    =                      11.0000
 -LIBRARY -                                              VARIABLE-LIST    =                      12.0000
 -LIBRARY -                                              VARIABLE-LIST    =                      20.0000
-     *1559 *    ..
+     *1558 *    ..
 
 -NOTE- - -         DATA FOR     Hourly Report
 -LIBRARY - - - - - - - - - - - - - - - - - - - - - - -  REPORT-SCHEDULE  = Hourly Report Schedule
@@ -7826,26 +7825,26 @@
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
+     *1559 *  
      *1560 *  
-     *1561 *  
-     *1562 * $ ---------------------------------------------------------
-     *1563 * $              THE END
-     *1564 * $ ---------------------------------------------------------
-     *1565 *  
-     *1566 * END ..
+     *1561 * $ ---------------------------------------------------------
+     *1562 * $              THE END
+     *1563 * $ ---------------------------------------------------------
+     *1564 *  
+     *1565 * END ..
 *WARNING**************************************************************************************
-*WARNING***SPACE BL1 West Perim Spc (G.W4) has 0 delayed walls, 1 delayed
-            floors and 0 delayed ceilings. There should be at least a delayed
-            wall and floor, a delayed wall and ceiling, or a delayed ceiling and
-            floor for custom weighting factors to be calculated. ASHRAE
-            weighting factors with floor weight of 70 lb/ft2 (342 kg/m2) will be
-            used for this space.229 Test Case 1 updated                                                                   11/05/2024    10:09:48  BDL  RUN 3
+*WARNING***SPACE Prm Space 4 (West) has 0 delayed walls, 1 delayed floors and
+            0 delayed ceilings. There should be at least a delayed wall and
+            floor, a delayed wall and ceiling, or a delayed ceiling and floor
+            for custom weighting factors to be calculated. ASHRAE weighting
+            factors with floor weight of 70 lb/ft2 (342 kg/m2) will be used for
+            this space.229 Test Case 1 updated                                                                   11/07/2024    14:25:09  BDL  RUN 3
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
 
-SP NAME--   BL1 South Perim  BL1 East Perim S BL1 North Perim  BL1 West Perim S BL1 Core Spc (G.
-            Spc (G.S1)       pc (G.E2)        Spc (G.N3)       pc (G.W4)        C5)             
+SP NAME--   Prm Space 1 (Sou Prm Space 2 (Eas Prm Space 3 (Nor Prm Space 4 (Wes Core Space 1    
+            th)              t)               th)              t)                               
 
 SOLAR
 -----
@@ -7900,5 +7899,5 @@ G3*         -0.00015         -0.00102         -0.00321          0.00000         
 P1          -1.24986         -1.21343         -1.08911         -0.87000         -1.24082
 P2           0.34926          0.31903          0.21687          0.00000          0.34074
 -CAUTION--------------------------------------------------------------------------------------NO COOLING EQUIPMENT HAS BEEN DEFINED   
-     *1567 * COMPUTE ..
-     *1568 * STOP ..
+     *1566 * COMPUTE ..
+     *1567 * STOP ..
