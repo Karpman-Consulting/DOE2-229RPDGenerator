@@ -776,6 +776,7 @@ class BDLEnums:
                 "HP-SUPP-SOURCE",
                 "MAX-HP-SUPP-T",
                 "MIN-HP-T",
+                "INDUCTION-RATIO",
             ]
         ),
         "UndergroundWallKeywords": _ListEnum(
@@ -818,6 +819,7 @@ class BDLEnums:
                 "SERIES-PIU",
                 "PARALLEL-PIU",
                 "TERMINAL-IU",
+                "CEILING-IU",
                 "DUAL-DUCT",
                 "MULTIZONE",
                 "SUBZONE",
@@ -855,9 +857,24 @@ class BDLEnums:
                 "NO",
             ]
         ),
+        "ZoneInductionSourceOptions": _ListEnum(
+            [
+                "ZONE-RECIRC",
+                "RETURN-PLENUM",
+                "RETURN-AIR",
+                "SUPPLY-AIR",
+            ]
+        ),
+        "ZoneFanControlOptions": _ListEnum(
+            [
+                "CONSTANT-VOLUME",
+                "VARIABLE-VOLUME",
+            ]
+        ),
         "ZoneKeywords": _ListEnum(
             [
                 "TERMINAL-TYPE",
+                "ZONE-FAN-CTRL",
                 "DESIGN-HEAT-T",
                 "DESIGN-COOL-T",
                 "HEATING-CAPACITY",
@@ -897,6 +914,8 @@ class BDLEnums:
                 "CHW-VALVE-TYPE",
                 "CW-VALVE",
                 "WSE-VALVE-TYPE",
+                "INDUCTION-RATIO",
+                "INDUCED-AIR-SRC",
             ]
         ),
         "HPSupplementSourceOptions": _ListEnum(
