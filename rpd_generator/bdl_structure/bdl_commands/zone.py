@@ -6,6 +6,9 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 HeatingSourceOptions = SchemaEnums.schema_enums["HeatingSourceOptions"]
 CoolingSourceOptions = SchemaEnums.schema_enums["CoolingSourceOptions"]
 TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
+TerminalFanConfigurationOptions = SchemaEnums.schema_enums[
+    "TerminalFanConfigurationOptions"
+]
 FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
     "FanSystemSupplyFanControlOptions"
 ]
@@ -307,6 +310,7 @@ class Zone(ChildNode):
                 if self.terminals_cooling_capacity[0]
                 else None
             )
+            self.terminals_fan_configuration[0] = TerminalFanConfigurationOptions.SERIES
 
         if not self.parent.is_terminal:
             self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
@@ -334,6 +338,19 @@ class Zone(ChildNode):
 
         if is_iu:
             induct_source = self.get_inp(BDL_ZoneKeywords.INDUCED_AIR_SRC)
+            piu_fan_flow = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
+            )
+            piu_fan_kw = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW"
+            )
+            piu_cd_flow = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow"
+            )
+            piu_cd_min_airflow_ratio = output_data.get(
+                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Minimum Airflow Ratio"
+            )
+
             if induct_source == BDL_ZoneInductionSourceOptions.SUPPLY_AIR:
                 self.terminals_primary_airflow[0] = supply_airflow
                 self.terminals_secondary_airflow[0] = 0
@@ -341,22 +358,22 @@ class Zone(ChildNode):
                 self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE)
                 == BDL_TerminalTypes.SERIES_PIU
             ):
-                self.terminals_primary_airflow[0] = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow"
-                )
-                self.terminals_secondary_airflow[0] = (
-                    output_data.get(
-                        "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
+                self.terminals_primary_airflow[0] = piu_cd_flow
+                if (
+                    self.terminals_primary_airflow[0]
+                    and piu_fan_flow
+                    and piu_cd_min_airflow_ratio
+                ):
+                    self.terminals_secondary_airflow[0] = (
+                        piu_fan_flow
+                        - self.terminals_primary_airflow[0] * piu_cd_min_airflow_ratio
                     )
-                    - self.terminals_primary_airflow[0]
+                self.terminals_fan_configuration[0] = (
+                    TerminalFanConfigurationOptions.SERIES
                 )
             else:
-                self.terminals_primary_airflow[0] = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow"
-                )
-                self.terminals_secondary_airflow[0] = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
-                )
+                self.terminals_primary_airflow[0] = piu_cd_flow
+                self.terminals_secondary_airflow[0] = piu_fan_flow
 
             # Only populate MainTerminal Fan data elements here if the zone TERMINAL-TYPE is SERIES-PIU or PARALLEL-PIU
             if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
@@ -364,11 +381,7 @@ class Zone(ChildNode):
                 BDL_TerminalTypes.PARALLEL_PIU,
             ]:
                 self.terminal_fan_id = self.u_name + " MainTerminal Fan"
-                self.terminal_fan_design_airflow = self.try_float(
-                    output_data.get(
-                        "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
-                    )
-                )
+                self.terminal_fan_design_airflow = piu_fan_flow
                 self.terminals_is_fan_first_stage_heat[0] = (
                     self.is_fan_first_stage_map.get(
                         self.get_inp(BDL_ZoneKeywords.ZONE_FAN_RUN)
@@ -379,11 +392,13 @@ class Zone(ChildNode):
                 self.terminal_fan_specification_method = (
                     FanSpecificationMethodOptions.SIMPLE
                 )
-                self.terminal_fan_design_electric_power = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW"
-                )
+                self.terminal_fan_design_electric_power = piu_fan_kw
                 self.terminals_type[0] = self.terminal_fan_type_map.get(
                     self.get_inp(BDL_ZoneKeywords.ZONE_FAN_CTRL)
+                )
+                self.terminals_fan_configuration[0] = (
+                    self.terminals_fan_configuration[0]
+                    or TerminalFanConfigurationOptions.PARALLEL
                 )
 
         else:
@@ -443,6 +458,9 @@ class Zone(ChildNode):
             self.zone_exhaust_fan_design_airflow = exhaust_airflow
             self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
             if self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC) is not None:
+                zone_fan_power = output_data.get(
+                    "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
+                )
                 self.zone_exhaust_fan_specification_method = (
                     FanSpecificationMethodOptions.DETAILED
                 )
@@ -451,9 +469,6 @@ class Zone(ChildNode):
                 )
                 self.zone_exhaust_fan_total_efficiency = self.try_float(
                     self.get_inp(BDL_ZoneKeywords.EXHAUST_EFF)
-                )
-                zone_fan_power = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
                 )
                 self.zone_exhaust_fan_design_electric_power = (
                     None
@@ -471,9 +486,10 @@ class Zone(ChildNode):
                 zone_ef_power_per_flow = self.try_float(
                     self.get_inp(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
                 )
-                self.zone_exhaust_fan_design_electric_power = (
-                    zone_ef_power_per_flow * exhaust_airflow
-                )
+                if zone_ef_power_per_flow:
+                    self.zone_exhaust_fan_design_electric_power = (
+                        zone_ef_power_per_flow * exhaust_airflow
+                    )
             return
 
     def populate_data_group(self):
