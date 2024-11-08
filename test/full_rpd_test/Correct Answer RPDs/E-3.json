@@ -24,7 +24,7 @@
                                             "ENERGY_EFFICIENCY_RATIO"
                                         ],
                                         "efficiency_metric_values": [
-                                            10.0
+                                            3.0
                                         ]
                                     },
                                     "preheat_system": {
@@ -45085,7 +45085,7 @@
                 {
                     "id": "Boiler 1",
                     "loop": "Boiler Loop 1",
-                    "draft_type": "NATURAL",
+                    "draft_type": "FORCED",
                     "energy_source_type": "NATURAL_GAS",
                     "rated_capacity": 87921,
                     "efficiency_metric": "ANNUAL_FUEL_UTILIZATION",
@@ -45110,7 +45110,7 @@
                     "loop_or_piping": "Boiler Loop 1",
                     "specification_method": "SIMPLE",
                     "design_electric_power": 380,
-                    "speed_control": "VARIABLE_SPEED",
+                    "speed_control": "FIXED_SPEED",
                     "design_flow": 1.26,
                     "is_flow_sized_based_on_design_day": false
                 }
@@ -45128,7 +45128,7 @@
                         "operation": "CONTINUOUS",
                         "flow_control": "VARIABLE_FLOW",
                         "minimum_flow_fraction": 0.25,
-                        "temperature_reset_type": "OUTSIDE_AIR_RESET",
+                        "temperature_reset_type": "LOAD_RESET",
                         "outdoor_high_for_loop_supply_reset_temperature": 10,
                         "outdoor_low_for_loop_supply_reset_temperature": -6.7,
                         "loop_supply_temperature_at_outdoor_high": 65.6,
