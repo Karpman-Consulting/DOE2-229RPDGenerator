@@ -21,7 +21,7 @@
                                         "rated_total_cool_capacity": 87921.321,
                                         "is_sized_based_on_design_day": false,
                                         "efficiency_metric_types": [
-                                            "ENERGY_EFFICIENCY_RATIO"
+                                            "FULL_LOAD_COEFFICIENT_OF_PERFORMANCE"
                                         ],
                                         "efficiency_metric_values": [
                                             3.0
