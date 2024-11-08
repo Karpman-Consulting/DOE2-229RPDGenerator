@@ -899,7 +899,11 @@ def handle_special_cases(path_spec, object_id_map, generated_json, reference_jso
             compare_pump_power_warnings, compare_pump_power_errors = compare_pump_power(
                 pump, special_case_value
             )
-
+            if compare_pump_power_warnings:
+                warnings.extend(
+                    f"Warning at {json_key_path.split('.')[-1]}: {warn}"
+                    for warn in compare_pump_power_warnings
+                )
             if compare_pump_power_errors:
                 errors.extend(
                     f"Error at {json_key_path.split('.')[-1]}: {err}"
