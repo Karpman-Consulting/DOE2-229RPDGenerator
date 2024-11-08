@@ -6,6 +6,9 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 HeatingSourceOptions = SchemaEnums.schema_enums["HeatingSourceOptions"]
 CoolingSourceOptions = SchemaEnums.schema_enums["CoolingSourceOptions"]
 TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
+TerminalFanConfigurationOptions = SchemaEnums.schema_enums[
+    "TerminalFanConfigurationOptions"
+]
 FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
     "FanSystemSupplyFanControlOptions"
 ]
@@ -307,6 +310,7 @@ class Zone(ChildNode):
                 if self.terminals_cooling_capacity[0]
                 else None
             )
+            self.terminals_fan_configuration[0] = TerminalFanConfigurationOptions.SERIES
 
         if not self.parent.is_terminal:
             self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
@@ -350,6 +354,9 @@ class Zone(ChildNode):
                     )
                     - self.terminals_primary_airflow[0]
                 )
+                self.terminals_fan_configuration[0] = (
+                    TerminalFanConfigurationOptions.SERIES
+                )
             else:
                 self.terminals_primary_airflow[0] = output_data.get(
                     "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow"
@@ -385,6 +392,9 @@ class Zone(ChildNode):
                 self.terminals_type[0] = self.terminal_fan_type_map.get(
                     self.get_inp(BDL_ZoneKeywords.ZONE_FAN_CTRL)
                 )
+                self.terminals_fan_configuration[0] = self.terminals_fan_configuration[
+                    0
+                ] or (TerminalFanConfigurationOptions.PARALLEL)
 
         else:
             self.terminals_primary_airflow[0] = supply_airflow
