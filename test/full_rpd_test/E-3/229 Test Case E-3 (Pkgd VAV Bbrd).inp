@@ -483,6 +483,10 @@ $ ---------------------------------------------------------
    SUPPLY-HI        = 44
    SUPPLY-LO        = 54
    ..
+"All ON Day" = DAY-SCHEDULE-PD
+   TYPE             = ON/OFF
+   VALUES           = ( 1 )
+   ..
 
 $ ---------------------------------------------------------
 $              Week Schedules
@@ -549,6 +553,10 @@ $ ---------------------------------------------------------
 "OA Reset Week" = WEEK-SCHEDULE-PD
    TYPE             = RESET-TEMP
    DAY-SCHEDULES    = ( "OA Reset Day", &D, &D, &D, &D, "OA Reset Day" )
+   ..
+"All ON Wk" = WEEK-SCHEDULE-PD
+   TYPE             = ON/OFF
+   DAY-SCHEDULES    = ( "All ON Day", &D, &D, &D, &D, "All ON Day" )
    ..
 
 $ ---------------------------------------------------------
@@ -623,6 +631,12 @@ $ ---------------------------------------------------------
    MONTH            = ( 12 )
    DAY              = ( 31 )
    WEEK-SCHEDULES   = ( "OA Reset Week" )
+   ..
+"All ON Sch" = SCHEDULE-PD
+   TYPE             = ON/OFF
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "All ON Wk" )
    ..
 
 
@@ -1191,9 +1205,10 @@ $ ---------------------------------------------------------
    LOOP-DESIGN-DT   = 50
    SIZING-OPTION    = COINCIDENT
    LOOP-OPERATION   = SCHEDULED
-   HEATING-SCHEDULE = "Hourly Report Schedule"
+   HEATING-SCHEDULE = "All ON Sch"
    DESIGN-HEAT-T    = 180
    HEAT-SETPT-CTRL  = LOAD-RESET
+   MIN-RESET-T      = 160
    LOOP-PUMP        = "Hot Water Pumps"
    ..
 
@@ -1345,7 +1360,6 @@ SET-DEFAULT FOR SYSTEM
    MAX-SUPPLY-T     = 90
    HEAT-CONTROL     = COLDEST
    COOL-SET-T       = 60
-   COOL-CONTROL     = WARMEST
    ECONO-LIMIT-T    = 70
    ECONO-LOCKOUT    = NO
    PREHEAT-T        = 50
@@ -1361,7 +1375,6 @@ SET-DEFAULT FOR SYSTEM
    COOLING-CAPACITY = 300000
    COOLING-EIR      = {1/3}
    HP-SUPP-SOURCE   = NONE
-   MIN-SUPPLY-SCH   = "Cooling Setpoint Annual"
    EVAP-PCC-EFF     = 1.2
    PREHEAT-CAPACITY = -150000
    ZONE-HW-LOOP     = "Hot Water Loop"
@@ -1551,6 +1564,10 @@ $ ---------------------------------------------------------
 $              Hourly Reporting
 $ ---------------------------------------------------------
 
+"Hourly Report Block 3" = REPORT-BLOCK    
+   VARIABLE-TYPE    = "Pkgd VAV"
+   VARIABLE-LIST    = ( 1 )
+   ..
 
 "Hourly Report" = HOURLY-REPORT   
    LIBRARY-ENTRY "Hourly Report"
