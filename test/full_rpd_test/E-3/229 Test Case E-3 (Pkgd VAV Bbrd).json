@@ -211,19 +211,20 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.03370722565545,
+                                            "heating_capacity": 7033.70722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 1 (South) Zn MainTerminal",
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
-                                            "heating_capacity": "-6000.0000",
+                                            "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
                                             "id": "Prm Zone 1 (South) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
@@ -423,19 +424,20 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.03370722565545,
+                                            "heating_capacity": 7033.70722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 2 (East) Zn MainTerminal",
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
-                                            "heating_capacity": "-6000.0000",
+                                            "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
                                             "id": "Prm Zone 2 (East) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
@@ -634,19 +636,20 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.03370722565545,
+                                            "heating_capacity": 7033.70722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 3 (North) MainTerminal",
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
-                                            "heating_capacity": "-6000.0000",
+                                            "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
                                             "id": "Prm Zone 3 (North) BaseboardTerminal",
                                             "is_supply_ducted": false,
@@ -817,19 +820,20 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.03370722565545,
+                                            "heating_capacity": 7033.70722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 4 (West) MainTerminal",
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
-                                            "heating_capacity": "-6000.0000",
+                                            "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
                                             "id": "Prm Zone 4 (West) BaseboardTerminal",
                                             "is_supply_ducted": false,
@@ -958,19 +962,20 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.03370722565545,
+                                            "heating_capacity": 7033.70722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Core Zone 1 MainTerminal",
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
-                                            "heating_capacity": "-6000.0000",
+                                            "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
                                             "id": "Core Zone 1 BaseboardTerminal",
                                             "is_supply_ducted": false,
@@ -1012,6 +1017,7 @@
                                         "fan_control": "VARIABLE_SPEED_DRIVE",
                                         "has_fully_ducted_return": true,
                                         "id": "Pkgd VAV FanSys",
+                                        "maximum_outdoor_airflow": 4719.632055071848,
                                         "minimum_airflow": 1415.8896727839528,
                                         "minimum_outdoor_airflow": 471.9632125399846,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -106293,6 +106299,7 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop (1)",
+                    "thermal_efficiency": 0.8,
                     "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }
@@ -106348,109 +106355,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "NATURAL-GAS",
-                            "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 2725.89404296875,
-                            "annual_demand": 115414.7109375
-                        },
-                        {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
                             "annual_consumption": 201790.828125,
                             "annual_demand": 70.61578369140625
+                        },
+                        {
+                            "id": "NATURAL-GAS",
+                            "energy_source": "NATURAL_GAS",
+                            "annual_consumption": 2725.89404296875,
+                            "annual_demand": 115414.7109375
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "NATURAL-GAS - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 2508.861328125,
-                            "annual_site_coincident_demand": 110825.9375,
-                            "annual_site_non_coincident_demand": 26.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 217.03208923339844,
-                            "annual_site_coincident_demand": 4588.775390625,
-                            "annual_site_non_coincident_demand": 8.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "ELECTRICITY - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -106539,6 +106456,96 @@
                             "annual_site_energy_use": 0.0,
                             "annual_site_coincident_demand": 0.0,
                             "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 2508.861328125,
+                            "annual_site_coincident_demand": 110825.9375,
+                            "annual_site_non_coincident_demand": 26.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 217.03208923339844,
+                            "annual_site_coincident_demand": 4588.775390625,
+                            "annual_site_non_coincident_demand": 8.0,
                             "is_regulated": true
                         }
                     ]
