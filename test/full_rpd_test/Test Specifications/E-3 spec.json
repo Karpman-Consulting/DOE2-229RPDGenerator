@@ -334,15 +334,19 @@
         "compare-value": false
         },
         {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.is_sized_based_on_design_day",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.dehumidification_type",
+        "compare-value": true
+        },
+        {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.type",
         "compare-value": true
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.hot_water_loop",
-        "compare-value": false
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.design_capacity",
         "compare-value": false
         },
         {
@@ -356,6 +360,10 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.heating_coil_setpoint",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].humidification_type",
         "compare-value": true
         },
         {
@@ -379,6 +387,11 @@
         "compare-value": true
         },
         {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.air_filter_merv_rating",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_airflow",
         "compare-value": true,
         "tolerance": 1.0
@@ -398,11 +411,11 @@
         "compare-value": false
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_fan_power",
-        "compare-value": false
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.air_economizer.type",
+        "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.air_economizer.type",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.air_economizer.is_integrated",
         "compare-value": true
         },
         {
@@ -433,14 +446,6 @@
         "tolerance": 1
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.humidification_type",
-        "compare-value": true
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.dehumidification_type",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops",
         "compare-value": false
         },
@@ -453,22 +458,6 @@
         "compare-value": false
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].cooling_or_condensing_design_and_control.is_sized_using_coincident_load",
-        "compare-value": true
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].cooling_or_condensing_design_and_control.operation",
-        "compare-value": true
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].cooling_or_condensing_design_and_control.flow_control",
-        "compare-value": true
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].speed_control",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].pump_power_per_flow_rate",
         "compare-value": true,
         "tolerance": 1.0
@@ -479,13 +468,42 @@
         "tolerance": 0.1
         },
         {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.design_return_temperature",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.is_sized_using_coincident_load",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.operation",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.flow_control",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.temperature_reset_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.loop_supply_temperature_at_low_load",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps",
         "compare-value": false
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].design_flow",
-        "compare-value": true,
-        "tolerance": 0.01
+        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].loop_or_piping",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].specification_method",
+        "compare-value": true
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].design_electric_power",
@@ -493,13 +511,17 @@
         "tolerance": 0.1
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.temperature_reset_type",
+        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].speed_control",
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.outdoor_low_for_loop_supply_reset_temperature",
+        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].design_flow",
         "compare-value": true,
-        "tolerance": 0.1
+        "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].is_flow_sized_based_on_design_day",
+        "compare-value": true
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].boilers",
@@ -510,14 +532,13 @@
         "compare-value": true
         },
         {
+        "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].energy_source_type",
+        "compare-value": true
+        },
+        {
         "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].rated_capacity",
         "compare-value": true,
         "tolerance": 1.0
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].minimum_load_ratio",
-        "compare-value": true,
-        "tolerance": 0.01
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].loop",
