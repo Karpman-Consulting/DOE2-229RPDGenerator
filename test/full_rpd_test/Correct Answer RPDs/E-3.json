@@ -884,18 +884,18 @@
                                                 "surface_construction_input_option": "LAYERS",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Concrete 04",
-                                                        "thickness": 0.1016,
-                                                        "thermal_conductivity": 2.31,
-                                                        "density": 2322,
-                                                        "specific_heat": 832
-                                                    },
-                                                    {
                                                         "id": "Slab Insulation 01",
                                                         "thickness": 0.1143,
                                                         "thermal_conductivity": 0.04,
                                                         "density": 91.31,
                                                         "specific_heat": 838
+                                                    },
+                                                    {
+                                                        "id": "Concrete 04",
+                                                        "thickness": 0.1016,
+                                                        "thermal_conductivity": 2.31,
+                                                        "density": 2322,
+                                                        "specific_heat": 832
                                                     }
                                                 ],
                                                 "f_factor": 0.52
@@ -1112,18 +1112,18 @@
                                                 "surface_construction_input_option": "LAYERS",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Concrete 05",
-                                                        "thickness": 0.1016,
-                                                        "thermal_conductivity": 2.31,
-                                                        "density": 2322,
-                                                        "specific_heat": 832
-                                                    },
-                                                    {
                                                         "id": "Slab Insulation 02",
                                                         "thickness": 0.1143,
                                                         "thermal_conductivity": 0.037,
                                                         "density": 91.31,
                                                         "specific_heat": 838
+                                                    },
+                                                    {
+                                                        "id": "Concrete 05",
+                                                        "thickness": 0.1016,
+                                                        "thermal_conductivity": 2.31,
+                                                        "density": 2322,
+                                                        "specific_heat": 832
                                                     }
                                                 ],
                                                 "f_factor": 0.52
