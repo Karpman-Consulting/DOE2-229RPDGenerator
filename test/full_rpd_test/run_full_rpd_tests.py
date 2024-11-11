@@ -247,12 +247,34 @@ def match_terminal_by_references(generated_values, reference_values, object_id_m
         if generated_hvac_id:
             reference_hvac_id = object_id_map.get(generated_hvac_id)
             if reference_hvac_id:
-                best_match = find_one(
-                    f'$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*][?(@.served_by_heating_ventilating_air_conditioning_system="{reference_hvac_id}")]',
-                    reference_values,
+                best_match = next(
+                    terminal
+                    for terminal in reference_values
+                    if terminal.get(
+                        "served_by_heating_ventilating_air_conditioning_system"
+                    )
+                    == reference_hvac_id
                 )
                 if best_match:
                     mapping[generated_object.get("id")] = best_match.get("id")
+        else:
+            best_match = get_best_match_attrs(
+                generated_object,
+                reference_values,
+                [
+                    "type",
+                    "is_supply_ducted",
+                    "heating_source",
+                    "heating_capacity",
+                    "cooling_capacity",
+                    "primary_airflow",
+                    "minimum_outdoor_airflow",
+                ],
+                None,
+                None,
+            )
+            if best_match:
+                mapping[generated_object.get("id")] = best_match.get("id")
 
     return mapping
 
