@@ -209,6 +209,15 @@ class Zone(ChildNode):
 
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
+        for key in [
+            "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity",
+            "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity",
+        ]:
+            if key in output_data:
+                output_data[key] = self.try_convert_units(
+                    output_data[key], "kBtu/hr", "Btu/hr"
+                )
+
         supply_airflow = output_data.get(
             "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow"
         )
@@ -320,8 +329,10 @@ class Zone(ChildNode):
                 self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
             )
             self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
-            self.terminals_heating_capacity[0] = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
+            self.terminals_heating_capacity[0] = self.try_abs(
+                output_data.get(
+                    "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
+                )
             )
             self.terminals_cooling_capacity[0] = output_data.get(
                 "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
@@ -430,7 +441,7 @@ class Zone(ChildNode):
             else:
                 self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
 
-        if not has_doas:
+        else:
             self.terminals_minimum_outdoor_airflow[0] = minimum_outdoor_airflow
             self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
                 self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
@@ -449,8 +460,8 @@ class Zone(ChildNode):
             self.terminals_heating_from_loop[1] = self.parent.get_inp(
                 BDL_SystemKeywords.BBRD_LOOP
             )
-            self.terminals_heating_capacity[1] = self.get_inp(
-                BDL_ZoneKeywords.BASEBOARD_RATING
+            self.terminals_heating_capacity[1] = self.try_abs(
+                self.try_float(self.get_inp(BDL_ZoneKeywords.BASEBOARD_RATING))
             )
 
         if exhaust_airflow is not None and exhaust_airflow > 0:
