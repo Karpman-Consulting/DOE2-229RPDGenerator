@@ -30,14 +30,6 @@
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1674.0,
                                                     "sensible_fraction": 1.0
-                                                },
-                                                {
-                                                    "energy_type": "ELECTRICITY",
-                                                    "id": "Prm Space 1 (South) MiscEqp2",
-                                                    "latent_fraction": 0.0,
-                                                    "multiplier_schedule": "Elevator Annual",
-                                                    "power": 8213.76,
-                                                    "sensible_fraction": 1.0
                                                 }
                                             ],
                                             "service_water_heating_uses": [],
@@ -151,7 +143,7 @@
                                                         "id": "Metal Deck",
                                                         "thickness": 0.0009143999999999999,
                                                         "thermal_conductivity": 45.27948666666667,
-                                                        "density": 7833.028589866511,
+                                                        "density": 7824.058250377093,
                                                         "specific_heat": 498.22926959728164
                                                     },
                                                     {
@@ -219,14 +211,23 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.225921667599148,
+                                            "heating_capacity": -7.03370722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 1 (South) Zn MainTerminal",
-                                            "minimum_airflow": 722.0333266461842,
+                                            "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
-                                            "primary_airflow": 722.0333266461842,
+                                            "primary_airflow": 943.9263994922153,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "has_demand_control_ventilation": false,
+                                            "heating_capacity": "-6000.0000",
+                                            "heating_from_loop": "Hot Water Loop",
+                                            "id": "Prm Zone 1 (South) Zn BaseboardTerminal",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD"
                                         }
                                     ],
                                     "infiltration": {
@@ -260,14 +261,6 @@
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1059.75,
-                                                    "sensible_fraction": 1.0
-                                                },
-                                                {
-                                                    "energy_type": "ELECTRICITY",
-                                                    "id": "Prm Space 2 (East) MiscEqp2",
-                                                    "latent_fraction": 0.0,
-                                                    "multiplier_schedule": "Elevator Annual",
-                                                    "power": 5199.84,
                                                     "sensible_fraction": 1.0
                                                 }
                                             ],
@@ -362,7 +355,7 @@
                                                         "id": "Metal Deck--1",
                                                         "thickness": 0.0009143999999999999,
                                                         "thermal_conductivity": 45.27948666666667,
-                                                        "density": 7833.028589866511,
+                                                        "density": 7824.058250377093,
                                                         "specific_heat": 498.22926959728164
                                                     },
                                                     {
@@ -430,19 +423,28 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -4.728704121822781,
+                                            "heating_capacity": -7.03370722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 2 (East) Zn MainTerminal",
-                                            "minimum_airflow": 472.50468339096074,
+                                            "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
-                                            "primary_airflow": 472.50468339096074,
+                                            "primary_airflow": 943.9263994922153,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "has_demand_control_ventilation": false,
+                                            "heating_capacity": "-6000.0000",
+                                            "heating_from_loop": "Hot Water Loop",
+                                            "id": "Prm Zone 2 (East) Zn BaseboardTerminal",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD"
                                         }
                                     ],
                                     "infiltration": {
                                         "algorithm_name": "Air Change Method",
-                                        "flow_rate": 0.056083072102018544,
+                                        "flow_rate": 0.07695584447768063,
                                         "id": "Prm Space 2 (East) Infil",
                                         "modeling_method": "CONSTANT"
                                     },
@@ -471,14 +473,6 @@
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1674.0,
-                                                    "sensible_fraction": 1.0
-                                                },
-                                                {
-                                                    "energy_type": "ELECTRICITY",
-                                                    "id": "Prm Space 3 (North) MiscEqp2",
-                                                    "latent_fraction": 0.0,
-                                                    "multiplier_schedule": "Elevator Annual",
-                                                    "power": 8213.76,
                                                     "sensible_fraction": 1.0
                                                 }
                                             ],
@@ -568,7 +562,7 @@
                                                         "id": "Metal Deck--2",
                                                         "thickness": 0.0009143999999999999,
                                                         "thermal_conductivity": 45.27948666666667,
-                                                        "density": 7833.028589866511,
+                                                        "density": 7824.058250377093,
                                                         "specific_heat": 498.22926959728164
                                                     },
                                                     {
@@ -607,18 +601,18 @@
                                                 "id": "Slab-on-grade Type 2",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Concrete--2",
-                                                        "thickness": 0.10149839999999999,
-                                                        "thermal_conductivity": 2.310531102362205,
-                                                        "density": 2324.6794971459663,
-                                                        "specific_heat": 833.1733163853703
-                                                    },
-                                                    {
                                                         "id": "Insulation (Slab on grade)",
                                                         "thickness": 0.11429999999999998,
                                                         "thermal_conductivity": 0.04326837270341208,
                                                         "density": 91.30524123157284,
                                                         "specific_heat": 837.3601169702214
+                                                    },
+                                                    {
+                                                        "id": "Concrete--2",
+                                                        "thickness": 0.10149839999999999,
+                                                        "thermal_conductivity": 2.310531102362205,
+                                                        "density": 2324.6794971459663,
+                                                        "specific_heat": 833.1733163853703
                                                     }
                                                 ],
                                                 "framing_layers": [],
@@ -640,14 +634,23 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -6.86152470574273,
+                                            "heating_capacity": -7.03370722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 3 (North) MainTerminal",
-                                            "minimum_airflow": 685.6217633303435,
+                                            "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
-                                            "primary_airflow": 685.6217633303435,
+                                            "primary_airflow": 943.9263994922153,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "has_demand_control_ventilation": false,
+                                            "heating_capacity": "-6000.0000",
+                                            "heating_from_loop": "Hot Water Loop",
+                                            "id": "Prm Zone 3 (North) BaseboardTerminal",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD"
                                         }
                                     ],
                                     "infiltration": {
@@ -682,14 +685,6 @@
                                                     "latent_fraction": 0.0,
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 1059.75,
-                                                    "sensible_fraction": 1.0
-                                                },
-                                                {
-                                                    "energy_type": "ELECTRICITY",
-                                                    "id": "Prm Space 4 (West) MiscEqp2",
-                                                    "latent_fraction": 0.0,
-                                                    "multiplier_schedule": "Elevator Annual",
-                                                    "power": 5199.84,
                                                     "sensible_fraction": 1.0
                                                 }
                                             ],
@@ -789,18 +784,18 @@
                                                 "id": "Slab-on-grade Type 2--1",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Concrete--3",
-                                                        "thickness": 0.10149839999999999,
-                                                        "thermal_conductivity": 2.310531102362205,
-                                                        "density": 2324.6794971459663,
-                                                        "specific_heat": 833.1733163853703
-                                                    },
-                                                    {
                                                         "id": "Insulation (Slab on grade)--1",
                                                         "thickness": 0.11429999999999998,
                                                         "thermal_conductivity": 0.04326837270341208,
                                                         "density": 91.30524123157284,
                                                         "specific_heat": 837.3601169702214
+                                                    },
+                                                    {
+                                                        "id": "Concrete--3",
+                                                        "thickness": 0.10149839999999999,
+                                                        "thermal_conductivity": 2.310531102362205,
+                                                        "density": 2324.6794971459663,
+                                                        "specific_heat": 833.1733163853703
                                                     }
                                                 ],
                                                 "framing_layers": [],
@@ -822,14 +817,23 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": -7.367276515112983,
+                                            "heating_capacity": -7.03370722565545,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 4 (West) MainTerminal",
-                                            "minimum_airflow": 736.1578171975497,
+                                            "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
-                                            "primary_airflow": 736.1578171975497,
+                                            "primary_airflow": 943.9263994922153,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "has_demand_control_ventilation": false,
+                                            "heating_capacity": "-6000.0000",
+                                            "heating_from_loop": "Hot Water Loop",
+                                            "id": "Prm Zone 4 (West) BaseboardTerminal",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD"
                                         }
                                     ],
                                     "infiltration": {
@@ -865,14 +869,6 @@
                                                     "multiplier_schedule": "Plug Load Annual",
                                                     "power": 7947.719999999999,
                                                     "sensible_fraction": 1.0
-                                                },
-                                                {
-                                                    "energy_type": "ELECTRICITY",
-                                                    "id": "Core Space 1 MiscEqp2",
-                                                    "latent_fraction": 0.0,
-                                                    "multiplier_schedule": "Elevator Annual",
-                                                    "power": 38996.8128,
-                                                    "sensible_fraction": 1.0
                                                 }
                                             ],
                                             "service_water_heating_uses": [],
@@ -894,7 +890,7 @@
                                                         "id": "Metal Deck--3",
                                                         "thickness": 0.0009143999999999999,
                                                         "thermal_conductivity": 45.27948666666667,
-                                                        "density": 7833.028589866511,
+                                                        "density": 7824.058250377093,
                                                         "specific_heat": 498.22926959728164
                                                     },
                                                     {
@@ -962,13 +958,23 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
+                                            "heating_capacity": -7.03370722565545,
+                                            "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Core Zone 1 MainTerminal",
-                                            "minimum_airflow": 94.39264150991457,
+                                            "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
-                                            "primary_airflow": 2103.3142052583366,
+                                            "primary_airflow": 943.9263994922153,
                                             "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "has_demand_control_ventilation": false,
+                                            "heating_capacity": "-6000.0000",
+                                            "heating_from_loop": "Hot Water Loop",
+                                            "id": "Core Zone 1 BaseboardTerminal",
+                                            "is_supply_ducted": false,
+                                            "type": "BASEBOARD"
                                         }
                                     ],
                                     "infiltration": {
@@ -990,11 +996,11 @@
                                             "high_limit_shutoff_temperature": 21.111111111111143,
                                             "id": "Pkgd VAV AirEconomizer",
                                             "is_integrated": true,
-                                            "type": "TEMPERATURE"
+                                            "type": "DIFFERENTIAL_ENTHALPY"
                                         },
                                         "air_energy_recovery": {
                                             "design_sensible_effectiveness": 0.8,
-                                            "energy_recovery_operation": "WHEN_FANS_ON",
+                                            "energy_recovery_operation": "SCHEDULED",
                                             "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
                                             "exhaust_airflow": 424.75269887999985,
                                             "id": "Pkgd VAV AirEnergyRecovery",
@@ -1011,34 +1017,22 @@
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
                                         "relief_fans": [],
-                                        "return_fans": [
-                                            {
-                                                "design_airflow": 4247.668941741898,
-                                                "design_electric_power": 4225.3522872924805,
-                                                "design_pressure_rise": 871.8112083333333,
-                                                "id": "Pkgd VAV ReturnFan",
-                                                "is_airflow_sized_based_on_design_day": false,
-                                                "output_validation_points": [],
-                                                "specification_method": "DETAILED"
-                                            }
-                                        ],
+                                        "return_fans": [],
                                         "supply_fans": [
                                             {
                                                 "design_airflow": 4719.632055071848,
-                                                "design_electric_power": 5346.895694732666,
-                                                "design_pressure_rise": 1021.2645583333332,
+                                                "design_electric_power": 7460.000514984131,
                                                 "id": "Pkgd VAV SupplyFan",
                                                 "is_airflow_sized_based_on_design_day": false,
-                                                "motor_efficiency": 0.9,
                                                 "output_validation_points": [],
-                                                "specification_method": "DETAILED",
-                                                "total_efficiency": 0.9
+                                                "specification_method": "SIMPLE"
                                             }
-                                        ]
+                                        ],
+                                        "temperature_control": "ZONE_RESET"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 63363.044500918,
-                                        "design_total_cool_capacity": 85396.1135798611,
+                                        "design_sensible_cool_capacity": 95912.9983823029,
+                                        "design_total_cool_capacity": 99796.85866819444,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Pkgd VAV CoolSys",
@@ -106268,8 +106262,9 @@
                         "is_sized_using_coincident_load": true,
                         "minimum_flow_fraction": 0.05,
                         "operation": "SCHEDULED",
-                        "flow_control": "VARIABLE_FLOW",
-                        "temperature_reset_type": "NO_RESET"
+                        "flow_control": "FIXED_FLOW",
+                        "temperature_reset_type": "LOAD_RESET",
+                        "loop_supply_temperature_at_low_load": 37.77777777777783
                     },
                     "child_loops": [],
                     "type": "HEATING",
@@ -106349,20 +106344,20 @@
                 "id": "Output2019ASHRAE901",
                 "output_instance": {
                     "id": "229 Test Case E-3 (Pkgd VAV Bbrd) Output",
-                    "unmet_load_hours_heating": 821.0,
-                    "unmet_load_hours_cooling": 1073.0,
+                    "unmet_load_hours_heating": 1173.0,
+                    "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 464.60015869140625,
-                            "annual_demand": 60327.21484375
+                            "annual_consumption": 2725.89404296875,
+                            "annual_demand": 115414.7109375
                         },
                         {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
-                            "annual_consumption": 218823.671875,
-                            "annual_demand": 89.55985260009766
+                            "annual_consumption": 201790.828125,
+                            "annual_demand": 70.61578369140625
                         }
                     ],
                     "annual_end_use_results": [
@@ -106388,8 +106383,8 @@
                             "id": "NATURAL-GAS - Space Heating",
                             "type": "SPACE_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 247.74566650390625,
-                            "annual_site_coincident_demand": 55738.3203125,
+                            "annual_site_energy_use": 2508.861328125,
+                            "annual_site_coincident_demand": 110825.9375,
                             "annual_site_non_coincident_demand": 26.0,
                             "is_regulated": true
                         },
@@ -106451,8 +106446,8 @@
                             "id": "NATURAL-GAS - Domestic Hot Water",
                             "type": "SERVICE_WATER_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 216.85440063476562,
-                            "annual_site_coincident_demand": 4588.89306640625,
+                            "annual_site_energy_use": 217.03208923339844,
+                            "annual_site_coincident_demand": 4588.775390625,
                             "annual_site_non_coincident_demand": 8.0,
                             "is_regulated": true
                         },
@@ -106469,27 +106464,27 @@
                             "id": "ELECTRICITY - Misc Equipment",
                             "type": "MISC_EQUIPMENT",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 148609.328125,
-                            "annual_site_coincident_demand": 56.955657958984375,
-                            "annual_site_non_coincident_demand": 56.955657958984375,
+                            "annual_site_energy_use": 54307.5234375,
+                            "annual_site_coincident_demand": 11.537089347839355,
+                            "annual_site_non_coincident_demand": 11.537089347839355,
                             "is_regulated": false
                         },
                         {
                             "id": "ELECTRICITY - Space Heating",
                             "type": "SPACE_HEATING",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 9384.1162109375,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 21.11256980895996,
+                            "annual_site_energy_use": 95030.640625,
+                            "annual_site_coincident_demand": 40.63823318481445,
+                            "annual_site_non_coincident_demand": 41.938663482666016,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Space Cooling",
                             "type": "SPACE_COOLING",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 9811.380859375,
-                            "annual_site_coincident_demand": 12.89748764038086,
-                            "annual_site_non_coincident_demand": 20.272733688354492,
+                            "annual_site_energy_use": 2955.953125,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 11.720857620239258,
                             "is_regulated": true
                         },
                         {
@@ -106505,18 +106500,18 @@
                             "id": "ELECTRICITY - Pumps & Aux",
                             "type": "PUMPS",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 1239.869140625,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.40240156650543213,
+                            "annual_site_energy_use": 2221.416259765625,
+                            "annual_site_coincident_demand": 0.2790646553039551,
+                            "annual_site_non_coincident_demand": 0.2790646553039551,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Ventilation Fans",
                             "type": "FANS_INTERIOR_VENTILATION",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 4728.1396484375,
-                            "annual_site_coincident_demand": 2.2892837524414062,
-                            "annual_site_non_coincident_demand": 9.42681884765625,
+                            "annual_site_energy_use": 2224.71142578125,
+                            "annual_site_coincident_demand": 0.7439655661582947,
+                            "annual_site_non_coincident_demand": 1.8335049152374268,
                             "is_regulated": true
                         },
                         {

@@ -132812,109 +132812,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "ELECTRICITY",
-                            "energy_source": "ELECTRICITY",
-                            "annual_consumption": 182429.796875,
-                            "annual_demand": 52.68084716796875
-                        },
-                        {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
                             "annual_consumption": 9016.7548828125,
                             "annual_demand": 385312.6875
+                        },
+                        {
+                            "id": "ELECTRICITY",
+                            "energy_source": "ELECTRICITY",
+                            "annual_consumption": 182429.796875,
+                            "annual_demand": 52.68084716796875
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "ELECTRICITY - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 45050.78125,
-                            "annual_site_coincident_demand": 17.41742706298828,
-                            "annual_site_non_coincident_demand": 17.41742706298828,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 54307.5234375,
-                            "annual_site_coincident_demand": 11.537089347839355,
-                            "annual_site_non_coincident_demand": 11.537089347839355,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 3172.91162109375,
-                            "annual_site_coincident_demand": 0.11903821676969528,
-                            "annual_site_non_coincident_demand": 3.1330742835998535,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 108.78898620605469,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.34132644534111023,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 59671.578125,
-                            "annual_site_coincident_demand": 15.99533462524414,
-                            "annual_site_non_coincident_demand": 41.84450912475586,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 20118.36328125,
-                            "annual_site_coincident_demand": 7.6119561195373535,
-                            "annual_site_non_coincident_demand": 10.849591255187988,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "NATURAL-GAS - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -133003,6 +132913,96 @@
                             "annual_site_energy_use": 215.99282836914062,
                             "annual_site_coincident_demand": 604.353515625,
                             "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 45050.78125,
+                            "annual_site_coincident_demand": 17.41742706298828,
+                            "annual_site_non_coincident_demand": 17.41742706298828,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 54307.5234375,
+                            "annual_site_coincident_demand": 11.537089347839355,
+                            "annual_site_non_coincident_demand": 11.537089347839355,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 3172.91162109375,
+                            "annual_site_coincident_demand": 0.11903821676969528,
+                            "annual_site_non_coincident_demand": 3.1330742835998535,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 108.78898620605469,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.34132644534111023,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 59671.578125,
+                            "annual_site_coincident_demand": 15.99533462524414,
+                            "annual_site_non_coincident_demand": 41.84450912475586,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 20118.36328125,
+                            "annual_site_coincident_demand": 7.6119561195373535,
+                            "annual_site_non_coincident_demand": 10.849591255187988,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
                             "is_regulated": true
                         }
                     ]

@@ -111,7 +111,7 @@ $ ---------------------------------------------------------
    TYPE             = PROPERTIES
    THICKNESS        = 0.003
    CONDUCTIVITY     = 26.162
-   DENSITY          = 489
+   DENSITY          = 488.44
    SPECIFIC-HEAT    = 0.119
    ..
 "Continuous Insulation" = MATERIAL        
@@ -246,7 +246,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IFlr Layer Type 2" = LAYERS          
    INSIDE-FILM-RES  = 0.92
-   MATERIAL         = ( "Concrete", "Insulation (Slab on grade)", 
+   MATERIAL         = ( "Insulation (Slab on grade)", "Concrete", 
          "Carpet & No Pad" )
    ..
 
@@ -722,10 +722,6 @@ $ **      Floors / Spaces / Walls / Windows / Doors      **
 $ **                                                     **
 $ *********************************************************
 
-SET-DEFAULT FOR SPACE           
-   EQUIPMENT-W/AREA = ( &D, 3.68 )
-   ..
-
 "Floor 1" = FLOOR           
    AZIMUTH          = 360
    POLYGON          = "BL1 Floor Polygon"
@@ -740,7 +736,6 @@ SET-DEFAULT FOR SPACE
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
    AIR-CHANGES/HR   = 0.5
-   INF-FLOW/AREA    = 0
    POLYGON          = "BL1 Space Polygon 1"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -749,7 +744,7 @@ SET-DEFAULT FOR SPACE
    PEOPLE-HG-SENS   = ( {55%*409.457} )
    LIGHTING-SCHEDUL = ( "Lighting Schedule" )
    LIGHTING-W/AREA  = ( 1.025 )
-   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual" )
    EQUIPMENT-W/AREA = ( 0.75 )
    EQUIP-LATENT     = ( 0 )
    EQUIP-SENSIBLE   = ( 1 )
@@ -842,7 +837,7 @@ SET-DEFAULT FOR SPACE
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
-   INF-FLOW/AREA    = 0.0841
+   INF-FLOW/AREA    = 0.1154
    POLYGON          = "BL1 Space Polygon 2"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -851,7 +846,7 @@ SET-DEFAULT FOR SPACE
    PEOPLE-HG-SENS   = ( {55%*409.457} )
    LIGHTING-SCHEDUL = ( "Lighting Schedule" )
    LIGHTING-W/AREA  = ( 1.025 )
-   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual" )
    EQUIPMENT-W/AREA = ( 0.75 )
    EQUIP-LATENT     = ( 0 )
    EQUIP-SENSIBLE   = ( 1 )
@@ -933,7 +928,7 @@ SET-DEFAULT FOR SPACE
    PEOPLE-HG-SENS   = ( {55%*409.457} )
    LIGHTING-SCHEDUL = ( "Lighting Schedule" )
    LIGHTING-W/AREA  = ( 1.025 )
-   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual" )
    EQUIPMENT-W/AREA = ( 0.75 )
    EQUIP-LATENT     = ( 0 )
    EQUIP-SENSIBLE   = ( 1 )
@@ -1026,7 +1021,7 @@ SET-DEFAULT FOR SPACE
    PEOPLE-HG-SENS   = ( {55%*409.457} )
    LIGHTING-SCHEDUL = ( "Lighting Schedule" )
    LIGHTING-W/AREA  = ( 1.025 )
-   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual" )
    EQUIPMENT-W/AREA = ( 0.75 )
    EQUIP-LATENT     = ( 0 )
    EQUIP-SENSIBLE   = ( 1 )
@@ -1091,6 +1086,7 @@ SET-DEFAULT FOR SPACE
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
+   AIR-CHANGES/HR   = 0
    POLYGON          = "BL1 Space Polygon 5"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -1099,7 +1095,7 @@ SET-DEFAULT FOR SPACE
    PEOPLE-HG-SENS   = ( {55%*409.457} )
    LIGHTING-SCHEDUL = ( "Lighting Schedule" )
    LIGHTING-W/AREA  = ( 1.025 )
-   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual" )
    EQUIPMENT-W/AREA = ( 0.75 )
    EQUIP-LATENT     = ( 0 )
    EQUIP-SENSIBLE   = ( 1 )
@@ -1197,6 +1193,7 @@ $ ---------------------------------------------------------
    LOOP-OPERATION   = SCHEDULED
    HEATING-SCHEDULE = "Hourly Report Schedule"
    DESIGN-HEAT-T    = 180
+   HEAT-SETPT-CTRL  = LOAD-RESET
    LOOP-PUMP        = "Hot Water Pumps"
    ..
 
@@ -1326,56 +1323,44 @@ SET-DEFAULT FOR SYSTEM
    TYPE = PVAVS
    HUMIDIFIER-TYPE  = STEAM
    HP-SUPP-SOURCE   = HOT-WATER
-   PHT-COIL-AIR-DT  = 20
    ..
 SET-DEFAULT FOR SYSTEM          
    TYPE = PVVT
    HUMIDIFIER-TYPE  = STEAM
-   COOLING-EIR      = {1/3}
+   HW-LOOP          = "Hot Water Loop"
    HEATING-CAPACITY = 0
-   HP-SUPP-SOURCE   = HOT-WATER
-   MIN-HP-T         = 90
-   MAX-HP-SUPP-T    = 90
    ..
 SET-DEFAULT FOR SYSTEM          
    TYPE = DOAS
    HUMIDIFIER-TYPE  = STEAM
    ..
 
-SET-DEFAULT FOR ZONE            
-   TYPE = CONDITIONED
-   ZONE-FAN-KW/FLOW = 0.0007457
-   ZONE-FAN-RATIO   = 0.8
-   OA-FLOW/AREA     = ( 0.12 )
-   ..
-
 "Pkgd VAV" = SYSTEM          
-   TYPE             = PVVT
+   TYPE             = PVAVS
    HEAT-SOURCE      = NONE
    ZONE-HEAT-SOURCE = HOT-WATER
    PREHEAT-SOURCE   = HOT-WATER
+   BASEBOARD-SOURCE = HOT-WATER
    HUMIDIFIER-TYPE  = NONE
    MAX-SUPPLY-T     = 90
+   HEAT-CONTROL     = COLDEST
    COOL-SET-T       = 60
+   COOL-CONTROL     = WARMEST
    ECONO-LIMIT-T    = 70
    ECONO-LOCKOUT    = NO
    PREHEAT-T        = 50
    MIN-OA-METHOD    = DCV-RETURN-SENSOR
    SUPPLY-FLOW      = 10000
-   RETURN-FLOW      = 9000
+   OA-CONTROL       = DUAL-ENTHALPY
    RECOVER-EXHAUST  = EXHAUST-ONLY
    FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
    FAN-CONTROL      = SPEED
-   SUPPLY-STATIC    = 4.1
-   SUPPLY-MECH-EFF  = 1
-   RETURN-STATIC    = 3.5
-   REHEAT-DELTA-T   = 20
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
+   SUPPLY-KW/FLOW   = 0.000746
    PHW-LOOP         = "Hot Water Loop"
+   BBRD-LOOP        = "Hot Water Loop"
    COOLING-CAPACITY = 300000
-   HEATING-CAPACITY = -24000
-   HP-SUPP-HT-CAP   = -6000
+   COOLING-EIR      = {1/3}
+   HP-SUPP-SOURCE   = NONE
    MIN-SUPPLY-SCH   = "Cooling Setpoint Annual"
    EVAP-PCC-EFF     = 1.2
    PREHEAT-CAPACITY = -150000
@@ -1385,71 +1370,85 @@ SET-DEFAULT FOR ZONE
    ERV-OA-FLOW      = 1000
    ERV-EXH-FLOW     = 900
    ERV-SENSIBLE-EFF = 0.8
+   ERV-RUN-CTRL     = ERV-SCHEDULE
+   ERV-SCHEDULE     = "Hourly Report Schedule"
    ERV-TEMP-CTRL    = FIXED-SETPT
    OA-HEAT-SETPT-T  = 55
    OA-COOL-SETPT-T  = 90
    ERV-CAP-CTRL     = MODULATE-HX
    ERV-FANS         = SELF-CONTAINED
-   SUPPLY-MTR-EFF   = 0.9
    PREHEAT-LOCN     = MIXED-AIR
    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
-   RHT-SIZING-METHO = MAX-SUPPLY-T
    DOAS-ATTACHED-TO = MIXED-AIR
    ..
 "Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
-   FLOW/AREA        = 0.5
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 1 (South)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 "Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
-   FLOW/AREA        = 0.5
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 2 (East)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 "Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
-   FLOW/AREA        = 0.5
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 3 (North)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 "Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
-   FLOW/AREA        = 0.5
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 4 (West)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 "Core Zone 1" = ZONE            
    TYPE             = CONDITIONED
-   FLOW/AREA        = 0.5
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
    SPACE            = "Core Space 1"
-   AUX-HEAT-RATIO   = 0.7
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 
