@@ -300,6 +300,7 @@
                                             "minimum_airflow": 943.9263994922153,
                                             "minimum_outdoor_airflow": 126.41062144740464,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (South)"
                                         }
                                     ],
@@ -557,6 +558,7 @@
                                             "minimum_airflow": 943.9263994922153,
                                             "minimum_outdoor_airflow": 80.02608621766872,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (East)"
                                         }
                                     ],
@@ -813,6 +815,7 @@
                                             "minimum_airflow": 943.9263994922153,
                                             "minimum_outdoor_airflow": 126.41062144740464,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (North)"
                                         }
                                     ],
@@ -1013,6 +1016,7 @@
                                             "minimum_airflow": 943.9263994922153,
                                             "minimum_outdoor_airflow": 80.02608621766872,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (West)"
                                         }
                                     ],
@@ -1143,6 +1147,7 @@
                                             "minimum_airflow": 943.9263994922153,
                                             "minimum_outdoor_airflow": 600.1650553126498,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (Core)"
                                         }
                                     ],
@@ -1181,6 +1186,7 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (South) FanSys",
+                                        "maximum_outdoor_airflow": 4864.884020212498,
                                         "minimum_airflow": 1459.4652640576862,
                                         "minimum_outdoor_airflow": 126.41062543130803,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -1248,6 +1254,7 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (East) FanSys",
+                                        "maximum_outdoor_airflow": 3531.5444639130737,
                                         "minimum_airflow": 1059.4633812732127,
                                         "minimum_outdoor_airflow": 80.02608772502673,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -1315,6 +1322,7 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (North) FanSys",
+                                        "maximum_outdoor_airflow": 4123.027806347249,
                                         "minimum_airflow": 1236.9083910544962,
                                         "minimum_outdoor_airflow": 126.41061822735867,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -1382,6 +1390,7 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (West) FanSys",
+                                        "maximum_outdoor_airflow": 3575.7826234204485,
                                         "minimum_airflow": 1072.7348296527853,
                                         "minimum_outdoor_airflow": 80.0260883063714,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -1449,6 +1458,7 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (Core) FanSys",
+                                        "maximum_outdoor_airflow": 7369.719265370697,
                                         "minimum_airflow": 2210.915867465109,
                                         "minimum_outdoor_airflow": 600.1650760576587,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -106705,6 +106715,7 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop",
+                    "thermal_efficiency": 0.8,
                     "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }

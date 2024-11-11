@@ -546,6 +546,9 @@ class System(ParentNode):
             self.populate_preheat_system(output_data)
         if has_economizer:
             self.populate_air_economizer()
+            self.fan_sys_maximum_outdoor_airflow = self.fan_design_airflow[0]
+        else:
+            self.fan_sys_maximum_outdoor_airflow = self.fan_sys_minimum_outdoor_airflow
         if has_energy_recovery:
             self.populate_air_energy_recovery()
 
@@ -1395,7 +1398,6 @@ class System(ParentNode):
             BDL_SystemTypes.EVAP_COOL,
             BDL_SystemTypes.FC,
             BDL_SystemTypes.SZRH,
-            BDL_SystemTypes.HP,
         ]:
             if not fan_sch:
                 return self.occupied_fan_operation_map.get(

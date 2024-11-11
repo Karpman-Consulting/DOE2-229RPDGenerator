@@ -218,6 +218,7 @@
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
                                         }
                                     ],
@@ -421,6 +422,7 @@
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
                                         }
                                     ],
@@ -623,6 +625,7 @@
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
                                         }
                                     ],
@@ -797,6 +800,7 @@
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
                                         }
                                     ],
@@ -929,6 +933,7 @@
                                             "minimum_airflow": 94.39264135578146,
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
+                                            "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
                                         }
                                     ],
@@ -968,6 +973,7 @@
                                         "fan_control": "VARIABLE_SPEED_DRIVE",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 7 (CHW VAV) FanSys",
+                                        "maximum_outdoor_airflow": 4719.632055071848,
                                         "minimum_airflow": 1415.8896727839528,
                                         "minimum_outdoor_airflow": 471.9632125399846,
                                         "operation_during_occupied": "CONTINUOUS",
@@ -132614,6 +132620,7 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop",
+                    "thermal_efficiency": 0.8,
                     "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }
