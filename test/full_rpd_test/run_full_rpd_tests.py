@@ -173,9 +173,17 @@ def get_mapping(
             generated_values, reference_values, object_id_map
         )
 
-    # TODO: Expand capabilities when length of mapping is less than length of generated_values -e.g. unmatched objects
     if not mapping:
         mapping = match_by_id(generated_values, reference_values)
+
+    # TODO: Expand capabilities when length of mapping is less than length of generated_values -e.g. unmatched objects
+    if len(mapping) < len(generated_values):
+        unmatched_objects = [
+            generated_object
+            for generated_object in generated_values
+            if generated_object.get("id") not in mapping
+        ]
+        print(f"Unmatched {match_type} objects: {unmatched_objects}")
 
     return mapping
 
