@@ -327,47 +327,11 @@ class Zone(ChildNode):
                     zone_ef_power_per_flow * exhaust_airflow
                 )
             return
-        # Populate Terminal for terminals_has_demand_control_ventilation
-        if self.keyword_value_pairs.get(BDL_ZoneKeywords.OA_FLOW_PER) is not None:
-            if (
-                self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
-                is not None
-            ):
+        # Populate Terminal for terminals_has_demand_control_ventilation. DCV is not modeled when a zone has the OUTSIDE-AIR-FLOW keyword populated or when
+        # OA-FLOW/PER is not populated
+        if self.keyword_value_pairs.get(BDL_ZoneKeywords.OA_FLOW_PER) is not None and self.keyword_value_pairs.get(BDL_ZoneKeywords.OUTSIDE_AIR_FLOW) is None:
+            if self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOAS_ATTACHED_TO
 
-                if (
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.MIN_OA_METHOD
-                    )
-                    == BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS
-                ):
-                    self.terminals_has_demand_control_ventilation[2] = True
-                elif (
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.DOAS_ATTACHED_TO
-                    )
-                    == BDL_DOASAttachedToOptions.AHU_MIXED_AIR
-                    and self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.MIN_OA_METHOD
-                    )
-                    == BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR
-                ):
-                    self.terminals_has_demand_control_ventilation[2] = True
-                else:
-                    self.terminals_has_demand_control_ventilation[2] = False
-            else:
-                if (
-                    self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.MIN_OA_METHOD
-                    )
-                    == BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS
-                    or self.parent.keyword_value_pairs.get(
-                        BDL_SystemKeywords.MIN_OA_METHOD
-                    )
-                    == BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR
-                ):
-                    self.terminals_has_demand_control_ventilation[0] = True
-                else:
-                    self.terminals_has_demand_control_ventilation[0] = False
         # No per person rate was populated, set equal to false if the terminal type exists
         else:
             if (

@@ -589,6 +589,12 @@ class BDLEnums:
                 "RELIEF",
             ]
         ),
+        "ZoneOAMethodOptions": _ListEnum(
+            [
+                "MAX-OCC-OR-AREA",
+                "SUM-OCC-AND-AREA",
+            ]
+        ),
         "SystemKeywords": _ListEnum(
             [
                 "TYPE",
@@ -601,6 +607,7 @@ class BDLEnums:
                 "FAN-CONTROL",
                 "NIGHT-CYCLE-CTRL",
                 "MIN-OA-METHOD",
+                "MIN-AIR-SCH",
                 "SIZING-RATIO",
                 "HEAT-SIZING-RATI",
                 "COOL-SIZING-RATI",
@@ -690,6 +697,14 @@ class BDLEnums:
                 "HEAT-PUMP",
             ]
         ),
+        "MinFlowControlOptions": _ListEnum(
+            [
+                "FIXED/SCHEDULED",
+                "DCV-RESET-UP",
+                "DCV-RESET-DOWN",
+                "DCV-RESET-UP/DOWN",
+            ]
+        ),
         "BaseboardControlOptions": _ListEnum(
             [
                 "NONE",
@@ -716,9 +731,15 @@ class BDLEnums:
                 "BASEBOARD-SOURCE",
                 "BASEBOARD-RATING",
                 "MIN-FLOW-SCH",
+                "CMIN-FLOW-SCH",
+                "HMIN-FLOW-SCH",
+                "MIN-FLOW-CONTROL",
                 "MIN-FLOW-RATIO",
                 "MIN-FLOW/AREA",
                 "OA-FLOW/PER",
+                "OUTSIDE-AIR-FLOW",
+                "OA-CHANGES",
+                "OA-FLOW/AREA",
                 "EXHAUST-STATIC",
                 "EXHAUST-EFF",
                 "EXHAUST-KW/FLOW",
