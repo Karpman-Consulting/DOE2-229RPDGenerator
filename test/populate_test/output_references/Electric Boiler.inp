@@ -1,0 +1,1609 @@
+INPUT ..
+
+
+$ ---------------------------------------------------------
+$              Abort, Diagnostics
+$ ---------------------------------------------------------
+
+
+
+
+$ ---------------------------------------------------------
+$              Global Parameters
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Title, Run Periods, Design Days, Holidays
+$ ---------------------------------------------------------
+
+TITLE           
+   LINE-1           = *229 Test Case 1 updated*
+   ..
+
+"Entire Year" = RUN-PERIOD-PD
+   BEGIN-MONTH      = 1
+   BEGIN-DAY        = 1
+   BEGIN-YEAR       = 2021
+   END-MONTH        = 12
+   END-DAY          = 31
+   END-YEAR         = 2021
+   ..
+
+"Cooling Design Day" = DESIGN-DAY      
+   TYPE             = COOLING
+   DRYBULB-HIGH     = 90
+   DRYBULB-RANGE    = 0
+   WETBULB-AT-HIGH  = 59
+   DAY              = 1
+   GROUND-T         = 50
+   NUMBER-OF-DAYS   = 120
+   ..
+"Heating Design Day" = DESIGN-DAY      
+   TYPE             = HEATING
+   DRYBULB-HIGH     = -3
+   GROUND-T         = 50
+   ..
+
+"Standard US Holidays" = HOLIDAYS        
+   LIBRARY-ENTRY "US"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Compliance Data
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Site and Building Data
+$ ---------------------------------------------------------
+
+"Site Data" = SITE-PARAMETERS 
+   DAYLIGHT-SAVINGS = NO
+   GROUND-T         = ( 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 )
+   ..
+
+"Building Data" = BUILD-PARAMETERS
+   HOLIDAYS         = "Standard US Holidays"
+   ..
+
+
+
+PROJECT-DATA    
+   ..
+
+
+$ ---------------------------------------------------------
+$              Materials / Layers / Constructions
+$ ---------------------------------------------------------
+
+"Roof Type 2 M1" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 0.337
+   ..
+"Exterior Wall Type 2 M2" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 0.565
+   ..
+"Roof Type 3 FRV" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 6.84701
+   ..
+"BL1 UFMat (G.S1.U2.M1)" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 37.232
+   ..
+"BL1 UFMat (G.E2.U3.M1)" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 35.1508
+   ..
+"BL1 UFMat (G.C5.U6.M1)" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 100
+   ..
+"Conc LW 30lb 4in (CC34)" = MATERIAL        
+   LIBRARY-ENTRY "Conc LW 30lb 4in (CC34)"
+   ..
+"Metal Deck" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.003
+   CONDUCTIVITY     = 26.162
+   DENSITY          = 489
+   SPECIFIC-HEAT    = 0.119
+   ..
+"Continuous Insulation" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.173
+   CONDUCTIVITY     = 0.012
+   DENSITY          = 2
+   SPECIFIC-HEAT    = 0.22
+   ..
+"Built-up roofing" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.031
+   CONDUCTIVITY     = 0.092
+   DENSITY          = 70
+   SPECIFIC-HEAT    = 0.349
+   ..
+"Stucco" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.083
+   CONDUCTIVITY     = 0.416
+   DENSITY          = 116
+   SPECIFIC-HEAT    = 0.201
+   ..
+"Gypsum Board" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.052
+   CONDUCTIVITY     = 0.092
+   DENSITY          = 50
+   SPECIFIC-HEAT    = 0.26
+   ..
+"Insulation" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.204
+   CONDUCTIVITY     = 0.021
+   DENSITY          = 0.6
+   SPECIFIC-HEAT    = 0.2
+   ..
+"Builtup roof resistance" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 0.337
+   ..
+"Gypsum board resistance" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 0.565
+   ..
+"Concrete" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.333
+   CONDUCTIVITY     = 1.335
+   DENSITY          = 145.125
+   SPECIFIC-HEAT    = 0.199
+   ..
+"Insulation (Slab on grade)" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0.375
+   CONDUCTIVITY     = 0.025
+   DENSITY          = 5.7
+   SPECIFIC-HEAT    = 0.2
+   ..
+"exterior wall type3" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 11.05
+   ..
+"Roof Type 3lyr" = MATERIAL        
+   TYPE             = RESISTANCE
+   RESISTANCE       = 15.09
+   ..
+"Surface to Surface" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0
+   CONDUCTIVITY     = 0.066
+   DENSITY          = 0
+   SPECIFIC-HEAT    = 0
+   ..
+"Surface to surface wall" = MATERIAL        
+   TYPE             = PROPERTIES
+   THICKNESS        = 0
+   CONDUCTIVITY     = 0.09
+   DENSITY          = 0
+   SPECIFIC-HEAT    = 0
+   ..
+
+SET-DEFAULT FOR LAYERS          
+   MATERIAL         = ( "Roof Type 3lyr" )
+   ..
+
+"Roof Construction Lyr" = LAYERS          
+   INSIDE-FILM-RES  = 0.61
+   MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
+         "Built-up roofing" )
+   ..
+"Exterior Wall Construct-1 Lyr" = LAYERS          
+   INSIDE-FILM-RES  = 0.68
+   MATERIAL         = ( "Stucco", "Gypsum Board", "Insulation", 
+         "Gypsum Board" )
+   THICKNESS        = ( &D, 0.052, 0.204, 0.052 )
+   ..
+"Roof Type 2 Lyr" = LAYERS          
+   INSIDE-FILM-RES  = 0.61
+   MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
+         "Builtup roof resistance" )
+   THICKNESS        = ( &D, 0.346 )
+   ..
+"Exterior Wall Type 2 Lyr" = LAYERS          
+   INSIDE-FILM-RES  = 0.68
+   MATERIAL         = ( "Stucco", "Gypsum board resistance", "Insulation", 
+         "Gypsum board resistance" )
+   THICKNESS        = ( &D, &D, 0.588 )
+   ..
+"BL1 Ceilg Cons Layers" = LAYERS          
+   MATERIAL         = ( "AcousTile 1/2in (AC02)" )
+   ..
+"BL1 IFlr Cons Layers Type 1" = LAYERS          
+   INSIDE-FILM-RES  = 0.92
+   MATERIAL         = ( "Concrete", "Carpet & No Pad" )
+   THICKNESS        = ( 0.333 )
+   ..
+"BL1 UFLyrs (G.S1.U2)" = LAYERS          
+   INSIDE-FILM-RES  = 0.92
+   MATERIAL         = ( "BL1 UFMat (G.S1.U2.M1)", "Light Soil, Damp 12in", 
+         "Conc HW 140lb 6in (HF-C13)", "Carpet & No Pad" )
+   ..
+"BL1 UFLyrs (G.E2.U3)" = LAYERS          
+   INSIDE-FILM-RES  = 0.92
+   MATERIAL         = ( "BL1 UFMat (G.E2.U3.M1)", "Light Soil, Damp 12in", 
+         "Conc HW 140lb 6in (HF-C13)", "Carpet & No Pad" )
+   ..
+"BL1 UFLyrs (G.C5.U6)" = LAYERS          
+   INSIDE-FILM-RES  = 0.92
+   MATERIAL         = ( "BL1 UFMat (G.C5.U6.M1)", "Light Soil, Damp 12in", 
+         "Conc HW 140lb 6in (HF-C13)", "Carpet & No Pad" )
+   ..
+"BL1 IFlr Layer Type 2" = LAYERS          
+   INSIDE-FILM-RES  = 0.92
+   MATERIAL         = ( "Concrete", "Insulation (Slab on grade)", 
+         "Carpet & No Pad" )
+   ..
+
+"Roof Type 1" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "Roof Construction Lyr"
+   ..
+"Exterior Wall Type 1" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "Exterior Wall Construct-1 Lyr"
+   ..
+"Roof Type 2" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "Roof Type 2 Lyr"
+   ..
+"Exterior Wall Type 2" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "Exterior Wall Type 2 Lyr"
+   ..
+"Roof Type 3" = CONSTRUCTION    
+   TYPE             = U-VALUE
+   U-VALUE          = 0.066
+   ..
+"BL1 Ceilg Construction" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 Ceilg Cons Layers"
+   ..
+"BL1 IWall Construction" = CONSTRUCTION    
+   TYPE             = U-VALUE
+   U-VALUE          = 2.857
+   ..
+"Slab-on-grade Type 1" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 IFlr Cons Layers Type 1"
+   ..
+"BL1 IFlSP Construction" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 IFlr Cons Layers Type 1"
+   ..
+"BL1 UFCons (G.S1.U2)" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 UFLyrs (G.S1.U2)"
+   ..
+"BL1 UFCons (G.E2.U3)" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 UFLyrs (G.E2.U3)"
+   ..
+"BL1 UFCons (G.C5.U6)" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 UFLyrs (G.C5.U6)"
+   ..
+"Exterior Wall Type 3" = CONSTRUCTION    
+   TYPE             = U-VALUE
+   U-VALUE          = 0.09
+   ..
+"Slab-on-grade Type 2" = CONSTRUCTION    
+   TYPE             = LAYERS
+   LAYERS           = "BL1 IFlr Layer Type 2"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Glass Type Codes
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Glass Types
+$ ---------------------------------------------------------
+
+"BL1 Window Type #1 GT" = GLASS-TYPE      
+   TYPE             = SHADING-COEF
+   SHADING-COEF     = 0.44
+   GLASS-CONDUCT    = 0.579
+   VIS-TRANS        = 0.417
+   ..
+
+
+$ ---------------------------------------------------------
+$              Window Layers
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Lamps / Luminaries / Lighting Systems
+$ ---------------------------------------------------------
+
+
+
+
+
+$ ---------------------------------------------------------
+$              Day Schedules
+$ ---------------------------------------------------------
+
+"DHW Eqp NRes WD" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0.05, &D, &D, &D, &D, &D, 0.101, 0.5005, &D, 0.9, &D, 
+         &D, &D, &D, &D, 0.696, 0.5005, 0.2965, 0.203, &D, &D, 0.05 )
+   ..
+"DHW Eqp NRes WEH" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0.015 )
+   ..
+"DHW Eqp NRes HDD" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0 )
+   ..
+"ZG0-S1 (PSZ) P-Inf WD" = DAY-SCHEDULE-PD
+   TYPE             = MULTIPLIER
+   VALUES           = ( 1, &D, &D, &D, &D, 1.049, 1.25, &D, 0.944, 0.5, 1.25, 
+         &D, &D, &D, 0.5, 0.944, 1.25, &D, 1.148, 1, &D, 1.049, &D, 1 )
+   ..
+"ZG0-S1 (PSZ) P-Inf WEH" = DAY-SCHEDULE-PD
+   TYPE             = MULTIPLIER
+   VALUES           = ( 1 )
+   ..
+"ZG0-S1 (PSZ) P-Inf HDD" = DAY-SCHEDULE-PD
+   TYPE             = MULTIPLIER
+   VALUES           = ( 1, &D, &D, &D, &D, &D, &D, 0.5, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, 1 )
+   ..
+"S1 Sys1 (PSZ) Fan WD" = DAY-SCHEDULE-PD
+   TYPE             = ON/OFF/FLAG
+   VALUES           = ( 0, &D, &D, &D, &D, &D, &D, 1, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, 0 )
+   ..
+"S1 Sys1 (PSZ) Fan WEH" = DAY-SCHEDULE-PD
+   TYPE             = ON/OFF/FLAG
+   VALUES           = ( 0 )
+   ..
+"S1 Sys1 (PSZ) MinOA WD" = DAY-SCHEDULE-PD
+   TYPE             = FRAC/DESIGN
+   VALUES           = ( 0, &D, &D, &D, &D, &D, &D, -999, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, 0 )
+   ..
+"S1 Sys1 (PSZ) MinOA WEH" = DAY-SCHEDULE-PD
+   TYPE             = FRAC/DESIGN
+   VALUES           = ( 0 )
+   ..
+"Occupancy Weekday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.1, 0.2, 0.95, &D, &D, &D, 
+         0.5, 0.95, &D, &D, &D, 0.3, 0.1, &D, &D, &D, 0.05 )
+   ..
+"Occupancy Saturday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.1, 0.1, 0.3, &D, &D, &D, 0.1, 
+         0.1, &D, &D, &D, 0.05, 0.05, 0, &D, &D, 0, 0 )
+   ..
+"Occupancy Sunday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.05, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, 0 )
+   ..
+"Lighting Weekday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.1, 0.2, 0.95, &D, &D, &D, 
+         0.5, 0.95, &D, &D, &D, 0.3, 0.1, &D, &D, &D, 0.05 )
+   ..
+"Lighting Saturday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 
+         0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0 )
+   ..
+"Lighting Sunday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, 0.05, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, 0 )
+   ..
+"Plug Load Weekday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0.31, &D, &D, &D, &D, &D, 0.38, &D, 0.86, &D, &D, &D, 
+         0.76, 0.86, &D, &D, &D, 0.48, 0.38 )
+   ..
+"Plug Load Saturday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0.23, &D, &D, &D, &D, &D, 0.38, &D, 0.48, &D, &D, &D, 
+         0.33, &D, &D, &D, &D, 0.29, &D, 0.23 )
+   ..
+"Plug Load Sunday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0.23, &D, &D, &D, &D, &D, 0.29, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, &D, 0.23 )
+   ..
+"Elevator Weekday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, &D, 0.35, 0.69, 0.43, 0.37, 
+         0.43, 0.58, 0.48, 0.37, &D, 0.46, 0.62, 0.12, 0.04, 0.04, 0 )
+   ..
+"Elevator Saturday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0, &D, &D, &D, &D, &D, &D, 0.16, 0.14, 0.21, 0.18, 
+         0.25, 0.21, 0.13, 0.08, 0.04, 0.05, 0.06, 0 )
+   ..
+"Elevator Sunday" = DAY-SCHEDULE-PD
+   TYPE             = FRACTION
+   VALUES           = ( 0 )
+   ..
+"Heating setpoint weekday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 59, &D, &D, &D, &D, 68.18, &D, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, &D, &D, &D, &D, 59 )
+   ..
+"Heating setpoint Saturday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 59, &D, &D, &D, &D, 68.18, &D, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, 59 )
+   ..
+"Heating setpoint Sunday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 59 )
+   ..
+"Cooling setpoint weekday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 80.06, &D, &D, &D, &D, 75.2, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, &D, &D, &D, &D, &D, 80.06, 80.06 )
+   ..
+"Cooling setpoint saturday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 80.06, &D, &D, &D, &D, 75.2, &D, &D, &D, &D, &D, &D, 
+         &D, &D, &D, &D, &D, 80.06 )
+   ..
+"Cooling Setpoint Sunday" = DAY-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   VALUES           = ( 80.06 )
+   ..
+"OA Reset Day" = DAY-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   OUTSIDE-HI       = 60
+   OUTSIDE-LO       = 80
+   SUPPLY-HI        = 44
+   SUPPLY-LO        = 54
+   ..
+
+$ ---------------------------------------------------------
+$              Week Schedules
+$ ---------------------------------------------------------
+
+"DHW Eqp NRes Wk" = WEEK-SCHEDULE-PD
+   TYPE             = FRACTION
+   DAY-SCHEDULES    = ( "DHW Eqp NRes WD", &D, &D, &D, &D, "DHW Eqp NRes WEH", 
+         &D, &D, "DHW Eqp NRes HDD" )
+   ..
+"ZG0-S1 (PSZ) P-Inf Wk" = WEEK-SCHEDULE-PD
+   TYPE             = MULTIPLIER
+   DAY-SCHEDULES    = ( "ZG0-S1 (PSZ) P-Inf WD", &D, &D, &D, &D, 
+         "ZG0-S1 (PSZ) P-Inf WEH", &D, &D, "ZG0-S1 (PSZ) P-Inf HDD" )
+   ..
+"S1 Sys1 (PSZ) Fan Wk" = WEEK-SCHEDULE-PD
+   TYPE             = ON/OFF/FLAG
+   DAY-SCHEDULES    = ( "S1 Sys1 (PSZ) Fan WD", &D, &D, &D, &D, 
+         "S1 Sys1 (PSZ) Fan WEH" )
+   ..
+"S1 Sys1 (PSZ) MinOA Wk" = WEEK-SCHEDULE-PD
+   TYPE             = FRAC/DESIGN
+   DAY-SCHEDULES    = ( "S1 Sys1 (PSZ) MinOA WD", &D, &D, &D, &D, 
+         "S1 Sys1 (PSZ) MinOA WEH" )
+   ..
+"Occupancy Week" = WEEK-SCHEDULE-PD
+   TYPE             = FRACTION
+   DAY-SCHEDULES    = ( "Occupancy Weekday", &D, &D, &D, &D, 
+         "Occupancy Saturday", "Occupancy Sunday", "Occupancy Saturday", &D, 
+         &D, "Occupancy Saturday", "Occupancy Saturday" )
+   ..
+"Lighting Week" = WEEK-SCHEDULE-PD
+   TYPE             = FRACTION
+   DAY-SCHEDULES    = ( "Lighting Weekday", &D, &D, &D, &D, 
+         "Lighting Saturday", "Lighting Sunday", "Lighting Saturday", &D, &D, 
+         "Lighting Saturday", "Lighting Saturday" )
+   ..
+"Plug Load Week Schedule" = WEEK-SCHEDULE-PD
+   TYPE             = FRACTION
+   DAY-SCHEDULES    = ( "Plug Load Weekday", &D, &D, &D, &D, 
+         "Plug Load Saturday", "Plug Load Sunday", "Plug Load Saturday", &D, 
+         &D, "Plug Load Saturday", "Plug Load Saturday" )
+   ..
+"Elevator Week" = WEEK-SCHEDULE-PD
+   TYPE             = FRACTION
+   DAY-SCHEDULES    = ( "Elevator Weekday", &D, &D, &D, &D, 
+         "Elevator Saturday", "Elevator Sunday", "Elevator Saturday", &D, &D, 
+         "Elevator Saturday", "Elevator Saturday" )
+   ..
+"Heating Setpoint Week" = WEEK-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   DAY-SCHEDULES    = ( "Heating setpoint weekday", &D, &D, &D, &D, 
+         "Heating setpoint Saturday", "Heating setpoint Sunday", 
+         "Heating setpoint Saturday", &D, &D, "Heating setpoint Saturday", 
+         "Heating setpoint Saturday" )
+   ..
+"Cooling setpoint week" = WEEK-SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   DAY-SCHEDULES    = ( "Cooling setpoint weekday", &D, &D, &D, &D, 
+         "Cooling setpoint saturday", "Cooling Setpoint Sunday", 
+         "Cooling setpoint saturday", &D, &D, "Cooling setpoint saturday", 
+         "Cooling setpoint saturday" )
+   ..
+"OA Reset Week" = WEEK-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   DAY-SCHEDULES    = ( "OA Reset Day", &D, &D, &D, &D, "OA Reset Day" )
+   ..
+
+$ ---------------------------------------------------------
+$              Annual Schedules
+$ ---------------------------------------------------------
+
+"DHW Eqp NRes Sch" = SCHEDULE-PD
+   TYPE             = FRACTION
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "DHW Eqp NRes Wk" )
+   ..
+"ZG0-S1 (PSZ) P-Inf Sch" = SCHEDULE-PD
+   TYPE             = MULTIPLIER
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "ZG0-S1 (PSZ) P-Inf Wk" )
+   ..
+"S1 Sys1 (PSZ) Fan Sch" = SCHEDULE-PD
+   TYPE             = ON/OFF/FLAG
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "S1 Sys1 (PSZ) Fan Wk" )
+   ..
+"S1 Sys1 (PSZ) MinOA Sch" = SCHEDULE-PD
+   TYPE             = FRAC/DESIGN
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "S1 Sys1 (PSZ) MinOA Wk" )
+   ..
+"Occupancy Annual" = SCHEDULE-PD
+   TYPE             = FRACTION
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Occupancy Week" )
+   ..
+"Lighting Schedule" = SCHEDULE-PD
+   TYPE             = FRACTION
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Lighting Week" )
+   ..
+"Plug Load Annual" = SCHEDULE-PD
+   TYPE             = FRACTION
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Plug Load Week Schedule" )
+   ..
+"Elevator Annual" = SCHEDULE-PD
+   TYPE             = FRACTION
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Elevator Week" )
+   ..
+"Heating Setpoint Annual" = SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Heating Setpoint Week" )
+   ..
+"Cooling Setpoint Annual" = SCHEDULE-PD
+   TYPE             = TEMPERATURE
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Cooling setpoint week" )
+   ..
+"Hourly Report Schedule 23" = SCHEDULE-PD
+   LIBRARY-ENTRY "Hourly Report Schedule"
+   ..
+"OA Reset Annual" = SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "OA Reset Week" )
+   ..
+"Schedule ON/OFF" = SCHEDULE-PD
+   LIBRARY-ENTRY "Schedule ON/OFF"
+   ..
+"Schedule FRACTION" = SCHEDULE-PD
+   LIBRARY-ENTRY "Schedule FRACTION"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Polygons
+$ ---------------------------------------------------------
+
+"BL1 Floor Polygon" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 163.8, 0 )
+   V3               = ( 163.8, 109.2 )
+   V4               = ( 0, 109.2 )
+   ..
+"BL1 Space Polygon 1" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 163.8, 0 )
+   V3               = ( 148.8, 15 )
+   V4               = ( 15, 15 )
+   ..
+"BL1 Space Polygon 2" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 109.2, -0 )
+   V3               = ( 94.2, 15 )
+   V4               = ( 15, 15 )
+   ..
+"BL1 Space Polygon 3" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 163.8, 0 )
+   V3               = ( 148.8, 15 )
+   V4               = ( 15, 15 )
+   ..
+"BL1 Space Polygon 4" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 109.2, 0 )
+   V3               = ( 94.2, 15 )
+   V4               = ( 15, 15 )
+   ..
+"BL1 Space Polygon 5" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 133.8, 0 )
+   V3               = ( 133.8, 79.2 )
+   V4               = ( 0, 79.2 )
+   ..
+"BL1 Space Polygon 1 - SMirro" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 15, 15 )
+   V3               = ( 15, 148.8 )
+   V4               = ( 0, 163.8 )
+   ..
+"BL1 Space Polygon 2 - SMirro" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 15, 15 )
+   V3               = ( 15, 94.2 )
+   V4               = ( -0, 109.2 )
+   ..
+"BL1 Space Polygon 5 - SMirro" = POLYGON         
+   V1               = ( 0, 0 )
+   V2               = ( 79.2, 0 )
+   V3               = ( 79.2, 133.8 )
+   V4               = ( 0, 133.8 )
+   ..
+
+
+$ ---------------------------------------------------------
+$              Wall Parameters
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Fixed and Building Shades
+$ ---------------------------------------------------------
+
+
+
+
+$ ---------------------------------------------------------
+$              Misc Cost Related Objects
+$ ---------------------------------------------------------
+
+
+
+"Baseline Data" = BASELINE        
+   ..
+
+
+$ *********************************************************
+$ **                                                     **
+$ **                Performance Curves                   **
+$ **                                                     **
+$ *********************************************************
+
+
+$ *********************************************************
+$ **                                                     **
+$ **      Floors / Spaces / Walls / Windows / Doors      **
+$ **                                                     **
+$ *********************************************************
+
+SET-DEFAULT FOR SPACE           
+   EQUIPMENT-W/AREA = ( &D, 3.68 )
+   ..
+
+"Floor 1" = FLOOR           
+   AZIMUTH          = 360
+   POLYGON          = "BL1 Floor Polygon"
+   SHAPE            = POLYGON
+   FLOOR-HEIGHT     = 13
+   AREA             = 17867
+   SPACE-HEIGHT     = 13
+   C-DIAGRAM-DATA   = *Bldg Envelope & Loads 1 Diag Data*
+   ..
+"Perimeter Space 1 (South)" = SPACE           
+   SHAPE            = POLYGON
+   ZONE-TYPE        = CONDITIONED
+   INF-METHOD       = AIR-CHANGE
+   AIR-CHANGES/HR   = 0.5
+   INF-FLOW/AREA    = 0
+   POLYGON          = "BL1 Space Polygon 1"
+   PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
+   AREA/PERSON      = ( 200 )
+   PEOPLE-HEAT-GAIN = ( 409.457 )
+   PEOPLE-HG-LAT    = ( {45%*409.457} )
+   PEOPLE-HG-SENS   = ( {55%*409.457} )
+   LIGHTING-SCHEDUL = ( "Lighting Schedule" )
+   LIGHTING-W/AREA  = ( 1.025 )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIPMENT-W/AREA = ( 0.75 )
+   EQUIP-LATENT     = ( 0 )
+   EQUIP-SENSIBLE   = ( 1 )
+   LOCATION         = FLOOR-V1
+   C-SUB-SRC-BTUH   = ( 0, 0, 0 )
+   C-SUB-SRC-KW     = ( 0, 0, 0 )
+   C-ACTIVITY-DESC  = *Office (Executive/Private)*
+   ..
+"Perimeter Space 1 Ext Wall" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Exterior Wall Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = SPACE-V1
+   INSIDE-EMISS     = 0.9
+   ..
+"South Window 1" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 0
+   Y                = 3.28
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"South Window 2" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 55.81
+   Y                = 3.1
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"South Window 3" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 111.71
+   Y                = 3.1
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"South Door 1" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 52.4
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"South Door 2" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 108.3
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"Perimeter Space 1 Roof" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Roof Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = TOP
+   INSIDE-EMISS     = 0.9
+   INSIDE-RCONV     = 1.41
+   ..
+"Perimeter Space 1 NE Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Perimeter Space 2 (East)"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7 )
+   LOCATION         = SPACE-V2
+   INSIDE-VIS-REFL  = ( 0.3 )
+   ..
+"Perimeter Space 1 N Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7 )
+   LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3 )
+   ..
+"Perimeter Space 1 NW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Perimeter Space 4 (West)"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7 )
+   LOCATION         = SPACE-V4
+   INSIDE-VIS-REFL  = ( 0.3 )
+   ..
+"Perimeter Space 1 Slab on Grade" = UNDERGROUND-WALL
+   CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   LOCATION         = BOTTOM
+   ..
+"Perimeter Space 2 (East)" = SPACE           
+   SHAPE            = POLYGON
+   ZONE-TYPE        = CONDITIONED
+   INF-METHOD       = AIR-CHANGE
+   INF-FLOW/AREA    = 0.0841
+   POLYGON          = "BL1 Space Polygon 2"
+   PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
+   AREA/PERSON      = ( 200 )
+   PEOPLE-HEAT-GAIN = ( 409 )
+   PEOPLE-HG-LAT    = ( {45%*409.457} )
+   PEOPLE-HG-SENS   = ( {55%*409.457} )
+   LIGHTING-SCHEDUL = ( "Lighting Schedule" )
+   LIGHTING-W/AREA  = ( 1.025 )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIPMENT-W/AREA = ( 0.75 )
+   EQUIP-LATENT     = ( 0 )
+   EQUIP-SENSIBLE   = ( 1 )
+   LOCATION         = FLOOR-V2
+   C-SUB-SRC-BTUH   = ( 0, 0, 0 )
+   C-SUB-SRC-KW     = ( 0, 0, 0 )
+   C-ACTIVITY-DESC  = *Office (Executive/Private)*
+   ..
+"Perimeter Space 2 Ext Wall" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Exterior Wall Type 2"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = SPACE-V1
+   SHADING-SURFACE  = YES
+   INSIDE-EMISS     = 0.9
+   ..
+"East Window 1" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 0
+   Y                = 3.2
+   HEIGHT           = 4.45
+   WIDTH            = 101.2
+   WIN-SHADE-TYPE   = NO-SHADE
+   FRAME-CONDUCT    = 2.781
+   ..
+"East Window 2" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 105.2
+   Y                = 3.2
+   HEIGHT           = 4.45
+   WIDTH            = 4
+   FRAME-CONDUCT    = 2.781
+   ..
+"East Door 1" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 101.7
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"Perimeter Space 2 Roof" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Roof Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = TOP
+   INSIDE-EMISS     = 0.9
+   INSIDE-RCONV     = 1.41
+   ..
+"Perimeter Space 2 NW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Perimeter Space 3 (North)"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7 )
+   LOCATION         = SPACE-V2
+   INSIDE-VIS-REFL  = ( 0.3 )
+   ..
+"Perimeter Space 2 W Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7 )
+   LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3 )
+   ..
+"Perimeter Space 2 Slab on Grade" = UNDERGROUND-WALL
+   CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   LOCATION         = BOTTOM
+   ..
+"Perimeter Space 3 (North)" = SPACE           
+   SHAPE            = POLYGON
+   ZONE-TYPE        = CONDITIONED
+   INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
+   INF-METHOD       = AIR-CHANGE
+   INF-FLOW/AREA    = 0.07646
+   POLYGON          = "BL1 Space Polygon 3"
+   PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
+   AREA/PERSON      = ( 200 )
+   PEOPLE-HEAT-GAIN = ( 409 )
+   PEOPLE-HG-LAT    = ( {45%*409.457} )
+   PEOPLE-HG-SENS   = ( {55%*409.457} )
+   LIGHTING-SCHEDUL = ( "Lighting Schedule" )
+   LIGHTING-W/AREA  = ( 1.025 )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIPMENT-W/AREA = ( 0.75 )
+   EQUIP-LATENT     = ( 0 )
+   EQUIP-SENSIBLE   = ( 1 )
+   LOCATION         = FLOOR-V3
+   C-SUB-SRC-BTUH   = ( 0, 0, 0 )
+   C-SUB-SRC-KW     = ( 0, 0, 0 )
+   C-ACTIVITY-DESC  = *Office (Executive/Private)*
+   ..
+"Perimeter Space 3 Ext Wall" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Exterior Wall Type 3"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = SPACE-V1
+   SHADING-SURFACE  = YES
+   INSIDE-EMISS     = 0.9
+   ..
+"North Window 1" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 0
+   Y                = 3.1
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"North Window 2" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 55.9
+   Y                = 3.1
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"North Window 3" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 111.71
+   Y                = 3.1
+   HEIGHT           = 4.45
+   WIDTH            = 51.9
+   FRAME-CONDUCT    = 2.781
+   ..
+"North Door 1" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 52.4
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"North Door 2" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 108.3
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"Perimeter Space 3 Roof" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Roof Type 2"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = TOP
+   INSIDE-EMISS     = 0.9
+   INSIDE-RCONV     = 1.41
+   ..
+"Perimeter Space 3 SW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Perimeter Space 4 (West)"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   LOCATION         = SPACE-V2
+   ..
+"Perimeter Space 3 S Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   LOCATION         = SPACE-V3
+   ..
+"Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
+   CONSTRUCTION     = "Slab-on-grade Type 2"
+   INSIDE-SOL-ABS   = 0.7
+   LOCATION         = BOTTOM
+   ..
+"Perimeter Space 4 (West)" = SPACE           
+   SHAPE            = POLYGON
+   ZONE-TYPE        = CONDITIONED
+   INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
+   INF-METHOD       = AIR-CHANGE
+   INF-FLOW/AREA    = 0.08053
+   POLYGON          = "BL1 Space Polygon 4"
+   PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
+   AREA/PERSON      = ( 200 )
+   PEOPLE-HEAT-GAIN = ( 409 )
+   PEOPLE-HG-LAT    = ( {45%*409.457} )
+   PEOPLE-HG-SENS   = ( {55%*409.457} )
+   LIGHTING-SCHEDUL = ( "Lighting Schedule" )
+   LIGHTING-W/AREA  = ( 1.025 )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIPMENT-W/AREA = ( 0.75 )
+   EQUIP-LATENT     = ( 0 )
+   EQUIP-SENSIBLE   = ( 1 )
+   LOCATION         = FLOOR-V4
+   C-SUB-SRC-BTUH   = ( 0, 0, 0 )
+   C-SUB-SRC-KW     = ( 0, 0, 0 )
+   C-ACTIVITY-DESC  = *Office (Executive/Private)*
+   ..
+"Perimeter Space 4 Ext Wall" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Exterior Wall Type 3"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = SPACE-V1
+   SHADING-SURFACE  = YES
+   INSIDE-EMISS     = 0.9
+   ..
+"West Window 1" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 0
+   Y                = 3.2
+   HEIGHT           = 4.45
+   WIDTH            = 101.2
+   FRAME-CONDUCT    = 2.781
+   ..
+"West Window 2" = WINDOW          
+   GLASS-TYPE       = "BL1 Window Type #1 GT"
+   FRAME-WIDTH      = 0
+   X                = 105.2
+   Y                = 3.2
+   HEIGHT           = 4.45
+   WIDTH            = 4
+   FRAME-CONDUCT    = 2.781
+   ..
+"West Door 1" = DOOR            
+   CONSTRUCTION     = "Sgl Lyr Unins Mtl Door"
+   X                = 101.7
+   HEIGHT           = 7
+   WIDTH            = 3
+   ..
+"Perimeter Space 4 Roof" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Roof Type 3"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = TOP
+   INSIDE-EMISS     = 0.9
+   INSIDE-RCONV     = 1.41
+   ..
+"Perimeter Space 4 E Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
+   CONSTRUCTION     = "BL1 IWall Construction"
+   LOCATION         = SPACE-V3
+   ..
+"Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
+   CONSTRUCTION     = "Slab-on-grade Type 2"
+   INSIDE-SOL-ABS   = 0.7
+   LOCATION         = BOTTOM
+   ..
+"Core Space 1" = SPACE           
+   X                = 15
+   Y                = 15
+   SHAPE            = POLYGON
+   ZONE-TYPE        = CONDITIONED
+   INF-METHOD       = AIR-CHANGE
+   POLYGON          = "BL1 Space Polygon 5"
+   PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
+   AREA/PERSON      = ( 200 )
+   PEOPLE-HEAT-GAIN = ( 409 )
+   PEOPLE-HG-LAT    = ( {45%*409.457} )
+   PEOPLE-HG-SENS   = ( {55%*409.457} )
+   LIGHTING-SCHEDUL = ( "Lighting Schedule" )
+   LIGHTING-W/AREA  = ( 1.025 )
+   EQUIP-SCHEDULE   = ( "Plug Load Annual", "Elevator Annual" )
+   EQUIPMENT-W/AREA = ( 0.75 )
+   EQUIP-LATENT     = ( 0 )
+   EQUIP-SENSIBLE   = ( 1 )
+   C-SUB-SRC-BTUH   = ( 0, 0, 0 )
+   C-SUB-SRC-KW     = ( 0, 0, 0 )
+   C-ACTIVITY-DESC  = *Office (Executive/Private)*
+   ..
+"Core Space 1 Roof" = EXTERIOR-WALL   
+   CONSTRUCTION     = "Roof Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   INSIDE-VIS-REFL  = 0.3
+   LOCATION         = TOP
+   INSIDE-EMISS     = 0.9
+   INSIDE-RCONV     = 1.41
+   ..
+"Core Space 1 Slab on Grade" = UNDERGROUND-WALL
+   CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
+   LOCATION         = BOTTOM
+   ..
+
+
+$ *********************************************************
+$ **                                                     **
+$ **              Electric & Fuel Meters                 **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Electric Meters
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Fuel Meters
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Master Meters
+$ ---------------------------------------------------------
+
+"MASTER-METERS 1" = MASTER-METERS   
+   MSTR-ELEC-METER  = "EM1"
+   MSTR-FUEL-METER  = "FM1"
+   ..
+
+
+$ *********************************************************
+$ **                                                     **
+$ **      HVAC Circulation Loops / Plant Equipment       **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Pumps
+$ ---------------------------------------------------------
+
+"Hot Water Pumps" = PUMP            
+   NUMBER           = 2
+   CAP-CTRL         = VAR-SPEED-PUMP
+   ..
+"CHW Pump (Primary)" = PUMP            
+   NUMBER           = 2
+   ..
+"Condenser Water Pump" = PUMP            
+   HEAD             = 31
+   ..
+"CHW Pump (Secondary)" = PUMP            
+   CAP-CTRL         = VAR-SPEED-PUMP
+   ..
+
+
+$ ---------------------------------------------------------
+$              Condensing Units
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Circulation Loops
+$ ---------------------------------------------------------
+
+"DHW Plant 1 Loop" = CIRCULATION-LOOP
+   TYPE             = DHW
+   DESIGN-HEAT-T    = 135
+   PROCESS-FLOW     = ( 0.164632 )
+   PROCESS-SCH      = ( "DHW Eqp NRes Sch" )
+   PROCESS-T        = ( 135 )
+   ..
+"Hot Water Loop" = CIRCULATION-LOOP
+   TYPE             = HW
+   SIZING-OPTION    = NON-COINCIDENT
+   LOOP-OPERATION   = DEMAND
+   DESIGN-HEAT-T    = 150
+   LOOP-PUMP        = "Hot Water Pumps"
+   ..
+"Chilled Water Loop (Primary)" = CIRCULATION-LOOP
+   TYPE             = CHW
+   LOOP-MIN-FLOW    = 0.25
+   DESIGN-COOL-T    = 50
+   COOL-SETPT-CTRL  = OA-RESET
+   COOL-RESET-SCH   = "OA Reset Annual"
+   LOOP-PUMP        = "CHW Pump (Primary)"
+   ..
+"Chilled Water Loop (Secondary)" = CIRCULATION-LOOP
+   TYPE             = CHW
+   SUBTYPE          = SECONDARY
+   LOOP-DESIGN-DT   = 12
+   LOOP-MIN-FLOW    = 0.25
+   PRIMARY-LOOP     = "Chilled Water Loop (Primary)"
+   LOOP-OPERATION   = STANDBY
+   DESIGN-COOL-T    = 44
+   COOL-SETPT-CTRL  = OA-RESET
+   COOL-RESET-SCH   = "OA Reset Annual"
+   LOOP-PUMP        = "CHW Pump (Secondary)"
+   ..
+"Condenser Water Loop" = CIRCULATION-LOOP
+   TYPE             = CW
+   DESIGN-COOL-T    = 70
+   COOL-SETPT-T     = 70
+   LOOP-PUMP        = "Condenser Water Pump"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Chillers
+$ ---------------------------------------------------------
+
+"Chiller 1" = CHILLER         
+   TYPE             = ELEC-OPEN-CENT
+   MIN-RATIO        = 0.25
+   VARIABLE-SPEED   = YES
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   CONDENSER-TYPE   = WATER-COOLED
+   CW-LOOP          = "Condenser Water Loop"
+   MAX-HTREC        = 1
+   ..
+"Chiller 2" = CHILLER         
+   TYPE             = ELEC-SCREW
+   MIN-RATIO        = 0.25
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   CONDENSER-TYPE   = WATER-COOLED
+   CW-LOOP          = "Condenser Water Loop"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Boilers
+$ ---------------------------------------------------------
+
+"Boiler 1" = BOILER          
+   TYPE             = ELEC-HW-BOILER
+   MIN-RATIO        = 0.33
+   HW-LOOP          = "Hot Water Loop"
+   ..
+"Boiler 2" = BOILER          
+   TYPE             = ELEC-HW-BOILER
+   MIN-RATIO        = 0.33
+   HW-LOOP          = "Hot Water Loop"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Domestic Water Heaters
+$ ---------------------------------------------------------
+
+"DHW Plant 1 Wtr Htr" = DW-HEATER       
+   TYPE             = GAS
+   TANK-VOLUME      = 44.7174
+   CAPACITY         = 0.0595993
+   HIR-FPLR         = "DW-Gas-Pilotless-HIR-fPLR"
+   TANK-UA          = 1.86322
+   LOCATION         = ZONE
+   ZONE-NAME        = "Core Zone"
+   DHW-LOOP         = "DHW Plant 1 Loop"
+   C-ENERGY-FACTOR  = 0.535037
+   C-TANK-EXT-RVAL  = 12
+   ..
+
+
+$ ---------------------------------------------------------
+$              Heat Rejection
+$ ---------------------------------------------------------
+
+"Heat Rejection 1" = HEAT-REJECTION  
+   TYPE             = OPEN-TWR
+   CAPACITY-CTRL    = VARIABLE-SPEED-FAN
+   DESIGN-RANGE     = 10
+   DESIGN-APPROACH  = 7
+   DESIGN-WETBULB   = 77
+   CW-LOOP          = "Condenser Water Loop"
+   ..
+
+
+$ ---------------------------------------------------------
+$              Tower Free Cooling
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Photovoltaic Modules
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Electric Generators
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Thermal Storage
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Ground Loop Heat Exchangers
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Compliance DHW (residential dwelling units)
+$ ---------------------------------------------------------
+
+
+
+$ *********************************************************
+$ **                                                     **
+$ **            Steam & Chilled Water Meters             **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Steam Meters
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Chilled Water Meters
+$ ---------------------------------------------------------
+
+
+
+$ *********************************************************
+$ **                                                     **
+$ **               HVAC Systems / Zones                  **
+$ **                                                     **
+$ *********************************************************
+
+SET-DEFAULT FOR SYSTEM          
+   TYPE = VAVS
+   HUMIDIFIER-TYPE  = STEAM
+   HUMIDIFIER-LOC   = IN-AIR-HANDLER
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PSZ
+   FAN-CONTROL      = CONSTANT-VOLUME
+   ERV-RECOVER-TYPE = ENTHALPY-HX
+   ERV-RUN-CTRL     = WHEN-MIN-OA
+   ERV-TEMP-CTRL    = FIXED-SETPT
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PMZS
+   HUMIDIFIER-TYPE  = STEAM
+   COOL-MIN-RESET-T = 60
+   FAN-CONTROL      = SPEED
+   RETURN-FAN-CONTR = SPEED
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PVAVS
+   HUMIDIFIER-TYPE  = STEAM
+   HP-SUPP-SOURCE   = HOT-WATER
+   PHT-COIL-AIR-DT  = 20
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PVVT
+   HUMIDIFIER-TYPE  = STEAM
+   HP-SUPP-SOURCE   = HOT-WATER
+   HT-RATED-EDB     = 70
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = DOAS
+   HUMIDIFIER-TYPE  = STEAM
+   ..
+
+SET-DEFAULT FOR ZONE            
+   TYPE = CONDITIONED
+   OA-FLOW/AREA     = ( 0.12 )
+   ..
+
+"Baseline System 7 (CHW VAV)" = SYSTEM          
+   TYPE             = VAVS
+   HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = HOT-WATER
+   PREHEAT-SOURCE   = HOT-WATER
+   HUMIDIFIER-TYPE  = STEAM
+   HEAT-CONTROL     = COLDEST
+   COOL-CONTROL     = WARMEST
+   MAX-HUMIDITY     = 80
+   MIN-HUMIDITY     = 40
+   ECONO-LIMIT-T    = 70
+   PREHEAT-T        = 50
+   COOL-MIN-RESET-T = 60
+   MIN-OA-METHOD    = DCV-RETURN-SENSOR
+   COOL-MAX-RESET-T = 60
+   SUPPLY-FLOW      = 10000
+   RETURN-FLOW      = 9000
+   MIN-OUTSIDE-AIR  = 1
+   RECOVER-EXHAUST  = YES
+   FAN-CONTROL      = SPEED
+   SUPPLY-STATIC    = 3.5
+   SUPPLY-MECH-EFF  = 1
+   RETURN-STATIC    = 2
+   RETURN-FAN-CONTR = SPEED
+   REHEAT-DELTA-T   = 20
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Secondary)"
+   COOLING-CAPACITY = 300000
+   PREHEAT-CAPACITY = -300000
+   ZONE-HW-LOOP     = "Hot Water Loop"
+   HUMIDIFIER-LOC   = IN-AIR-HANDLER
+   ERV-RECOVER-TYPE = ENTHALPY-WHEEL
+   ERV-SENSIBLE-EFF = 0.5
+   ERV-LATENT-EFF   = 0.5
+   ERV-TEMP-CTRL    = MIXED-AIR-RESET
+   ERV-CAP-CTRL     = BYPASS-EXHAUST
+   ERV-FANS         = SELF-CONTAINED
+   SUPPLY-MTR-EFF   = 0.6
+   RETURN-MECH-EFF  = 1
+   RETURN-MTR-EFF   = 0.6
+   HEAT-MAX-RESET-T = 60
+   ..
+"Perimeter Zone 1 (South)" = ZONE            
+   TYPE             = CONDITIONED
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   SPACE            = "Perimeter Space 1 (South)"
+   ..
+"Perimeter Zone 2 (East)" = ZONE            
+   TYPE             = CONDITIONED
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   SPACE            = "Perimeter Space 2 (East)"
+   ..
+"Perimeter Zone 3 (North)" = ZONE            
+   TYPE             = CONDITIONED
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   SPACE            = "Perimeter Space 3 (North)"
+   ..
+"Perimeter Zone 4 (West)" = ZONE            
+   TYPE             = CONDITIONED
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   SPACE            = "Perimeter Space 4 (West)"
+   ..
+"Core Zone" = ZONE            
+   TYPE             = CONDITIONED
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   SPACE            = "Core Space 1"
+   ..
+
+
+$ *********************************************************
+$ **                                                     **
+$ **                Metering & Misc HVAC                 **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Equipment Controls
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Load Management
+$ ---------------------------------------------------------
+
+
+
+$ *********************************************************
+$ **                                                     **
+$ **                    Utility Rates                    **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Ratchets
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Block Charges
+$ ---------------------------------------------------------
+
+
+
+$ ---------------------------------------------------------
+$              Utility Rates
+$ ---------------------------------------------------------
+
+"Custom Elec Rate" = UTILITY-RATE    
+   TYPE             = ELECTRICITY
+   ..
+"Custom Gas Rate" = UTILITY-RATE    
+   TYPE             = NATURAL-GAS
+   ..
+
+
+$ *********************************************************
+$ **                                                     **
+$ **                 Output Reporting                    **
+$ **                                                     **
+$ *********************************************************
+
+$ ---------------------------------------------------------
+$              Loads Non-Hourly Reporting
+$ ---------------------------------------------------------
+
+LOADS-REPORT    
+   VERIFICATION     = ( ALL-VERIFICATION )
+   SUMMARY          = ( ALL-SUMMARY )
+   ..
+
+
+$ ---------------------------------------------------------
+$              Systems Non-Hourly Reporting
+$ ---------------------------------------------------------
+
+SYSTEMS-REPORT  
+   VERIFICATION     = ( ALL-VERIFICATION )
+   SUMMARY          = ( ALL-SUMMARY )
+   ..
+
+
+$ ---------------------------------------------------------
+$              Plant Non-Hourly Reporting
+$ ---------------------------------------------------------
+
+PLANT-REPORT    
+   VERIFICATION     = ( ALL-VERIFICATION )
+   SUMMARY          = ( ALL-SUMMARY )
+   ..
+
+
+$ ---------------------------------------------------------
+$              Economics Non-Hourly Reporting
+$ ---------------------------------------------------------
+
+ECONOMICS-REPORT
+   VERIFICATION     = ( ALL-VERIFICATION )
+   SUMMARY          = ( ALL-SUMMARY )
+   ..
+
+
+$ ---------------------------------------------------------
+$              Hourly Reporting
+$ ---------------------------------------------------------
+
+
+"Hourly Report" = HOURLY-REPORT   
+   LIBRARY-ENTRY "Hourly Report"
+   ..
+
+
+$ ---------------------------------------------------------
+$              THE END
+$ ---------------------------------------------------------
+
+END ..
+COMPUTE ..
+STOP ..

@@ -26,6 +26,13 @@ class Space(ChildNode, ParentNode):
         BDL_InfiltrationAlgorithmOptions.ASHRAE_ENHANCED: "2005 ASHRAE Handbook Fundamentals - Enhanced Infiltration Method",
     }
 
+    energy_source_map = {
+        BDL_InternalEnergySourceOptions.GAS: EnergySourceOptions.NATURAL_GAS,
+        BDL_InternalEnergySourceOptions.ELECTRIC: EnergySourceOptions.ELECTRICITY,
+        BDL_InternalEnergySourceOptions.HOT_WATER: EnergySourceOptions.NONE,
+        BDL_InternalEnergySourceOptions.PROCESS: EnergySourceOptions.NONE,
+    }
+
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
         ParentNode.__init__(self, u_name, rmd)
@@ -84,18 +91,14 @@ class Space(ChildNode, ParentNode):
         """Populate data elements that originate from eQUEST's SPACE command"""
         # Establish zone and populate the zone volume and space floor area first to use in other data elements
         self.zone = self.rmd.space_map.get(self.u_name)
-        volume = self.keyword_value_pairs.get(BDL_SpaceKeywords.VOLUME)
+        volume = self.get_inp(BDL_SpaceKeywords.VOLUME)
         if volume is not None:
             volume = self.try_float(volume)
             self.zone.volume = volume
-        self.floor_area = self.try_float(
-            self.keyword_value_pairs.get(BDL_SpaceKeywords.AREA)
-        )
+        self.floor_area = self.try_float(self.get_inp(BDL_SpaceKeywords.AREA))
 
         # Populate interior lighting data elements
-        space_ltg_scheds = self.keyword_value_pairs.get(
-            BDL_SpaceKeywords.LIGHTING_SCHEDUL
-        )
+        space_ltg_scheds = self.get_inp(BDL_SpaceKeywords.LIGHTING_SCHEDUL)
         self.standardize_dict_values(
             self.keyword_value_pairs,
             [BDL_SpaceKeywords.LIGHTING_W_AREA, BDL_SpaceKeywords.LIGHTING_KW],
@@ -108,9 +111,7 @@ class Space(ChildNode, ParentNode):
             self.populate_interior_lighting(i, sched)
 
         # Populate miscellaneous equipment data elements
-        space_misc_eq_scheds = self.keyword_value_pairs.get(
-            BDL_SpaceKeywords.EQUIP_SCHEDULE
-        )
+        space_misc_eq_scheds = self.get_inp(BDL_SpaceKeywords.EQUIP_SCHEDULE)
         self.standardize_dict_values(
             self.keyword_value_pairs,
             [
@@ -122,9 +123,7 @@ class Space(ChildNode, ParentNode):
             self.try_length(space_misc_eq_scheds),
         )
 
-        space_int_energy_source_scheds = self.keyword_value_pairs.get(
-            BDL_SpaceKeywords.SOURCE_SCHEDULE
-        )
+        space_int_energy_source_scheds = self.get_inp(BDL_SpaceKeywords.SOURCE_SCHEDULE)
         self.standardize_dict_values(
             self.keyword_value_pairs,
             [
@@ -160,14 +159,14 @@ class Space(ChildNode, ParentNode):
 
         # Populate space data elements
         self.number_of_occupants = self.try_float(
-            self.keyword_value_pairs.get(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
+            self.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
         )
 
-        self.occupant_multiplier_schedule = self.keyword_value_pairs.get(
+        self.occupant_multiplier_schedule = self.get_inp(
             BDL_SpaceKeywords.PEOPLE_SCHEDULE
         )
 
-        self.occupant_sensible_heat_gain = self.keyword_value_pairs.get(
+        self.occupant_sensible_heat_gain = self.get_inp(
             BDL_SpaceKeywords.PEOPLE_HG_SENS
         )
 
@@ -175,9 +174,7 @@ class Space(ChildNode, ParentNode):
             self.occupant_sensible_heat_gain
         )
 
-        self.occupant_latent_heat_gain = self.keyword_value_pairs.get(
-            BDL_SpaceKeywords.PEOPLE_HG_LAT
-        )
+        self.occupant_latent_heat_gain = self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_LAT)
 
         self.occupant_latent_heat_gain = self.try_float(self.occupant_latent_heat_gain)
 
@@ -224,14 +221,10 @@ class Space(ChildNode, ParentNode):
         """Populate interior lighting data elements for an instance of InteriorLighting"""
         int_ltg_id = f"{self.u_name} IntLtg{n}"
         int_ltg_lpd = self.try_float(
-            self.try_access_index(
-                self.keyword_value_pairs.get(BDL_SpaceKeywords.LIGHTING_W_AREA), n
-            )
+            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_W_AREA), n)
         )
         int_ltg_power = self.try_float(
-            self.try_access_index(
-                self.keyword_value_pairs.get(BDL_SpaceKeywords.LIGHTING_KW), n
-            )
+            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_KW), n)
         )
         total_lpd = (
             int_ltg_lpd + int_ltg_power * 1000 / self.floor_area
@@ -273,13 +266,13 @@ class Space(ChildNode, ParentNode):
         if equip_type == "EQUIPMENT":
             misc_epd = self.try_float(
                 self.try_access_index(
-                    self.keyword_value_pairs.get(BDL_SpaceKeywords.EQUIPMENT_W_AREA),
+                    self.get_inp(BDL_SpaceKeywords.EQUIPMENT_W_AREA),
                     n - 1,
                 )
             )
             misc_eq_power = self.try_float(
                 self.try_access_index(
-                    self.keyword_value_pairs.get(BDL_SpaceKeywords.EQUIPMENT_KW), n - 1
+                    self.get_inp(BDL_SpaceKeywords.EQUIPMENT_KW), n - 1
                 )
             )
             total_eq_power = (
@@ -290,16 +283,15 @@ class Space(ChildNode, ParentNode):
                 else misc_eq_power
             )
             misc_eq_multiplier_schedule = schedule
-
             misc_eq_sensible_fraction = self.try_float(
                 self.try_access_index(
-                    self.keyword_value_pairs.get(BDL_SpaceKeywords.EQUIP_SENSIBLE),
+                    self.get_inp(BDL_SpaceKeywords.EQUIP_SENSIBLE),
                     n - 1,
                 )
             )
             misc_eq_latent_fraction = self.try_float(
                 self.try_access_index(
-                    self.keyword_value_pairs.get(BDL_SpaceKeywords.EQUIP_LATENT), n - 1
+                    self.get_inp(BDL_SpaceKeywords.EQUIP_LATENT), n - 1
                 )
             )
 
@@ -327,19 +319,10 @@ class Space(ChildNode, ParentNode):
                 self.misc_eq_has_automatic_control.append(None)
 
         elif equip_type == "INTERNAL_ENERGY_SOURCE":
-            source = self.keyword_value_pairs.get(BDL_SpaceKeywords.SOURCE_TYPE)
-            energy_type = None
-            if source == BDL_InternalEnergySourceOptions.GAS:
-                energy_type = EnergySourceOptions.NATURAL_GAS
-            elif source == BDL_InternalEnergySourceOptions.ELECTRIC:
-                energy_type = EnergySourceOptions.ELECTRICITY
-            elif source in [
-                BDL_InternalEnergySourceOptions.HOT_WATER,
-                BDL_InternalEnergySourceOptions.PROCESS,
-            ]:
-                # When HOT-WATER is selected as the source, we are noticing the behavior is identical to PROCESS. Energy consumption does not seem to behave as described in the DOE-2 help text.
-                # We are treating it the same as a PROCESS source
-                energy_type = EnergySourceOptions.NONE
+            source = self.try_access_index(
+                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), n - 1
+            )
+            energy_type = self.energy_source_map.get(source)
 
             if n == 0:
                 self.misc_eq_energy_type = [energy_type]
@@ -361,19 +344,19 @@ class Space(ChildNode, ParentNode):
     def populate_zone_infiltration(self):
         """Populate infiltration data elements for the zone object."""
         self.zone.infil_id = self.u_name + " Infil"
-        self.zone.infil_multiplier_schedule = self.keyword_value_pairs.get(
+        self.zone.infil_multiplier_schedule = self.get_inp(
             BDL_SpaceKeywords.INF_SCHEDULE
         )
-        infiltration_method = self.keyword_value_pairs.get(BDL_SpaceKeywords.INF_METHOD)
+        infiltration_method = self.get_inp(BDL_SpaceKeywords.INF_METHOD)
         self.zone.infil_algorithm_name = self.infiltration_algorithm_map.get(
             infiltration_method
         )
         if infiltration_method == BDL_InfiltrationAlgorithmOptions.AIR_CHANGE:
             flow_per_area = self.try_float(
-                self.keyword_value_pairs.get(BDL_SpaceKeywords.INF_FLOW_AREA)
+                self.get_inp(BDL_SpaceKeywords.INF_FLOW_AREA)
             )
             air_changes_per_hour = self.try_float(
-                self.keyword_value_pairs.get(BDL_SpaceKeywords.AIR_CHANGES_HR)
+                self.get_inp(BDL_SpaceKeywords.AIR_CHANGES_HR)
             )
             if (
                 flow_per_area

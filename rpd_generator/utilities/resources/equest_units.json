@@ -75,7 +75,7 @@
         "rated_capacity": "btu_h",
         "heating_coil_setpoint": "F",
         "efficiency_metric_values": null,
-        "heatpump_auxilliary_heat_high_shutoff_temperature": "F",
+        "heatpump_auxiliary_heat_high_shutoff_temperature": "F",
         "heatpump_low_shutoff_temperature": "F"
     },
     "CoolingSystem": {
@@ -86,7 +86,7 @@
         "efficiency_metric_values": null
     },
     "FanSystem": {
-        "reset_differential_temperature": "F",
+        "reset_differential_temperature": "delta_F",
         "minimum_airflow": "cfm",
         "minimum_outdoor_airflow": "cfm",
         "maximum_outdoor_airflow": "cfm"
@@ -146,8 +146,8 @@
         "design_capacity": "MMbtu_h",
         "rated_capacity": "MMbtu_h",
         "auxiliary_power": "kW",
-        "operation_lower_limit": "",
-        "operation_upper_limit": ""
+        "operation_lower_limit": "MMbtu_h",
+        "operation_upper_limit": "MMbtu_h"
     },
     "BoilerOutputValidationPoint": {
         "load": "",
@@ -179,8 +179,8 @@
         "result": ""
     },
     "HeatRejection": {
-        "range": "F",
-        "approach": "F",
+        "range": "delta_F",
+        "approach": "delta_F",
         "fan_shaft_power": "",
         "fan_motor_efficiency": "",
         "fan_motor_nameplate_power": "",

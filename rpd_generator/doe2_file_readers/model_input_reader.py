@@ -29,6 +29,51 @@ class ModelInputReader:
     """Model input reader class."""
 
     bdl_command_dict = None
+    known_units = [
+        "",
+        "F",
+        "F (DELTA)",
+        "KNOTS",
+        "FT",
+        "IN",
+        "DEGREES",
+        "HR-SQFT-F /BTU",
+        "BTU/HR-FT-F",
+        "LB/CUFT",
+        "BTU/LB-F",
+        "BTU/HR-SQFT-F",
+        "FRAC.OR MULT.",
+        "SQFT",
+        "CUFT",
+        "CFM/SQFT",
+        "BTU/HR/PERSON",
+        "W/SQFT",
+        "BTU/HR",
+        "KW",
+        "LB/SQFT",
+        "CFM",
+        "FOOTCANDLES",
+        "LUMEN / WATT",
+        "BTU/BTU",
+        "BTU/UNIT",
+        "LBS/KW",
+        "$/UNIT",
+        "GPM",
+        "PERCENT",
+        "GAL/MIN",
+        "MBTU/HR",
+        "BTU/HR-F",
+        "KW/CFM",
+        "IN-WATER",
+        "CFM/TON",
+        "HP",
+        "R",
+        "HOURS",
+        "GALLONS/MIN/TON",
+        "GAL",
+        "KW/TON",
+        "BTU/LB",
+    ]
 
     def __init__(self):
         ModelInputReader.bdl_command_dict = _get_bdl_commands_for_rpd()
@@ -52,6 +97,8 @@ class ModelInputReader:
             record_data_for = False
 
             for line in bdl_file:
+                if not line.strip():
+                    continue
 
                 if "JJHirsch DOE-2 Version:" in line:
                     doe2_version = line.split(":")[1].split()[0].strip()
@@ -141,18 +188,27 @@ class ModelInputReader:
         command = line[60:76].strip()
         return unique_name, command
 
-    @staticmethod
-    def _parse_definition_line(line):
+    def _parse_definition_line(self, line):
         """
         Parse the line to extract keyword and value.
 
         :param line: Line to be parsed.
         :return: tuple: Keyword and value extracted from the line.
         """
-        parts, units = line[:104].split(" = "), line[104:].strip()
-        keyword = re.split(r" {2,}", parts[0])[1].strip()
-        value = parts[1].strip()
-        return keyword, value, units
+        potential_units = line[104:].strip()
+        has_expected_whitespace = line[75:80] == "     " and (
+            len(line) < 105 or line[103] == " "
+        )
+        if potential_units in self.known_units and has_expected_whitespace:
+            parts, units = line[:104].split(" = "), line[104:].strip()
+            keyword = re.split(r" {2,}", parts[0])[1].strip()
+            value = parts[1].strip()
+            return keyword, value, units
+        else:
+            parts = line.split(" = ")
+            keyword = re.split(r" {2,}", parts[0])[1].strip()
+            value = parts[1].strip()
+            return keyword, value, None
 
     def _track_current_parents(self, command, command_dict):
         """

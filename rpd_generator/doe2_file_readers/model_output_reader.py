@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 
 
+# noinspection PyTypeChecker
 class MRTArray(ctypes.Structure):
-    # noinspection PyTypeChecker
     _fields_ = [
         ("entry_id", ctypes.c_int),
         ("return_value", ctypes.c_int),
@@ -14,8 +14,6 @@ class MRTArray(ctypes.Structure):
 
 
 NHR_DICT = None
-BUFFER_SIZE = 100
-pfData = ctypes.create_string_buffer(BUFFER_SIZE)
 
 
 def read_nhr_list(file_path):
@@ -60,6 +58,7 @@ pMRTs: Pointer to an array of MultResultsType structures:
 """
 
 
+# noinspection PyTypeChecker, PyCallingNonCallable
 def get_multiple_results(
     d2_result_dll: str, doe2_data_dir: str, project_fname: str, request_array: list
 ) -> list:
@@ -97,7 +96,6 @@ def get_multiple_results(
         if entry_id in nhr_dict:
             max_values += nhr_dict[entry_id]
 
-    # noinspection PyTypeChecker, PyCallingNonCallable
     pf_data = (ctypes.c_float * max_values)()
 
     multiple_result_dll(
@@ -113,8 +111,14 @@ def get_multiple_results(
     return [data for data in pf_data]
 
 
+# noinspection PyTypeChecker,PyCallingNonCallable
 def get_string_result(
-    d2_result_dll: str, doe2_dir: str, project_fname: str, entry_id: int
+    d2_result_dll: str,
+    doe2_dir: str,
+    project_fname: str,
+    entry_id: int,
+    report_key: str = "",
+    row_key: str = "",
 ) -> str:
     """
     Get single result from the simulation output files expected to be a string
@@ -122,9 +126,11 @@ def get_string_result(
     Arguments
     ---------
     :param d2_result_dll: (string) path to user's eQUEST D2Result.dll file included with installation files
-    :param doe2_dir: (binary string) path to DOE-2 directory
-    :param project_fname: (binary string) path to project with project name NOT INCLUDING FILE EXTENSION
+    :param doe2_dir: (string) path to DOE-2 directory
+    :param project_fname: (string) path to project with project name NOT INCLUDING FILE EXTENSION
     :param entry_id: (int) id from NHRList.txt corresponding to the value to retrieve
+    :param report_key: (string) to use when RI > 0 and when value to retrieve refers to a particular BDL component
+    :param row_key: (string) to use when KT > 0 and when a report has multiple row where each row provides results for a separate building component or month of the year
 
     :return: value from binary simulation output files
     """
@@ -143,21 +149,25 @@ def get_string_result(
         ctypes.c_int,  # iEntryID
         ctypes.POINTER(ctypes.c_char),  # pfData
         ctypes.c_int,  # iMaxValues
-        ctypes.c_char_p,  # pszReportKey
-        ctypes.c_char_p,  # pszRowKey
+        ctypes.c_char * 40,  # pszReportKey
+        ctypes.c_char * 40,  # pszRowKey
     ]
     single_result_dll.restype = ctypes.c_long
+
+    pf_data = ctypes.create_string_buffer(256)
+    report_key_arr = (ctypes.c_char * 40)(*report_key.encode("utf-8"))
+    row_key_arr = (ctypes.c_char * 40)(*row_key.encode("utf-8"))
 
     # Call the function
     single_result_dll(
         doe2_dir.encode("utf-8"),
         project_fname.encode("utf-8"),
         entry_id,
-        pfData,
+        pf_data,
         1,
-        None,
-        None,
+        report_key_arr,
+        row_key_arr,
     )
 
     # Return the string from the buffer
-    return pfData.value.decode("utf-8")
+    return pf_data.value.decode("utf-8").strip()

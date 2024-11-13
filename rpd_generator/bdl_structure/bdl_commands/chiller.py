@@ -23,10 +23,10 @@ class Chiller(BaseNode):
         BDL_ChillerTypes.ELEC_HERM_REC: ChillerCompressorOptions.RECIPROCATING,
         BDL_ChillerTypes.ELEC_SCREW: ChillerCompressorOptions.SCREW,
         BDL_ChillerTypes.ELEC_HTREC: ChillerCompressorOptions.OTHER,
-        BDL_ChillerTypes.ABSOR_1: ChillerCompressorOptions.SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION,
-        BDL_ChillerTypes.ABSOR_2: ChillerCompressorOptions.DOUBLE_EFFECT_DIRECT_FIRED_ABSORPTION,
-        BDL_ChillerTypes.GAS_ABSOR: ChillerCompressorOptions.OTHER,
-        BDL_ChillerTypes.ENGINE: ChillerCompressorOptions.OTHER,
+        BDL_ChillerTypes.ABSOR_1: ChillerCompressorOptions.SINGLE_EFFECT_INDIRECT_FIRED_ABSORPTION,
+        BDL_ChillerTypes.ABSOR_2: ChillerCompressorOptions.DOUBLE_EFFECT_INDIRECT_FIRED_ABSORPTION,
+        BDL_ChillerTypes.GAS_ABSOR: ChillerCompressorOptions.DOUBLE_EFFECT_DIRECT_FIRED_ABSORPTION,
+        BDL_ChillerTypes.ENGINE: ChillerCompressorOptions.SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION,
         BDL_ChillerTypes.HEAT_PUMP: ChillerCompressorOptions.OTHER,
         BDL_ChillerTypes.LOOP_TO_LOOP_HP: ChillerCompressorOptions.OTHER,
         BDL_ChillerTypes.WATER_ECONOMIZER: OMIT,
@@ -35,11 +35,14 @@ class Chiller(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.chiller_names.append(u_name)
 
         self.omit = False
         self.chiller_data_structure = {}
 
         # data elements with children
+        self.part_load_efficiency = []
+        self.part_load_efficiency_metrics = []
         self.capacity_validation_points = []
         self.power_validation_points = []
 
@@ -58,8 +61,6 @@ class Chiller(BaseNode):
         self.design_entering_condenser_temperature = None
         self.design_leaving_evaporator_temperature = None
         self.full_load_efficiency = None
-        self.part_load_efficiency = None
-        self.part_load_efficiency_metric = None
         self.is_chilled_water_pump_interlocked = None
         self.is_condenser_water_pump_interlocked = None
         self.heat_recovery_loop = None
@@ -71,16 +72,11 @@ class Chiller(BaseNode):
     def populate_data_elements(self):
         """Populate data elements for chiller object."""
         absorp_or_engine = False
-        if (
-            self.compressor_type_map.get(
-                self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE)
-            )
-            == OMIT
-        ):
+        if self.compressor_type_map.get(self.get_inp(BDL_ChillerKeywords.TYPE)) == OMIT:
             self.omit = True
             return
 
-        elif self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE) in [
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ABSOR_1,
             BDL_ChillerTypes.ABSOR_2,
             BDL_ChillerTypes.GAS_ABSOR,
@@ -90,154 +86,127 @@ class Chiller(BaseNode):
 
         requests = self.get_output_requests(absorp_or_engine)
         output_data = self.get_output_data(requests)
+        for key in [
+            "Design Parameters - Capacity",
+            "Normalized (ARI) Capacity at Peak (Btu/hr)",
+        ]:
+            if key in output_data:
+                output_data[key] = self.try_convert_units(
+                    output_data[key], "Btu/hr", "MMBtu/hr"
+                )
 
-        self.cooling_loop = self.keyword_value_pairs.get(BDL_ChillerKeywords.CHW_LOOP)
+        self.cooling_loop = self.get_inp(BDL_ChillerKeywords.CHW_LOOP)
 
-        self.condensing_loop = self.keyword_value_pairs.get(BDL_ChillerKeywords.CW_LOOP)
+        self.condensing_loop = self.get_inp(BDL_ChillerKeywords.CW_LOOP)
 
-        self.heat_recovery_loop = self.keyword_value_pairs.get(
-            BDL_ChillerKeywords.HTREC_LOOP
-        )
+        self.heat_recovery_loop = self.get_inp(BDL_ChillerKeywords.HTREC_LOOP)
 
         self.compressor_type = self.compressor_type_map.get(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE)
+            self.get_inp(BDL_ChillerKeywords.TYPE)
         )
 
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
-
-            # This value comes out in tons of refrigeration
-            self.design_capacity = self.try_float(
-                output_data.get("Elec Chillers - Sizing Info - Capacity")
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
+            BDL_ChillerTypes.ENGINE,
+            BDL_ChillerTypes.GAS_ABSOR,
+        ]:
+            self.energy_source_type = EnergySourceOptions.NATURAL_GAS
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
+            BDL_ChillerTypes.ABSOR_1,
+            BDL_ChillerTypes.ABSOR_2,
+        ]:
+            hot_water_loop_name = self.get_obj(
+                self.get_inp(BDL_ChillerKeywords.HW_LOOP)
             )
+            hot_water_loop = self.get_obj(hot_water_loop_name)
+            if hot_water_loop:
+                self.energy_source_type = self.get_loop_energy_source(hot_water_loop)
 
-            # This value comes out in Btu/hr
-            self.rated_capacity = self.try_float(
-                output_data.get(
-                    "Elec Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)"
-                )
-            )
+        # This value comes out in Btu/hr
+        self.design_capacity = self.try_float(
+            output_data.get("Design Parameters - Capacity")
+        )
 
-            self.design_flow_evaporator = self.try_float(
-                output_data.get("Elec Chillers - Design Parameters - Flow")
-            )
+        # This value comes out in Btu/hr
+        self.rated_capacity = self.try_float(
+            output_data.get("Normalized (ARI) Capacity at Peak (Btu/hr)")
+        )
 
-            self.design_flow_condenser = self.try_float(
-                output_data.get("Elec Chillers - Design Parameters - Condenser Flow")
-            )
+        self.design_flow_evaporator = self.try_float(
+            output_data.get("Design Parameters - Flow")
+        )
 
-        else:
-            # This value comes out in tons of refrigeration
-            self.design_capacity = self.try_float(
-                output_data.get("Abs/Eng Chillers - Sizing Info - Capacity")
-            )
-
-            # This value comes out in Btu/hr
-            self.rated_capacity = self.try_float(
-                output_data.get(
-                    "Abs/Eng Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)"
-                )
-            )
-
-            self.design_flow_evaporator = self.try_float(
-                output_data.get("Abs/Eng Chillers - Design Parameters - Flow")
-            )
-
-            self.design_flow_condenser = self.try_float(
-                output_data.get("Abs/Eng Chillers - Design Parameters - Condenser Flow")
-            )
+        self.design_flow_condenser = self.try_float(
+            output_data.get("Design Parameters - Condenser Flow")
+        )
 
         self.rated_leaving_evaporator_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.RATED_CHW_T)
+            self.get_inp(BDL_ChillerKeywords.RATED_CHW_T)
         )
 
         self.rated_entering_condenser_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.RATED_COND_T)
+            self.get_inp(BDL_ChillerKeywords.RATED_COND_T)
         )
 
         self.design_leaving_evaporator_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.DESIGN_CHW_T)
+            self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T)
         )
 
         self.design_entering_condenser_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.DESIGN_COND_T)
+            self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T)
         )
 
+        self.minimum_load_ratio = self.try_float(
+            self.get_inp(BDL_ChillerKeywords.MIN_RATIO)
+        )
+
+        (
+            self.is_chilled_water_pump_interlocked,
+            self.is_condenser_water_pump_interlocked,
+        ) = self.are_pumps_interlocked(self.cooling_loop, self.condensing_loop)
+
         # Assign pump data elements populated from the boiler keyword value pairs
-        chw_pump_name = self.keyword_value_pairs.get(BDL_ChillerKeywords.CHW_PUMP)
+        chw_pump_name = self.get_inp(BDL_ChillerKeywords.CHW_PUMP)
         if chw_pump_name is not None:
-            pump = self.rmd.bdl_obj_instances.get(chw_pump_name)
+            pump = self.get_obj(chw_pump_name)
             if pump is not None:
                 pump.loop_or_piping = [self.cooling_loop] * pump.qty
 
         # Assign pump data elements populated from the chiller keyword value pairs
-        cw_pump_name = self.keyword_value_pairs.get(BDL_ChillerKeywords.CW_PUMP)
+        cw_pump_name = self.get_inp(BDL_ChillerKeywords.CW_PUMP)
         if cw_pump_name is not None:
-            pump = self.rmd.bdl_obj_instances.get(cw_pump_name)
+            pump = self.get_obj(cw_pump_name)
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
     def get_output_requests(self, absorp_or_engine):
         """Get output data requests for chiller object."""
-        #      2318001,  74,  1,  2,  1,  2,  1,  4,  0,  1,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Type
-        #      2318002,  74,  1,  2,  5,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Cooling Loop
-        #      2318003,  74,  1,  2, 13,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Capacity
-        #      2318004,  74,  1,  2, 14,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Flow
-        #      2318005,  74,  1,  2, 15,  1,  1,  1,  0, 22,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Electric Input Ratio
-        #      2318006,  74,  1,  2, 16,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Auxiliary Power
-        #      2318007,  74,  1,  3,  1,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Condenser Loop
-        #      2318008,  74,  1,  3,  9,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Condenser Load
-        #      2318009,  74,  1,  3, 10,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Condenser Flow
-        #      2318010,  74,  1,  5,  1,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Heat Recovery Loop
-        #      2318011,  74,  1,  5,  9,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Heat Recovery Capacity
-        #      2318012,  74,  1,  5, 10,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Elec Chillers - Design Parameters - Heat Recovery Flow
-        #      2318901,  74,  1,  9,  1,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Elec Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)
-        #      2318902,  74,  1,  9,  2,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Elec Chillers - Normalized (ARI) Leaving Chilled Water Temperature (°F)
-        #      2318903,  74,  1,  9,  3,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Elec Chillers - Normalized (ARI) Entering Condenser Water Temperature (°F)
-        #      2318904,  74,  1,  9,  4,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Elec Chillers - Drybulb Temperature @ Peak (°F)
-        #      2318905,  74,  1,  9,  5,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Elec Chillers - Wetbulb Temperature @ Peak (°F)
-        #      2318907,  74,  1, 10,  1,  2,  1,  4,  0,  1,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Equipment Type
-        #      2318908,  74,  1, 10,  5,  1,  1,  1,  0,129,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Capacity
-        #      2318909,  74,  1, 10,  6,  1,  1,  1,  0, 23,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Startup, Hours
-        #      2318910,  74,  1, 10,  7,  1,  1,  1,  0, 23,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Standby, Hours
-        #      2318911,  74,  1, 10,  8,  1,  1,  1,  0, 46,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Cool EIR, BTU/BTU
-        #      2318912,  74,  1, 10,  9,  1,  1,  1,  0, 49,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Cool EFF, KW/TON
-        #      2318913,  74,  1, 10, 10,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Aux Elec, KW
-        #      2318914,  74,  1, 10, 11,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Cond Fan, KW
-        #      2318915,  74,  1, 10, 12,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2063   ; Elec Chillers - Sizing Info - Cond Pump, KW
-        #      2319001,  75,  1,  2,  1,  2,  1,  4,  0,  1,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Type
-        #      2319002,  75,  1,  2,  5,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Cooling Loop
-        #      2319003,  75,  1,  2, 13,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Capacity
-        #      2319004,  75,  1,  2, 14,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Flow
-        #      2319005,  75,  1,  2, 15,  1,  1,  1,  0, 22,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Electric Input Ratio
-        #      2319006,  75,  1,  2, 16,  1,  1,  1,  0, 22,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heating Input Ratio
-        #      2319007,  75,  1,  2, 17,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Auxiliary Power
-        #      2319008,  75,  1,  3,  1,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Condenser Loop
-        #      2319009,  75,  1,  3,  9,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Condenser Load
-        #      2319010,  75,  1,  3, 10,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Condenser Flow
-        #      2319011,  75,  1,  4,  1,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heating Loop (Absorption)
-        #      2319012,  75,  1,  4,  9,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heating Loop Load
-        #      2319013,  75,  1,  4, 10,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heating Loop Flow
-        #      2319014,  75,  1,  5,  1,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heat Recovery Loop
-        #      2319015,  75,  1,  5,  9,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heat Recovery Capacity
-        #      2319016,  75,  1,  5, 10,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Design Parameters - Heat Recovery Flow
-        #      2319901,  74,  1,  9,  1,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)
-        #      2319902,  74,  1,  9,  2,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Normalized (ARI) Leaving Chilled Water Temperature (°F)
-        #      2319903,  74,  1,  9,  3,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Normalized (ARI) Entering Condenser Water Temperature (°F)
-        #      2319904,  74,  1,  9,  4,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Drybulb Temperature @ Peak (°F)
-        #      2319905,  74,  1,  9,  5,  1,  1,  1,  0,  8,    0,  0,  0,  0, 2063   ; Abs/Eng Chillers - Wetbulb Temperature @ Peak (°F)
-        #
 
         if not absorp_or_engine:
             requests = {
-                "Elec Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)": (
+                "Normalized (ARI) Capacity at Peak (Btu/hr)": (
                     2318901,
                     self.u_name,
                     "",
                 ),
-                "Elec Chillers - Sizing Info - Capacity": (2318908, self.u_name, ""),
-                "Elec Chillers - Design Parameters - Flow": (2318004, self.u_name, ""),
-                "Elec Chillers - Design Parameters - Condenser Flow": (
+                "Normalized (ARI) Leaving Chilled Water Temperature (°F)": (
+                    2318902,
+                    self.u_name,
+                    "",
+                ),
+                "Normalized (ARI) Entering Condenser Water Temperature (°F)": (
+                    2318903,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Capacity": (
+                    2318003,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Flow": (2318004, self.u_name, ""),
+                "Design Parameters - Condenser Flow": (
                     2318009,
                     self.u_name,
                     "",
@@ -245,18 +214,32 @@ class Chiller(BaseNode):
             }
         else:
             requests = {
-                "Abs/Eng Chillers - Normalized (ARI) Capacity at Peak (Btu/hr)": (
+                "Normalized (ARI) Capacity at Peak (Btu/hr)": (
                     2319901,
                     self.u_name,
                     "",
                 ),
-                "Abs/Eng Chillers - Sizing Info - Capacity": (2319908, self.u_name, ""),
-                "Abs/Eng Chillers - Design Parameters - Flow": (
+                "Normalized (ARI) Leaving Chilled Water Temperature (°F)": (
+                    2319902,
+                    self.u_name,
+                    "",
+                ),
+                "Normalized (ARI) Entering Condenser Water Temperature (°F)": (
+                    2319903,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Capacity": (
+                    2319003,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Flow": (
                     2319004,
                     self.u_name,
                     "",
                 ),
-                "Abs/Eng Chillers - Design Parameters - Condenser Flow": (
+                "Design Parameters - Condenser Flow": (
                     2319010,
                     self.u_name,
                     "",
@@ -272,13 +255,15 @@ class Chiller(BaseNode):
 
         self.chiller_data_structure = {
             "id": self.u_name,
+            "part_load_efficiency": self.part_load_efficiency,
+            "part_load_efficiency_metrics": self.part_load_efficiency_metrics,
             "capacity_validation_points": self.capacity_validation_points,
             "power_validation_points": self.power_validation_points,
         }
 
         no_children_attributes = [
             "cooling_loop",
-            "condending_loop",
+            "condensing_loop",
             "compressor_type",
             "energy_source_type",
             "design_capacity",
@@ -291,8 +276,6 @@ class Chiller(BaseNode):
             "design_entering_condenser_temperature",
             "design_leaving_evaporator_temperature",
             "full_load_efficiency",
-            "part_load_efficiency",
-            "part_load_efficiency_metric",
             "is_chilled_water_pump_interlocked",
             "is_condenser_water_pump_interlocked",
             "heat_recovery_loop",
@@ -311,3 +294,39 @@ class Chiller(BaseNode):
             return
 
         rmd.chillers.append(self.chiller_data_structure)
+
+    def get_loop_energy_source(self, hot_water_loop):
+        """Get the energy source type for the loop. Used for absorption chillers to populate the energy_source_type."""
+        energy_source_set = set()
+        for boiler_name in self.rmd.boiler_names:
+            boiler = self.get_obj(boiler_name)
+            if boiler.loop == hot_water_loop.u_name:
+                energy_source_set.add(boiler.energy_source_type)
+
+        for steam_meter_name in self.rmd.steam_meter_names:
+            steam_meter = self.get_obj(steam_meter_name)
+            if steam_meter.loop == hot_water_loop.u_name:
+                energy_source_set.add(steam_meter.energy_source_type)
+
+        for chiller_name in self.rmd.chiller_names:
+            chiller = self.get_obj(chiller_name)
+            if chiller.heat_recovery_loop == hot_water_loop.u_name:
+                energy_source_set.add(EnergySourceOptions.ELECTRICITY)
+
+        if len(energy_source_set) == 1:
+            return energy_source_set.pop()
+        else:
+            return EnergySourceOptions.OTHER
+
+    def are_pumps_interlocked(self, chw_loop_name, cw_loop_name):
+        """Check if the chiller has a pump with interlocked operation."""
+        chw_pump_interlocked = False
+        cw_pump_interlocked = False
+        for pump_name in self.rmd.pump_names:
+            pump = self.get_obj(pump_name)
+            if pump.loop_or_piping == chw_loop_name:  # pump is gauranteed to exist
+                chw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CHW_PUMP))
+
+            if pump.loop_or_piping == cw_loop_name:  # pump is gauranteed to exist
+                cw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CW_PUMP))
+        return chw_pump_interlocked, cw_pump_interlocked

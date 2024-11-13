@@ -129,7 +129,11 @@
     ],
     "FluidLoopDesignAndControl": [
         "$.ruleset_model_descriptions[*].fluid_loops[*].cooling_or_condensing_design_and_control",
-        "$.ruleset_model_descriptions[*].fluid_loops[*].heating_design_and_control"
+        "$.ruleset_model_descriptions[*].fluid_loops[*].heating_design_and_control",
+        "$.ruleset_model_descriptions[*].fluid_loops[*].child_loops[*].cooling_or_condensing_design_and_control",
+        "$.ruleset_model_descriptions[*].fluid_loops[*].child_loops[*].heating_design_and_control",
+        "$.ruleset_model_descriptions[*].fluid_loops[*].child_loops[*].child_loops[*].cooling_or_condensing_design_and_control",
+        "$.ruleset_model_descriptions[*].fluid_loops[*].child_loops[*].child_loops[*].heating_design_and_control"
     ],
     "PumpOutputValidationPoint": [
         "$.ruleset_model_descriptions[*].pumps[*].output_validation_points"

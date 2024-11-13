@@ -6,8 +6,10 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 PumpSpecificationMethodOptions = SchemaEnums.schema_enums[
     "PumpSpecificationMethodOptions"
 ]
+PumpSpeedControlOptions = SchemaEnums.schema_enums["PumpSpeedControlOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_PumpKeywords = BDLEnums.bdl_enums["PumpKeywords"]
+BDL_PumpCapacityControlOptions = BDLEnums.bdl_enums["PumpCapacityControlOptions"]
 
 
 class Pump(BaseNode):
@@ -15,8 +17,16 @@ class Pump(BaseNode):
 
     bdl_command = BDL_Commands.PUMP
 
+    pump_speed_control_map = {
+        BDL_PumpCapacityControlOptions.ONE_SPEED_PUMP: PumpSpeedControlOptions.FIXED_SPEED,
+        BDL_PumpCapacityControlOptions.TWO_SPEED_PUMP: PumpSpeedControlOptions.TWO_SPEED,
+        BDL_PumpCapacityControlOptions.VAR_SPEED_PUMP: PumpSpeedControlOptions.VARIABLE_SPEED,
+    }
+
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.pump_names.append(u_name)
+
         self.qty = None
         self.pump_data_structures = []
         self.output_data = None
@@ -40,56 +50,50 @@ class Pump(BaseNode):
 
     def populate_data_elements(self):
         """Populate the schema data elements for the pump object."""
-        self.qty = self.try_int(
-            self.try_float(self.keyword_value_pairs.get(BDL_PumpKeywords.NUMBER))
-        )
+
+        self.qty = self.try_int(self.try_float(self.get_inp(BDL_PumpKeywords.NUMBER)))
         requests = self.get_output_requests()
         self.output_data = self.get_output_data(requests)
         self.loop_or_piping = [None] * self.qty
         self.speed_control = [None] * self.qty
         self.is_flow_sized_based_on_design_day = [None] * self.qty
-
         spec_method = (
             PumpSpecificationMethodOptions.SIMPLE
-            if self.keyword_value_pairs.get(BDL_PumpKeywords.PUMP_KW) is not None
+            if self.get_inp(BDL_PumpKeywords.PUMP_KW) is not None
             else PumpSpecificationMethodOptions.DETAILED
         )
-        design_head = self.try_float(
-            self.keyword_value_pairs.get(BDL_PumpKeywords.HEAD)
-        )
-
+        design_head = self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
         self.specification_method = [spec_method] * self.qty
-
         if spec_method == PumpSpecificationMethodOptions.SIMPLE:
             self.design_electric_power = [
-                self.try_float(self.keyword_value_pairs.get(BDL_PumpKeywords.PUMP_KW))
+                self.try_float(self.get_inp(BDL_PumpKeywords.PUMP_KW))
             ] * self.qty
         else:
             self.design_electric_power = [
                 self.output_data.get("Pump - Power (kW)")
             ] * self.qty
-
         self.design_head = [design_head] * self.qty
-
         self.impeller_efficiency = [
             self.output_data.get("Pump - Mechanical Eff (frac)")
         ] * self.qty
-
         self.motor_efficiency = [
             self.output_data.get("Pump - Motor Eff (frac)")
         ] * self.qty
-
         self.design_flow = [self.output_data.get("Pump - Flow (gal/min)")] * self.qty
+        pump_cap_ctrl = self.get_inp(BDL_PumpKeywords.CAP_CTRL)
+        if pump_cap_ctrl:
+            self.speed_control = [
+                self.pump_speed_control_map.get(pump_cap_ctrl)
+            ] * self.qty
+        input_design_flow = self.try_float(self.get_inp(BDL_PumpKeywords.FLOW))
+        if input_design_flow:
+            self.is_flow_sized_based_on_design_day = [False] * self.qty
+        else:
+            self.is_flow_sized_based_on_design_day = [True] * self.qty
 
     def get_output_requests(self):
         """Get the output requests for the pump object."""
-        #      2401001,  12,  1,  4,  9,  0,  1,  1,  0,  1, 2061,  8,  1,  0,    0   ; Pump - Number of Pumps
-        #      2401002,  12,  1,  4, 18,  1,  1,  1,  0, 52, 2061,  8,  1,  0,    0   ; Pump - Flow (gal/min)
-        #      2401003,  12,  1,  4, 19,  1,  1,  1,  0,128, 2061,  8,  1,  0,    0   ; Pump - Head (ft)
-        #      2401004,  12,  1,  4, 20,  1,  1,  1,  0,128, 2061,  8,  1,  0,    0   ; Pump - Head Setpoint (ft)
-        #      2401005,  12,  1,  4, 24,  1,  1,  1,  0, 28, 2061,  8,  1,  0,    0   ; Pump - Power (kW)
-        #      2401006,  12,  1,  4, 25,  1,  1,  1,  0, 22, 2061,  8,  1,  0,    0   ; Pump - Mechanical Eff (frac)
-        #      2401007,  12,  1,  4, 26,  1,  1,  1,  0, 22, 2061,  8,  1,  0,    0   ; Pump - Motor Eff (frac)
+
         requests = {
             "Pump - Flow (gal/min)": (2401002, "", self.u_name),
             "Pump - Power (kW)": (2401005, "", self.u_name),

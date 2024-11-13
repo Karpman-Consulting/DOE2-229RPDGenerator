@@ -60,8 +60,8 @@ class Door(ChildNode):
         """Populate data elements for door object."""
         self.classification = SubsurfaceClassificationOptions.DOOR
 
-        height = self.try_float(self.keyword_value_pairs.get(BDL_DoorKeywords.HEIGHT))
-        width = self.try_float(self.keyword_value_pairs.get(BDL_DoorKeywords.WIDTH))
+        height = self.try_float(self.get_inp(BDL_DoorKeywords.HEIGHT))
+        width = self.try_float(self.get_inp(BDL_DoorKeywords.WIDTH))
         if height is not None and width is not None:
             self.opaque_area = height * width
 
@@ -101,5 +101,5 @@ class Door(ChildNode):
 
     def insert_to_rpd(self, rmd):
         """Insert window object into the rpd data structure."""
-        surface = rmd.bdl_obj_instances.get(self.parent.u_name)
+        surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.door_data_structure)

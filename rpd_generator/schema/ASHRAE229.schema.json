@@ -2072,12 +2072,12 @@
                     },
                     "notes": "Used for furnace or heat pump."
                 },
-                "heatpump_auxilliary_heat_type": {
-                    "description": "Heatpump auxilliary heat type used for backup",
-                    "$ref": "ASHRAE229.schema.json#/definitions/HeatpumpAuxilliaryHeatOptions"
+                "heatpump_auxiliary_heat_type": {
+                    "description": "Heatpump auxiliary heat type used for backup",
+                    "$ref": "ASHRAE229.schema.json#/definitions/HeatpumpAuxiliaryHeatOptions"
                 },
-                "heatpump_auxilliary_heat_high_shutoff_temperature": {
-                    "description": "Heatpump auxilliary heat high temperature shutoff",
+                "heatpump_auxiliary_heat_high_shutoff_temperature": {
+                    "description": "Heatpump auxiliary heat high temperature shutoff",
                     "type": "number",
                     "units": "C"
                 },
@@ -2115,7 +2115,7 @@
                 "Other"
             ]
         },
-        "HeatpumpAuxilliaryHeatOptions": {
+        "HeatpumpAuxiliaryHeatOptions": {
             "type": "string",
             "enum": [
                 "ELECTRIC_RESISTANCE",
@@ -3426,6 +3426,7 @@
             "type": "string",
             "enum": [
                 "FIXED_SPEED",
+                "TWO_SPEED",
                 "VARIABLE_SPEED"
             ],
             "descriptions": [

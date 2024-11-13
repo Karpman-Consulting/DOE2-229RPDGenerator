@@ -75,7 +75,7 @@
         "rated_capacity": "W",
         "heating_coil_setpoint": "C",
         "efficiency_metric_values": "W/W",
-        "heatpump_auxilliary_heat_high_shutoff_temperature": "C",
+        "heatpump_auxiliary_heat_high_shutoff_temperature": "C",
         "heatpump_low_shutoff_temperature": "C"
     },
     "CoolingSystem": {

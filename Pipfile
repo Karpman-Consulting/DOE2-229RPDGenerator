@@ -11,12 +11,14 @@ jsonpath2 = "*"
 pint = "*"
 pip = "==23.2"
 jsonschema = "*"
+rpd-generator = {file = ".", editable = true}
 
 [dev-packages]
 pytest = "*"
 black = "*"
 xlsxwriter = "*"
 jsonschema = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.11"

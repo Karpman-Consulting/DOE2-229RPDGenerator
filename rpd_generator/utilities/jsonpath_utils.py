@@ -19,7 +19,7 @@ def ensure_root(jpath):
 
 
 def find_all(jpath, obj):
-    return [m.current_value for m in match(ensure_root(jpath), obj)]
+    return [m.current_value for m in match(ensure_root(jpath), obj) if m]
 
 
 def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:

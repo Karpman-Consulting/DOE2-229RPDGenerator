@@ -55,6 +55,5 @@ jobs:
           # Install your project package in editable mode
           pipenv install -e .
 
-      - name: Run RPD Tests
-        run: pipenv run python test/test_generated_rpd_files.py
-
+      - name: Run Full RPD Tests
+        run: pipenv run python test/full_rpd_test/run_full_rpd_tests.py

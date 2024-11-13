@@ -1,0 +1,19 @@
+repos:
+  - repo: local
+    hooks:
+      - id: run-tests
+        name: Run Unit Tests
+        entry: pipenv run python test/populate_test/run_tests.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.2.0
+    hooks:
+      - id: black
+        # It is recommended to specify the latest version of Python
+        # supported by your project here, or alternatively use
+        # pre-commit's default_language_version, see
+        # https://pre-commit.com/#top_level-default_language_version
+        language_version: python3.11

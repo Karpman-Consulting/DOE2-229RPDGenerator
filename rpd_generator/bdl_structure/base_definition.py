@@ -10,6 +10,7 @@ class BaseDefinition:
     Base class for BDL commands that are not nodes in the tree, but are used to populate 229 schema data elements.
     """
 
+    bdl_command = None
     boolean_map = {
         "YES": True,
         "NO": False,
@@ -26,6 +27,22 @@ class BaseDefinition:
     def add_inputs(self, key_val_dict):
         """Insert a keyword-value pair for the BDL command."""
         self.keyword_value_pairs = key_val_dict
+
+    def get_obj(self, u_name):
+        """
+        Return the object instance by its u_name.
+        :param u_name: str
+        """
+        return self.rmd.bdl_obj_instances.get(u_name, None)
+
+    def get_inp(self, keyword, default=None):
+        """
+        Return the value of the keyword from the keyword_value_pairs.
+        :param keyword: str
+        :param default: any
+        :return: value: str
+        """
+        return self.keyword_value_pairs.get(keyword, default)
 
     def populate_data_elements(self):
         """This method will be overridden by each child class"""
