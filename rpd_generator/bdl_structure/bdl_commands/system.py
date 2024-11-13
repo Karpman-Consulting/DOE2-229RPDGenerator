@@ -73,14 +73,20 @@ class System(ParentNode):
         BDL_SystemTypes.PTAC,
     ]
     reheat_system_types = [
-        BDL_SystemTypes.PMZS,
-        BDL_SystemTypes.PVAVS,
-        BDL_SystemTypes.SZRH,
+        BDL_SystemTypes.MZS,
+        BDL_SystemTypes.DDS,
+        BDL_SystemTypes.SZCI,
+        BDL_SystemTypes.IU,
         BDL_SystemTypes.VAVS,
         BDL_SystemTypes.RHFS,
-        BDL_SystemTypes.PIU,
-        BDL_SystemTypes.IU,
+        BDL_SystemTypes.HVSYS,
         BDL_SystemTypes.CBVAV,
+        BDL_SystemTypes.PMZS,
+        BDL_SystemTypes.PVAVS,
+        BDL_SystemTypes.PIU,
+        BDL_SystemTypes.FNSYS,
+        BDL_SystemTypes.PTGSD,
+        BDL_SystemTypes.SZRH,
         BDL_SystemTypes.DOAS,
     ]
     heat_type_map = {
@@ -489,43 +495,37 @@ class System(ParentNode):
             self.omit = True
             return
 
-        output_heat_type = self.BDL_output_heat_type_map.get(heat_source)
+        self.output_heat_type = self.BDL_output_heat_type_map.get(heat_source)
         self.BDL_output_system_heating_type_map.update(
             {
-                BDL_SystemTypes.PTAC: output_heat_type,
-                BDL_SystemTypes.PSZ: output_heat_type,
-                BDL_SystemTypes.PMZS: output_heat_type,
-                BDL_SystemTypes.PVAVS: output_heat_type,
-                BDL_SystemTypes.PVVT: output_heat_type,
-                BDL_SystemTypes.SZRH: output_heat_type,
-                BDL_SystemTypes.VAVS: output_heat_type,
-                BDL_SystemTypes.RHFS: output_heat_type,
-                BDL_SystemTypes.DDS: output_heat_type,
-                BDL_SystemTypes.MZS: output_heat_type,
-                BDL_SystemTypes.PIU: output_heat_type,
-                BDL_SystemTypes.FC: output_heat_type,
-                BDL_SystemTypes.IU: output_heat_type,
-                BDL_SystemTypes.UVT: output_heat_type,
-                BDL_SystemTypes.UHT: output_heat_type,
-                BDL_SystemTypes.RESYS2: output_heat_type,
-                BDL_SystemTypes.CBVAV: output_heat_type,
-                BDL_SystemTypes.DOAS: output_heat_type,
+                BDL_SystemTypes.PTAC: self.output_heat_type,
+                BDL_SystemTypes.PSZ: self.output_heat_type,
+                BDL_SystemTypes.PMZS: self.output_heat_type,
+                BDL_SystemTypes.PVAVS: self.output_heat_type,
+                BDL_SystemTypes.PVVT: self.output_heat_type,
+                BDL_SystemTypes.SZRH: self.output_heat_type,
+                BDL_SystemTypes.VAVS: self.output_heat_type,
+                BDL_SystemTypes.RHFS: self.output_heat_type,
+                BDL_SystemTypes.DDS: self.output_heat_type,
+                BDL_SystemTypes.MZS: self.output_heat_type,
+                BDL_SystemTypes.PIU: self.output_heat_type,
+                BDL_SystemTypes.FC: self.output_heat_type,
+                BDL_SystemTypes.IU: self.output_heat_type,
+                BDL_SystemTypes.UVT: self.output_heat_type,
+                BDL_SystemTypes.UHT: self.output_heat_type,
+                BDL_SystemTypes.RESYS2: self.output_heat_type,
+                BDL_SystemTypes.CBVAV: self.output_heat_type,
+                BDL_SystemTypes.DOAS: self.output_heat_type,
             }
         )
-        output_cool_type = self.BDL_output_cool_type_map.get(
+        self.output_cool_type = self.BDL_output_cool_type_map.get(
             self.get_inp(BDL_SystemKeywords.TYPE)
         )
         self.BDL_output_system_cooling_type_map.update(
             {
-                BDL_SystemTypes.PIU: output_cool_type,
-                BDL_SystemTypes.DOAS: output_cool_type,
+                BDL_SystemTypes.PIU: self.output_cool_type,
+                BDL_SystemTypes.DOAS: self.output_cool_type,
             }
-        )
-        self.output_heat_type = self.BDL_output_system_heating_type_map.get(
-            self.get_inp(BDL_SystemKeywords.TYPE)
-        )
-        self.output_cool_type = self.BDL_output_system_cooling_type_map.get(
-            self.get_inp(BDL_SystemKeywords.TYPE)
         )
 
         requests = self.get_output_requests()
@@ -589,6 +589,16 @@ class System(ParentNode):
             requests["Heating Supply Fan - Power"] = (2201036, self.u_name, "")
 
         if self.is_zonal_system:
+            requests["Supply Fan - Power"] = (
+                2201047,
+                self.u_name,
+                self.children[0].u_name,
+            )
+            requests["Supply Fan - Airflow"] = (
+                2201045,
+                self.u_name,
+                self.children[0].u_name,
+            )
             match self.output_cool_type:
                 case BDL_OutputCoolingTypes.CHILLED_WATER:
                     # Design data for Cooling - chilled water - ZONE - capacity, btu/hr
