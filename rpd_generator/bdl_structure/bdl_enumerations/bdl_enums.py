@@ -777,6 +777,7 @@ class BDLEnums:
                 "MAX-HP-SUPP-T",
                 "MIN-HP-T",
                 "INDUCTION-RATIO",
+                "HEAT-FUEL-METER",
             ]
         ),
         "UndergroundWallKeywords": _ListEnum(
