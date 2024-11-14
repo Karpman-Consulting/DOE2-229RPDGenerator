@@ -210,23 +210,17 @@ class Zone(ChildNode):
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
         for key in [
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity",
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity",
+            "Zone Heating Capacity",
+            "Zone Cooling Capacity",
         ]:
             if key in output_data:
                 output_data[key] = self.try_convert_units(
                     output_data[key], "kBtu/hr", "Btu/hr"
                 )
 
-        zone_supply_airflow = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow"
-        )
-        minimum_airflow_ratio = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio"
-        )
-        minimum_outdoor_airflow = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow"
-        )
+        zone_supply_airflow = output_data.get("Zone Supply Airflow")
+        minimum_airflow_ratio = output_data.get("Zone Minimum Airflow Ratio")
+        minimum_outdoor_airflow = output_data.get("Zone Outside Airflow")
         exhaust_airflow = self.try_float(self.get_inp(BDL_ZoneKeywords.EXHAUST_FLOW))
 
         if exhaust_airflow is not None and exhaust_airflow > 0:
@@ -369,12 +363,10 @@ class Zone(ChildNode):
             )
             self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
             self.terminals_heating_capacity[0] = self.try_abs(
-                output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
-                )
+                output_data.get("Zone Heating Capacity")
             )
             self.terminals_cooling_capacity[0] = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
+                "Zone Cooling Capacity"
             )
             self.terminals_cooling_source[0] = (
                 CoolingSourceOptions.CHILLED_WATER
@@ -564,12 +556,12 @@ class Zone(ChildNode):
         requests = {}
         if self.parent.is_terminal and self.parent.is_zonal_system:
             requests = {
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow": (
+                "Zone Supply Airflow": (
                     2201045,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Exhaust Airflow": (
+                "Zone Exhaust Airflow": (
                     2201046,
                     self.parent.u_name,
                     self.u_name,
@@ -579,32 +571,32 @@ class Zone(ChildNode):
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio": (
+                "Zone Minimum Airflow Ratio": (
                     2201048,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow": (
+                "Zone Outside Airflow": (
                     2201049,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity": (
+                "Zone Cooling Capacity": (
                     2201050,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Sensible Heat Ratio": (
+                "Zone Sensible Heat Ratio": (
                     2201051,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity": (
+                "Zone Heating Capacity": (
                     2201053,
                     self.parent.u_name,
                     self.u_name,
                 ),
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Multiplier": (
+                "Zone Multiplier": (
                     2201055,
                     self.parent.u_name,
                     self.u_name,
@@ -891,42 +883,42 @@ class Zone(ChildNode):
         else:
             requests.update(
                 {
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow": (
+                    "Zone Supply Airflow": (
                         2201045,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Exhaust Airflow": (
+                    "Zone Exhaust Airflow": (
                         2201046,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio": (
+                    "Zone Minimum Airflow Ratio": (
                         2201048,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow": (
+                    "Zone Outside Airflow": (
                         2201049,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity": (
+                    "Zone Cooling Capacity": (
                         2201050,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Sensible Heat Ratio": (
+                    "Zone Sensible Heat Ratio": (
                         2201051,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity": (
+                    "Zone Heating Capacity": (
                         2201053,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Multiplier": (
+                    "Zone Multiplier": (
                         2201055,
                         self.parent.u_name,
                         self.u_name,
