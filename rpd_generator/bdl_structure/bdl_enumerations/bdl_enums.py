@@ -616,6 +616,10 @@ class BDLEnums:
                 "CBVAV",
                 "SUM",
                 "DOAS",
+                "SZCI",
+                "HVSYS",
+                "FNSYS",
+                "PTGSD",
             ]
         ),
         "SystemSupplyFanTypes": _ListEnum(
@@ -953,6 +957,7 @@ class BDLEnums:
                 "WSE-VALVE-TYPE",
                 "INDUCTION-RATIO",
                 "INDUCED-AIR-SRC",
+                "SPACE",
             ]
         ),
         "HPSupplementSourceOptions": _ListEnum(
