@@ -1420,9 +1420,9 @@ class System(ParentNode):
             for value in fan_sch.hourly_values:
                 if is_all_0 and value != 0:
                     is_all_0 = False
-                if value == 1:
+                if not has_one and value == 1:
                     has_one = True
-                elif value == -999:
+                elif not has_neg_999 and value == -999:
                     has_neg_999 = True
 
             # Handle special case where all fan schedule values are 0 so unoccupied/occupied cannot be distinguished
