@@ -344,11 +344,14 @@ class Zone(ChildNode):
 
         if self.parent.is_terminal and self.parent.is_zonal_system:
             self.terminal_fan_design_airflow = zone_supply_airflow
-            zone_fan_power = output_data.get("Zone Fan Power")
-            self.terminal_fan_design_electric_power = (
-                zone_fan_power
-                if self.zone_exhaust_fan_design_electric_power is None
-                else zone_fan_power - self.zone_exhaust_fan_design_electric_power
+            zone_fan_power = output_data.get("Zone Fan Power", 0)
+            self.terminal_fan_design_electric_power = max(
+                0,
+                (
+                    zone_fan_power
+                    if self.zone_exhaust_fan_design_electric_power is None
+                    else zone_fan_power - self.zone_exhaust_fan_design_electric_power
+                ),
             )
 
         elif self.parent.is_terminal and not self.parent.is_zonal_system:
@@ -440,6 +443,15 @@ class Zone(ChildNode):
                     self.terminals_fan_configuration[0]
                     or TerminalFanConfigurationOptions.PARALLEL
                 )
+
+        elif self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.DUAL_DUCT,
+            BDL_TerminalTypes.MULTIZONE,
+        ]:
+            self.terminals_primary_airflow[0] = output_data.get(
+                "Dual-Duct/Multizone Boxes - Outlet Airflow", 0
+            )
+            self.terminals_secondary_airflow[0] = 0
 
         else:
             self.terminals_primary_airflow[0] = zone_supply_airflow
