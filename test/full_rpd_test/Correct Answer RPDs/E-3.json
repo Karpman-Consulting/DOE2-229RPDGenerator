@@ -45109,8 +45109,8 @@
                     "draft_type": "FORCED",
                     "energy_source_type": "NATURAL_GAS",
                     "rated_capacity": 87921,
-                    "efficiency_metric": "THERMAL",
-                    "efficiency": 0.9,
+                    "efficiency_metric_types": ["THERMAL"],
+                    "efficiency_metric_values": [0.9],
                     "output_validation_points": [
                         {
                             "load": 0,

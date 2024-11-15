@@ -45055,8 +45055,8 @@
                     "rated_capacity": 30000,
                     "minimum_load_ratio": 0.33,
                     "operation_lower_limit": 0,
-                    "efficiency_metric": "COMBUSTION",
-                    "efficiency": 0.9,
+                    "efficiency_metric_types": ["COMBUSTION"],
+                    "efficiency_metric_values": [0.9],
                     "output_validation_points": [
                         {
                             "load": 0,
@@ -45079,8 +45079,8 @@
                     "minimum_load_ratio": 0.33,
                     "operation_lower_limit": 30000,
                     "operation_upper_limit": 60000,
-                    "efficiency_metric": "COMBUSTION",
-                    "efficiency": 0.9,
+                    "efficiency_metric_types": ["COMBUSTION"],
+                    "efficiency_metric_values": [0.9],
                     "output_validation_points": [
                         {
                             "load": 0,
@@ -45109,8 +45109,8 @@
                     "minimum_load_ratio": 0.25,
                     "rated_entering_condenser_temperature": 29.4444,
                     "rated_leaving_evaporator_temperature": 6.6667,
-                    "part_load_efficiency": 0.5,
-                    "part_load_efficiency_metric": "INTEGRATED_PART_LOAD_VALUE",
+                    "efficiency_metric_values": [0.5],
+                    "efficiency_metric_types": ["INTEGRATED_PART_LOAD_VALUE"],
                     "capacity_validation_points": [
                         {
                             "chilled_water_supply_temperature": 10,
@@ -45151,8 +45151,8 @@
                     "minimum_load_ratio": 0.25,
                     "rated_entering_condenser_temperature": 29.4444,
                     "rated_leaving_evaporator_temperature": 6.6667,
-                    "part_load_efficiency": 0.5,
-                    "part_load_efficiency_metric": "INTEGRATED_PART_LOAD_VALUE",
+                    "efficiency_metric_values": [0.5],
+                    "efficiency_metric_types": ["INTEGRATED_PART_LOAD_VALUE"],
                     "capacity_validation_points": [
                         {
                             "chilled_water_supply_temperature": 10,
