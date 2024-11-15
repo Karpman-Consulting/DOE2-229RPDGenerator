@@ -274,8 +274,8 @@ class System(ParentNode):
         self.is_terminal = False
         self.is_zonal_system = False
         self.is_derived_system = False
-        self.output_cool_type = None
-        self.output_heat_type = None
+        self.bdl_output_cool_type = None
+        self.bdl_output_heat_type = None
 
         # system data elements with children
         self.fan_system = {}
@@ -438,31 +438,27 @@ class System(ParentNode):
     def populate_data_elements(self):
         """Populate data elements from the keyword_value pairs returned from model_input_reader."""
         system_type = self.get_inp(BDL_SystemKeywords.TYPE)
+
         if system_type == BDL_SystemTypes.SUM:
             self.omit = True
             return
+
         if system_type in self.zonal_system_types:
             self.is_zonal_system = True
             if not self.is_derived_system:
                 self.create_zonal_systems()
 
-        cool_source = self.get_inp(BDL_SystemKeywords.COOL_SOURCE)
-        cool_type = self.cool_type_map.get(cool_source)
-        self.system_cooling_type_map.update(
-            {
-                BDL_SystemTypes.PIU: cool_type,
-                BDL_SystemTypes.DOAS: cool_type,
-            }
-        )
+        self.update_system_mapping()
+        heat_type = self.heat_type_map.get(self.get_inp(BDL_SystemKeywords.HEAT_SOURCE))
+        cool_type = self.cool_type_map.get(self.get_inp(BDL_SystemKeywords.COOL_SOURCE))
+
+        has_heat = heat_type not in [None, HeatingSystemOptions.NONE]
         has_cool = self.system_cooling_type_map.get(
             self.get_inp(BDL_SystemKeywords.TYPE)
         ) not in [None, CoolingSystemOptions.NONE]
         has_preheat = self.get_inp(BDL_SystemKeywords.PREHEAT_SOURCE) and self.get_inp(
             BDL_SystemKeywords.PREHEAT_SOURCE
         ) not in [None, BDL_SystemHeatingTypes.NONE]
-        heat_source = self.get_inp(BDL_SystemKeywords.HEAT_SOURCE)
-        heat_type = self.heat_type_map.get(heat_source)
-        has_heat = heat_type not in [None, HeatingSystemOptions.NONE]
         has_economizer = (
             self.get_inp(BDL_SystemKeywords.OA_CONTROL)
             and self.get_inp(BDL_SystemKeywords.OA_CONTROL)
@@ -491,42 +487,10 @@ class System(ParentNode):
             and not has_economizer
             and not has_energy_recovery
         )
+
         if self.is_terminal:
             self.omit = True
             return
-
-        self.output_heat_type = self.BDL_output_heat_type_map.get(heat_source)
-        self.BDL_output_system_heating_type_map.update(
-            {
-                BDL_SystemTypes.PTAC: self.output_heat_type,
-                BDL_SystemTypes.PSZ: self.output_heat_type,
-                BDL_SystemTypes.PMZS: self.output_heat_type,
-                BDL_SystemTypes.PVAVS: self.output_heat_type,
-                BDL_SystemTypes.PVVT: self.output_heat_type,
-                BDL_SystemTypes.SZRH: self.output_heat_type,
-                BDL_SystemTypes.VAVS: self.output_heat_type,
-                BDL_SystemTypes.RHFS: self.output_heat_type,
-                BDL_SystemTypes.DDS: self.output_heat_type,
-                BDL_SystemTypes.MZS: self.output_heat_type,
-                BDL_SystemTypes.PIU: self.output_heat_type,
-                BDL_SystemTypes.FC: self.output_heat_type,
-                BDL_SystemTypes.IU: self.output_heat_type,
-                BDL_SystemTypes.UVT: self.output_heat_type,
-                BDL_SystemTypes.UHT: self.output_heat_type,
-                BDL_SystemTypes.RESYS2: self.output_heat_type,
-                BDL_SystemTypes.CBVAV: self.output_heat_type,
-                BDL_SystemTypes.DOAS: self.output_heat_type,
-            }
-        )
-        self.output_cool_type = self.BDL_output_cool_type_map.get(
-            self.get_inp(BDL_SystemKeywords.TYPE)
-        )
-        self.BDL_output_system_cooling_type_map.update(
-            {
-                BDL_SystemTypes.PIU: self.output_cool_type,
-                BDL_SystemTypes.DOAS: self.output_cool_type,
-            }
-        )
 
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
@@ -541,7 +505,9 @@ class System(ParentNode):
         if has_cool:
             self.populate_cooling_system(output_data)
         if has_heat:
-            self.populate_heating_system(output_data, heat_source)
+            self.populate_heating_system(
+                output_data, self.get_inp(BDL_SystemKeywords.HEAT_SOURCE)
+            )
         if has_preheat:
             self.populate_preheat_system(output_data)
         if has_economizer:
@@ -599,7 +565,7 @@ class System(ParentNode):
                 self.u_name,
                 self.children[0].u_name,
             )
-            match self.output_cool_type:
+            match self.bdl_output_cool_type:
                 case BDL_OutputCoolingTypes.CHILLED_WATER:
                     # Design data for Cooling - chilled water - ZONE - capacity, btu/hr
                     requests["Design Cooling capacity"] = (
@@ -701,7 +667,7 @@ class System(ParentNode):
                         self.children[0].u_name,
                     )
 
-            match self.output_heat_type:
+            match self.bdl_output_heat_type:
                 case BDL_OutputHeatingTypes.FURNACE:
                     # Design data for Heating - furnace - ZONE - capacity, btu/hr
                     requests["Design Heating capacity"] = (
@@ -750,7 +716,7 @@ class System(ParentNode):
                     )
 
         else:
-            match self.output_cool_type:
+            match self.bdl_output_cool_type:
                 case BDL_OutputCoolingTypes.CHILLED_WATER:
                     # Design data for Cooling - chilled water - SYSTEM - capacity, btu/hr
                     requests["Design Cooling capacity"] = (2203015, self.u_name, "")
@@ -788,7 +754,7 @@ class System(ParentNode):
                     # Rated data for Cooling - VRF - SYSTEM - SHR
                     requests["Rated Cooling SHR"] = (2203217, self.u_name, "")
 
-            match self.output_heat_type:
+            match self.bdl_output_heat_type:
                 case BDL_OutputHeatingTypes.FURNACE:
                     requests["Design Heating capacity"] = (2203296, self.u_name, "")
                 case BDL_OutputHeatingTypes.HEAT_PUMP_AIR_COOLED:
@@ -925,6 +891,57 @@ class System(ParentNode):
         if self.omit:
             return
         self.parent_building_segment.hvac_systems.append(self.system_data_structure)
+
+    def update_system_mapping(self):
+        """Update various system mapping based on the system component types."""
+        cool_source = self.get_inp(BDL_SystemKeywords.COOL_SOURCE)
+        cool_type = self.cool_type_map.get(cool_source)
+        self.system_cooling_type_map.update(
+            {
+                BDL_SystemTypes.PIU: cool_type,
+                BDL_SystemTypes.DOAS: cool_type,
+            }
+        )
+
+        self.bdl_output_heat_type = self.BDL_output_heat_type_map.get(
+            self.get_inp(BDL_SystemKeywords.HEAT_SOURCE)
+        )
+        self.BDL_output_system_heating_type_map.update(
+            {
+                BDL_SystemTypes.PTAC: self.bdl_output_heat_type,
+                BDL_SystemTypes.PSZ: self.bdl_output_heat_type,
+                BDL_SystemTypes.PMZS: self.bdl_output_heat_type,
+                BDL_SystemTypes.PVAVS: self.bdl_output_heat_type,
+                BDL_SystemTypes.PVVT: self.bdl_output_heat_type,
+                BDL_SystemTypes.SZRH: self.bdl_output_heat_type,
+                BDL_SystemTypes.VAVS: self.bdl_output_heat_type,
+                BDL_SystemTypes.RHFS: self.bdl_output_heat_type,
+                BDL_SystemTypes.DDS: self.bdl_output_heat_type,
+                BDL_SystemTypes.MZS: self.bdl_output_heat_type,
+                BDL_SystemTypes.PIU: self.bdl_output_heat_type,
+                BDL_SystemTypes.FC: self.bdl_output_heat_type,
+                BDL_SystemTypes.IU: self.bdl_output_heat_type,
+                BDL_SystemTypes.UVT: self.bdl_output_heat_type,
+                BDL_SystemTypes.UHT: self.bdl_output_heat_type,
+                BDL_SystemTypes.RESYS2: self.bdl_output_heat_type,
+                BDL_SystemTypes.CBVAV: self.bdl_output_heat_type,
+                BDL_SystemTypes.DOAS: self.bdl_output_heat_type,
+            }
+        )
+
+        self.BDL_output_system_cooling_type_map.update(
+            {
+                BDL_SystemTypes.PIU: self.BDL_output_cool_type_map.get(
+                    self.get_inp(BDL_SystemKeywords.TYPE)
+                ),
+                BDL_SystemTypes.DOAS: self.BDL_output_cool_type_map.get(
+                    self.get_inp(BDL_SystemKeywords.TYPE)
+                ),
+            }
+        )
+        self.bdl_output_cool_type = self.BDL_output_system_cooling_type_map.get(
+            self.get_inp(BDL_SystemKeywords.TYPE)
+        )
 
     def populate_fan_system(self, output_data):
         self.fan_sys_id = self.u_name + " FanSys"
