@@ -236,7 +236,13 @@ class BDLEnums:
                 "HEATING-SCHEDULE",
             ]
         ),
-        "ConstructionKeywords": _ListEnum(["LAYERS", "ABSORPTANCE", "U-VALUE"]),
+        "ConstructionTypes": _ListEnum(
+            [
+                "LAYERS",
+                "U-VALUE",
+            ]
+        ),
+        "ConstructionKeywords": _ListEnum(["TYPE", "LAYERS", "ABSORPTANCE", "U-VALUE"]),
         "DayScheduleKeywords": _ListEnum(
             [
                 "TYPE",
@@ -380,6 +386,7 @@ class BDLEnums:
         "LayerKeywords": _ListEnum(
             [
                 "MATERIAL",
+                "INSIDE-FILM-RES",
             ]
         ),
         "MasterMeterKeywords": _ListEnum(
