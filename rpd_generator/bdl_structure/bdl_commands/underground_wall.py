@@ -1,3 +1,5 @@
+import copy
+
 from rpd_generator.bdl_structure.child_node import ChildNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
@@ -11,9 +13,12 @@ AdditionalSurfaceAdjacencyOptions2019ASHRAE901 = SchemaEnums.schema_enums[
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_UndergroundWallKeywords = BDLEnums.bdl_enums["UndergroundWallKeywords"]
-BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]
+BDL_LayerKeywords = BDLEnums.bdl_enums["LayerKeywords"]
 BDL_SpaceKeywords = BDLEnums.bdl_enums["SpaceKeywords"]
 BDL_FloorKeywords = BDLEnums.bdl_enums["FloorKeywords"]
+BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
 
 
 class BelowGradeWall(ChildNode):
@@ -118,9 +123,11 @@ class BelowGradeWall(ChildNode):
 
     def populate_data_group(self):
         """Populate schema structure for below grade wall object."""
-        self.construction = self.get_obj(
-            self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
-        ).construction_data_structure
+        self.construction = copy.deepcopy(
+            self.get_obj(
+                self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
+            ).construction_data_structure
+        )
 
         optical_property_attributes = [
             "absorptance_thermal_exterior",
@@ -166,3 +173,24 @@ class BelowGradeWall(ChildNode):
         """Insert below grade wall object into the rpd data structure."""
         zone = rmd.space_map.get(self.parent.u_name)
         zone.surfaces.append(self.underground_wall_data_structure)
+
+    def account_for_air_film_resistance(self):
+        """
+        Remove interior air film resistance from a simplified construction's simplified material r_value.
+        """
+        construction_obj = self.get_obj(
+            self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
+        )
+        spec_method = construction_obj.get_inp(BDL_ConstructionKeywords.TYPE)
+        u_factor = self.construction.get("u_factor")
+        if u_factor:
+            if spec_method == BDL_ConstructionTypes.U_VALUE:
+                location = self.get_inp(BDL_UndergroundWallKeywords.LOCATION)
+                int_air_film_resistance = (
+                    0.61
+                    if location == BDL_WallLocationOptions.TOP
+                    else 0.92 if location == BDL_WallLocationOptions.BOTTOM else 0.68
+                )
+                self.construction["primary_layers"][0]["r_value"] = (
+                    1 / u_factor - int_air_film_resistance
+                )
