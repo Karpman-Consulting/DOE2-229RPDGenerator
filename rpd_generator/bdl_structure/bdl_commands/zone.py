@@ -496,7 +496,7 @@ class Zone(ChildNode):
             self.terminals_has_demand_control_ventilation[1] = False
             self.terminals_cooling_capacity[1] = 0.0
             self.terminals_heating_source[1] = self.heat_source_map.get(
-                self.get_inp(BDL_ZoneKeywords.BASEBOARD_SOURCE)
+                self.parent.get_inp(BDL_SystemKeywords.BASEBOARD_SOURCE)
             )
             self.terminals_heating_from_loop[1] = self.parent.get_inp(
                 BDL_SystemKeywords.BBRD_LOOP

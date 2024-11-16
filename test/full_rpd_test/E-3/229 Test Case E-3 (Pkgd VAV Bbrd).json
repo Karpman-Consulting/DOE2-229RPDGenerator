@@ -226,6 +226,7 @@
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 1 (South) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -439,6 +440,7 @@
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 2 (East) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -651,6 +653,7 @@
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 3 (North) BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -835,6 +838,7 @@
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 4 (West) BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -977,6 +981,7 @@
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Core Zone 1 BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
