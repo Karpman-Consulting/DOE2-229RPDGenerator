@@ -255,7 +255,9 @@ class Zone(ChildNode):
             ):
                 # Get the space occupancy schedule and number of occupants so that cfm per pps can be converted to cfm for comparison
                 space = self.get_obj(self.get_inp(BDL_ZoneKeywords.SPACE))
-                spc_occ_sch = space.get_obj(space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE))
+                spc_occ_sch = space.get_obj(
+                    space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE)
+                )
                 spc_num_pp = float(space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE))
                 occ_cfm = cfm_per_pps * spc_num_pp * max(spc_occ_sch.hourly_values)
                 # Assess whether ACH or CFM per sf have been populated and if so calculate the total cfm for each for comparison
