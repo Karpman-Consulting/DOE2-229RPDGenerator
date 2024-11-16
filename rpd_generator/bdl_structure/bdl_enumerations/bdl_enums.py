@@ -422,10 +422,20 @@ class BDLEnums:
                 "DEM-UNIT-INDEX",
             ]
         ),
+        "AirflowConditionOptions": _ListEnum(
+            [
+                "SEA-LEVEL",
+                "BLDG-ALTITUDE",
+            ]
+        ),
         "SiteParameterKeywords": _ListEnum(
             [
                 "DAYLIGHT-SAVINGS",
                 "GROUND-T",
+                "SPECIFY-AIRFLOWS",
+                "ALTITUDE",
+                "LATITUDE",
+                "LONGITUDE",
             ]
         ),
         "RunPeriodKeywords": _ListEnum(
