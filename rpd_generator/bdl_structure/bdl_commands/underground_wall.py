@@ -128,6 +128,7 @@ class BelowGradeWall(ChildNode):
                 self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
             ).construction_data_structure
         )
+        self.account_for_air_film_resistance()
 
         optical_property_attributes = [
             "absorptance_thermal_exterior",
