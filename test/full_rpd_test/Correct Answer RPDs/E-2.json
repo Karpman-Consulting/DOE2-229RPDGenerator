@@ -495,7 +495,7 @@
                                                         "specific_heat": 1090
                                                     }
                                                 ],
-                                                "u_factor": 0.477396
+                                                "u_factor": 0.478345
                                             },
                                             "optical_properties": {
                                                 "id": "Prm Zone 1 South Wall Optical Properties",
@@ -691,7 +691,7 @@
                                                         "r_value": 0.099
                                                     }
                                                 ],
-                                                "u_factor": 0.477396
+                                                "u_factor": 0.180874
                                             },
                                             "optical_properties": {
                                                 "id": "Prm Zone 2 East Wall Optical Properties",
@@ -919,7 +919,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Exterior Wall Resistance 01",
-                                                        "r_value": 2.095711
+                                                        "r_value": 1.946018
                                                     }
                                                 ],
                                                 "u_factor": 0.477165
@@ -1039,7 +1039,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Roof Resistance 01",
-                                                        "r_value": 2.7948686
+                                                        "r_value": 2.657503
                                                     }
                                                 ],
                                                 "u_factor": 0.35779857
@@ -1139,7 +1139,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Exterior Wall Resistance 02",
-                                                        "r_value": 2.095711
+                                                        "r_value": 1.946018
                                                     }
                                                 ],
                                                 "u_factor": 0.477165
@@ -45107,8 +45107,8 @@
                     "rated_capacity": 85000,
                     "design_capacity": 85000,
                     "minimum_load_ratio": 0.25,
-                    "rated_entering_condenser_temperature": 29.4444,
-                    "rated_leaving_evaporator_temperature": 6.6667,
+                    "rated_entering_condenser_temperature": 29.4,
+                    "rated_leaving_evaporator_temperature": 6.7,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "INTEGRATED_PART_LOAD_VALUE",
                     "capacity_validation_points": [
@@ -45149,8 +45149,8 @@
                     "rated_capacity": 85000,
                     "design_capacity": 85000,
                     "minimum_load_ratio": 0.25,
-                    "rated_entering_condenser_temperature": 29.4444,
-                    "rated_leaving_evaporator_temperature": 6.6667,
+                    "rated_entering_condenser_temperature": 29.4,
+                    "rated_leaving_evaporator_temperature": 6.7,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "INTEGRATED_PART_LOAD_VALUE",
                     "capacity_validation_points": [
@@ -45274,7 +45274,6 @@
                         {
                             "id": "Secondary CHW Loop",
                             "type": "COOLING",
-                            "pump_power_per_flow_rate": 206,
                             "cooling_or_condensing_design_and_control": {
                                 "id": "Secondary CHW Design and Control",
                                 "design_supply_temperature": 6.7,
@@ -45313,8 +45312,8 @@
                     "fan_type": "AXIAL",
                     "fan_speed_control": "VARIABLE_SPEED",
                     "fluid": "WATER",
-                    "range": 5.5556,
-                    "approach": 3.8889,
+                    "range": 5.6,
+                    "approach": 3.9,
                     "design_wetbulb_temperature": 25,
                     "leaving_water_setpoint_temperature": 21.1111,
                     "rated_water_flowrate": 100
