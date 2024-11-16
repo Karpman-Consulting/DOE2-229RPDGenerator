@@ -123,7 +123,7 @@ $ ---------------------------------------------------------
    TYPE             = PROPERTIES
    THICKNESS        = 0.031
    CONDUCTIVITY     = 0.092
-   DENSITY          = 70
+   DENSITY          = 69.92
    SPECIFIC-HEAT    = 0.349
    ..
 "Stucco" = MATERIAL        
@@ -205,7 +205,7 @@ SET-DEFAULT FOR LAYERS
    INSIDE-FILM-RES  = 0.68
    MATERIAL         = ( "Stucco", "Gypsum Board", "Insulation", 
          "Gypsum Board" )
-   THICKNESS        = ( &D, 0.052, 0.204, 0.052 )
+   THICKNESS        = ( {.08333}, {.0521654}, {.2034121}, {.0521654} )
    ..
 "Roof Type 2 Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
@@ -224,8 +224,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IFlr Cons Layers Type 1" = LAYERS          
    INSIDE-FILM-RES  = 0.92
-   MATERIAL         = ( "Concrete", "Carpet & No Pad" )
-   THICKNESS        = ( 0.333 )
+   MATERIAL         = ( "Concrete" )
    ..
 "BL1 UFLyrs (G.S1.U2)" = LAYERS          
    INSIDE-FILM-RES  = 0.92
@@ -265,7 +264,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "Roof Type 3" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 0.066
+   U-VALUE          = {0.063694}
    ..
 "BL1 Ceilg Construction" = CONSTRUCTION    
    TYPE             = LAYERS
@@ -297,7 +296,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "Exterior Wall Type 3" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 0.09
+   U-VALUE          = {.08525}
    ..
 "Slab-on-grade Type 2" = CONSTRUCTION    
    TYPE             = LAYERS
@@ -1002,12 +1001,16 @@ $ *********************************************************
 "Perimeter Space 3 SW Wall" = INTERIOR-WALL   
    NEXT-TO          = "Perimeter Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V2
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 3 S Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
@@ -1080,7 +1083,9 @@ $ *********************************************************
 "Perimeter Space 4 E Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
