@@ -273,7 +273,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IWall Construction" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 2.857
+   U-VALUE          = {.2985}
    ..
 "Slab-on-grade Type 1" = CONSTRUCTION    
    TYPE             = LAYERS

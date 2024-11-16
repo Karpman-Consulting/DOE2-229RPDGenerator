@@ -60,13 +60,11 @@
 
 
 
-
-
-     *   1 * INPUT ..
-
+
+     *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           11/11/2024    10:56:08  BDL RUN   2
+                           11/16/2024    11:34:00  BDL RUN   2
 
 
 
@@ -1383,12 +1381,12 @@
 -DEFAULT -                                              C-C-U            =                       1.0000 BTU/HR-SQFT-F
      * 274 * "BL1 IWall Construction" = CONSTRUCTION
      * 275 *    TYPE             = U-VALUE
-     * 276 *    U-VALUE          = 2.857
+     * 276 *    U-VALUE          = {.2985}
      * 277 *    ..
 
 -NOTE- - -         DATA FOR     BL1 IWall Construction
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = U-VALUE
--INPUT - -                                              U-VALUE          =                       2.8570 BTU/HR-SQFT-F
+-INPUT - -                                              U-VALUE          =                       0.2985 BTU/HR-SQFT-F
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  ABSORPTANCE      =                       0.7000
 -DEFAULT -                                              ROUGHNESS        =                       3.0000
 -DEFAULT -                                              C-USER-INP-ABS   =                       0.7000
@@ -4018,7 +4016,6 @@
      * 820 *    LOCATION         = SPACE-V2
      * 821 *    INSIDE-VIS-REFL  = ( 0.3 )
      * 822 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 1 NE Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Perimeter Space 2 (East)
@@ -4029,7 +4026,7 @@
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.5000
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                     275.7716 SQFT
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                     163.8000 FT
 -DEFAULT -                                              Y                =                       0.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -4048,7 +4045,6 @@
      * 827 *    LOCATION         = SPACE-V3
      * 828 *    INSIDE-VIS-REFL  = ( 0.3 )
      * 829 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 1 N Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
@@ -4059,7 +4055,7 @@
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.5000
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1739.4000 SQFT
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                     148.8000 FT
 -DEFAULT -                                              Y                =                      15.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -4078,7 +4074,6 @@
      * 834 *    LOCATION         = SPACE-V4
      * 835 *    INSIDE-VIS-REFL  = ( 0.3 )
      * 836 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 1 NW Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Perimeter Space 4 (West)
@@ -4089,7 +4084,7 @@
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.5000
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                     275.7716 SQFT
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                      15.0000 FT
 -DEFAULT -                                              Y                =                      15.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -4583,7 +4578,6 @@
      * 909 *    LOCATION         = SPACE-V2
      * 910 *    INSIDE-VIS-REFL  = ( 0.3 )
      * 911 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 2 NW Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Perimeter Space 3 (North)
@@ -4594,7 +4588,7 @@
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.5000
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                     275.7716 SQFT
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                     109.2000 FT
 -DEFAULT -                                              Y                =                       0.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -4613,7 +4607,6 @@
      * 916 *    LOCATION         = SPACE-V3
      * 917 *    INSIDE-VIS-REFL  = ( 0.3 )
      * 918 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 2 W Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
@@ -4624,7 +4617,7 @@
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.3000
 -INPUT - -                                              INSIDE-VIS-REFL  =                       0.5000
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1029.6000 SQFT
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                      94.2000 FT
 -DEFAULT -                                              Y                =                      15.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -5195,7 +5188,6 @@
      *1004 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1005 *    LOCATION         = SPACE-V2
      *1006 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 3 SW Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Perimeter Space 4 (West)
@@ -5204,7 +5196,7 @@
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                     275.7716 SQFT
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                     163.8000 FT
 -DEFAULT -                                              Y                =                       0.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -5223,7 +5215,6 @@
      *1009 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1010 *    LOCATION         = SPACE-V3
      *1011 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 3 S Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
@@ -5232,7 +5223,7 @@
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1739.4000 SQFT
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                     148.8000 FT
 -DEFAULT -                                              Y                =                      15.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -5727,7 +5718,6 @@
      *1082 *    CONSTRUCTION     = "BL1 IWall Construction"
      *1083 *    LOCATION         = SPACE-V3
      *1084 *    ..
--CAUTION--------------------------------------------------------------------------------------INT-WALL-TYPE has been changed to AIR   
 
 -NOTE- - -         DATA FOR     Perimeter Space 4 E Wall
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  NEXT-TO          = Core Space 1
@@ -5736,7 +5726,7 @@
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  AREA             =                    1029.6000 SQFT
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
 -DEFAULT -                                              INSIDE-SOL-ABS   =                       0.5000
--DEFAULT -                                              INT-WALL-TYPE    = AIR
+-DEFAULT -                                              INT-WALL-TYPE    = STANDARD
 -DEFAULT -                                              X                =                      94.2000 FT
 -DEFAULT -                                              Y                =                      15.0000 FT
 -DEFAULT -                                              Z                =                       0.0000 FT
@@ -8582,8 +8572,7 @@
             wall and floor, a delayed wall and ceiling, or a delayed ceiling and
             floor for custom weighting factors to be calculated. ASHRAE
             weighting factors with floor weight of 70 lb/ft2 (342 kg/m2) will be
-            used for this space.
-229 Test Case 1 updated                                                                   11/11/2024    10:56:08  BDL  RUN 2
+            used for this space.229 Test Case 1 updated                                                                   11/16/2024    11:34:00  BDL  RUN 2
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -8593,56 +8582,55 @@ SP NAME--   Perimeter Space  Perimeter Space  Perimeter Space  Perimeter Space  
 
 SOLAR
 -----
-V0           0.27759          0.33306          0.29400          0.19700          0.27592
-V1          -0.24358         -0.31712         -0.33833         -0.06700         -0.24027
-V2           0.01649          0.03997          0.07723          0.00000          0.01492
-W1           1.25552          1.20790          1.30391          0.87000          1.24524
-W2          -0.35299         -0.31350         -0.34467          0.00000         -0.34362
+V0           0.35438          0.40309          0.32742          0.19700          0.33644
+V1          -0.34448         -0.40610         -0.38792         -0.06700         -0.32199
+V2           0.04801          0.06623          0.09644          0.00000          0.04156
+W1           1.23354          1.19165          1.33123          0.87000          1.23133
+W2          -0.33519         -0.30052         -0.37385          0.00000         -0.33253
 
 GENERAL
 LIGHTING
 --------
-V0           0.33484          0.40440          0.41720          0.53000          0.29641
-V1          -0.29692         -0.37886         -0.40286         -0.40000         -0.25321
-V2           0.02109          0.04761          0.03543          0.00000          0.01217
-W1           1.24700          1.17321          1.05541          0.87000          1.23742
-W2          -0.34801         -0.29540         -0.11687          0.00000         -0.33904
+V0           0.45214          0.52155          0.51941          0.53000          0.39180
+V1          -0.44371         -0.51880         -0.50760         -0.40000         -0.37230
+V2           0.06199          0.08399          0.04623          0.00000          0.04509
+W1           1.22583          1.15661          1.04437          0.87000          1.22339
+W2          -0.33087         -0.28287         -0.11205          0.00000         -0.32789
 
 TASK
 LIGHTING
 --------
-V0           0.33484          0.40440          0.41720          0.50000          0.29641
-V1          -0.29692         -0.37886         -0.40286         -0.37000         -0.25321
-V2           0.02109          0.04761          0.03543          0.00000          0.01217
-W1           1.24700          1.17321          1.05541          0.87000          1.23742
-W2          -0.34801         -0.29540         -0.11687          0.00000         -0.33904
+V0           0.45214          0.52155          0.51941          0.50000          0.39180
+V1          -0.44371         -0.51880         -0.50760         -0.37000         -0.37230
+V2           0.06199          0.08399          0.04623          0.00000          0.04509
+W1           1.22583          1.15661          1.04437          0.87000          1.22339
+W2          -0.33087         -0.28287         -0.11205          0.00000         -0.32789
 
 PEOPLE-
 EQUIPMENT
 ---------
-V0           0.33484          0.40440          0.41720          0.68100          0.29641
-V1          -0.29692         -0.37886         -0.40286         -0.55100         -0.25321
-V2           0.02109          0.04761          0.03543          0.00000          0.01217
-W1           1.24700          1.17321          1.05541          0.87000          1.23742
-W2          -0.34801         -0.29540         -0.11687          0.00000         -0.33904
+V0           0.45214          0.52155          0.51941          0.68100          0.39180
+V1          -0.44371         -0.51880         -0.50760         -0.55100         -0.37230
+V2           0.06199          0.08399          0.04623          0.00000          0.04509
+W1           1.22583          1.15661          1.04437          0.87000          1.22339
+W2          -0.33087         -0.28287         -0.11205          0.00000         -0.32789
 
 CONDUCTION
 ----------
-V0           0.56457          0.61046          0.61849          0.68100          0.52765
-V1          -0.62506         -0.65368         -0.62824         -0.55100         -0.57667
-V2           0.13400          0.13333          0.06356          0.00000          0.11960
-W1           1.24700          1.17321          1.05541          0.87000          1.23742
-W2          -0.34801         -0.29540         -0.11687          0.00000         -0.33904
+V0           0.64737          0.69252          0.69066          0.68100          0.59915
+V1          -0.72242         -0.74672         -0.69888         -0.55100         -0.66246
+V2           0.15780          0.15506          0.06969          0.00000          0.14151
+W1           1.22583          1.15661          1.04437          0.87000          1.22339
+W2          -0.33087         -0.28287         -0.11205          0.00000         -0.32789
 
 AIR
 TEMP     (BTU/HR-SQFT-F   )
 ----
-G0*          0.39605          0.31532          0.45712          1.81000          0.26563
-G1*         -0.69819         -0.55011         -0.58442         -1.89000         -0.46226
-G2*          0.30229          0.23580          0.12926          0.08000          0.19675
-G3*         -0.00015         -0.00102         -0.00196          0.00000         -0.00012
-P1          -1.24986         -1.21343         -1.16998         -0.87000         -1.24082
-P2           0.34926          0.31903          0.22253          0.00000          0.34074
-
+G0*          0.47238          0.37296          0.55226          1.81000          0.30834
+G1*         -0.83317         -0.65079         -0.70199         -1.89000         -0.53669
+G2*          0.36095          0.27917          0.15198          0.08000          0.22848
+G3*         -0.00015         -0.00133         -0.00226          0.00000         -0.00013
+P1          -1.23013         -1.19857         -1.15651         -0.87000         -1.22796
+P2           0.33299          0.30708          0.21468          0.00000          0.33033
      *1613 * COMPUTE ..
      *1614 * STOP ..

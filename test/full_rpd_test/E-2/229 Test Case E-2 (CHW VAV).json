@@ -117,7 +117,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.47743267937272194
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Ext Wall OpticalProps",
@@ -164,7 +165,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Roof OpticalProps",
@@ -178,6 +180,96 @@
                                             "azimuth": 180.0,
                                             "adjacent_to": "EXTERIOR",
                                             "does_cast_shade": false
+                                        },
+                                        {
+                                            "id": "Perimeter Space 1 NE Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_visible_interior": 0.7
+                                            },
+                                            "classification": "WALL",
+                                            "area": 25.620019985663994,
+                                            "tilt": 90.0,
+                                            "azimuth": 45.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Perimeter Zone 2 (East)"
+                                        },
+                                        {
+                                            "id": "Perimeter Space 1 N Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--1",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--1",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_visible_interior": 0.7
+                                            },
+                                            "classification": "WALL",
+                                            "area": 161.595547776,
+                                            "tilt": 90.0,
+                                            "azimuth": 0.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Core Zone"
+                                        },
+                                        {
+                                            "id": "Perimeter Space 1 NW Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--2",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--2",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_visible_interior": 0.7
+                                            },
+                                            "classification": "WALL",
+                                            "area": 25.620019985663994,
+                                            "tilt": 90.0,
+                                            "azimuth": 315.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Perimeter Zone 4 (West)"
                                         },
                                         {
                                             "id": "Perimeter Space 1 Slab on Grade",
@@ -195,7 +287,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -211,7 +304,7 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 22391.56796532525,
+                                            "heating_capacity": 22384.723706665038,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Perimeter Zone 1 (South) MainTerminal",
@@ -321,7 +414,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18802180423859668
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Ext Wall OpticalProps",
@@ -368,7 +462,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Roof OpticalProps",
@@ -382,6 +477,66 @@
                                             "azimuth": 90.0,
                                             "adjacent_to": "EXTERIOR",
                                             "does_cast_shade": false
+                                        },
+                                        {
+                                            "id": "Perimeter Space 2 NW Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--3",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--3",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_visible_interior": 0.7
+                                            },
+                                            "classification": "WALL",
+                                            "area": 25.620019985663994,
+                                            "tilt": 90.0,
+                                            "azimuth": 315.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Perimeter Zone 3 (North)"
+                                        },
+                                        {
+                                            "id": "Perimeter Space 2 W Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--4",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--4",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_visible_interior": 0.7
+                                            },
+                                            "classification": "WALL",
+                                            "area": 95.65296998399998,
+                                            "tilt": 90.0,
+                                            "azimuth": 270.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Core Zone"
                                         },
                                         {
                                             "id": "Perimeter Space 2 Slab on Grade",
@@ -399,7 +554,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -415,7 +571,7 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 22119.416450432673,
+                                            "heating_capacity": 22381.327290818957,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Perimeter Zone 2 (East) MainTerminal",
@@ -514,13 +670,15 @@
                                                 "id": "Exterior Wall Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material"
+                                                        "id": "Simplified Material--5",
+                                                        "r_value": 1.837024637175657
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.5033426298508266
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Ext Wall OpticalProps",
@@ -564,7 +722,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18970607381902888
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Roof OpticalProps",
@@ -578,6 +737,66 @@
                                             "azimuth": 0.0,
                                             "adjacent_to": "EXTERIOR",
                                             "does_cast_shade": false
+                                        },
+                                        {
+                                            "id": "Perimeter Space 3 SW Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--5",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--6",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.5,
+                                                "absorptance_visible_interior": 0.5
+                                            },
+                                            "classification": "WALL",
+                                            "area": 25.620019985663994,
+                                            "tilt": 90.0,
+                                            "azimuth": 225.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Perimeter Zone 4 (West)"
+                                        },
+                                        {
+                                            "id": "Perimeter Space 3 S Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--6",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--7",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.5,
+                                                "absorptance_visible_interior": 0.5
+                                            },
+                                            "classification": "WALL",
+                                            "area": 161.595547776,
+                                            "tilt": 90.0,
+                                            "azimuth": 180.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Core Zone"
                                         },
                                         {
                                             "id": "Perimeter Space 3 Slab on Grade",
@@ -602,7 +821,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.3509167235001137
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -618,7 +838,7 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 22391.56796532525,
+                                            "heating_capacity": 22382.304403211805,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Perimeter Zone 3 (North) MainTerminal",
@@ -704,13 +924,15 @@
                                                 "id": "Exterior Wall Type 3--1",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--1"
+                                                        "id": "Simplified Material--8",
+                                                        "r_value": 1.837024637175657
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.5033426298508266
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Ext Wall OpticalProps",
@@ -733,13 +955,15 @@
                                                 "id": "Roof Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--2"
+                                                        "id": "Simplified Material--9",
+                                                        "r_value": 2.560908546620877
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.37060721985739914
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Roof OpticalProps",
@@ -753,6 +977,36 @@
                                             "azimuth": 270.0,
                                             "adjacent_to": "EXTERIOR",
                                             "does_cast_shade": false
+                                        },
+                                        {
+                                            "id": "Perimeter Space 4 E Wall",
+                                            "subsurfaces": [],
+                                            "construction": {
+                                                "id": "BL1 IWall Construction--7",
+                                                "primary_layers": [
+                                                    {
+                                                        "id": "Simplified Material--10",
+                                                        "r_value": 0.3504739661669534
+                                                    }
+                                                ],
+                                                "framing_layers": [],
+                                                "insulation_locations": [],
+                                                "r_values": [],
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
+                                            },
+                                            "optical_properties": {
+                                                "absorptance_solar_exterior": 0.5,
+                                                "absorptance_visible_exterior": 0.5,
+                                                "absorptance_solar_interior": 0.5,
+                                                "absorptance_visible_interior": 0.5
+                                            },
+                                            "classification": "WALL",
+                                            "area": 95.65296998399998,
+                                            "tilt": 90.0,
+                                            "azimuth": 90.0,
+                                            "adjacent_to": "INTERIOR",
+                                            "adjacent_zone": "Core Zone"
                                         },
                                         {
                                             "id": "Perimeter Space 4 Slab on Grade",
@@ -777,7 +1031,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.3509167235001137
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -793,7 +1048,7 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 21181.428800489637,
+                                            "heating_capacity": 21168.435665215387,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Perimeter Zone 4 (West) MainTerminal",
@@ -879,7 +1134,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Core Space 1 Roof OpticalProps",
@@ -910,7 +1166,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -926,7 +1183,7 @@
                                     "terminals": [
                                         {
                                             "cooling_capacity": 0.0,
-                                            "heating_capacity": 22408.880965915258,
+                                            "heating_capacity": 22434.384270155166,
                                             "heating_from_loop": "Hot Water Loop",
                                             "heating_source": "HOT_WATER",
                                             "id": "Core Zone MainTerminal",
@@ -132538,7 +132795,7 @@
                     },
                     "child_loops": [],
                     "type": "HEATING",
-                    "pump_power_per_flow_rate": 300.443056143079
+                    "pump_power_per_flow_rate": 300.443017844897
                 },
                 {
                     "id": "Chilled Water Loop (Primary)",
@@ -132631,11 +132888,11 @@
                     "output_validation_points": [],
                     "loop_or_piping": "Hot Water Loop",
                     "specification_method": "DETAILED",
-                    "design_electric_power": 299.7424602508545,
+                    "design_electric_power": 300.04212260246277,
                     "impeller_efficiency": 0.7699999809265137,
                     "motor_efficiency": 0.5960000157356262,
                     "speed_control": "VARIABLE_SPEED",
-                    "design_flow": 0.9976681241989139,
+                    "design_flow": 0.9986656529903415,
                     "is_flow_sized_based_on_design_day": true
                 },
                 {
@@ -132643,11 +132900,11 @@
                     "output_validation_points": [],
                     "loop_or_piping": "Hot Water Loop",
                     "specification_method": "DETAILED",
-                    "design_electric_power": 299.7424602508545,
+                    "design_electric_power": 300.04212260246277,
                     "impeller_efficiency": 0.7699999809265137,
                     "motor_efficiency": 0.5960000157356262,
                     "speed_control": "VARIABLE_SPEED",
-                    "design_flow": 0.9976681241989139,
+                    "design_flow": 0.9986656529903415,
                     "is_flow_sized_based_on_design_day": true
                 },
                 {
@@ -132716,14 +132973,14 @@
                     ],
                     "output_validation_points": [],
                     "loop": "Hot Water Loop",
-                    "design_capacity": 55157.03175618056,
-                    "rated_capacity": 55157.03175618056,
+                    "design_capacity": 55263.16013229166,
+                    "rated_capacity": 55263.16013229166,
                     "minimum_load_ratio": 0.33,
                     "draft_type": "NATURAL",
                     "energy_source_type": "NATURAL_GAS",
                     "auxiliary_power": 0.0,
                     "operation_lower_limit": 0.0,
-                    "operation_upper_limit": 55157.03175618056
+                    "operation_upper_limit": 55263.16013229166
                 },
                 {
                     "id": "Boiler 2",
@@ -132739,14 +132996,14 @@
                     ],
                     "output_validation_points": [],
                     "loop": "Hot Water Loop",
-                    "design_capacity": 55157.03175618056,
-                    "rated_capacity": 55157.03175618056,
+                    "design_capacity": 55263.16013229166,
+                    "rated_capacity": 55263.16013229166,
                     "minimum_load_ratio": 0.33,
                     "draft_type": "NATURAL",
                     "energy_source_type": "NATURAL_GAS",
                     "auxiliary_power": 0.0,
-                    "operation_lower_limit": 55157.03175618056,
-                    "operation_upper_limit": 110314.06351236111
+                    "operation_lower_limit": 55263.16013229166,
+                    "operation_upper_limit": 110526.32026458332
                 }
             ],
             "chillers": [
@@ -132808,20 +133065,20 @@
                 "id": "Output2019ASHRAE901",
                 "output_instance": {
                     "id": "229 Test Case E-2 (CHW VAV) Output",
-                    "unmet_load_hours_heating": 590.0,
+                    "unmet_load_hours_heating": 1613.0,
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
-                            "annual_consumption": 182429.796875,
-                            "annual_demand": 52.68084716796875
+                            "annual_consumption": 183941.859375,
+                            "annual_demand": 62.32698440551758
                         },
                         {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 9016.7548828125,
-                            "annual_demand": 385312.6875
+                            "annual_consumption": 9409.5712890625,
+                            "annual_demand": 370303.625
                         }
                     ],
                     "annual_end_use_results": [
@@ -132856,36 +133113,36 @@
                             "id": "ELECTRICITY - Space Cooling",
                             "type": "SPACE_COOLING",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 3172.91162109375,
-                            "annual_site_coincident_demand": 0.11903821676969528,
-                            "annual_site_non_coincident_demand": 3.1330742835998535,
+                            "annual_site_energy_use": 4055.080078125,
+                            "annual_site_coincident_demand": 0.27536115050315857,
+                            "annual_site_non_coincident_demand": 4.317905902862549,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Heat Rejection",
                             "type": "HEAT_REJECTION",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 108.78898620605469,
+                            "annual_site_energy_use": 133.67367553710938,
                             "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.34132644534111023,
+                            "annual_site_non_coincident_demand": 0.5062037706375122,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Pumps & Aux",
                             "type": "PUMPS",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 59671.578125,
-                            "annual_site_coincident_demand": 15.99533462524414,
-                            "annual_site_non_coincident_demand": 41.84450912475586,
+                            "annual_site_energy_use": 60877.31640625,
+                            "annual_site_coincident_demand": 32.06315994262695,
+                            "annual_site_non_coincident_demand": 37.51033020019531,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Ventilation Fans",
                             "type": "FANS_INTERIOR_VENTILATION",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 20118.36328125,
-                            "annual_site_coincident_demand": 7.6119561195373535,
-                            "annual_site_non_coincident_demand": 10.849591255187988,
+                            "annual_site_energy_use": 19517.689453125,
+                            "annual_site_coincident_demand": 1.0339486598968506,
+                            "annual_site_non_coincident_demand": 10.594249725341797,
                             "is_regulated": true
                         },
                         {
@@ -132937,9 +133194,9 @@
                             "id": "NATURAL-GAS - Space Heating",
                             "type": "SPACE_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 8800.76171875,
-                            "annual_site_coincident_demand": 384708.34375,
-                            "annual_site_non_coincident_demand": 9.0,
+                            "annual_site_energy_use": 9193.36328125,
+                            "annual_site_coincident_demand": 369693.9375,
+                            "annual_site_non_coincident_demand": 1.0,
                             "is_regulated": true
                         },
                         {
@@ -133000,8 +133257,8 @@
                             "id": "NATURAL-GAS - Domestic Hot Water",
                             "type": "SERVICE_WATER_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 215.99282836914062,
-                            "annual_site_coincident_demand": 604.353515625,
+                            "annual_site_energy_use": 216.20901489257812,
+                            "annual_site_coincident_demand": 609.6993408203125,
                             "annual_site_non_coincident_demand": 8.0,
                             "is_regulated": true
                         }
