@@ -244,6 +244,7 @@ class Zone(ChildNode):
         # Populate terminals_has_demand_control_ventilation
         # DCV is not modeled when a zone has the OUTSIDE-AIR-FLOW keyword populated or when OA-FLOW/PER is not populated.
         cfm_per_pps = self.get_inp(BDL_ZoneKeywords.OA_FLOW_PER)
+        cfm_per_pps = float(cfm_per_pps) if cfm_per_pps is not None else None
         if cfm_per_pps and self.get_inp(BDL_ZoneKeywords.OUTSIDE_AIR_FLOW) is None:
             # If MAX-OCC-OR-AREA was input as the ZONE-OA-METHOD then it will need to be determined whether the OA CFM per person rate is
             # high enough such that it is greater than the OA CFM/sf and the ACH rate during max occupancy periods. If it is not then DCV will not be modeled.
@@ -254,24 +255,26 @@ class Zone(ChildNode):
             ):
                 # Get the space occupancy schedule and number of occupants so that cfm per pps can be converted to cfm for comparison
                 space = self.get_obj(self.get_inp(BDL_ZoneKeywords.SPACE))
-                spc_occ_sch = space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE)
-                spc_num_pp = space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
-                occ_cfm = cfm_per_pps * spc_num_pp * max(spc_occ_sch)
+                spc_occ_sch = space.get_obj(space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE))
+                spc_num_pp = float(space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE))
+                occ_cfm = cfm_per_pps * spc_num_pp * max(spc_occ_sch.hourly_values)
                 # Assess whether ACH or CFM per sf have been populated and if so calculate the total cfm for each for comparison
                 ach = self.get_inp(BDL_ZoneKeywords.OA_CHANGES)
-                cfm_sf = self.get_inp(BDL_ZoneKeywords.OA_FLOW_AREA)
+                cfm_sf = float(self.get_inp(BDL_ZoneKeywords.OA_FLOW_AREA))
                 ach_cfm = (
                     (space.get_inp(BDL_SpaceKeywords.VOLUME) * ach) / 60
                     if ach is not None
                     else 0
                 )
                 sf_cfm = (
-                    space.get_inp(BDL_SpaceKeywords.AREA) * cfm_sf
+                    float(space.get_inp(BDL_SpaceKeywords.AREA)) * cfm_sf
                     if cfm_sf is not None
                     else 0
                 )
                 if occ_cfm <= ach_cfm or occ_cfm <= sf_cfm:
                     occ_cfm_allows_dcv_to_be_modeled = False
+                else:
+                    occ_cfm_allows_dcv_to_be_modeled = True
             else:
                 occ_cfm_allows_dcv_to_be_modeled = True
 
