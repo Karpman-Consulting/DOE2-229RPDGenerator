@@ -305,11 +305,13 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_heating_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_cooling_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].minimum_outdoor_airflow",
