@@ -219,7 +219,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -423,7 +425,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -626,7 +630,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -801,7 +807,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -934,7 +942,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {

@@ -219,7 +219,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
@@ -433,7 +435,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
@@ -646,7 +650,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
@@ -831,7 +837,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
@@ -974,7 +982,9 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
@@ -115124,109 +115134,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "NATURAL-GAS",
-                            "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 3479.34326171875,
-                            "annual_demand": 139856.34375
-                        },
-                        {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
                             "annual_consumption": 231152.359375,
                             "annual_demand": 73.57808685302734
+                        },
+                        {
+                            "id": "NATURAL-GAS",
+                            "energy_source": "NATURAL_GAS",
+                            "annual_consumption": 3479.34326171875,
+                            "annual_demand": 139856.34375
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "NATURAL-GAS - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 3262.45361328125,
-                            "annual_site_coincident_demand": 135271.734375,
-                            "annual_site_non_coincident_demand": 26.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 216.88975524902344,
-                            "annual_site_coincident_demand": 4584.6103515625,
-                            "annual_site_non_coincident_demand": 8.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "ELECTRICITY - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -115315,6 +115235,96 @@
                             "annual_site_energy_use": 0.0,
                             "annual_site_coincident_demand": 0.0,
                             "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 3262.45361328125,
+                            "annual_site_coincident_demand": 135271.734375,
+                            "annual_site_non_coincident_demand": 26.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 216.88975524902344,
+                            "annual_site_coincident_demand": 4584.6103515625,
+                            "annual_site_non_coincident_demand": 8.0,
                             "is_regulated": true
                         }
                     ]
