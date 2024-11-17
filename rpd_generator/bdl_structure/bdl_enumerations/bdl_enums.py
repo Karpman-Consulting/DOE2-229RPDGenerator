@@ -934,7 +934,7 @@ class BDLEnums:
                 "MIN-FLOW-SCH",
                 "CMIN-FLOW-SCH",
                 "HMIN-FLOW-SCH",
-                "MIN-FLOW-CONTROL",
+                "MIN-FLOW-CTRL",
                 "MIN-FLOW-RATIO",
                 "MIN-FLOW/AREA",
                 "OA-FLOW/PER",
