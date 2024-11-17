@@ -267,6 +267,12 @@ class Zone(ChildNode):
         self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
             self.parent.u_name
         )
+        self.terminals_supply_design_heating_setpoint_temperature[0] = self.try_float(
+            self.parent.get_inp(BDL_SystemKeywords.MAX_SUPPLY_T)
+        )
+        self.terminals_supply_design_cooling_setpoint_temperature[0] = self.try_float(
+            self.parent.get_inp(BDL_SystemKeywords.MIN_SUPPLY_T)
+        )
 
         # Only populate MainTerminal Fan data elements here if the parent system is_terminal is True
         # (Systems that allow PIU terminals cannot be terminal)

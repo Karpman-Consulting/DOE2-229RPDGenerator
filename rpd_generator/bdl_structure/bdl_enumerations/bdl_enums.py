@@ -783,6 +783,8 @@ class BDLEnums:
                 "MAX-HP-SUPP-T",
                 "MIN-HP-T",
                 "INDUCTION-RATIO",
+                "MAX-SUPPLY-T",
+                "MIN-SUPPLY-T",
             ]
         ),
         "UndergroundWallKeywords": _ListEnum(
