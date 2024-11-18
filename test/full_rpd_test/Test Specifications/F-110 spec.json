@@ -298,6 +298,81 @@
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].latent_fraction",
         "compare-value": true,
         "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.design_sensible_cool_capacity",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.rated_total_cool_capacity",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.is_sized_based_on_design_day",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.efficiency_metric_values",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].cooling_system.efficiency_metric_types",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.heatpump_auxiliary_heat_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.design_capacity",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.rated_capacity",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.efficiency_metric_values",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].heating_system.efficiency_metric_types",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.fan_control",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.operation_during_occupied",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.operation_during_unoccupied",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_airflow",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].is_airflow_sized_based_on_design_day",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].specification_method",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_electric_power",
+        "compare-value": true
         }
     ]
 }
