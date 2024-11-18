@@ -109,7 +109,7 @@ $ ---------------------------------------------------------
    ..
 "Metal Deck" = MATERIAL        
    TYPE             = PROPERTIES
-   THICKNESS        = 0.003
+   THICKNESS        = {.002625}
    CONDUCTIVITY     = 26.162
    DENSITY          = 488.44
    SPECIFIC-HEAT    = 0.119
@@ -125,7 +125,7 @@ $ ---------------------------------------------------------
    TYPE             = PROPERTIES
    THICKNESS        = 0.031
    CONDUCTIVITY     = 0.092
-   DENSITY          = 70
+   DENSITY          = 69.92
    SPECIFIC-HEAT    = 0.349
    ..
 "Stucco" = MATERIAL        
@@ -207,7 +207,7 @@ SET-DEFAULT FOR LAYERS
    INSIDE-FILM-RES  = 0.68
    MATERIAL         = ( "Stucco", "Gypsum Board", "Insulation", 
          "Gypsum Board" )
-   THICKNESS        = ( &D, 0.052, 0.204, 0.052 )
+   THICKNESS        = ( {.08333}, {.0521654}, {.2034121}, {.0521654} )
    ..
 "Roof Type 2 Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
@@ -226,8 +226,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IFlr Cons Layers Type 1" = LAYERS          
    INSIDE-FILM-RES  = 0.92
-   MATERIAL         = ( "Concrete", "Carpet & No Pad" )
-   THICKNESS        = ( 0.333 )
+   MATERIAL         = ( "Concrete" )
    ..
 "BL1 UFLyrs (G.S1.U2)" = LAYERS          
    INSIDE-FILM-RES  = 0.92
@@ -246,8 +245,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IFlr Layer Type 2" = LAYERS          
    INSIDE-FILM-RES  = 0.92
-   MATERIAL         = ( "Insulation (Slab on grade)", "Concrete", 
-         "Carpet & No Pad" )
+   MATERIAL         = ( "Insulation (Slab on grade)", "Concrete" )
    ..
 
 "Roof Type 1" = CONSTRUCTION    
@@ -268,7 +266,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "Roof Type 3" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 0.066
+   U-VALUE          = {0.063694}
    ..
 "BL1 Ceilg Construction" = CONSTRUCTION    
    TYPE             = LAYERS
@@ -276,7 +274,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "BL1 IWall Construction" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 2.857
+   U-VALUE          = {.2985}
    ..
 "Slab-on-grade Type 1" = CONSTRUCTION    
    TYPE             = LAYERS
@@ -300,7 +298,7 @@ SET-DEFAULT FOR LAYERS
    ..
 "Exterior Wall Type 3" = CONSTRUCTION    
    TYPE             = U-VALUE
-   U-VALUE          = 0.09
+   U-VALUE          = {.08525}
    ..
 "Slab-on-grade Type 2" = CONSTRUCTION    
    TYPE             = LAYERS
@@ -1009,12 +1007,16 @@ $ *********************************************************
 "Perimeter Space 2 SW Wall" = INTERIOR-WALL   
    NEXT-TO          = "Prm Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V2
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 2 South Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
@@ -1087,7 +1089,9 @@ $ *********************************************************
 "Perimeter Space 4 East Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
@@ -1170,10 +1174,6 @@ $ ---------------------------------------------------------
 $              Pumps
 $ ---------------------------------------------------------
 
-SET-DEFAULT FOR PUMP            
-   PUMP-KW          = {19/1000}
-   ..
-
 "Hot Water Pumps" = PUMP            
    FLOW             = 20
    NUMBER           = 1
@@ -1223,17 +1223,12 @@ $ ---------------------------------------------------------
 $              Boilers
 $ ---------------------------------------------------------
 
-SET-DEFAULT FOR BOILER          
-   TYPE = HW-BOILER-W/DRAFT
-   ELEC-INPUT-RATIO = {1/0.9}
-   HEAT-INPUT-RATIO = {1/0.9}
-   ..
-
 "Boiler 1" = BOILER          
    TYPE             = HW-BOILER-W/DRAFT
    CAPACITY         = 0.3
    MIN-RATIO        = 0.33
-   ELEC-INPUT-RATIO = {1/0.90}
+   ELEC-INPUT-RATIO = 0
+   HEAT-INPUT-RATIO = {1/0.9}
    AQUASTAT-SETPT-T = 160
    HW-LOOP          = "Hot Water Loop"
    ..
@@ -1323,33 +1318,6 @@ $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
 
-SET-DEFAULT FOR SYSTEM          
-   TYPE = VAVS
-   HUMIDIFIER-TYPE  = STEAM
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PSZ
-   FAN-CONTROL      = CONSTANT-VOLUME
-   ERV-RECOVER-TYPE = ENTHALPY-HX
-   ERV-RUN-CTRL     = WHEN-MIN-OA
-   ERV-TEMP-CTRL    = FIXED-SETPT
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVAVS
-   HUMIDIFIER-TYPE  = STEAM
-   HP-SUPP-SOURCE   = HOT-WATER
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVVT
-   HUMIDIFIER-TYPE  = STEAM
-   HW-LOOP          = "Hot Water Loop"
-   HEATING-CAPACITY = 0
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = DOAS
-   HUMIDIFIER-TYPE  = STEAM
-   ..
-
 "Pkgd VAV" = SYSTEM          
    TYPE             = PVAVS
    HEAT-SOURCE      = NONE
@@ -1374,11 +1342,8 @@ SET-DEFAULT FOR SYSTEM
    BBRD-LOOP        = "Hot Water Loop"
    COOLING-CAPACITY = 300000
    COOLING-EIR      = {1/3}
-   HP-SUPP-SOURCE   = NONE
-   EVAP-PCC-EFF     = 1.2
    PREHEAT-CAPACITY = -150000
    ZONE-HW-LOOP     = "Hot Water Loop"
-   CONTROL-ZONE     = "Core Zone 1"
    ERV-RECOVER-TYPE = SENSIBLE-WHEEL
    ERV-OA-FLOW      = 1000
    ERV-EXH-FLOW     = 900

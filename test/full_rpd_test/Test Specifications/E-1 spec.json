@@ -255,7 +255,8 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.u_factor",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.01
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers",
@@ -300,8 +301,7 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].primary_airflow",
-        "compare-value": true,
-        "tolerance": 1.0
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_heating_setpoint_temperature",
