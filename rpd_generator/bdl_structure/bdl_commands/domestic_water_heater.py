@@ -95,6 +95,16 @@ class DomesticWaterHeater(BaseNode):
         )
         if self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.ELEC:
             self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
+        elif self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.HEAT_PUMP:
+            self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
+            self.compressor_location = self.location_map.get(
+                self.get_inp(BDL_DWHeaterKeywords.LOCATION)
+            )
+            self.compressor_zone = self.get_inp(BDL_DWHeaterKeywords.ZONE_NAME)
+            self.compressor_heat_rejection_source = ComponentLocationOptions.OTHER
+            if self.compressor_zone:
+                self.notes = 'At the time of development, heat pump water heaters within a zone are not fully supported by eQUEST. The compressor heat rejection source is therefore populated as OTHER. According to help text Volume 2: Dictionary > HVAC Components > DW-HEATER > Energy Consumption: "Partially implemented; the program will use the zone temperature when calculating the tank losses or the performance of a HEAT-PUMP water heater, however these interactions do not have any effect on the zone temperature."'
+
         else:
             fuel_meter_ref = self.get_inp(BDL_DWHeaterKeywords.FUEL_METER)
             fuel_meter = self.get_obj(fuel_meter_ref)
@@ -110,6 +120,7 @@ class DomesticWaterHeater(BaseNode):
                         self.heater_fuel_type = dhw_fuel_meter.fuel_type
             else:
                 self.heater_fuel_type = fuel_meter.fuel_type
+
         self.distribution_system = self.get_inp(BDL_DWHeaterKeywords.DHW_LOOP)
         self.rated_capacity = self.try_abs(
             self.try_float(output_data.get("DW Heaters - Design Parameters - Capacity"))
