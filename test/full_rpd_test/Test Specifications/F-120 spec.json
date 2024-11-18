@@ -1,4 +1,303 @@
 {
     "name": "Test Case F-120 Specifications",
-    "json-test-key-paths": []
+    "json-test-key-paths": [
+        {
+        "json-key-path": "$.weather.climate_zone",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.weather.ground_temperature_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.weather.cooling_design_day_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.weather.heating_design_day_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.calendar.day_of_week_for_january_1",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.calendar.is_leap_year",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.calendar.has_daylight_saving_time",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_open_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].volume",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].conditioning_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].thermostat_cooling_setpoint_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].thermostat_heating_setpoint_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].design_thermostat_cooling_setpoint",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].design_thermostat_heating_setpoint",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].air_distribution_effectiveness",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].infiltration.modeling_method",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].infiltration.flow_rate",
+        "compare-value": true,
+        "tolerance": 0.001
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].classification",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].area",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].tilt",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.classification = \"WALL\")].azimuth",
+        "compare-value": true,
+        "special-case": "azimuth"
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].adjacent_to",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_thermal_exterior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_solar_exterior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_visible_exterior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].optical_properties.absorptance_thermal_interior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].optical_properties.absorptance_solar_interior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].optical_properties.absorptance_visible_interior",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.surface_construction_input_option",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.u_factor",
+        "compare-value": true,
+        "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers[*].thickness",
+        "compare-value": true,
+        "tolerance": 0.001
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers[*].thermal_conductivity",
+        "compare-value": true,
+        "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers[*].density",
+        "compare-value": true,
+        "tolerance": 5.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers[*].specific_heat",
+        "compare-value": true,
+        "tolerance": 5.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers[*].r_value",
+        "compare-value": true,
+        "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].is_supply_ducted",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].primary_airflow",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_heating_setpoint_temperature",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_cooling_setpoint_temperature",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].minimum_outdoor_airflow",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].floor_area",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].number_of_occupants",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].occupant_sensible_heat_gain",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].occupant_latent_heat_gain",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].occupant_multiplier_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].lighting_space_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].ventilation_space_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].service_water_heating_space_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting[*].power_per_area",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting[*].lighting_multiplier_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting[*].daylighting_control_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting[*].are_schedules_used_for_modeling_occupancy_control",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].interior_lighting[*].are_schedules_used_for_modeling_daylighting_control",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].energy_type",
+        "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].multiplier_schedule",
+        "compare-value": false
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].power",
+        "compare-value": true,
+        "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].sensible_fraction",
+        "compare-value": true,
+        "tolerance": 0.01
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].spaces[*].miscellaneous_equipment[*].latent_fraction",
+        "compare-value": true,
+        "tolerance": 0.01
+        }
+    ]
 }
