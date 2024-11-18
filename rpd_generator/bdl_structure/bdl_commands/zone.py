@@ -267,9 +267,24 @@ class Zone(ChildNode):
         self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
             self.parent.u_name
         )
-        self.terminals_supply_design_heating_setpoint_temperature[0] = self.try_float(
-            self.parent.get_inp(BDL_SystemKeywords.MAX_SUPPLY_T)
-        )
+        if self.parent.get_inp(BDL_SystemKeywords.TYPE) in [
+            BDL_SystemTypes.DDS,
+            BDL_SystemTypes.MZS,
+            BDL_SystemTypes.PMZS,
+            BDL_SystemTypes.SZRH,
+            BDL_SystemTypes.SZCI,
+            BDL_SystemTypes.UVT,
+            BDL_SystemTypes.UHT,
+            BDL_SystemTypes.HP,
+            BDL_SystemTypes.FC,
+            BDL_SystemTypes.PSZ,
+            BDL_SystemTypes.PVVT,
+            BDL_SystemTypes.RESVVT,
+            BDL_SystemTypes.DOAS,
+        ]:
+            self.terminals_supply_design_heating_setpoint_temperature[0] = (
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.MAX_SUPPLY_T))
+            )
         self.terminals_supply_design_cooling_setpoint_temperature[0] = self.try_float(
             self.parent.get_inp(BDL_SystemKeywords.MIN_SUPPLY_T)
         )
