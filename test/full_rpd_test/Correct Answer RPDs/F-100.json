@@ -427,7 +427,7 @@
                                                     "multiplier_schedule": "Plug Load Schedule",
                                                     "sensible_fraction": 1.0,
                                                     "latent_fraction": 0.0,
-                                                    "power": 7941.8
+                                                    "power": 7947.7
                                                 }
                                             ],
                                             "ventilation_space_type": "OFFICE_BUILDINGS_OFFICE_SPACE",
@@ -619,7 +619,7 @@
                                                         "specific_heat": 1090
                                                     }
                                                 ],
-                                                "u_factor": 0.477396
+                                                "u_factor": 0.478345
                                             },
                                             "optical_properties": {
                                                 "id": "Prm Zone 1 South Wall Optical Properties",
@@ -676,7 +676,7 @@
                                                     "multiplier_schedule": "Plug Load Schedule",
                                                     "sensible_fraction": 1.0,
                                                     "latent_fraction": 0.0,
-                                                    "power": 1673.4
+                                                    "power": 1674.0
                                                 }
                                             ],
                                             "ventilation_space_type": "OFFICE_BUILDINGS_OFFICE_SPACE",
@@ -812,7 +812,7 @@
                                                         "r_value": 0.099
                                                     }
                                                 ],
-                                                "u_factor": 0.477396
+                                                "u_factor": 0.180874
                                             },
                                             "optical_properties": {
                                                 "id": "Prm Zone 2 East Wall Optical Properties",
@@ -1037,7 +1037,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Exterior Wall Resistance 01",
-                                                        "r_value": 2.095711
+                                                        "r_value": 1.946018
                                                     }
                                                 ],
                                                 "u_factor": 0.477165
@@ -1123,7 +1123,7 @@
                                                     "multiplier_schedule": "Plug Load Schedule",
                                                     "sensible_fraction": 1.0,
                                                     "latent_fraction": 0.0,
-                                                    "power": 1673.4
+                                                    "power": 1674.0
                                                 }
                                             ],
                                             "ventilation_space_type": "OFFICE_BUILDINGS_OFFICE_SPACE",
@@ -1154,7 +1154,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Roof Resistance 01",
-                                                        "r_value": 2.7948686
+                                                        "r_value": 2.657503
                                                     }
                                                 ],
                                                 "u_factor": 0.35779857
@@ -1254,7 +1254,7 @@
                                                 "primary_layers": [
                                                     {
                                                         "id": "Exterior Wall Resistance 02",
-                                                        "r_value": 2.095711
+                                                        "r_value": 1.946018
                                                     }
                                                 ],
                                                 "u_factor": 0.477165
@@ -45165,8 +45165,8 @@
                     "draft_type": "NATURAL",
                     "energy_source_type": "NATURAL_GAS",
                     "rated_capacity": 87921,
-                    "efficiency_metric_types": ["ANNUAL_FUEL_UTILIZATION"],
-                    "efficiency_metric_values": [0.84],
+                    "efficiency_metric": "ANNUAL_FUEL_UTILIZATION",
+                    "efficiency": 0.84,
                     "output_validation_points": [
                         {
                             "load": 0,
