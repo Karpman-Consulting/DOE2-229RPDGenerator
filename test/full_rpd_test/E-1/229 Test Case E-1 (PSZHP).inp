@@ -191,10 +191,6 @@ $ ---------------------------------------------------------
    SPECIFIC-HEAT    = 0
    ..
 
-SET-DEFAULT FOR LAYERS          
-   MATERIAL         = ( "Roof Type 3lyr" )
-   ..
-
 "Roof Construction Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
    MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
@@ -806,7 +802,6 @@ $ *********************************************************
    ..
 "Perimeter Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
-   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 "Perimeter Space 2 (East)" = SPACE           
@@ -887,7 +882,6 @@ $ *********************************************************
    ..
 "Perimeter Space 2 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
-   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 "Perimeter Space 3 (North)" = SPACE           
@@ -984,7 +978,6 @@ $ *********************************************************
    ..
 "Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
-   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 "Perimeter Space 4 (West)" = SPACE           
@@ -1059,7 +1052,6 @@ $ *********************************************************
    ..
 "Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
-   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 "Core Space 1 (Core)" = SPACE           
@@ -1094,7 +1086,6 @@ $ *********************************************************
    ..
 "Core Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
-   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 

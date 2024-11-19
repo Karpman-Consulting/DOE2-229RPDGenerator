@@ -3,6 +3,7 @@
     "ruleset_model_descriptions": [
         {
             "id": "229 Test Case E-2 (CHW VAV)",
+            "altitude": 0,
             "buildings": [
                 {
                     "id": "Default Building",
