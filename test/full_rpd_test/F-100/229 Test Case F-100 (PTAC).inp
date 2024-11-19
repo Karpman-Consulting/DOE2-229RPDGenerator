@@ -472,10 +472,10 @@ $ ---------------------------------------------------------
    ..
 "OA Reset Day" = DAY-SCHEDULE-PD
    TYPE             = RESET-TEMP
-   OUTSIDE-HI       = 60
-   OUTSIDE-LO       = 80
-   SUPPLY-HI        = 44
-   SUPPLY-LO        = 54
+   OUTSIDE-HI       = 50
+   OUTSIDE-LO       = 20
+   SUPPLY-HI        = 150
+   SUPPLY-LO        = 180
    ..
 "All ON Day" = DAY-SCHEDULE-PD
    TYPE             = ON/OFF
@@ -1175,7 +1175,7 @@ $ ---------------------------------------------------------
    NUMBER           = 1
    HEAD             = 31
    PUMP-KW          = 0.38
-   CAP-CTRL         = ONE-SPEED-PUMP
+   CAP-CTRL         = VAR-SPEED-PUMP
    ..
 
 
@@ -1200,11 +1200,14 @@ $ ---------------------------------------------------------
    TYPE             = HW
    LOOP-DESIGN-DT   = 50
    SIZING-OPTION    = COINCIDENT
+   LOOP-MIN-FLOW    = 0.25
    LOOP-OPERATION   = SCHEDULED
    HEATING-SCHEDULE = "All ON Sch"
    DESIGN-HEAT-T    = 180
-   HEAT-SETPT-CTRL  = LOAD-RESET
-   MIN-RESET-T      = 160
+   HEAT-SETPT-CTRL  = OA-RESET
+   HEAT-RESET-SCH   = "OA Reset Annual"
+   MAX-RESET-T      = 180
+   MIN-RESET-T      = 150
    LOOP-PUMP        = "Hot Water Pumps"
    ..
 
@@ -1220,11 +1223,11 @@ $              Boilers
 $ ---------------------------------------------------------
 
 "Boiler 1" = BOILER          
-   TYPE             = HW-BOILER-W/DRAFT
+   TYPE             = HW-BOILER
    CAPACITY         = 0.3
    MIN-RATIO        = 0.33
    ELEC-INPUT-RATIO = 0
-   HEAT-INPUT-RATIO = {1/0.9}
+   HEAT-INPUT-RATIO = {1/0.84}
    AQUASTAT-SETPT-T = 160
    HW-LOOP          = "Hot Water Loop"
    ..
@@ -1314,46 +1317,51 @@ $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
 
-"Pkgd VAV" = SYSTEM          
-   TYPE             = PVAVS
-   HEAT-SOURCE      = NONE
+"PTAC 1" = SYSTEM          
+   TYPE             = PSZ
+   HEAT-SOURCE      = HOT-WATER
    ZONE-HEAT-SOURCE = HOT-WATER
-   PREHEAT-SOURCE   = HOT-WATER
-   BASEBOARD-SOURCE = HOT-WATER
    HUMIDIFIER-TYPE  = NONE
    MAX-SUPPLY-T     = 90
-   HEAT-CONTROL     = COLDEST
    COOL-SET-T       = 60
-   ECONO-LIMIT-T    = 70
-   ECONO-LOCKOUT    = NO
-   PREHEAT-T        = 50
-   MIN-OA-METHOD    = DCV-RETURN-SENSOR
-   SUPPLY-FLOW      = 10000
-   OA-CONTROL       = DUAL-ENTHALPY
-   RECOVER-EXHAUST  = EXHAUST-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   FAN-CONTROL      = SPEED
-   SUPPLY-KW/FLOW   = 0.000746
-   PHW-LOOP         = "Hot Water Loop"
-   BBRD-LOOP        = "Hot Water Loop"
-   COOLING-CAPACITY = 300000
-   COOLING-EIR      = {1/3}
-   PREHEAT-CAPACITY = -150000
-   ZONE-HW-LOOP     = "Hot Water Loop"
-   ERV-RECOVER-TYPE = SENSIBLE-WHEEL
-   ERV-OA-FLOW      = 1000
-   ERV-EXH-FLOW     = 900
-   ERV-SENSIBLE-EFF = 0.8
-   ERV-RUN-CTRL     = ERV-SCHEDULE
-   ERV-SCHEDULE     = "Hourly Report Schedule"
-   ERV-TEMP-CTRL    = FIXED-SETPT
-   OA-HEAT-SETPT-T  = 55
-   OA-COOL-SETPT-T  = 90
-   ERV-CAP-CTRL     = MODULATE-HX
-   ERV-FANS         = SELF-CONTAINED
-   PREHEAT-LOCN     = MIXED-AIR
+   SUPPLY-FLOW      = 2000
+   SUPPLY-KW/FLOW   = 0.0003
+   REHEAT-DELTA-T   = 0
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   COOLING-CAPACITY = 60000
+   COOLING-EIR      = {1/3.1
+}
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Core Zone 1"
    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
-   DOAS-ATTACHED-TO = MIXED-AIR
+   ..
+"Core Zone 1" = ZONE            
+   TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Core Space 1"
+   OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"PTAC 2" = SYSTEM          
+   TYPE             = PSZ
+   HEAT-SOURCE      = HOT-WATER
+   SUPPLY-FLOW      = 2000
+   SUPPLY-KW/FLOW   = 0.0003
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   COOLING-CAPACITY = 60000
+   COOLING-EIR      = {1/3.1
+}
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Prm Zone 1 (South) Zn"
    ..
 "Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
@@ -1369,6 +1377,19 @@ $ *********************************************************
    SPACE            = "Prm Space 1 (South)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
+"PTAC 3" = SYSTEM          
+   TYPE             = PSZ
+   HEAT-SOURCE      = HOT-WATER
+   SUPPLY-FLOW      = 2000
+   SUPPLY-KW/FLOW   = 0.0003
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   COOLING-CAPACITY = 60000
+   COOLING-EIR      = {1/3.1
+}
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Prm Zone 2 (East) Zn"
+   ..
 "Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
    HEATING-CAPACITY = -24000
@@ -1382,6 +1403,19 @@ $ *********************************************************
    REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 2 (East)"
    OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"PTAC 4" = SYSTEM          
+   TYPE             = PSZ
+   HEAT-SOURCE      = HOT-WATER
+   SUPPLY-FLOW      = 2000
+   SUPPLY-KW/FLOW   = 0.0003
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   COOLING-CAPACITY = 60000
+   COOLING-EIR      = {1/3.1
+}
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Prm Zone 3 (North)"
    ..
 "Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
@@ -1397,6 +1431,19 @@ $ *********************************************************
    SPACE            = "Prm Space 3 (North)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
+"PTAC 5" = SYSTEM          
+   TYPE             = PSZ
+   HEAT-SOURCE      = HOT-WATER
+   SUPPLY-FLOW      = 2000
+   SUPPLY-KW/FLOW   = 0.0003
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   COOLING-CAPACITY = 60000
+   COOLING-EIR      = {1/3.1
+}
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Prm Zone 4 (West)"
+   ..
 "Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
    HEATING-CAPACITY = -24000
@@ -1409,20 +1456,6 @@ $ *********************************************************
    THERMOSTAT-TYPE  = REVERSE-ACTION
    REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 4 (West)"
-   OUTSIDE-AIR-FLOW = ( 200 )
-   ..
-"Core Zone 1" = ZONE            
-   TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
-   ASSIGNED-FLOW    = 2000
-   DESIGN-HEAT-T    = 70
-   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-   DESIGN-COOL-T    = 75
-   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
-   SPACE            = "Core Space 1"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 
@@ -1526,7 +1559,7 @@ $              Hourly Reporting
 $ ---------------------------------------------------------
 
 "Hourly Report Block 3" = REPORT-BLOCK    
-   VARIABLE-TYPE    = "Pkgd VAV"
+   VARIABLE-TYPE    = "PTAC 1"
    VARIABLE-LIST    = ( 1 )
    ..
 
