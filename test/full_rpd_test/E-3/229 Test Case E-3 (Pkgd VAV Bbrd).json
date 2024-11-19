@@ -3,6 +3,7 @@
     "ruleset_model_descriptions": [
         {
             "id": "229 Test Case E-3 (Pkgd VAV Bbrd)",
+            "altitude": 0,
             "buildings": [
                 {
                     "id": "Default Building",
@@ -117,7 +118,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.47743267937272194
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Ext Wall OpticalProps",
@@ -164,7 +166,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Roof OpticalProps",
@@ -195,7 +198,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -330,7 +334,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18802180423859668
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Ext Wall OpticalProps",
@@ -377,7 +382,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Roof OpticalProps",
@@ -408,7 +414,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -532,13 +539,15 @@
                                                 "id": "Exterior Wall Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material"
+                                                        "id": "Simplified Material",
+                                                        "r_value": 1.837024637175657
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.5033426298508266
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Ext Wall OpticalProps",
@@ -582,7 +591,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18970607381902888
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Roof OpticalProps",
@@ -620,7 +630,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.33558541033748734
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -731,13 +742,15 @@
                                                 "id": "Exterior Wall Type 3--1",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--1"
+                                                        "id": "Simplified Material--1",
+                                                        "r_value": 1.837024637175657
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.5033426298508266
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Ext Wall OpticalProps",
@@ -760,13 +773,15 @@
                                                 "id": "Roof Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--2"
+                                                        "id": "Simplified Material--2",
+                                                        "r_value": 2.560908546620877
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.37060721985739914
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Roof OpticalProps",
@@ -804,7 +819,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.33558541033748734
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -915,7 +931,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Core Space 1 Roof OpticalProps",
@@ -946,7 +963,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 2.9583756139734505
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_interior": 0.7,
@@ -115119,109 +115137,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "ELECTRICITY",
-                            "energy_source": "ELECTRICITY",
-                            "annual_consumption": 108909.5234375,
-                            "annual_demand": 42.13459014892578
-                        },
-                        {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
                             "annual_consumption": 3479.562744140625,
                             "annual_demand": 139858.828125
+                        },
+                        {
+                            "id": "ELECTRICITY",
+                            "energy_source": "ELECTRICITY",
+                            "annual_consumption": 108909.5234375,
+                            "annual_demand": 42.13459014892578
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "ELECTRICITY - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 45050.78125,
-                            "annual_site_coincident_demand": 17.41742706298828,
-                            "annual_site_non_coincident_demand": 17.41742706298828,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 54307.5234375,
-                            "annual_site_coincident_demand": 11.537089347839355,
-                            "annual_site_non_coincident_demand": 11.537089347839355,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 5257.50439453125,
-                            "annual_site_coincident_demand": 11.452861785888672,
-                            "annual_site_non_coincident_demand": 11.452861785888672,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 2221.416259765625,
-                            "annual_site_coincident_demand": 0.22906465828418732,
-                            "annual_site_non_coincident_demand": 0.2790646553039551,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 2072.481689453125,
-                            "annual_site_coincident_demand": 1.4981461763381958,
-                            "annual_site_non_coincident_demand": 1.541835069656372,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "NATURAL-GAS - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -115310,6 +115238,96 @@
                             "annual_site_energy_use": 216.89027404785156,
                             "annual_site_coincident_demand": 4584.57958984375,
                             "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 45050.78125,
+                            "annual_site_coincident_demand": 17.41742706298828,
+                            "annual_site_non_coincident_demand": 17.41742706298828,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 54307.5234375,
+                            "annual_site_coincident_demand": 11.537089347839355,
+                            "annual_site_non_coincident_demand": 11.537089347839355,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 5257.50439453125,
+                            "annual_site_coincident_demand": 11.452861785888672,
+                            "annual_site_non_coincident_demand": 11.452861785888672,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 2221.416259765625,
+                            "annual_site_coincident_demand": 0.22906465828418732,
+                            "annual_site_non_coincident_demand": 0.2790646553039551,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 2072.481689453125,
+                            "annual_site_coincident_demand": 1.4981461763381958,
+                            "annual_site_non_coincident_demand": 1.541835069656372,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
                             "is_regulated": true
                         }
                     ]
