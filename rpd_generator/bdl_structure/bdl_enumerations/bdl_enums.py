@@ -627,6 +627,10 @@ class BDLEnums:
                 "CBVAV",
                 "SUM",
                 "DOAS",
+                "SZCI",
+                "HVSYS",
+                "FNSYS",
+                "PTGSD",
             ]
         ),
         "SystemSupplyFanTypes": _ListEnum(
