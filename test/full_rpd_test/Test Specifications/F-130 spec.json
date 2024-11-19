@@ -326,7 +326,7 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.hot_water_loop",
-        "compare-value": true
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.rated_capacity",
