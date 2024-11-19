@@ -953,36 +953,25 @@ class System(ParentNode):
             self.get_inp(BDL_SystemKeywords.FAN_CONTROL)
         )
         self.fan_sys_temperature_control = self.get_temperature_control()
-        self.fan_sys_operation_during_unoccupied = (
-            self.unoccupied_fan_operation_map.get(
-                self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
-            )
-        )
         self.fan_sys_demand_control_ventilation_control = self.dcv_map.get(
             self.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
         )
         cool_control = self.get_inp(BDL_SystemKeywords.COOL_CONTROL)
-        min_reset_t = self.get_inp(BDL_SystemKeywords.COOL_MIN_RESET_T)
-        max_reset_t = self.get_inp(BDL_SystemKeywords.COOL_MAX_RESET_T)
+        min_reset_t = self.try_float(self.get_inp(BDL_SystemKeywords.COOL_MIN_RESET_T))
+        max_reset_t = self.try_float(self.get_inp(BDL_SystemKeywords.COOL_MAX_RESET_T))
         if (
             cool_control == BDL_CoolControlOptions.WARMEST
             and min_reset_t
             and max_reset_t
         ):
-            self.fan_sys_reset_differential_temperature = self.try_float(
-                max_reset_t
-            ) - self.try_float(min_reset_t)
+            self.fan_sys_reset_differential_temperature = max_reset_t - min_reset_t
         supply_fan_airflow = output_data.get("Supply Fan - Airflow")
         supply_fan_min_ratio = output_data.get("Supply Fan - Min Flow Ratio")
         oa_ratio = output_data.get("Outside Air Ratio")
         if oa_ratio and supply_fan_airflow:
-            self.fan_sys_minimum_outdoor_airflow = self.try_float(
-                oa_ratio
-            ) * self.try_float(supply_fan_airflow)
+            self.fan_sys_minimum_outdoor_airflow = oa_ratio * supply_fan_airflow
         if supply_fan_min_ratio and supply_fan_airflow:
-            self.fan_sys_minimum_airflow = self.try_float(
-                supply_fan_min_ratio
-            ) * self.try_float(supply_fan_airflow)
+            self.fan_sys_minimum_airflow = supply_fan_min_ratio * supply_fan_airflow
         self.fan_sys_operation_during_unoccupied = (
             self.unoccupied_fan_operation_map.get(
                 self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
@@ -1434,9 +1423,12 @@ class System(ParentNode):
             has_one = False
             has_neg_999 = False
             is_all_0 = True
+            is_all_1 = True
             for value in fan_sch.hourly_values:
                 if is_all_0 and value != 0:
                     is_all_0 = False
+                if is_all_1 and value != 1:
+                    is_all_1 = False
                 if not has_one and value == 1:
                     has_one = True
                 elif not has_neg_999 and value == -999:
@@ -1446,6 +1438,10 @@ class System(ParentNode):
             if is_all_0:
                 return self.unoccupied_fan_operation_map.get(
                     self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                )
+            if is_all_1:
+                self.fan_sys_operation_during_unoccupied = (
+                    FanSystemOperationOptions.CONTINUOUS
                 )
 
             mixed_operation = has_one and has_neg_999
@@ -1461,6 +1457,10 @@ class System(ParentNode):
             if all(value == 0 for value in fan_sch.hourly_values):
                 return self.unoccupied_fan_operation_map.get(
                     self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                )
+            if all(value == 1 for value in fan_sch.hourly_values):
+                self.fan_sys_operation_during_unoccupied = (
+                    FanSystemOperationOptions.CONTINUOUS
                 )
 
             if any(value == -999 for value in fan_sch.hourly_values):
