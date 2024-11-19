@@ -17,6 +17,7 @@ class SiteParameters(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        rmd.site_parameter_name = u_name
 
     def __repr__(self):
         return f"SitePameters(u_name='{self.u_name}')"

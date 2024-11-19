@@ -4,14 +4,17 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.base_node import Base
 
+EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
+EndUseOptions = SchemaEnums.schema_enums["EndUseOptions"]
 BDL_FuelMeterKeywords = BDLEnums.bdl_enums["FuelMeterKeywords"]
 BDL_FuelTypes = BDLEnums.bdl_enums["FuelTypes"]
 BDL_ElecGeneratorKeywords = BDLEnums.bdl_enums["ElecGeneratorKeywords"]
-BDL_ElecGeneratorTypes = BDLEnums.bdl_enums["ElecGeneratorTypes"]
 BDL_UtilityRateKeywords = BDLEnums.bdl_enums["UtilityRateKeywords"]
+BDL_SiteParameterKeywords = BDLEnums.bdl_enums["SiteParameterKeywords"]
+BDL_ElecGeneratorTypes = BDLEnums.bdl_enums["ElecGeneratorTypes"]
 BDL_UtilityRateTypes = BDLEnums.bdl_enums["UtilityRateTypes"]
-EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
-EndUseOptions = SchemaEnums.schema_enums["EndUseOptions"]
+BDL_AirflowConditionOptions = BDLEnums.bdl_enums["AirflowConditionOptions"]
+
 
 fuel_type_map = {
     BDL_FuelTypes.ELECTRICITY: EnergySourceOptions.ELECTRICITY,
@@ -45,6 +48,7 @@ class RulesetModelDescription(Base):
 
         self.rmd_data_structure = {}
 
+        self.site_parameter_name = None
         self.master_meters = None
         self.electric_meter_names = []
         self.fuel_meter_names = []
@@ -86,7 +90,9 @@ class RulesetModelDescription(Base):
         self.reporting_name = None
         self.notes = None
         self.type = None
+        self.measured_infiltration_pressure_difference = None
         self.is_measured_infiltration_based_on_test = None
+        self.altitude = None
 
         # output data elements
         self.output_id = "Output2019ASHRAE901"
@@ -124,6 +130,15 @@ class RulesetModelDescription(Base):
         self.output_instance_annual_end_use_results = []
 
     def populate_data_elements(self):
+        site_parameter_obj = self.bdl_obj_instances.get(self.site_parameter_name)
+        altitude = site_parameter_obj.get_inp(BDL_SiteParameterKeywords.ALTITUDE)
+        self.altitude = (
+            float(altitude)
+            if altitude
+            and site_parameter_obj.get_inp(BDL_SiteParameterKeywords.SPECIFY_AIRFLOWS)
+            == BDL_AirflowConditionOptions.BLDG_ALTITUDE
+            else 0
+        )
         requests, str_requests = self.get_output_requests()
         output_data = self.get_output_data(self, requests)
         for key, value in str_requests.items():
@@ -1881,6 +1896,7 @@ class RulesetModelDescription(Base):
             key: value
             for key, value in {
                 "id": self.obj_id,
+                "altitude": self.altitude,
                 "buildings": self.buildings,
                 "schedules": self.schedules,
                 "fluid_loops": self.fluid_loops,
