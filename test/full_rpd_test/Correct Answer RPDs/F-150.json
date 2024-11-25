@@ -26,7 +26,7 @@
                                     "preheat_system": {
                                         "id": "Preheat Coil 1",
                                         "type": "ELECTRIC_RESISTANCE",
-                                        "rated_capacity": 87921,
+                                        "rated_capacity": 43961,
                                         "heating_coil_setpoint": 10
                                     },
                                     "fan_system": {
