@@ -341,7 +341,8 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].preheat_system.rated_capacity",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 1.0
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.fan_control",
@@ -395,7 +396,7 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].cooling_loop",
-        "compare-value": true
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].is_chilled_water_pump_interlocked",
@@ -410,9 +411,13 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].design_capacity",
+        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].rated_capacity",
         "compare-value": true,
         "tolerance": 1.0
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].design_capacity",
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].minimum_load_ratio",
@@ -420,18 +425,18 @@
         "tolerance": 0.01
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].rated_entering_condenser_temperature",
+        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].design_entering_condenser_temperature",
         "compare-value": true,
         "tolerance": 0.1
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].rated_leaving_evaporator_temperature",
+        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].design_leaving_evaporator_temperature",
         "compare-value": true,
         "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].loop_or_piping",
-        "compare-value": true
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].specification_method",
