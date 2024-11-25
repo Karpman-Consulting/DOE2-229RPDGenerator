@@ -381,7 +381,17 @@ class Zone(ChildNode):
                 "Supply Fan - Power"
             )
 
-        if not self.parent.is_terminal:
+        else:  # not self.parent.is_terminal:
+            if self.parent.is_zonal_system:
+                self.parent.fan_design_electric_power[0] = max(
+                    0,
+                    (
+                        self.parent.fan_design_electric_power[0]
+                        if self.zone_exhaust_fan_design_electric_power is None
+                        else self.parent.fan_design_electric_power[0]
+                        - self.zone_exhaust_fan_design_electric_power
+                    ),
+                )
             if self.parent.is_derived_system:
                 self.terminals_served_by_heating_ventilating_air_conditioning_system[
                     0
@@ -1057,4 +1067,4 @@ class Zone(ChildNode):
         airflow_m3_s = self.try_convert_units(airflow, "cfm", "m3/s")
 
         if pressure_rise_pa and airflow_m3_s and total_efficiency:
-            return pressure_rise_pa * airflow_m3_s / total_efficiency
+            return pressure_rise_pa * airflow_m3_s / total_efficiency / 1000
