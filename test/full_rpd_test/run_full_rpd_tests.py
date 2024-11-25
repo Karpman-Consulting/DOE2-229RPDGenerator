@@ -1246,7 +1246,10 @@ def handle_ordered_comparisons(
         # Populate data for each zone individually and ensure correct alignment via object mapping
         for generated_hvac in generated_hvacs:
             generated_hvac_id = generated_hvac["id"]
-            reference_hvac_id = object_id_map[generated_hvac_id]
+            reference_hvac_id = object_id_map.get(generated_hvac_id)
+
+            if not reference_hvac_id:
+                continue
 
             hvac_data_path = json_key_path[
                 json_key_path.index(
@@ -1295,7 +1298,10 @@ def handle_ordered_comparisons(
 
         for generated_boiler in generated_boilers:
             generated_boiler_id = generated_boiler["id"]
-            reference_boiler_id = object_id_map[generated_boiler_id]
+            reference_boiler_id = object_id_map.get(generated_boiler_id)
+
+            if not reference_boiler_id:
+                continue
 
             boiler_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("boilers")) + 2 :
@@ -1340,7 +1346,10 @@ def handle_ordered_comparisons(
 
         for generated_chiller in generated_chillers:
             generated_chiller_id = generated_chiller["id"]
-            reference_chiller_id = object_id_map[generated_chiller_id]
+            reference_chiller_id = object_id_map.get(generated_chiller_id)
+
+            if not reference_chiller_id:
+                continue
 
             chiller_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("chillers")) + 2 :
@@ -1387,7 +1396,10 @@ def handle_ordered_comparisons(
 
         for generated_heat_rejection in generated_heat_rejections:
             generated_heat_rejection_id = generated_heat_rejection["id"]
-            reference_heat_rejection_id = object_id_map[generated_heat_rejection_id]
+            reference_heat_rejection_id = object_id_map.get(generated_heat_rejection_id)
+
+            if not reference_heat_rejection_id:
+                continue
 
             heat_rejection_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("heat_rejections")) + 2 :
@@ -1438,7 +1450,10 @@ def handle_ordered_comparisons(
 
         for generated_fluid_loop in generated_fluid_loops:
             generated_fluid_loop_id = generated_fluid_loop["id"]
-            reference_fluid_loop_id = object_id_map[generated_fluid_loop_id]
+            reference_fluid_loop_id = object_id_map.get(generated_fluid_loop_id)
+
+            if not reference_fluid_loop_id:
+                continue
 
             fluid_loop_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("fluid_loops")) + 2 :
@@ -1483,7 +1498,10 @@ def handle_ordered_comparisons(
 
         for generated_pump in generated_pumps:
             generated_pump_id = generated_pump["id"]
-            reference_pump_id = object_id_map[generated_pump_id]
+            reference_pump_id = object_id_map.get(generated_pump_id)
+
+            if not reference_pump_id:
+                continue
 
             pump_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("pumps")) + 2 :
