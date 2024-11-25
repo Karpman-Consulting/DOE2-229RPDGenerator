@@ -382,6 +382,14 @@ class Zone(ChildNode):
             )
 
         if not self.parent.is_terminal:
+            if self.parent.is_derived_system:
+                self.terminals_served_by_heating_ventilating_air_conditioning_system[
+                    0
+                ] = self.parent.sys_id
+            else:
+                self.terminals_served_by_heating_ventilating_air_conditioning_system[
+                    0
+                ] = self.parent.u_name
             self.terminals_heating_source[0] = self.heat_source_map.get(
                 self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
             )

@@ -267,7 +267,7 @@ class System(ParentNode):
         self.parent_building_segment = self.get_obj("Default Building Segment")
         self.rmd.system_names.append(u_name)
 
-        self.sys_id = None
+        self.sys_id = None  # used to store the implicit system id for zonal systems
         self.system_data_structure = {}
 
         self.omit = False
@@ -433,7 +433,9 @@ class System(ParentNode):
             zone_system.keyword_value_pairs = self.keyword_value_pairs.copy()
             zone_system.populate_data_elements()
             self.rmd.bdl_obj_instances[sys_id] = zone_system
-            self.children.remove(zone)
+
+        # Remove zones after processing
+        self.children = self.children[:1]
 
     def populate_data_elements(self):
         """Populate data elements from the keyword_value pairs returned from model_input_reader."""
