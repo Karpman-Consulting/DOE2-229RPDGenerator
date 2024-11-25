@@ -313,13 +313,16 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 1 (South) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -589,13 +592,16 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 2 (East) Zn BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -865,13 +871,16 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 3 (North) BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -1084,13 +1093,16 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Prm Zone 4 (West) BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -1228,13 +1240,16 @@
                                             "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV"
+                                            "served_by_heating_ventilating_air_conditioning_system": "Pkgd VAV",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         },
                                         {
                                             "cooling_capacity": 0.0,
                                             "has_demand_control_ventilation": false,
                                             "heating_capacity": 1758.4266666666667,
                                             "heating_from_loop": "Hot Water Loop",
+                                            "heating_source": "HOT_WATER",
                                             "id": "Core Zone 1 BaseboardTerminal",
                                             "is_supply_ducted": false,
                                             "type": "BASEBOARD"
@@ -115377,109 +115392,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "ELECTRICITY",
-                            "energy_source": "ELECTRICITY",
-                            "annual_consumption": 109673.0625,
-                            "annual_demand": 42.10590362548828
-                        },
-                        {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 3913.45556640625,
-                            "annual_demand": 138044.9375
+                            "annual_consumption": 3479.34326171875,
+                            "annual_demand": 139856.34375
+                        },
+                        {
+                            "id": "ELECTRICITY",
+                            "energy_source": "ELECTRICITY",
+                            "annual_consumption": 231152.359375,
+                            "annual_demand": 73.57808685302734
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "ELECTRICITY - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 45050.78125,
-                            "annual_site_coincident_demand": 17.41742706298828,
-                            "annual_site_non_coincident_demand": 17.41742706298828,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 54307.5234375,
-                            "annual_site_coincident_demand": 11.537089347839355,
-                            "annual_site_non_coincident_demand": 11.537089347839355,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 6004.81591796875,
-                            "annual_site_coincident_demand": 11.41285228729248,
-                            "annual_site_non_coincident_demand": 11.41285228729248,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 2221.416259765625,
-                            "annual_site_coincident_demand": 0.22906465828418732,
-                            "annual_site_non_coincident_demand": 0.2790646553039551,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 2088.7119140625,
-                            "annual_site_coincident_demand": 1.509466528892517,
-                            "annual_site_non_coincident_demand": 1.5135422945022583,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "ELECTRICITY - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "NATURAL-GAS - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
