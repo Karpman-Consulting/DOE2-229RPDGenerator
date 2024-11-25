@@ -31,9 +31,10 @@ class DaySchedulePD(BaseDefinition):
         """Populate data elements that originate from eQUEST's DAY-SCHEDULE-PD command"""
         day_sch_type = self.get_inp(BDL_DayScheduleKeywords.TYPE)
         if day_sch_type in Schedule.supported_hourly_schedules:
-            day_sch_values_list = self.get_inp(BDL_DayScheduleKeywords.VALUES)
-            day_sch_values_list = [self.try_float(val) for val in day_sch_values_list]
-            self.hourly_values = day_sch_values_list
+            self.hourly_values = [
+                self.try_float(val)
+                for val in self.get_inp(BDL_DayScheduleKeywords.VALUES)
+            ]
 
         elif day_sch_type == BDL_ScheduleTypes.RESET_TEMP:
             self.outdoor_high_for_loop_supply_reset_temperature = self.try_float(
@@ -43,10 +44,10 @@ class DaySchedulePD(BaseDefinition):
                 self.get_inp(BDL_DayScheduleKeywords.OUTSIDE_LO)
             )
             self.loop_supply_temperature_at_outdoor_high = self.try_float(
-                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_HI)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_LO)
             )
             self.loop_supply_temperature_at_outdoor_low = self.try_float(
-                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_LO)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_HI)
             )
 
 
@@ -59,11 +60,11 @@ class WeekSchedulePD(BaseDefinition):
         super().__init__(u_name, rmd)
 
         # All lists will store 12 values, Mon-Sun, Holidays and then 4 design day schedules
+        self.outdoor_high_for_loop_supply_reset_temperature = []
+        self.outdoor_low_for_loop_supply_reset_temperature = []
+        self.loop_supply_temperature_at_outdoor_high = []
+        self.loop_supply_temperature_at_outdoor_low = []
         self.day_type_hourly_values = []  # 12 lists of 24 hourly values
-        self.day_type_outside_highs = []
-        self.day_type_outside_lows = []
-        self.day_type_supply_highs = []
-        self.day_type_supply_lows = []
 
     def __repr__(self):
         return f"WeekSchedulePD(u_name='{self.u_name}')"
@@ -79,22 +80,21 @@ class WeekSchedulePD(BaseDefinition):
             ]
 
         elif wk_sch_type == BDL_ScheduleTypes.RESET_TEMP:
-            attributes = {
-                "day_type_outside_highs": "outdoor_high_for_loop_supply_reset_temperature",
-                "day_type_outside_lows": "outdoor_low_for_loop_supply_reset_temperature",
-                "day_type_supply_highs": "loop_supply_temperature_at_outdoor_high",
-                "day_type_supply_lows": "loop_supply_temperature_at_outdoor_low",
-            }
-            day_schedule_names = self.get_inp(BDL_WeekScheduleKeywords.DAY_SCHEDULES)
-
-            for attr_name, field_name in attributes.items():
-                setattr(
-                    self,
-                    attr_name,
-                    [
-                        getattr(self.get_obj(day_sch_name), field_name)
-                        for day_sch_name in day_schedule_names
-                    ],
+            for day_schedule_name in self.get_inp(
+                BDL_WeekScheduleKeywords.DAY_SCHEDULES
+            ):
+                day_schedule = self.get_obj(day_schedule_name)
+                self.outdoor_high_for_loop_supply_reset_temperature.append(
+                    day_schedule.outdoor_high_for_loop_supply_reset_temperature
+                )
+                self.outdoor_low_for_loop_supply_reset_temperature.append(
+                    day_schedule.outdoor_low_for_loop_supply_reset_temperature
+                )
+                self.loop_supply_temperature_at_outdoor_high.append(
+                    day_schedule.loop_supply_temperature_at_outdoor_high
+                )
+                self.loop_supply_temperature_at_outdoor_low.append(
+                    day_schedule.loop_supply_temperature_at_outdoor_low
                 )
 
 
@@ -211,16 +211,24 @@ class Schedule(BaseNode):
 
                     wk_schedule_pd = self.get_obj(week_schedules[wk_sch_index])
                     outdoor_high_for_loop_supply_reset_temperature.add(
-                        wk_schedule_pd.day_type_outside_highs[day_type - 1]
+                        wk_schedule_pd.outdoor_high_for_loop_supply_reset_temperature[
+                            day_type - 1
+                        ]
                     )
                     outdoor_low_for_loop_supply_reset_temperature.add(
-                        wk_schedule_pd.day_type_outside_lows[day_type - 1]
+                        wk_schedule_pd.outdoor_low_for_loop_supply_reset_temperature[
+                            day_type - 1
+                        ]
                     )
                     loop_supply_temperature_at_outdoor_high.add(
-                        wk_schedule_pd.day_type_supply_highs[day_type - 1]
+                        wk_schedule_pd.loop_supply_temperature_at_outdoor_high[
+                            day_type - 1
+                        ]
                     )
                     loop_supply_temperature_at_outdoor_low.add(
-                        wk_schedule_pd.day_type_supply_lows[day_type - 1]
+                        wk_schedule_pd.loop_supply_temperature_at_outdoor_low[
+                            day_type - 1
+                        ]
                     )
                 if len(outdoor_high_for_loop_supply_reset_temperature) == 1:
                     self.outdoor_high_for_loop_supply_reset_temperature = (
