@@ -106747,6 +106747,7 @@
                 {
                     "id": "DHW Plant 1 Loop",
                     "design_supply_temperature": 57.222222222222285,
+                    "design_supply_temperature_difference": 26.666666666666686,
                     "is_ground_temperature_used_for_entering_water": true
                 }
             ],

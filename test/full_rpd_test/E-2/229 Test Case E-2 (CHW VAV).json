@@ -314,8 +314,7 @@
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
-                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
-                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828
                                         }
                                     ],
                                     "infiltration": {
@@ -583,8 +582,7 @@
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
-                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
-                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828
                                         }
                                     ],
                                     "infiltration": {
@@ -852,8 +850,7 @@
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
-                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
-                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828
                                         }
                                     ],
                                     "infiltration": {
@@ -1064,8 +1061,7 @@
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
-                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
-                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828
                                         }
                                     ],
                                     "infiltration": {
@@ -1201,8 +1197,7 @@
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
                                             "served_by_heating_ventilating_air_conditioning_system": "Baseline System 7 (CHW VAV)",
-                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
-                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828
                                         }
                                     ],
                                     "infiltration": {
@@ -1245,7 +1240,7 @@
                                         "minimum_airflow": 1415.8896727839528,
                                         "minimum_outdoor_airflow": 471.9632125399846,
                                         "operation_during_occupied": "CONTINUOUS",
-                                        "operation_during_unoccupied": "KEEP_OFF",
+                                        "operation_during_unoccupied": "CONTINUOUS",
                                         "relief_fans": [],
                                         "reset_differential_temperature": 2.7777777777777777,
                                         "return_fans": [
@@ -132870,6 +132865,7 @@
                 {
                     "id": "DHW Plant 1 Loop",
                     "design_supply_temperature": 57.222222222222285,
+                    "design_supply_temperature_difference": 26.666666666666686,
                     "is_ground_temperature_used_for_entering_water": true
                 }
             ],

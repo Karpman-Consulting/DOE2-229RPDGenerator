@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           11/25/2024    12:14:29  BDL RUN   4
+                           11/25/2024    12:50:03  BDL RUN   4
 
 
 
@@ -9149,7 +9149,7 @@
             floor, a delayed wall and ceiling, or a delayed ceiling and floor
             for custom weighting factors to be calculated. ASHRAE weighting
             factors with floor weight of 70 lb/ft2 (342 kg/m2) will be used for
-            this space.229 Test Case 1 updated                                                                   11/25/2024    12:14:29  BDL  RUN 4
+            this space.229 Test Case 1 updated                                                                   11/25/2024    12:50:03  BDL  RUN 4
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
