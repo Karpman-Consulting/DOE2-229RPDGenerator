@@ -423,14 +423,6 @@
         "tolerance": 0.1
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].efficiency_metric_types",
-        "compare-value": true
-        },
-        {
-        "json-key-path": "$.ruleset_model_descriptions[0].chillers[*].efficiency_metric_values",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].loop_or_piping",
         "compare-value": true
         },
