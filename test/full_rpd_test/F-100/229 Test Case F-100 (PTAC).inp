@@ -474,8 +474,8 @@ $ ---------------------------------------------------------
    TYPE             = RESET-TEMP
    OUTSIDE-HI       = 50
    OUTSIDE-LO       = 20
-   SUPPLY-HI        = 150
-   SUPPLY-LO        = 180
+   SUPPLY-HI        = 180
+   SUPPLY-LO        = 150
    ..
 "All ON Day" = DAY-SCHEDULE-PD
    TYPE             = ON/OFF

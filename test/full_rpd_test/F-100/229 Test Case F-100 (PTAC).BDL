@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           11/19/2024    10:15:19  BDL RUN   4
+                           11/25/2024    12:14:29  BDL RUN   4
 
 
 
@@ -2478,10 +2478,10 @@
      * 474 *    TYPE             = RESET-TEMP
      * 475 *    OUTSIDE-HI       = 50
      * 476 *    OUTSIDE-LO       = 20
-     * 477 *    SUPPLY-HI        = 150
+     * 477 *    SUPPLY-HI        = 180
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1200E+03
-     * 478 *    SUPPLY-LO        = 180
+     * 478 *    SUPPLY-LO        = 150
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1200E+03
      * 479 *    ..
@@ -2490,8 +2490,8 @@
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = RESET-TEMP
 -INPUT - -                                              OUTSIDE-HI       =                      50.0000 F
 -INPUT - -                                              OUTSIDE-LO       =                      20.0000 F
--INPUT - -                                              SUPPLY-HI        =                     150.0000 F
--INPUT - -                                              SUPPLY-LO        =                     180.0000 F
+-INPUT - -                                              SUPPLY-HI        =                     180.0000 F
+-INPUT - -                                              SUPPLY-LO        =                     150.0000 F
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  DAY-HOURS        =                       1.0000
 -DEFAULT -                                              DAY-HOURS        =                      24.0000
      * 480 * "All ON Day" = DAY-SCHEDULE-PD
@@ -9149,7 +9149,7 @@
             floor, a delayed wall and ceiling, or a delayed ceiling and floor
             for custom weighting factors to be calculated. ASHRAE weighting
             factors with floor weight of 70 lb/ft2 (342 kg/m2) will be used for
-            this space.229 Test Case 1 updated                                                                   11/19/2024    10:15:19  BDL  RUN 4
+            this space.229 Test Case 1 updated                                                                   11/25/2024    12:14:29  BDL  RUN 4
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
