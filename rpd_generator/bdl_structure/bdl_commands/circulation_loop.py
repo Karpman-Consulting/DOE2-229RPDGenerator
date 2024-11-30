@@ -670,11 +670,17 @@ class CirculationLoop(BaseNode):
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.HW:
-                heating_loop = system.get_inp(BDL_SystemKeywords.HW_LOOP)
-                valve_type = system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE)
+                heating_loops = [
+                    system.get_inp(BDL_SystemKeywords.HW_LOOP),
+                    system.get_inp(BDL_SystemKeywords.PHW_LOOP),
+                ]
+                valve_types = [
+                    system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE),
+                    system.get_inp(BDL_SystemKeywords.PHW_VALVE_TYPE),
+                ]
                 if (
-                    heating_loop == self.u_name
-                    and valve_type == BDL_SystemHeatingValveTypes.TWO_WAY
+                    self.u_name in heating_loops
+                    and BDL_SystemHeatingValveTypes.TWO_WAY in valve_types
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.CW:
