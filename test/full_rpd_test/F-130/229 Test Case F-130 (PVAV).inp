@@ -194,6 +194,10 @@ $ ---------------------------------------------------------
    SPECIFIC-HEAT    = 0
    ..
 
+SET-DEFAULT FOR LAYERS          
+   MATERIAL         = ( "Roof Type 3lyr" )
+   ..
+
 "Roof Construction Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
    MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
@@ -1170,10 +1174,9 @@ $ ---------------------------------------------------------
 $              Pumps
 $ ---------------------------------------------------------
 
-"Hot Water Pumps" = PUMP            
+"HW Pump" = PUMP            
    FLOW             = 20
-   NUMBER           = 1
-   HEAD             = 31
+   HEAD             = 60
    PUMP-KW          = 0.38
    CAP-CTRL         = VAR-SPEED-PUMP
    ..
@@ -1196,19 +1199,17 @@ $ ---------------------------------------------------------
    PROCESS-SCH      = ( "DHW Eqp NRes Sch" )
    PROCESS-T        = ( 135 )
    ..
-"Hot Water Loop" = CIRCULATION-LOOP
+"HW Loop" = CIRCULATION-LOOP
    TYPE             = HW
    LOOP-DESIGN-DT   = 50
-   SIZING-OPTION    = COINCIDENT
+   LOOP-FLOW        = 20
    LOOP-MIN-FLOW    = 0.25
    LOOP-OPERATION   = SCHEDULED
    HEATING-SCHEDULE = "All ON Sch"
    DESIGN-HEAT-T    = 180
    HEAT-SETPT-CTRL  = OA-RESET
    HEAT-RESET-SCH   = "OA Reset Annual"
-   MAX-RESET-T      = 180
-   MIN-RESET-T      = 150
-   LOOP-PUMP        = "Hot Water Pumps"
+   LOOP-PUMP        = "HW Pump"
    ..
 
 
@@ -1222,14 +1223,15 @@ $ ---------------------------------------------------------
 $              Boilers
 $ ---------------------------------------------------------
 
+SET-DEFAULT FOR BOILER          
+   TYPE = HW-BOILER-W/DRAFT
+   HEAT-INPUT-RATIO = {1/0.84}
+   ..
+
 "Boiler 1" = BOILER          
    TYPE             = HW-BOILER
-   CAPACITY         = 0.3
-   MIN-RATIO        = 0.33
-   ELEC-INPUT-RATIO = 0
-   HEAT-INPUT-RATIO = {1/0.84}
-   AQUASTAT-SETPT-T = 160
-   HW-LOOP          = "Hot Water Loop"
+   CAPACITY         = -0.3
+   HW-LOOP          = "HW Loop"
    ..
 
 
@@ -1317,150 +1319,89 @@ $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
 
-"PTAC 1" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
+"PVAV" = SYSTEM          
+   TYPE             = PVAVS
+   HEAT-SOURCE      = NONE
+   ZONE-HEAT-SOURCE = HOT-WATER
+   PREHEAT-SOURCE   = HOT-WATER
+   RETURN-AIR-PATH  = DIRECT
+   HEAT-CONTROL     = CONSTANT
    COOL-SET-T       = 60
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
+   SUPPLY-FLOW      = 10000
+   MIN-OUTSIDE-AIR  = 0.3
+   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+   FAN-CONTROL      = SPEED
+   SUPPLY-KW/FLOW   = 0.001
+   REHEAT-DELTA-T   = 25
    HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
+   PHW-LOOP         = "HW Loop"
+   COOLING-CAPACITY = 300000
    COOLING-EIR      = {1/3.1
 }
    HEATING-CAPACITY = -60000
+   HP-SUPP-SOURCE   = FURNACE
+   FURNACE-AUX      = 0
+   PREHEAT-CAPACITY = -150000
+   ZONE-HW-LOOP     = "HW Loop"
    CONTROL-ZONE     = "Core Zone 1"
-   ZONE-OA-METHOD   = SUM-OCC-AND-AREA
    ..
 "Core Zone 1" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
+   MIN-FLOW-RATIO   = 0.15
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
    SPACE            = "Core Space 1"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"PTAC 2" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 1 (South) Zn"
-   ..
 "Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
+   MIN-FLOW-RATIO   = 0.15
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 1 (South)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"PTAC 3" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 2 (East) Zn"
-   ..
 "Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
+   MIN-FLOW-RATIO   = 0.15
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 2 (East)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"PTAC 4" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 3 (North)"
-   ..
 "Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
+   MIN-FLOW-RATIO   = 0.15
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 3 (North)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"PTAC 5" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 4 (West)"
-   ..
 "Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
+   MIN-FLOW-RATIO   = 0.15
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
    SPACE            = "Prm Space 4 (West)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
@@ -1565,7 +1506,7 @@ $              Hourly Reporting
 $ ---------------------------------------------------------
 
 "Hourly Report Block 3" = REPORT-BLOCK    
-   VARIABLE-TYPE    = "PTAC 1"
+   VARIABLE-TYPE    = "PVAV"
    VARIABLE-LIST    = ( 1 )
    ..
 

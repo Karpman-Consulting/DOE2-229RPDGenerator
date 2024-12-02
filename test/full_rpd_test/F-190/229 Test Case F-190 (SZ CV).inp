@@ -36,9 +36,7 @@ TITLE
    DRYBULB-HIGH     = 90
    DRYBULB-RANGE    = 0
    WETBULB-AT-HIGH  = 59
-   DAY              = 1
    GROUND-T         = 50
-   NUMBER-OF-DAYS   = 120
    ..
 "Heating Design Day" = DESIGN-DAY      
    TYPE             = HEATING
@@ -192,6 +190,10 @@ $ ---------------------------------------------------------
    CONDUCTIVITY     = 0.09
    DENSITY          = 0
    SPECIFIC-HEAT    = 0
+   ..
+
+SET-DEFAULT FOR LAYERS          
+   MATERIAL         = ( "Roof Type 3lyr" )
    ..
 
 "Roof Construction Lyr" = LAYERS          
@@ -365,14 +367,13 @@ $ ---------------------------------------------------------
    VALUES           = ( 1, &D, &D, &D, &D, &D, &D, 0.5, &D, &D, &D, &D, &D, 
          &D, &D, &D, &D, &D, 1 )
    ..
-"S1 Sys1 (PSZ) Fan WD" = DAY-SCHEDULE-PD
+"Fan Sched weekday" = DAY-SCHEDULE-PD
    TYPE             = ON/OFF/FLAG
-   VALUES           = ( 0, &D, &D, &D, &D, &D, &D, 1, &D, &D, &D, &D, &D, &D, 
-         &D, &D, &D, &D, 0 )
+   VALUES           = ( 1 )
    ..
-"S1 Sys1 (PSZ) Fan WEH" = DAY-SCHEDULE-PD
+"Fan Sched Sunday" = DAY-SCHEDULE-PD
    TYPE             = ON/OFF/FLAG
-   VALUES           = ( 0 )
+   VALUES           = ( 1 )
    ..
 "S1 Sys1 (PSZ) MinOA WD" = DAY-SCHEDULE-PD
    TYPE             = FRAC/DESIGN
@@ -470,16 +471,23 @@ $ ---------------------------------------------------------
    TYPE             = TEMPERATURE
    VALUES           = ( 80.06 )
    ..
-"OA Reset Day" = DAY-SCHEDULE-PD
+"CHW OA Reset Day" = DAY-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   OUTSIDE-HI       = 80
+   OUTSIDE-LO       = 60
+   SUPPLY-HI        = 54
+   SUPPLY-LO        = 44
+   ..
+"Fan Sched Saturday" = DAY-SCHEDULE-PD
+   TYPE             = ON/OFF/FLAG
+   VALUES           = ( 1 )
+   ..
+"HW OA Reset Day" = DAY-SCHEDULE-PD
    TYPE             = RESET-TEMP
    OUTSIDE-HI       = 50
    OUTSIDE-LO       = 20
    SUPPLY-HI        = 180
    SUPPLY-LO        = 150
-   ..
-"All ON Day" = DAY-SCHEDULE-PD
-   TYPE             = ON/OFF
-   VALUES           = ( 1 )
    ..
 
 $ ---------------------------------------------------------
@@ -496,10 +504,10 @@ $ ---------------------------------------------------------
    DAY-SCHEDULES    = ( "ZG0-S1 (PSZ) P-Inf WD", &D, &D, &D, &D, 
          "ZG0-S1 (PSZ) P-Inf WEH", &D, &D, "ZG0-S1 (PSZ) P-Inf HDD" )
    ..
-"S1 Sys1 (PSZ) Fan Wk" = WEEK-SCHEDULE-PD
+"Fan Sched Wk" = WEEK-SCHEDULE-PD
    TYPE             = ON/OFF/FLAG
-   DAY-SCHEDULES    = ( "S1 Sys1 (PSZ) Fan WD", &D, &D, &D, &D, 
-         "S1 Sys1 (PSZ) Fan WEH" )
+   DAY-SCHEDULES    = ( "Fan Sched weekday", &D, &D, &D, &D, 
+         "Fan Sched Saturday", "Fan Sched Sunday" )
    ..
 "S1 Sys1 (PSZ) MinOA Wk" = WEEK-SCHEDULE-PD
    TYPE             = FRAC/DESIGN
@@ -544,13 +552,14 @@ $ ---------------------------------------------------------
          "Cooling setpoint saturday", &D, &D, "Cooling setpoint saturday", 
          "Cooling setpoint saturday" )
    ..
-"OA Reset Week" = WEEK-SCHEDULE-PD
+"CHW OA Reset Week" = WEEK-SCHEDULE-PD
    TYPE             = RESET-TEMP
-   DAY-SCHEDULES    = ( "OA Reset Day", &D, &D, &D, &D, "OA Reset Day" )
+   DAY-SCHEDULES    = ( "CHW OA Reset Day", &D, &D, &D, &D, 
+         "CHW OA Reset Day" )
    ..
-"All ON Wk" = WEEK-SCHEDULE-PD
-   TYPE             = ON/OFF
-   DAY-SCHEDULES    = ( "All ON Day", &D, &D, &D, &D, "All ON Day" )
+"HW OA Reset Week" = WEEK-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   DAY-SCHEDULES    = ( "HW OA Reset Day", &D, &D, &D, &D, "HW OA Reset Day" )
    ..
 
 $ ---------------------------------------------------------
@@ -569,11 +578,11 @@ $ ---------------------------------------------------------
    DAY              = ( 31 )
    WEEK-SCHEDULES   = ( "ZG0-S1 (PSZ) P-Inf Wk" )
    ..
-"S1 Sys1 (PSZ) Fan Sch" = SCHEDULE-PD
+"Fan Sched" = SCHEDULE-PD
    TYPE             = ON/OFF/FLAG
    MONTH            = ( 12 )
    DAY              = ( 31 )
-   WEEK-SCHEDULES   = ( "S1 Sys1 (PSZ) Fan Wk" )
+   WEEK-SCHEDULES   = ( "Fan Sched Wk" )
    ..
 "S1 Sys1 (PSZ) MinOA Sch" = SCHEDULE-PD
    TYPE             = FRAC/DESIGN
@@ -620,17 +629,23 @@ $ ---------------------------------------------------------
 "Hourly Report Schedule 23" = SCHEDULE-PD
    LIBRARY-ENTRY "Hourly Report Schedule"
    ..
-"OA Reset Annual" = SCHEDULE-PD
+"CHW OA Reset" = SCHEDULE-PD
    TYPE             = RESET-TEMP
    MONTH            = ( 12 )
    DAY              = ( 31 )
-   WEEK-SCHEDULES   = ( "OA Reset Week" )
+   WEEK-SCHEDULES   = ( "CHW OA Reset Week" )
    ..
-"All ON Sch" = SCHEDULE-PD
-   TYPE             = ON/OFF
+"Schedule ON/OFF" = SCHEDULE-PD
+   LIBRARY-ENTRY "Schedule ON/OFF"
+   ..
+"Schedule FRACTION" = SCHEDULE-PD
+   LIBRARY-ENTRY "Schedule FRACTION"
+   ..
+"HW OA Reset" = SCHEDULE-PD
+   TYPE             = RESET-TEMP
    MONTH            = ( 12 )
    DAY              = ( 31 )
-   WEEK-SCHEDULES   = ( "All ON Wk" )
+   WEEK-SCHEDULES   = ( "HW OA Reset Week" )
    ..
 
 
@@ -723,6 +738,15 @@ $ **                Performance Curves                   **
 $ **                                                     **
 $ *********************************************************
 
+"ScrewAir-EIR-fCHWT&DBT" = CURVE-FIT       
+   LIBRARY-ENTRY "ScrewAir-EIR-fCHWT&DBT"
+   ..
+"ScrewAir-EIR-fPLR&dT-1Comp/Ckt" = CURVE-FIT       
+   LIBRARY-ENTRY "ScrewAir-EIR-fPLR&dT-1Comp/Ckt"
+   ..
+"ScrewAir-Cap-fCHWT&DBT" = CURVE-FIT       
+   LIBRARY-ENTRY "ScrewAir-Cap-fCHWT&DBT"
+   ..
 
 $ *********************************************************
 $ **                                                     **
@@ -735,15 +759,15 @@ $ *********************************************************
    POLYGON          = "BL1 Floor Polygon"
    SHAPE            = POLYGON
    FLOOR-HEIGHT     = 13
-   AREA             = 17867
    SPACE-HEIGHT     = 13
-   C-DIAGRAM-DATA   = *Detailed UI DiagData*
+   C-DIAGRAM-DATA   = *Bldg Envelope & Loads 1 Diag Data*
    ..
-"Prm Space 1 (South)" = SPACE           
+"Perimeter Space 1 (South)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
    AIR-CHANGES/HR   = 0.5
+   INF-FLOW/AREA    = 0
    POLYGON          = "BL1 Space Polygon 1"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -816,13 +840,13 @@ $ *********************************************************
    INSIDE-RCONV     = 1.41
    ..
 "Perimeter Space 1 NE Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Prm Space 2 (East)"
+   NEXT-TO          = "Perimeter Space 2 (East)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"Perimeter Space 1 North Wall" = INTERIOR-WALL   
+"Perimeter Space 1 N Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
@@ -830,7 +854,7 @@ $ *********************************************************
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
 "Perimeter Space 1 NW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Prm Space 4 (West)"
+   NEXT-TO          = "Perimeter Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V4
@@ -841,11 +865,11 @@ $ *********************************************************
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Prm Space 2 (East)" = SPACE           
+"Perimeter Space 2 (East)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
-   INF-FLOW/AREA    = 0.1154
+   INF-FLOW/AREA    = 0.1159
    POLYGON          = "BL1 Space Polygon 2"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -878,6 +902,7 @@ $ *********************************************************
    Y                = 3.2
    HEIGHT           = 4.45
    WIDTH            = 101.2
+   WIN-SHADE-TYPE   = NO-SHADE
    FRAME-CONDUCT    = 2.781
    ..
 "East Window 2" = WINDOW          
@@ -904,13 +929,13 @@ $ *********************************************************
    INSIDE-RCONV     = 1.41
    ..
 "Perimeter Space 2 NW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Prm Space 3 (North)"
+   NEXT-TO          = "Perimeter Space 3 (North)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
-"Perimeter Space 2 West Wall" = INTERIOR-WALL   
+"Perimeter Space 2 W Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
@@ -922,7 +947,7 @@ $ *********************************************************
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Prm Space 3 (North)" = SPACE           
+"Perimeter Space 3 (North)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -1000,14 +1025,14 @@ $ *********************************************************
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"Perimeter Space 2 SW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Prm Space 4 (West)"
+"Perimeter Space 3 SW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Perimeter Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
-"Perimeter Space 2 South Wall" = INTERIOR-WALL   
+"Perimeter Space 3 S Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7, 0.7 )
@@ -1019,7 +1044,7 @@ $ *********************************************************
    INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Prm Space 4 (West)" = SPACE           
+"Perimeter Space 4 (West)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -1082,7 +1107,7 @@ $ *********************************************************
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"Perimeter Space 4 East Wall" = INTERIOR-WALL   
+"Perimeter Space 4 E Wall" = INTERIOR-WALL   
    NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7, 0.7 )
@@ -1100,7 +1125,6 @@ $ *********************************************************
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
-   AIR-CHANGES/HR   = 0
    POLYGON          = "BL1 Space Polygon 5"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -1170,11 +1194,16 @@ $ ---------------------------------------------------------
 $              Pumps
 $ ---------------------------------------------------------
 
-"Hot Water Pumps" = PUMP            
-   FLOW             = 20
-   NUMBER           = 1
-   HEAD             = 31
-   PUMP-KW          = 0.38
+"CHW Pump (Primary)" = PUMP            
+   FLOW             = 60
+   HEAD             = 30
+   PUMP-KW          = 1.32
+   ELEC-METER       = "EM1"
+   ..
+"DEFAULT-HW-PUMP" = PUMP            
+   LIBRARY-ENTRY "DEFAULT-HW-PUMP"
+   ..
+"CW Pump 1" = PUMP            
    CAP-CTRL         = VAR-SPEED-PUMP
    ..
 
@@ -1189,26 +1218,38 @@ $ ---------------------------------------------------------
 $              Circulation Loops
 $ ---------------------------------------------------------
 
-"DHW Plant 1 Loop (1)" = CIRCULATION-LOOP
+"DHW Plant 1 Loop" = CIRCULATION-LOOP
    TYPE             = DHW
    DESIGN-HEAT-T    = 135
    PROCESS-FLOW     = ( 0.164632 )
    PROCESS-SCH      = ( "DHW Eqp NRes Sch" )
    PROCESS-T        = ( 135 )
    ..
+"Chilled Water Loop (Primary)" = CIRCULATION-LOOP
+   TYPE             = CHW
+   LOOP-DESIGN-DT   = 12
+   LOOP-MIN-FLOW    = 0.25
+   DESIGN-COOL-T    = 44
+   COOL-SETPT-CTRL  = OA-RESET
+   COOL-RESET-SCH   = "CHW OA Reset"
+   LOOP-PUMP        = "CHW Pump (Primary)"
+   ..
 "Hot Water Loop" = CIRCULATION-LOOP
    TYPE             = HW
    LOOP-DESIGN-DT   = 50
-   SIZING-OPTION    = COINCIDENT
    LOOP-MIN-FLOW    = 0.25
-   LOOP-OPERATION   = SCHEDULED
-   HEATING-SCHEDULE = "All ON Sch"
    DESIGN-HEAT-T    = 180
    HEAT-SETPT-CTRL  = OA-RESET
-   HEAT-RESET-SCH   = "OA Reset Annual"
-   MAX-RESET-T      = 180
-   MIN-RESET-T      = 150
-   LOOP-PUMP        = "Hot Water Pumps"
+   HEAT-RESET-SCH   = "HW OA Reset"
+   ..
+"Condenser Water Loop" = CIRCULATION-LOOP
+   TYPE             = CW
+   SIZING-OPTION    = COINCIDENT
+   LOOP-FLOW        = 75
+   LOOP-MIN-FLOW    = 0.25
+   LOOP-OPERATION   = SCHEDULED
+   COOLING-SCHEDULE = "Hourly Report Schedule"
+   DESIGN-COOL-T    = 70
    ..
 
 
@@ -1216,6 +1257,19 @@ $ ---------------------------------------------------------
 $              Chillers
 $ ---------------------------------------------------------
 
+"Chiller 1" = CHILLER         
+   TYPE             = ELEC-SCREW
+   CAPACITY-FT      = "ScrewAir-Cap-fCHWT&DBT"
+   MIN-RATIO        = 0.25
+   EIR-FT           = "ScrewAir-EIR-fCHWT&DBT"
+   EIR-FPLR         = "ScrewAir-EIR-fPLR&dT-1Comp/Ckt"
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   RATED-CHW-T      = 50
+   CONDENSER-TYPE   = WATER-COOLED
+   CW-LOOP          = "Condenser Water Loop"
+   CW-PUMP          = "CW Pump 1"
+   CW-FLOW-CTRL     = VARIABLE-FLOW
+   ..
 
 
 $ ---------------------------------------------------------
@@ -1223,13 +1277,11 @@ $              Boilers
 $ ---------------------------------------------------------
 
 "Boiler 1" = BOILER          
-   TYPE             = HW-BOILER
-   CAPACITY         = 0.3
-   MIN-RATIO        = 0.33
+   TYPE             = HW-BOILER-W/DRAFT
+   CAPACITY         = -0.3
    ELEC-INPUT-RATIO = 0
-   HEAT-INPUT-RATIO = {1/0.84}
-   AQUASTAT-SETPT-T = 160
    HW-LOOP          = "Hot Water Loop"
+   HW-PUMP          = "DEFAULT-HW-PUMP"
    ..
 
 
@@ -1237,15 +1289,15 @@ $ ---------------------------------------------------------
 $              Domestic Water Heaters
 $ ---------------------------------------------------------
 
-"DHW Plant 1 Wtr Htr (1)" = DW-HEATER       
+"DHW Plant 1 Wtr Htr" = DW-HEATER       
    TYPE             = GAS
    TANK-VOLUME      = 44.7174
    CAPACITY         = 0.0595993
    HIR-FPLR         = "DW-Gas-Pilotless-HIR-fPLR"
    TANK-UA          = 1.86322
    LOCATION         = ZONE
-   ZONE-NAME        = "Core Zone 1"
-   DHW-LOOP         = "DHW Plant 1 Loop (1)"
+   ZONE-NAME        = "Core Zone"
+   DHW-LOOP         = "DHW Plant 1 Loop"
    C-ENERGY-FACTOR  = 0.535037
    C-TANK-EXT-RVAL  = 12
    ..
@@ -1255,6 +1307,11 @@ $ ---------------------------------------------------------
 $              Heat Rejection
 $ ---------------------------------------------------------
 
+"Heat Rejection 1" = HEAT-REJECTION  
+   TYPE             = FLUID-COOLER
+   CAPACITY-CTRL    = TWO-SPEED-FAN
+   CW-LOOP          = "Condenser Water Loop"
+   ..
 
 
 $ ---------------------------------------------------------
@@ -1317,151 +1374,205 @@ $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
 
-"PTAC 1" = SYSTEM          
-   TYPE             = PSZ
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PSZ
+   FAN-CONTROL      = CONSTANT-VOLUME
+   ERV-RECOVER-TYPE = ENTHALPY-HX
+   ERV-RUN-CTRL     = WHEN-MIN-OA
+   ERV-TEMP-CTRL    = FIXED-SETPT
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PMZS
+   HUMIDIFIER-TYPE  = STEAM
+   COOL-MIN-RESET-T = 60
+   FAN-CONTROL      = SPEED
+   RETURN-FAN-CONTR = SPEED
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PVAVS
+   HUMIDIFIER-TYPE  = STEAM
+   HP-SUPP-SOURCE   = HOT-WATER
+   PHT-COIL-AIR-DT  = 20
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = PVVT
+   HUMIDIFIER-TYPE  = STEAM
+   HP-SUPP-SOURCE   = HOT-WATER
+   HT-RATED-EDB     = 70
+   ..
+SET-DEFAULT FOR SYSTEM          
+   TYPE = DOAS
+   HUMIDIFIER-TYPE  = STEAM
+   ..
+
+"SZ CV 1" = SYSTEM          
+   TYPE             = SZRH
    HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = NONE
+   HUMIDIFIER-TYPE  = NONE
    MAX-SUPPLY-T     = 90
    HEAT-SET-T       = 90
-   COOL-SET-T       = 60
+   ENTHALPY-LIMIT   = 28
    SUPPLY-FLOW      = 2000
+   OA-CONTROL       = OA-ENTHALPY
+   FAN-SCHEDULE     = "Fan Sched"
+   FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
+   MIN-FAN-RATIO    = 0.15
+   NIGHT-CYCLE-CTRL = STAY-OFF
+   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
    COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
    HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Core Zone 1"
-   ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+   CONTROL-ZONE     = "Perimeter Zone 1 (South)"
    ..
-"Core Zone 1" = ZONE            
+"Perimeter Zone 1 (South)" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
+   SPACE            = "Perimeter Space 1 (South)"
+   OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"SZ CV 2" = SYSTEM          
+   TYPE             = SZRH
+   HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = NONE
+   HUMIDIFIER-TYPE  = NONE
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
+   ENTHALPY-LIMIT   = 28
+   SUPPLY-FLOW      = 2000
+   OA-CONTROL       = OA-ENTHALPY
+   FAN-SCHEDULE     = "Fan Sched"
+   FAN-CONTROL      = CONSTANT-VOLUME
+   SUPPLY-KW/FLOW   = 0.0003
+   MIN-FAN-RATIO    = 0.15
+   NIGHT-CYCLE-CTRL = STAY-OFF
+   MIN-FLOW-RATIO   = 0.15
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Perimeter Zone 2 (East)"
+   ..
+"Perimeter Zone 2 (East)" = ZONE            
+   TYPE             = CONDITIONED
+   ASSIGNED-FLOW    = 2000
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   SPACE            = "Perimeter Space 2 (East)"
+   OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"SZ CV 3" = SYSTEM          
+   TYPE             = SZRH
+   HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = NONE
+   HUMIDIFIER-TYPE  = NONE
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
+   ENTHALPY-LIMIT   = 28
+   SUPPLY-FLOW      = 2000
+   OA-CONTROL       = OA-ENTHALPY
+   FAN-SCHEDULE     = "Fan Sched"
+   FAN-CONTROL      = CONSTANT-VOLUME
+   SUPPLY-KW/FLOW   = 0.0003
+   MIN-FAN-RATIO    = 0.15
+   NIGHT-CYCLE-CTRL = STAY-OFF
+   MIN-FLOW-RATIO   = 0.15
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Perimeter Zone 3 (North)"
+   ..
+"Perimeter Zone 3 (North)" = ZONE            
+   TYPE             = CONDITIONED
+   ASSIGNED-FLOW    = 2000
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   SPACE            = "Perimeter Space 3 (North)"
+   OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"SZ CV 4" = SYSTEM          
+   TYPE             = SZRH
+   HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = NONE
+   HUMIDIFIER-TYPE  = NONE
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
+   ENTHALPY-LIMIT   = 28
+   SUPPLY-FLOW      = 2000
+   OA-CONTROL       = OA-ENTHALPY
+   FAN-SCHEDULE     = "Fan Sched"
+   FAN-CONTROL      = CONSTANT-VOLUME
+   SUPPLY-KW/FLOW   = 0.0003
+   MIN-FAN-RATIO    = 0.15
+   NIGHT-CYCLE-CTRL = STAY-OFF
+   MIN-FLOW-RATIO   = 0.15
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Perimeter Zone 4 (West)"
+   ..
+"Perimeter Zone 4 (West)" = ZONE            
+   TYPE             = CONDITIONED
+   ASSIGNED-FLOW    = 2000
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+   SPACE            = "Perimeter Space 4 (West)"
+   OUTSIDE-AIR-FLOW = ( 200 )
+   ..
+"SZ CV 5" = SYSTEM          
+   TYPE             = SZRH
+   HEAT-SOURCE      = HOT-WATER
+   ZONE-HEAT-SOURCE = NONE
+   HUMIDIFIER-TYPE  = NONE
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
+   ENTHALPY-LIMIT   = 28
+   SUPPLY-FLOW      = 2000
+   OA-CONTROL       = OA-ENTHALPY
+   FAN-SCHEDULE     = "Fan Sched"
+   FAN-CONTROL      = CONSTANT-VOLUME
+   SUPPLY-KW/FLOW   = 0.0003
+   MIN-FAN-RATIO    = 0.15
+   NIGHT-CYCLE-CTRL = STAY-OFF
+   MIN-FLOW-RATIO   = 0.15
+   HW-VALVE-TYPE    = TWO-WAY
+   HW-LOOP          = "Hot Water Loop"
+   CHW-VALVE-TYPE   = TWO-WAY
+   CHW-LOOP         = "Chilled Water Loop (Primary)"
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
+   CONTROL-ZONE     = "Core Zone"
+   ..
+"Core Zone" = ZONE            
+   TYPE             = CONDITIONED
+   ASSIGNED-FLOW    = 2000
+   DESIGN-HEAT-T    = 70
+   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+   DESIGN-COOL-T    = 75
+   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Core Space 1"
-   OUTSIDE-AIR-FLOW = ( 200 )
-   ..
-"PTAC 2" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 1 (South) Zn"
-   ..
-"Prm Zone 1 (South) Zn" = ZONE            
-   TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
-   ASSIGNED-FLOW    = 2000
-   DESIGN-HEAT-T    = 70
-   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-   DESIGN-COOL-T    = 75
-   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
-   SPACE            = "Prm Space 1 (South)"
-   OUTSIDE-AIR-FLOW = ( 200 )
-   ..
-"PTAC 3" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 2 (East) Zn"
-   ..
-"Prm Zone 2 (East) Zn" = ZONE            
-   TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
-   ASSIGNED-FLOW    = 2000
-   DESIGN-HEAT-T    = 70
-   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-   DESIGN-COOL-T    = 75
-   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
-   SPACE            = "Prm Space 2 (East)"
-   OUTSIDE-AIR-FLOW = ( 200 )
-   ..
-"PTAC 4" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 3 (North)"
-   ..
-"Prm Zone 3 (North)" = ZONE            
-   TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
-   ASSIGNED-FLOW    = 2000
-   DESIGN-HEAT-T    = 70
-   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-   DESIGN-COOL-T    = 75
-   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
-   SPACE            = "Prm Space 3 (North)"
-   OUTSIDE-AIR-FLOW = ( 200 )
-   ..
-"PTAC 5" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HOT-WATER
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   SUPPLY-FLOW      = 2000
-   SUPPLY-KW/FLOW   = 0.0003
-   HW-VALVE-TYPE    = TWO-WAY
-   HW-LOOP          = "Hot Water Loop"
-   COOLING-CAPACITY = 60000
-   COOLING-EIR      = {1/3.1
-}
-   HEATING-CAPACITY = -60000
-   CONTROL-ZONE     = "Prm Zone 4 (West)"
-   ..
-"Prm Zone 4 (West)" = ZONE            
-   TYPE             = CONDITIONED
-   HEATING-CAPACITY = -24000
-   BASEBOARD-RATING = -6000
-   ASSIGNED-FLOW    = 2000
-   DESIGN-HEAT-T    = 70
-   HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-   DESIGN-COOL-T    = 75
-   COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   THERMOSTAT-TYPE  = REVERSE-ACTION
-   REHEAT-DELTA-T   = 40
-   SPACE            = "Prm Space 4 (West)"
    OUTSIDE-AIR-FLOW = ( 200 )
    ..
 
@@ -1564,13 +1675,10 @@ $ ---------------------------------------------------------
 $              Hourly Reporting
 $ ---------------------------------------------------------
 
-"Hourly Report Block 3" = REPORT-BLOCK    
-   VARIABLE-TYPE    = "PTAC 1"
-   VARIABLE-LIST    = ( 1 )
-   ..
 
 "Hourly Report" = HOURLY-REPORT   
    LIBRARY-ENTRY "Hourly Report"
+   REPORT-BLOCK     = ( "EM1 Hourly Report Block", "FM1 Hourly Report Block" )
    ..
 
 

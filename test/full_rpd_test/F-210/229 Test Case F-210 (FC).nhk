@@ -1,0 +1,176 @@
+; Key to building component name storage
+;
+;   KeyID    BDL Command
+;   ---------------------------
+;   2001     COMPONENT-COST  
+;   2005     UTILITY-RATE    
+;   2006     BLOCK-CHARGE    
+;   2007     RATCHET         
+;   2010     SYSTEM          
+;   2019     ZONE            
+;   2020     EXTERIOR-WALL   
+;   2040     UNDERGROUND-WALL
+;   2046     INTERIOR-WALL   
+;   2050     WINDOW          
+;   2055     DOOR            
+;   2061     PUMP            
+;   2062     CIRCULATION-LOOP
+;   2063     CHILLER         
+;   2064     BOILER          
+;   2065     DW-HEATER       
+;   2066     HEAT-REJECTION  
+;   2068     ELEC-GENERATOR  
+;   2069     THERMAL-STORAGE 
+;   2070     SPACE           
+;   2082     CONDENSING-UNIT 
+;   2085     ELEC-METER      
+;   2086     FUEL-METER      
+;   2087     STEAM-METER     
+;   2088     CHW-METER       
+;   2091     MATERIALS-COST  
+;   2092     GROUND-LOOP-HX  
+
+
+KEYOBJ,  2001,  "Component Cost",  0
+
+
+KEYOBJ,  2005,  "Utility Rate",  2
+      "Custom Elec Rate",  3
+      "Custom Gas Rate",  4
+
+
+KEYOBJ,  2006,  "Block Charge",  0
+
+
+KEYOBJ,  2007,  "Ratchet",  0
+
+
+KEYOBJ,  2010,  "System",  1
+      "Fan Coil Units",  9
+
+
+KEYOBJ,  2019,  "Zone",  5
+      "Core Zone 1",  1
+      "Prm Zone 1 (South) Zn",  1
+      "Prm Zone 2 (East) Zn",  1
+      "Prm Zone 3 (North)",  1
+      "Prm Zone 4 (West)",  1
+
+
+KEYOBJ,  2020,  "Exterior Wall",  9
+      "Perimeter Space 1 Ext Wall",  -1
+      "Perimeter Space 1 Roof",  -1
+      "Perimeter Space 2 Ext Wall",  -1
+      "Perimeter Space 2 Roof",  -1
+      "Perimeter Space 3 Ext Wall",  -1
+      "Perimeter Space 3 Roof",  -1
+      "Perimeter Space 4 Ext Wall",  -1
+      "Perimeter Space 4 Roof",  -1
+      "Core Space 1 Roof",  -1
+
+
+KEYOBJ,  2040,  "Underground Wall",  5
+      "Perimeter Space 1 Slab on Grade",  -1
+      "Perimeter Space 2 Slab on Grade",  -1
+      "Perimeter Space 3 Slab on Grade",  -1
+      "Perimeter Space 4 Slab on Grade",  -1
+      "Core Space 1 Slab on Grade",  -1
+
+
+KEYOBJ,  2046,  "Interior Wall",  8
+      "Perimeter Space 1 NE Wall",  -1
+      "Perimeter Space 1 North Wall",  -1
+      "Perimeter Space 1 NW Wall",  -1
+      "Perimeter Space 2 NW Wall",  -1
+      "Perimeter Space 2 West Wall",  -1
+      "Perimeter Space 2 SW Wall",  -1
+      "Perimeter Space 2 South Wall",  -1
+      "Perimeter Space 4 East Wall",  -1
+
+
+KEYOBJ,  2050,  "Window",  10
+      "South Window 1",  -1
+      "South Window 2",  -1
+      "South Window 3",  -1
+      "East Window 1",  -1
+      "East Window 2",  -1
+      "North Window 1",  -1
+      "North Window 2",  -1
+      "North Window 3",  -1
+      "West Window 1",  -1
+      "West Window 2",  -1
+
+
+KEYOBJ,  2055,  "Door",  6
+      "South Door 1",  -1
+      "South Door 2",  -1
+      "East Door 1",  -1
+      "North Door 1",  -1
+      "North Door 2",  -1
+      "West Door 1",  -1
+
+
+KEYOBJ,  2061,  "Pump",  2
+      "Hot Water Pumps",  -1
+      "CHW-PUMP",  -1
+
+
+KEYOBJ,  2062,  "Circulation Loop",  3
+      "DHW Plant 1 Loop (1)",  8
+      "Hot Water Loop",  4
+      "Chilled Water Loop (Primary)",  1
+
+
+KEYOBJ,  2063,  "Chiller",  1
+      "Chiller 1",  12
+
+
+KEYOBJ,  2064,  "Boiler",  1
+      "Boiler 1",  1
+
+
+KEYOBJ,  2065,  "DW Heater",  1
+      "DHW Plant 1 Wtr Htr (1)",  1
+
+
+KEYOBJ,  2066,  "Heat Rejection",  0
+
+
+KEYOBJ,  2068,  "Elec Generator",  0
+
+
+KEYOBJ,  2069,  "Thermal Storage",  0
+
+
+KEYOBJ,  2070,  "Space",  5
+      "Prm Space 1 (South)",  -1
+      "Prm Space 2 (East)",  -1
+      "Prm Space 3 (North)",  -1
+      "Prm Space 4 (West)",  -1
+      "Core Space 1",  -1
+
+
+KEYOBJ,  2082,  "Condensing Unit",  0
+
+
+KEYOBJ,  2085,  "Elec Meter",  1
+      "EM1",  1
+
+
+KEYOBJ,  2086,  "Fuel Meter",  1
+      "FM1",  1
+
+
+KEYOBJ,  2087,  "Steam Meter",  0
+
+
+KEYOBJ,  2088,  "CHW Meter",  0
+
+
+KEYOBJ,  2091,  "Materials Cost",  0
+
+
+KEYOBJ,  2092,  "Ground Loop HX",  0
+
+
+END

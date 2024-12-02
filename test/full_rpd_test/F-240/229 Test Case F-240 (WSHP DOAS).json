@@ -2,7 +2,7 @@
     "id": "ASHRAE 229",
     "ruleset_model_descriptions": [
         {
-            "id": "229 Test Case F-100 (PTAC)",
+            "id": "229 Test Case F-240 (WSHP DOAS)",
             "altitude": 0,
             "buildings": [
                 {
@@ -121,17 +121,25 @@
                                     ],
                                     "terminals": [
                                         {
-                                            "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
-                                            "heating_from_loop": "Hot Water Loop",
+                                            "cooling_capacity": 17584.267784644235,
+                                            "cooling_source": "CHILLED_WATER",
+                                            "heating_capacity": 17584.267784644235,
                                             "id": "Core Zone 1 MainTerminal",
                                             "minimum_airflow": 943.9263994922153,
-                                            "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "PTAC 1",
+                                            "served_by_heating_ventilating_air_conditioning_system": "WSHP Units",
                                             "supply_design_cooling_setpoint_temperature": 12.777777777777828,
                                             "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "heating_capacity": 0.0,
+                                            "id": "Core Zone 1 DOASTerminal",
+                                            "minimum_airflow": 94.39264282976012,
+                                            "minimum_outdoor_airflow": 94.39264282976012,
+                                            "primary_airflow": 94.39264282976012,
+                                            "type": "VARIABLE_AIR_VOLUME"
                                         }
                                     ],
                                     "infiltration": {
@@ -437,17 +445,25 @@
                                     ],
                                     "terminals": [
                                         {
-                                            "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
-                                            "heating_from_loop": "Hot Water Loop",
+                                            "cooling_capacity": 17584.267784644235,
+                                            "cooling_source": "CHILLED_WATER",
+                                            "heating_capacity": 17584.267784644235,
                                             "id": "Prm Zone 1 (South) Zn MainTerminal",
                                             "minimum_airflow": 943.9263994922153,
-                                            "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "PTAC 2",
+                                            "served_by_heating_ventilating_air_conditioning_system": "WSHP Units - Prm Zone 1 (South) Zn",
                                             "supply_design_cooling_setpoint_temperature": 12.777777777777828,
                                             "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "heating_capacity": 0.0,
+                                            "id": "Prm Zone 1 (South) Zn DOASTerminal",
+                                            "minimum_airflow": 94.39264282976012,
+                                            "minimum_outdoor_airflow": 94.39264282976012,
+                                            "primary_airflow": 94.39264282976012,
+                                            "type": "VARIABLE_AIR_VOLUME"
                                         }
                                     ],
                                     "infiltration": {
@@ -705,17 +721,25 @@
                                     ],
                                     "terminals": [
                                         {
-                                            "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
-                                            "heating_from_loop": "Hot Water Loop",
+                                            "cooling_capacity": 17584.267784644235,
+                                            "cooling_source": "CHILLED_WATER",
+                                            "heating_capacity": 17584.267784644235,
                                             "id": "Prm Zone 2 (East) Zn MainTerminal",
                                             "minimum_airflow": 943.9263994922153,
-                                            "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "PTAC 3",
+                                            "served_by_heating_ventilating_air_conditioning_system": "WSHP Units - Prm Zone 2 (East) Zn",
                                             "supply_design_cooling_setpoint_temperature": 12.777777777777828,
                                             "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "heating_capacity": 0.0,
+                                            "id": "Prm Zone 2 (East) Zn DOASTerminal",
+                                            "minimum_airflow": 94.39264282976012,
+                                            "minimum_outdoor_airflow": 94.39264282976012,
+                                            "primary_airflow": 94.39264282976012,
+                                            "type": "VARIABLE_AIR_VOLUME"
                                         }
                                     ],
                                     "infiltration": {
@@ -973,17 +997,25 @@
                                     ],
                                     "terminals": [
                                         {
-                                            "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
-                                            "heating_from_loop": "Hot Water Loop",
+                                            "cooling_capacity": 17584.267784644235,
+                                            "cooling_source": "CHILLED_WATER",
+                                            "heating_capacity": 17584.267784644235,
                                             "id": "Prm Zone 3 (North) MainTerminal",
                                             "minimum_airflow": 943.9263994922153,
-                                            "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "PTAC 4",
+                                            "served_by_heating_ventilating_air_conditioning_system": "WSHP Units - Prm Zone 3 (North)",
                                             "supply_design_cooling_setpoint_temperature": 12.777777777777828,
                                             "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "heating_capacity": 0.0,
+                                            "id": "Prm Zone 3 (North) DOASTerminal",
+                                            "minimum_airflow": 94.39264282976012,
+                                            "minimum_outdoor_airflow": 94.39264282976012,
+                                            "primary_airflow": 94.39264282976012,
+                                            "type": "VARIABLE_AIR_VOLUME"
                                         }
                                     ],
                                     "infiltration": {
@@ -1184,17 +1216,25 @@
                                     ],
                                     "terminals": [
                                         {
-                                            "cooling_capacity": 0.0,
-                                            "heating_capacity": 0.0,
-                                            "heating_from_loop": "Hot Water Loop",
+                                            "cooling_capacity": 17584.267784644235,
+                                            "cooling_source": "CHILLED_WATER",
+                                            "heating_capacity": 17584.267784644235,
                                             "id": "Prm Zone 4 (West) MainTerminal",
                                             "minimum_airflow": 943.9263994922153,
-                                            "minimum_outdoor_airflow": 94.39264282976012,
                                             "primary_airflow": 943.9263994922153,
                                             "secondary_airflow": 0.0,
-                                            "served_by_heating_ventilating_air_conditioning_system": "PTAC 5",
+                                            "served_by_heating_ventilating_air_conditioning_system": "WSHP Units - Prm Zone 4 (West)",
                                             "supply_design_cooling_setpoint_temperature": 12.777777777777828,
                                             "supply_design_heating_setpoint_temperature": 32.222222222222285
+                                        },
+                                        {
+                                            "cooling_capacity": 0.0,
+                                            "heating_capacity": 0.0,
+                                            "id": "Prm Zone 4 (West) DOASTerminal",
+                                            "minimum_airflow": 94.39264282976012,
+                                            "minimum_outdoor_airflow": 94.39264282976012,
+                                            "primary_airflow": 94.39264282976012,
+                                            "type": "VARIABLE_AIR_VOLUME"
                                         }
                                     ],
                                     "infiltration": {
@@ -1213,20 +1253,12 @@
                             ],
                             "heating_ventilating_air_conditioning_systems": [
                                 {
-                                    "id": "PTAC 1",
+                                    "id": "WSHP Units",
                                     "fan_system": {
-                                        "air_economizer": {
-                                            "high_limit_shutoff_temperature": 18.33333333333337,
-                                            "id": "PTAC 1 AirEconomizer",
-                                            "is_integrated": false,
-                                            "type": "TEMPERATURE"
-                                        },
-                                        "demand_control_ventilation_control": "NONE",
                                         "exhaust_fans": [],
                                         "has_fully_ducted_return": true,
-                                        "id": "PTAC 1 FanSys",
-                                        "maximum_outdoor_airflow": 943.9263994922153,
-                                        "minimum_airflow": 283.1779311001441,
+                                        "id": "WSHP Units FanSys",
+                                        "maximum_outdoor_airflow": 94.39264135578146,
                                         "minimum_outdoor_airflow": 94.39264135578146,
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
@@ -1236,50 +1268,81 @@
                                             {
                                                 "design_airflow": 943.9263994922153,
                                                 "design_electric_power": 600.0000238418579,
-                                                "id": "PTAC 1 SupplyFan",
+                                                "id": "WSHP Units SupplyFan",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 17584.267784644235,
-                                        "energy_source_type": "NATURAL_GAS",
-                                        "heating_coil_setpoint": 32.222222222222285,
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "id": "PTAC 1 HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 17584.266666666666,
-                                        "type": "FLUID_LOOP"
-                                    },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 18547.594519697224,
-                                        "design_total_cool_capacity": 24997.102028680554,
+                                        "condenser_water_loop": "Condenser Water Loop",
+                                        "design_sensible_cool_capacity": 15774.479820650622,
+                                        "design_total_cool_capacity": 21888.535676631946,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "PTAC 1 CoolSys",
+                                        "id": "WSHP Units CoolSys",
                                         "is_sized_based_on_design_day": false,
-                                        "rated_sensible_cool_capacity": 13047.346355803807,
+                                        "rated_sensible_cool_capacity": 12672.507693099977,
                                         "rated_total_cool_capacity": 17584.266666666666,
                                         "type": "DIRECT_EXPANSION"
                                     }
                                 },
                                 {
-                                    "id": "PTAC 2",
+                                    "id": "DOAS 1",
                                     "fan_system": {
-                                        "air_economizer": {
-                                            "high_limit_shutoff_temperature": 18.33333333333337,
-                                            "id": "PTAC 2 AirEconomizer",
-                                            "is_integrated": false,
-                                            "type": "TEMPERATURE"
-                                        },
-                                        "demand_control_ventilation_control": "NONE",
+                                        "exhaust_fans": [],
+                                        "fan_control": "VARIABLE_SPEED_DRIVE",
+                                        "has_fully_ducted_return": false,
+                                        "id": "DOAS 1 FanSys",
+                                        "maximum_outdoor_airflow": 471.96319974610765,
+                                        "minimum_airflow": 47.19632067789073,
+                                        "minimum_outdoor_airflow": 471.96319974610765,
+                                        "operation_during_occupied": "CONTINUOUS",
+                                        "relief_fans": [],
+                                        "return_fans": [],
+                                        "supply_fans": [
+                                            {
+                                                "design_airflow": 471.96319974610765,
+                                                "design_electric_power": 1000.0,
+                                                "id": "DOAS 1 SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": false,
+                                                "output_validation_points": [],
+                                                "specification_method": "SIMPLE"
+                                            }
+                                        ],
+                                        "temperature_control": "CONSTANT"
+                                    },
+                                    "heating_system": {
+                                        "design_capacity": 18931.30620920139,
+                                        "energy_source_type": "NATURAL_GAS",
+                                        "heating_coil_setpoint": 15.5555555555556,
+                                        "id": "DOAS 1 HeatSys",
+                                        "is_sized_based_on_design_day": true,
+                                        "oversizing_factor": 0,
+                                        "rated_capacity": 18931.306656392415,
+                                        "type": "FURNACE"
+                                    },
+                                    "cooling_system": {
+                                        "design_sensible_cool_capacity": 6151.174485470305,
+                                        "design_total_cool_capacity": 8290.106625213622,
+                                        "efficiency_metric_types": [],
+                                        "efficiency_metric_values": [],
+                                        "id": "DOAS 1 CoolSys",
+                                        "is_sized_based_on_design_day": true,
+                                        "oversizing_factor": 0,
+                                        "rated_sensible_cool_capacity": 6151.174485470305,
+                                        "rated_total_cool_capacity": 8290.106625213622,
+                                        "type": "DIRECT_EXPANSION"
+                                    }
+                                },
+                                {
+                                    "id": "WSHP Units - Prm Zone 1 (South) Zn",
+                                    "fan_system": {
                                         "exhaust_fans": [],
                                         "has_fully_ducted_return": true,
-                                        "id": "PTAC 2 FanSys",
-                                        "maximum_outdoor_airflow": 943.9263994922153,
-                                        "minimum_airflow": 283.1779311001441,
+                                        "id": "WSHP Units FanSys--1",
+                                        "maximum_outdoor_airflow": 94.39264135578146,
                                         "minimum_outdoor_airflow": 94.39264135578146,
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
@@ -1289,50 +1352,33 @@
                                             {
                                                 "design_airflow": 943.9263994922153,
                                                 "design_electric_power": 600.0000238418579,
-                                                "id": "PTAC 2 SupplyFan",
+                                                "id": "WSHP Units SupplyFan--1",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 17584.267784644235,
-                                        "energy_source_type": "NATURAL_GAS",
-                                        "heating_coil_setpoint": 32.222222222222285,
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "id": "PTAC 2 HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 17584.266666666666,
-                                        "type": "FLUID_LOOP"
-                                    },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 11981.994000078124,
-                                        "design_total_cool_capacity": 16148.462066545138,
+                                        "condenser_water_loop": "Condenser Water Loop",
+                                        "design_sensible_cool_capacity": 12215.401615517889,
+                                        "design_total_cool_capacity": 16949.98865925347,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "PTAC 2 CoolSys",
+                                        "id": "WSHP Units CoolSys--1",
                                         "is_sized_based_on_design_day": false,
-                                        "rated_sensible_cool_capacity": 13047.346355803807,
+                                        "rated_sensible_cool_capacity": 12672.507693099977,
                                         "rated_total_cool_capacity": 17584.266666666666,
                                         "type": "DIRECT_EXPANSION"
                                     }
                                 },
                                 {
-                                    "id": "PTAC 3",
+                                    "id": "WSHP Units - Prm Zone 2 (East) Zn",
                                     "fan_system": {
-                                        "air_economizer": {
-                                            "high_limit_shutoff_temperature": 18.33333333333337,
-                                            "id": "PTAC 3 AirEconomizer",
-                                            "is_integrated": false,
-                                            "type": "TEMPERATURE"
-                                        },
-                                        "demand_control_ventilation_control": "NONE",
                                         "exhaust_fans": [],
                                         "has_fully_ducted_return": true,
-                                        "id": "PTAC 3 FanSys",
-                                        "maximum_outdoor_airflow": 943.9263994922153,
-                                        "minimum_airflow": 283.1779311001441,
+                                        "id": "WSHP Units FanSys--2",
+                                        "maximum_outdoor_airflow": 94.39264135578146,
                                         "minimum_outdoor_airflow": 94.39264135578146,
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
@@ -1342,50 +1388,33 @@
                                             {
                                                 "design_airflow": 943.9263994922153,
                                                 "design_electric_power": 600.0000238418579,
-                                                "id": "PTAC 3 SupplyFan",
+                                                "id": "WSHP Units SupplyFan--2",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 17584.267784644235,
-                                        "energy_source_type": "NATURAL_GAS",
-                                        "heating_coil_setpoint": 32.222222222222285,
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "id": "PTAC 3 HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 17584.266666666666,
-                                        "type": "FLUID_LOOP"
-                                    },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 11981.994000078124,
-                                        "design_total_cool_capacity": 16148.462066545138,
+                                        "condenser_water_loop": "Condenser Water Loop",
+                                        "design_sensible_cool_capacity": 12215.401615517889,
+                                        "design_total_cool_capacity": 16949.98865925347,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "PTAC 3 CoolSys",
+                                        "id": "WSHP Units CoolSys--2",
                                         "is_sized_based_on_design_day": false,
-                                        "rated_sensible_cool_capacity": 13047.346355803807,
+                                        "rated_sensible_cool_capacity": 12672.507693099977,
                                         "rated_total_cool_capacity": 17584.266666666666,
                                         "type": "DIRECT_EXPANSION"
                                     }
                                 },
                                 {
-                                    "id": "PTAC 4",
+                                    "id": "WSHP Units - Prm Zone 3 (North)",
                                     "fan_system": {
-                                        "air_economizer": {
-                                            "high_limit_shutoff_temperature": 18.33333333333337,
-                                            "id": "PTAC 4 AirEconomizer",
-                                            "is_integrated": false,
-                                            "type": "TEMPERATURE"
-                                        },
-                                        "demand_control_ventilation_control": "NONE",
                                         "exhaust_fans": [],
                                         "has_fully_ducted_return": true,
-                                        "id": "PTAC 4 FanSys",
-                                        "maximum_outdoor_airflow": 943.9263994922153,
-                                        "minimum_airflow": 283.1779311001441,
+                                        "id": "WSHP Units FanSys--3",
+                                        "maximum_outdoor_airflow": 94.39264135578146,
                                         "minimum_outdoor_airflow": 94.39264135578146,
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
@@ -1395,50 +1424,33 @@
                                             {
                                                 "design_airflow": 943.9263994922153,
                                                 "design_electric_power": 600.0000238418579,
-                                                "id": "PTAC 4 SupplyFan",
+                                                "id": "WSHP Units SupplyFan--3",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 17584.267784644235,
-                                        "energy_source_type": "NATURAL_GAS",
-                                        "heating_coil_setpoint": 32.222222222222285,
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "id": "PTAC 4 HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 17584.266666666666,
-                                        "type": "FLUID_LOOP"
-                                    },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 11981.994000078124,
-                                        "design_total_cool_capacity": 16148.462066545138,
+                                        "condenser_water_loop": "Condenser Water Loop",
+                                        "design_sensible_cool_capacity": 12215.401615517889,
+                                        "design_total_cool_capacity": 16949.98865925347,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "PTAC 4 CoolSys",
+                                        "id": "WSHP Units CoolSys--3",
                                         "is_sized_based_on_design_day": false,
-                                        "rated_sensible_cool_capacity": 13047.346355803807,
+                                        "rated_sensible_cool_capacity": 12672.507693099977,
                                         "rated_total_cool_capacity": 17584.266666666666,
                                         "type": "DIRECT_EXPANSION"
                                     }
                                 },
                                 {
-                                    "id": "PTAC 5",
+                                    "id": "WSHP Units - Prm Zone 4 (West)",
                                     "fan_system": {
-                                        "air_economizer": {
-                                            "high_limit_shutoff_temperature": 18.33333333333337,
-                                            "id": "PTAC 5 AirEconomizer",
-                                            "is_integrated": false,
-                                            "type": "TEMPERATURE"
-                                        },
-                                        "demand_control_ventilation_control": "NONE",
                                         "exhaust_fans": [],
                                         "has_fully_ducted_return": true,
-                                        "id": "PTAC 5 FanSys",
-                                        "maximum_outdoor_airflow": 943.9263994922153,
-                                        "minimum_airflow": 283.1779311001441,
+                                        "id": "WSHP Units FanSys--4",
+                                        "maximum_outdoor_airflow": 94.39264135578146,
                                         "minimum_outdoor_airflow": 94.39264135578146,
                                         "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "KEEP_OFF",
@@ -1448,31 +1460,22 @@
                                             {
                                                 "design_airflow": 943.9263994922153,
                                                 "design_electric_power": 600.0000238418579,
-                                                "id": "PTAC 5 SupplyFan",
+                                                "id": "WSHP Units SupplyFan--4",
                                                 "is_airflow_sized_based_on_design_day": false,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
-                                    "heating_system": {
-                                        "design_capacity": 17584.267784644235,
-                                        "energy_source_type": "NATURAL_GAS",
-                                        "heating_coil_setpoint": 32.222222222222285,
-                                        "hot_water_loop": "Hot Water Loop",
-                                        "id": "PTAC 5 HeatSys",
-                                        "is_sized_based_on_design_day": false,
-                                        "rated_capacity": 17584.266666666666,
-                                        "type": "FLUID_LOOP"
-                                    },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 11981.994000078124,
-                                        "design_total_cool_capacity": 16148.462066545138,
+                                        "condenser_water_loop": "Condenser Water Loop",
+                                        "design_sensible_cool_capacity": 12215.401615517889,
+                                        "design_total_cool_capacity": 16949.98865925347,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
-                                        "id": "PTAC 5 CoolSys",
+                                        "id": "WSHP Units CoolSys--4",
                                         "is_sized_based_on_design_day": false,
-                                        "rated_sensible_cool_capacity": 13047.346355803807,
+                                        "rated_sensible_cool_capacity": 12672.507693099977,
                                         "rated_total_cool_capacity": 17584.266666666666,
                                         "type": "DIRECT_EXPANSION"
                                     }
@@ -97906,7 +97909,10 @@
                     ]
                 },
                 {
-                    "id": "OA Reset Annual"
+                    "id": "HW OA Reset"
+                },
+                {
+                    "id": "CHW OA Reset"
                 },
                 {
                     "id": "All ON Sch",
@@ -124207,25 +124213,10 @@
             ],
             "fluid_loops": [
                 {
-                    "id": "Hot Water Loop",
-                    "heating_design_and_control": {
-                        "id": "Hot Water Loop HeatingDesign/Control",
-                        "design_supply_temperature": 82.22222222222229,
-                        "design_return_temperature": 54.44444444444446,
-                        "is_sized_using_coincident_load": true,
-                        "minimum_flow_fraction": 0.25,
-                        "operation": "CONTINUOUS",
-                        "flow_control": "VARIABLE_FLOW",
-                        "temperature_reset_type": "OUTSIDE_AIR_RESET",
-                        "outdoor_high_for_loop_supply_reset_temperature": 10.000000000000057,
-                        "outdoor_low_for_loop_supply_reset_temperature": -6.666666666666629,
-                        "loop_supply_temperature_at_outdoor_high": 65.5555555555556,
-                        "loop_supply_temperature_at_outdoor_low": 82.22222222222229,
-                        "loop_supply_temperature_at_low_load": 65.5555555555556
-                    },
+                    "id": "Condenser Water Loop",
                     "child_loops": [],
-                    "type": "HEATING",
-                    "pump_power_per_flow_rate": 301.1889234086796
+                    "type": "OTHER",
+                    "pump_power_per_flow_rate": 348.74502859783297
                 }
             ],
             "service_water_heating_distribution_systems": [
@@ -124258,16 +124249,16 @@
             ],
             "pumps": [
                 {
-                    "id": "Hot Water Pumps",
+                    "id": "CW-PUMP",
                     "output_validation_points": [],
-                    "loop_or_piping": "Hot Water Loop",
+                    "loop_or_piping": "Condenser Water Loop",
                     "specification_method": "SIMPLE",
-                    "design_electric_power": 380.0,
-                    "design_head": 92661.077,
-                    "impeller_efficiency": 0.43909013271331787,
-                    "motor_efficiency": 0.699999988079071,
+                    "design_electric_power": 1320.0,
+                    "design_head": 119562.68,
+                    "impeller_efficiency": 0.42814508080482483,
+                    "motor_efficiency": 0.800000011920929,
                     "speed_control": "VARIABLE_SPEED",
-                    "design_flow": 1.2616666666666672,
+                    "design_flow": 3.785000000000001,
                     "is_flow_sized_based_on_design_day": false
                 }
             ],
@@ -124275,9 +124266,9 @@
                 {
                     "id": "Boiler 1",
                     "efficiency": [
-                        0.8400000080108644,
-                        0.8600000080108644,
-                        0.8400000091552736
+                        0.8196721119254039,
+                        0.8396721119254039,
+                        0.9467211192540392
                     ],
                     "efficiency_metrics": [
                         "THERMAL",
@@ -124285,38 +124276,48 @@
                         "ANNUAL_FUEL_UTILIZATION"
                     ],
                     "output_validation_points": [],
-                    "loop": "Hot Water Loop",
-                    "design_capacity": 87921.33333333333,
-                    "rated_capacity": 87921.33333333333,
-                    "minimum_load_ratio": 0.33,
-                    "draft_type": "NATURAL",
+                    "loop": "Condenser Water Loop",
+                    "design_capacity": 63404.69849513889,
+                    "rated_capacity": 63404.69849513889,
+                    "minimum_load_ratio": 0.3,
+                    "draft_type": "FORCED",
                     "energy_source_type": "NATURAL_GAS",
                     "auxiliary_power": 0.0,
                     "operation_lower_limit": 0.0,
-                    "operation_upper_limit": 87921.33333333333
+                    "operation_upper_limit": 63404.69849513889
                 }
             ],
             "chillers": [],
-            "heat_rejections": [],
+            "heat_rejections": [
+                {
+                    "id": "Heat Rejection 1",
+                    "loop": "Condenser Water Loop",
+                    "type": "OPEN_CIRCUIT_COOLING_TOWER",
+                    "range": 5.555555555555555,
+                    "approach": 3.8888888888888893,
+                    "fan_speed_control": "VARIABLE_SPEED",
+                    "rated_water_flowrate": 3781974.271000001
+                }
+            ],
             "external_fluid_sources": [],
             "output": {
                 "id": "Output2019ASHRAE901",
                 "output_instance": {
-                    "id": "229 Test Case F-100 (PTAC) Output",
-                    "unmet_load_hours_heating": 4018.0,
+                    "id": "229 Test Case F-240 (WSHP DOAS) Output",
+                    "unmet_load_hours_heating": 3318.0,
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 11450.7685546875,
-                            "annual_demand": 361475.9375
+                            "annual_consumption": 9085.3955078125,
+                            "annual_demand": 346889.40625
                         },
                         {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
-                            "annual_consumption": 131779.65625,
-                            "annual_demand": 42.25633239746094
+                            "annual_consumption": 196043.40625,
+                            "annual_demand": 46.00529098510742
                         }
                     ],
                     "annual_end_use_results": [
@@ -124342,9 +124343,9 @@
                             "id": "NATURAL-GAS - Space Heating",
                             "type": "SPACE_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 11234.0478515625,
-                            "annual_site_coincident_demand": 356916.34375,
-                            "annual_site_non_coincident_demand": 9.0,
+                            "annual_site_energy_use": 8811.91015625,
+                            "annual_site_coincident_demand": 342241.90625,
+                            "annual_site_non_coincident_demand": 26.0,
                             "is_regulated": true
                         },
                         {
@@ -124369,9 +124370,9 @@
                             "id": "NATURAL-GAS - Pumps & Aux",
                             "type": "PUMPS",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
+                            "annual_site_energy_use": 56.95974349975586,
+                            "annual_site_coincident_demand": 92.65933227539062,
+                            "annual_site_non_coincident_demand": 5.0,
                             "is_regulated": true
                         },
                         {
@@ -124405,8 +124406,8 @@
                             "id": "NATURAL-GAS - Domestic Hot Water",
                             "type": "SERVICE_WATER_HEATING",
                             "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 216.72535705566406,
-                            "annual_site_coincident_demand": 4559.60107421875,
+                            "annual_site_energy_use": 216.52664184570312,
+                            "annual_site_coincident_demand": 4554.84765625,
                             "annual_site_non_coincident_demand": 8.0,
                             "is_regulated": true
                         },
@@ -124432,18 +124433,18 @@
                             "id": "ELECTRICITY - Space Heating",
                             "type": "SPACE_HEATING",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
+                            "annual_site_energy_use": 39161.109375,
+                            "annual_site_coincident_demand": 11.108952522277832,
+                            "annual_site_non_coincident_demand": 13.212393760681152,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Space Cooling",
                             "type": "SPACE_COOLING",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 4424.18212890625,
-                            "annual_site_coincident_demand": 10.246811866760254,
-                            "annual_site_non_coincident_demand": 10.246811866760254,
+                            "annual_site_energy_use": 5592.9638671875,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 6.748908519744873,
                             "is_regulated": true
                         },
                         {
@@ -124459,18 +124460,18 @@
                             "id": "ELECTRICITY - Pumps & Aux",
                             "type": "PUMPS",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 1695.4661865234375,
-                            "annual_site_coincident_demand": 0.052515335381031036,
-                            "annual_site_non_coincident_demand": 0.6299999952316284,
+                            "annual_site_energy_use": 16878.1171875,
+                            "annual_site_coincident_demand": 1.94032621383667,
+                            "annual_site_non_coincident_demand": 2.0587544441223145,
                             "is_regulated": true
                         },
                         {
                             "id": "ELECTRICITY - Ventilation Fans",
                             "type": "FANS_INTERIOR_VENTILATION",
                             "energy_source": "ELECTRICITY",
-                            "annual_site_energy_use": 26301.62109375,
-                            "annual_site_coincident_demand": 3.0024874210357666,
-                            "annual_site_non_coincident_demand": 3.0024874210357666,
+                            "annual_site_energy_use": 35052.87890625,
+                            "annual_site_coincident_demand": 4.001494407653809,
+                            "annual_site_non_coincident_demand": 4.001494407653809,
                             "is_regulated": true
                         },
                         {
