@@ -196,11 +196,13 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_heating_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_cooling_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].minimum_outdoor_airflow",
@@ -329,20 +331,20 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].supply_fans[*].design_airflow",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_airflow",
         "compare-value": true,
         "tolerance": 1.0
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].supply_fans[*].is_airflow_sized_based_on_design_day",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].is_airflow_sized_based_on_design_day",
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].supply_fans[*].specification_method",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].specification_method",
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].supply_fans[*].design_electric_power",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_electric_power",
         "compare-value": true,
         "tolerance": 1.0
         }

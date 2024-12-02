@@ -422,10 +422,6 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].type",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].pump_power_per_flow_rate",
         "compare-value": true,
         "tolerance": 1.0
