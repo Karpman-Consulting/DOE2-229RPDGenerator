@@ -45192,12 +45192,12 @@
                     "cooling_loop": "CHW Loop 1",
                     "condensing_loop": "CW Loop 1",
                     "is_chilled_water_pump_interlocked": false,
-                    "is_condenser_water_pump_interlocked": true,
                     "compressor_type": "SCREW",
                     "energy_source_type": "ELECTRICITY",
                     "design_capacity": 87921,
                     "rated_entering_condenser_temperature": 29.4,
                     "rated_leaving_evaporator_temperature": 10,
+                    "minimum_load_ratio": 0.25,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "NONSTANDARD_PART_LOAD_VALUE",
                     "capacity_validation_points": [
@@ -45272,7 +45272,9 @@
                         "loop_supply_temperature_at_outdoor_low": 82.2,
                         "is_sized_using_coincident_load": true,
                         "operation": "CONTINUOUS",
-                        "flow_control": "VARIABLE_FLOW"
+                        "flow_control": "VARIABLE_FLOW",
+                        "minimum_flow_fraction": 0.25,
+                        "temperature_reset_type": "OUTSIDE_AIR_RESET"
                     }
                 },
                 {
@@ -45281,6 +45283,7 @@
                     "pump_power_per_flow_rate": 348.7,
                     "cooling_or_condensing_design_and_control": {
                         "id": "Primary CHW Design and Control",
+                        "minimum_flow_fraction": 0.25,
                         "design_supply_temperature": 6.7,
                         "design_return_temperature": 12.8,
                         "outdoor_high_for_loop_supply_reset_temperature": 26.7,
@@ -45302,7 +45305,9 @@
                         "design_supply_temperature": 21.1,
                         "is_sized_using_coincident_load": true,
                         "operation": "CONTINUOUS",
-                        "flow_control": "VARIABLE_FLOW"
+                        "flow_control": "VARIABLE_FLOW",
+                        "minimum_flow_fraction": 0.25,
+                        "temperature_reset_type": "NO_RESET"
                     }
                 }
             ],

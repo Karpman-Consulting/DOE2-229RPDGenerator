@@ -45168,12 +45168,12 @@
                     "id": "Chiller 1",
                     "cooling_loop": "CHW Loop 1",
                     "is_chilled_water_pump_interlocked": false,
-                    "is_condenser_water_pump_interlocked": true,
                     "compressor_type": "SCREW",
                     "energy_source_type": "ELECTRICITY",
                     "design_capacity": 87921,
                     "rated_entering_condenser_temperature": 29.4,
                     "rated_leaving_evaporator_temperature": 10,
+                    "minimum_load_ratio": 0.25,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "NONSTANDARD_PART_LOAD_VALUE",
                     "capacity_validation_points": [
@@ -45231,6 +45231,7 @@
                         "is_sized_using_coincident_load": true,
                         "operation": "CONTINUOUS",
                         "flow_control": "VARIABLE_FLOW",
+                        "minimum_flow_fraction": 0.25,
                         "temperature_reset_type": "OUTSIDE_AIR_RESET"
                     }
                 }

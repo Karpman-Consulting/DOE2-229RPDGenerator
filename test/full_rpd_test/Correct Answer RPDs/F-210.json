@@ -45171,6 +45171,7 @@
                     "design_capacity": 87921,
                     "rated_entering_condenser_temperature": 29.4,
                     "rated_leaving_evaporator_temperature": 10,
+                    "minimum_load_ratio": 0.25,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "NONSTANDARD_PART_LOAD_VALUE",
                     "capacity_validation_points": [
