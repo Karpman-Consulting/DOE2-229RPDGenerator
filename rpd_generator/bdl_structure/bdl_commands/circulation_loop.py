@@ -802,6 +802,7 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.CW,
             ]:
                 pass  # Unused for boilers
+
             elif loop_type in [
                 BDL_CirculationLoopTypes.HW,
                 BDL_CirculationLoopTypes.PIPE2,
