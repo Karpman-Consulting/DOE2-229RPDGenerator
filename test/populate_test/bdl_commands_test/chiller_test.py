@@ -1,8 +1,7 @@
 import unittest
-import os
+from unittest.mock import patch
 
 from rpd_generator.config import Config
-from rpd_generator.utilities import validate_configuration
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.chiller import Chiller, BDL_ChillerTypes
@@ -16,19 +15,22 @@ EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 class TestElectricChillers(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        validate_configuration.find_equest_installation()
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.rmd.file_path = os.path.abspath(
-            os.path.join(
-                script_dir, "../../full_rpd_test/E-2/229 Test Case E-2 (CHW VAV)"
-            )
-        )
         self.chiller = Chiller("Chiller 1", self.rmd)
 
-    def test_populate_data_elements_with_centrif_chiller(self):
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_centrif_chiller(self, mock_get_output_data):
+        mock_get_output_data.return_value = {
+            "Design Parameters - Capacity": 151941.078125,
+            "Design Parameters - Condenser Flow": 36.10254669189453,
+            "Design Parameters - Flow": 28.88204002380371,
+            "Normalized (ARI) Capacity at Peak (Btu/hr)": 120092.3359375,
+            "Normalized (ARI) Entering Condenser Water Temperature (°F)": 70.0,
+            "Normalized (ARI) Leaving Chilled Water Temperature (°F)": 44.0,
+        }
+
         self.chiller.keyword_value_pairs = {
             BDL_ChillerKeywords.TYPE: BDL_ChillerTypes.ELEC_OPEN_CENT,
             BDL_ChillerKeywords.CHW_LOOP: "Chilled Water Loop (Primary)",
@@ -73,13 +75,18 @@ class TestEngineChillers(unittest.TestCase):
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.rmd.file_path = os.path.abspath(
-            os.path.join(script_dir, "../output_references/Engine Chiller")
-        )
         self.chiller = Chiller("Chiller 1", self.rmd)
 
-    def test_populate_data_elements_with_engine_chiller(self):
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_engine_chiller(self, mock_get_output_data):
+        mock_get_output_data.return_value = {
+            "Design Parameters - Capacity": 151941.078125,
+            "Design Parameters - Condenser Flow": 35.50693130493164,
+            "Design Parameters - Flow": 28.40554428100586,
+            "Normalized (ARI) Capacity at Peak (Btu/hr)": 120092.3359375,
+            "Normalized (ARI) Entering Condenser Water Temperature (°F)": 85.0,
+            "Normalized (ARI) Leaving Chilled Water Temperature (°F)": 44.0,
+        }
         self.chiller.keyword_value_pairs = {
             BDL_ChillerKeywords.TYPE: BDL_ChillerTypes.ENGINE,
             BDL_ChillerKeywords.CHW_LOOP: "Chilled Water Loop (Primary)",
@@ -103,6 +110,7 @@ class TestEngineChillers(unittest.TestCase):
             "design_leaving_evaporator_temperature": 50.0,
             "rated_entering_condenser_temperature": 85.0,
             "rated_leaving_evaporator_temperature": 44.0,
+            "rated_capacity": 0.12009233593749999,
             "design_capacity": 0.151941078125,
             "design_flow_condenser": 35.50693130493164,
             "design_flow_evaporator": 28.40554428100586,
