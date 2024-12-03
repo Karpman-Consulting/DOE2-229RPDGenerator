@@ -251,13 +251,6 @@ class Boiler(BaseNode):
                     boiler_name,
                     "",
                 )
-        output_data = self.get_output_data(requests)
-        for boiler_name, capacity in boiler_capacities.items():
-            boiler_capacities[boiler_name] = self.try_abs(
-                self.try_convert_units(capacity, "Btu/hr", "MMBtu/hr")
-            )
-            boiler = self.get_obj(boiler_name)
-            boiler.rated_capacity = boiler_capacities[boiler_name]
 
         hw_loop_equip_ctrls = []
         for equip_ctrl_name in self.rmd.equip_ctrl_names:

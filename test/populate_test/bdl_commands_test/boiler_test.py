@@ -61,8 +61,8 @@ class TestFuelBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 188203.578125,
         }
-        fuel_meter = FuelMeter("Test Fuel Meter", self.rmd)
-        fuel_meter.keyword_value_pairs = {
+
+        self.fuel_meter.keyword_value_pairs = {
             BDL_FuelMeterKeywords.TYPE: BDL_FuelTypes.METHANOL
         }
         self.fuel_meter.populate_data_elements()
@@ -106,7 +106,14 @@ class TestFuelBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 188203.578125,
         }
-        self.rmd.bdl_obj_instances = {}
+
+        self.master_meter.keyword_value_pairs = {
+            BDL_MasterMeterKeywords.HEAT_FUEL_METER: "Test Fuel Meter"
+        }
+        self.fuel_meter.keyword_value_pairs = {
+            BDL_FuelMeterKeywords.TYPE: BDL_FuelTypes.NATURAL_GAS
+        }
+        self.fuel_meter.populate_data_elements()
 
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.HW_BOILER_W_DRAFT,
@@ -129,7 +136,7 @@ class TestFuelBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.188203578125,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.9000089372091853, 0.9200089372091853, 0.9085816425247832],
+            "efficiency": [0.900009000090001, 0.920009000090001, 0.9085817143885725],
             "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
         }
 
@@ -163,7 +170,6 @@ class TestElectricBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Electric Input Ratio": 1.02,
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
         }
-        self.rmd.bdl_obj_instances = {}
 
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.ELEC_HW_BOILER,
@@ -202,7 +208,6 @@ class TestElectricBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Electric Input Ratio": 1.0,
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
         }
-        self.rmd.bdl_obj_instances = {}
 
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.ELEC_STM_BOILER,
