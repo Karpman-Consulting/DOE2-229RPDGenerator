@@ -10,7 +10,7 @@ from rpd_generator.utilities import validate_configuration
 
 def process_test_input_files():
     validate_configuration.find_equest_installation()
-    test_directory = Path(__file__).parents[1] / "test"
+    test_directory = Path(__file__).parents[1] / "test" / "full_rpd_test"
     test_inp_files = list(test_directory.rglob("*.inp"))
 
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -28,6 +28,7 @@ def process_test_input_files():
             bdl_path = temp_inp_path.with_suffix(".BDL")
             doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
             # TODO: Correct this path to the eQUEST installation path when BDLCIO32 issue is resolved
+            # test_bdlcio32_path = Path(Config.EQUEST_INSTALL_PATH) / "Bdlcio32.dll"
             test_bdlcio32_path = Path(__file__).parents[1] / "test" / "BDLCIO32.dll"
 
             # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory

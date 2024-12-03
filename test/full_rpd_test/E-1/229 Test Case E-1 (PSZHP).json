@@ -3,6 +3,7 @@
     "ruleset_model_descriptions": [
         {
             "id": "229 Test Case E-1 (PSZHP)",
+            "altitude": 0,
             "buildings": [
                 {
                     "id": "Default Building",
@@ -117,7 +118,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.4785360618245472
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Ext Wall OpticalProps",
@@ -164,7 +166,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 1 Roof OpticalProps",
@@ -186,13 +189,15 @@
                                                 "id": "BL1 IWall Construction",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material"
+                                                        "id": "Simplified Material",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -214,13 +219,15 @@
                                                 "id": "BL1 IWall Construction--1",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--1"
+                                                        "id": "Simplified Material--1",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -242,13 +249,15 @@
                                                 "id": "BL1 IWall Construction--2",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--2"
+                                                        "id": "Simplified Material--2",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -279,10 +288,11 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 4.8554836612451
                                             },
                                             "optical_properties": {
-                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_solar_interior": 0.8,
                                                 "absorptance_visible_interior": 0.8
                                             },
                                             "classification": "FLOOR",
@@ -297,10 +307,13 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "id": "Perimeter Zone 1 (South) MainTerminal",
-                                            "minimum_airflow": 943.9263994922153,
+                                            "minimum_airflow": 5598.571948398223,
                                             "minimum_outdoor_airflow": 126.41062144740464,
-                                            "primary_airflow": 943.9263994922153,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (South)"
+                                            "primary_airflow": 5598.571948398223,
+                                            "secondary_airflow": 0.0,
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (South)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -402,7 +415,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18802180423859668
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Ext Wall OpticalProps",
@@ -449,7 +463,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 2 Roof OpticalProps",
@@ -471,13 +486,15 @@
                                                 "id": "BL1 IWall Construction--3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--3"
+                                                        "id": "Simplified Material--3",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -499,13 +516,15 @@
                                                 "id": "BL1 IWall Construction--4",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--4"
+                                                        "id": "Simplified Material--4",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -536,10 +555,11 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 4.8554836612451
                                             },
                                             "optical_properties": {
-                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_solar_interior": 0.8,
                                                 "absorptance_visible_interior": 0.8
                                             },
                                             "classification": "FLOOR",
@@ -554,10 +574,13 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "id": "Perimeter Zone 2 (East) MainTerminal",
-                                            "minimum_airflow": 943.9263994922153,
+                                            "minimum_airflow": 3428.614063121061,
                                             "minimum_outdoor_airflow": 80.02608621766872,
-                                            "primary_airflow": 943.9263994922153,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (East)"
+                                            "primary_airflow": 3428.614063121061,
+                                            "secondary_airflow": 0.0,
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (East)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -648,13 +671,15 @@
                                                 "id": "Exterior Wall Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--5"
+                                                        "id": "Simplified Material--5",
+                                                        "r_value": 1.9472657383222005
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.47688096041226397
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Ext Wall OpticalProps",
@@ -698,7 +723,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.18970607381902888
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 3 Roof OpticalProps",
@@ -720,13 +746,15 @@
                                                 "id": "BL1 IWall Construction--5",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--6"
+                                                        "id": "Simplified Material--6",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -748,13 +776,15 @@
                                                 "id": "BL1 IWall Construction--6",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--7"
+                                                        "id": "Simplified Material--7",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -792,10 +822,11 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.3509167235001137
                                             },
                                             "optical_properties": {
-                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_solar_interior": 0.8,
                                                 "absorptance_visible_interior": 0.8
                                             },
                                             "classification": "FLOOR",
@@ -810,10 +841,13 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "id": "Perimeter Zone 3 (North) MainTerminal",
-                                            "minimum_airflow": 943.9263994922153,
+                                            "minimum_airflow": 3761.7469688297238,
                                             "minimum_outdoor_airflow": 126.41062144740464,
-                                            "primary_airflow": 943.9263994922153,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (North)"
+                                            "primary_airflow": 3761.7469688297238,
+                                            "secondary_airflow": 0.0,
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (North)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -891,13 +925,15 @@
                                                 "id": "Exterior Wall Type 3--1",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--8"
+                                                        "id": "Simplified Material--8",
+                                                        "r_value": 1.9472657383222005
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.47688096041226397
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Ext Wall OpticalProps",
@@ -920,13 +956,15 @@
                                                 "id": "Roof Type 3",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--9"
+                                                        "id": "Simplified Material--9",
+                                                        "r_value": 2.657253479280524
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 0.35783047909715215
                                             },
                                             "optical_properties": {
                                                 "id": "Perimeter Space 4 Roof OpticalProps",
@@ -948,13 +986,15 @@
                                                 "id": "BL1 IWall Construction--7",
                                                 "primary_layers": [
                                                     {
-                                                        "id": "Simplified Material--10"
+                                                        "id": "Simplified Material--10",
+                                                        "r_value": 0.3504739661669534
                                                     }
                                                 ],
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "SIMPLIFIED"
+                                                "surface_construction_input_option": "SIMPLIFIED",
+                                                "u_factor": 1.6949618440903549
                                             },
                                             "optical_properties": {
                                                 "absorptance_solar_exterior": 0.5,
@@ -992,10 +1032,11 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.3509167235001137
                                             },
                                             "optical_properties": {
-                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_solar_interior": 0.8,
                                                 "absorptance_visible_interior": 0.8
                                             },
                                             "classification": "FLOOR",
@@ -1010,10 +1051,13 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "id": "Perimeter Zone 4 (West) MainTerminal",
-                                            "minimum_airflow": 943.9263994922153,
+                                            "minimum_airflow": 3599.448206734349,
                                             "minimum_outdoor_airflow": 80.02608621766872,
-                                            "primary_airflow": 943.9263994922153,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (West)"
+                                            "primary_airflow": 3599.448206734349,
+                                            "secondary_airflow": 0.0,
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (West)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -1091,7 +1135,8 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 0.365608802525771
                                             },
                                             "optical_properties": {
                                                 "id": "Core Space 1 Roof OpticalProps",
@@ -1122,10 +1167,11 @@
                                                 "framing_layers": [],
                                                 "insulation_locations": [],
                                                 "r_values": [],
-                                                "surface_construction_input_option": "LAYERS"
+                                                "surface_construction_input_option": "LAYERS",
+                                                "u_factor": 4.8554836612451
                                             },
                                             "optical_properties": {
-                                                "absorptance_solar_interior": 0.7,
+                                                "absorptance_solar_interior": 0.8,
                                                 "absorptance_visible_interior": 0.8
                                             },
                                             "classification": "FLOOR",
@@ -1140,10 +1186,13 @@
                                             "cooling_capacity": 0.0,
                                             "heating_capacity": 0.0,
                                             "id": "Core Zone 1 (Core) MainTerminal",
-                                            "minimum_airflow": 943.9263994922153,
+                                            "minimum_airflow": 12389.969858720395,
                                             "minimum_outdoor_airflow": 600.1650553126498,
-                                            "primary_airflow": 943.9263994922153,
-                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (Core)"
+                                            "primary_airflow": 12389.969858720395,
+                                            "secondary_airflow": 0.0,
+                                            "served_by_heating_ventilating_air_conditioning_system": "Baseline System 4 (Core)",
+                                            "supply_design_cooling_setpoint_temperature": 12.777777777777828,
+                                            "supply_design_heating_setpoint_temperature": 32.222222222222285
                                         }
                                     ],
                                     "infiltration": {
@@ -1169,11 +1218,11 @@
                                         "air_energy_recovery": {
                                             "design_latent_effectiveness": 0.5,
                                             "design_sensible_effectiveness": 0.5,
-                                            "exhaust_airflow": 126.41062543130803,
+                                            "energy_recovery_operation": "WHEN_MINIMUM_OUTSIDE_AIR",
+                                            "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "exhaust_airflow": 126.4106219313974,
                                             "id": "Baseline System 4 (South) AirEnergyRecovery",
-                                            "operation": "WHEN_MINIMUM_OUTSIDE_AIR",
-                                            "outdoor_airflow": 126.41062543130803,
-                                            "supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "outdoor_airflow": 126.4106219313974,
                                             "type": "ENTHALPY_HEAT_EXCHANGE"
                                         },
                                         "demand_control_ventilation_control": "NONE",
@@ -1181,23 +1230,28 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (South) FanSys",
-                                        "minimum_airflow": 1459.4652640576862,
-                                        "minimum_outdoor_airflow": 126.41062543130803,
+                                        "maximum_outdoor_airflow": 5598.571948398223,
+                                        "minimum_airflow": 1679.5716512596453,
+                                        "minimum_outdoor_airflow": 126.4106219313974,
+                                        "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "CYCLING",
                                         "relief_fans": [],
                                         "return_fans": [],
                                         "supply_fans": [
                                             {
-                                                "design_airflow": 4864.884020212498,
-                                                "design_electric_power": 3092.3285484313965,
+                                                "design_airflow": 5598.571948398223,
+                                                "design_electric_power": 3558.69197845459,
                                                 "id": "Baseline System 4 (South) SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": true,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
                                     "heating_system": {
-                                        "design_capacity": 81564.48606051975,
+                                        "design_capacity": 93865.4680078125,
+                                        "energy_source_type": "ELECTRICITY",
+                                        "heating_coil_setpoint": 32.222222222222285,
                                         "heatpump_auxiliary_heat_high_shutoff_temperature": 4.444444444444457,
                                         "heatpump_auxiliary_heat_type": "ELECTRIC_RESISTANCE",
                                         "heatpump_low_shutoff_temperature": -23.333333333333286,
@@ -1205,25 +1259,20 @@
                                         "id": "Baseline System 4 (South) HeatSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.25,
-                                        "rated_capacity": 81564.48606051975,
+                                        "rated_capacity": 93865.4680078125,
                                         "type": "HEAT_PUMP"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 61753.756260322996,
-                                        "design_total_cool_capacity": 83227.2316636111,
+                                        "design_sensible_cool_capacity": 71067.03363501048,
+                                        "design_total_cool_capacity": 95778.99111194444,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Baseline System 4 (South) CoolSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.1499999999999999,
-                                        "rated_sensible_cool_capacity": 67244.46015444728,
-                                        "rated_total_cool_capacity": 90627.20395138889,
+                                        "rated_sensible_cool_capacity": 77385.80231569022,
+                                        "rated_total_cool_capacity": 104294.96903236111,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "id": "Baseline System 4 (South) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1237,11 +1286,11 @@
                                         "air_energy_recovery": {
                                             "design_latent_effectiveness": 0.5,
                                             "design_sensible_effectiveness": 0.5,
-                                            "exhaust_airflow": 80.02608772502673,
+                                            "energy_recovery_operation": "WHEN_MINIMUM_OUTSIDE_AIR",
+                                            "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "exhaust_airflow": 80.02608688548725,
                                             "id": "Baseline System 4 (East) AirEnergyRecovery",
-                                            "operation": "WHEN_MINIMUM_OUTSIDE_AIR",
-                                            "outdoor_airflow": 80.02608772502673,
-                                            "supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "outdoor_airflow": 80.02608688548725,
                                             "type": "ENTHALPY_HEAT_EXCHANGE"
                                         },
                                         "demand_control_ventilation_control": "NONE",
@@ -1249,23 +1298,28 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (East) FanSys",
-                                        "minimum_airflow": 1059.4633812732127,
-                                        "minimum_outdoor_airflow": 80.02608772502673,
+                                        "maximum_outdoor_airflow": 3428.614063121061,
+                                        "minimum_airflow": 1028.584259808583,
+                                        "minimum_outdoor_airflow": 80.02608688548725,
+                                        "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "CYCLING",
                                         "relief_fans": [],
                                         "return_fans": [],
                                         "supply_fans": [
                                             {
-                                                "design_airflow": 3531.5444639130737,
-                                                "design_electric_power": 2244.800806045532,
+                                                "design_airflow": 3428.614063121061,
+                                                "design_electric_power": 2179.3739795684814,
                                                 "id": "Baseline System 4 (East) SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": true,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
                                     "heating_system": {
-                                        "design_capacity": 59209.7599279107,
+                                        "design_capacity": 57484.031869099934,
+                                        "energy_source_type": "ELECTRICITY",
+                                        "heating_coil_setpoint": 32.222222222222285,
                                         "heatpump_auxiliary_heat_high_shutoff_temperature": 4.444444444444457,
                                         "heatpump_auxiliary_heat_type": "ELECTRIC_RESISTANCE",
                                         "heatpump_low_shutoff_temperature": -23.333333333333286,
@@ -1273,25 +1327,20 @@
                                         "id": "Baseline System 4 (East) HeatSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.25,
-                                        "rated_capacity": 59209.7599279107,
+                                        "rated_capacity": 57484.031869099934,
                                         "type": "HEAT_PUMP"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 44828.647031795255,
-                                        "design_total_cool_capacity": 60416.792725,
+                                        "design_sensible_cool_capacity": 43522.06721651923,
+                                        "design_total_cool_capacity": 58655.88411236111,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Baseline System 4 (East) CoolSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.1499999999999999,
-                                        "rated_sensible_cool_capacity": 48814.48542349977,
-                                        "rated_total_cool_capacity": 65788.62133916667,
+                                        "rated_sensible_cool_capacity": 47391.73686058185,
+                                        "rated_total_cool_capacity": 63871.14406465278,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "id": "Baseline System 4 (East) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1305,11 +1354,11 @@
                                         "air_energy_recovery": {
                                             "design_latent_effectiveness": 0.5,
                                             "design_sensible_effectiveness": 0.5,
-                                            "exhaust_airflow": 126.41061822735867,
+                                            "energy_recovery_operation": "WHEN_MINIMUM_OUTSIDE_AIR",
+                                            "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "exhaust_airflow": 126.41062710852326,
                                             "id": "Baseline System 4 (North) AirEnergyRecovery",
-                                            "operation": "WHEN_MINIMUM_OUTSIDE_AIR",
-                                            "outdoor_airflow": 126.41061822735867,
-                                            "supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "outdoor_airflow": 126.41062710852326,
                                             "type": "ENTHALPY_HEAT_EXCHANGE"
                                         },
                                         "demand_control_ventilation_control": "NONE",
@@ -1317,23 +1366,28 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (North) FanSys",
-                                        "minimum_airflow": 1236.9083910544962,
-                                        "minimum_outdoor_airflow": 126.41061822735867,
+                                        "maximum_outdoor_airflow": 3761.7469688297238,
+                                        "minimum_airflow": 1128.5241354924353,
+                                        "minimum_outdoor_airflow": 126.41062710852326,
+                                        "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "CYCLING",
                                         "relief_fans": [],
                                         "return_fans": [],
                                         "supply_fans": [
                                             {
-                                                "design_airflow": 4123.027806347249,
-                                                "design_electric_power": 2620.7730770111084,
+                                                "design_airflow": 3761.7469688297238,
+                                                "design_electric_power": 2391.127347946167,
                                                 "id": "Baseline System 4 (North) SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": true,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
                                     "heating_system": {
-                                        "design_capacity": 69126.54291754829,
+                                        "design_capacity": 63069.32257629395,
+                                        "energy_source_type": "ELECTRICITY",
+                                        "heating_coil_setpoint": 32.222222222222285,
                                         "heatpump_auxiliary_heat_high_shutoff_temperature": 4.444444444444457,
                                         "heatpump_auxiliary_heat_type": "ELECTRIC_RESISTANCE",
                                         "heatpump_low_shutoff_temperature": -23.333333333333286,
@@ -1341,25 +1395,20 @@
                                         "id": "Baseline System 4 (North) HeatSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.25,
-                                        "rated_capacity": 69126.54291754829,
+                                        "rated_capacity": 63069.32257629395,
                                         "type": "HEAT_PUMP"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 52336.80005055713,
-                                        "design_total_cool_capacity": 70535.74140458333,
+                                        "design_sensible_cool_capacity": 47750.78012536418,
+                                        "design_total_cool_capacity": 64355.03652375,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Baseline System 4 (North) CoolSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.1499999999999999,
-                                        "rated_sensible_cool_capacity": 56990.210878776394,
-                                        "rated_total_cool_capacity": 76807.27085444445,
+                                        "rated_sensible_cool_capacity": 51996.437595739444,
+                                        "rated_total_cool_capacity": 70077.025585625,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "id": "Baseline System 4 (North) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1373,11 +1422,11 @@
                                         "air_energy_recovery": {
                                             "design_latent_effectiveness": 0.5,
                                             "design_sensible_effectiveness": 0.5,
-                                            "exhaust_airflow": 80.0260883063714,
+                                            "energy_recovery_operation": "WHEN_MINIMUM_OUTSIDE_AIR",
+                                            "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "exhaust_airflow": 80.02608286971454,
                                             "id": "Baseline System 4 (West) AirEnergyRecovery",
-                                            "operation": "WHEN_MINIMUM_OUTSIDE_AIR",
-                                            "outdoor_airflow": 80.0260883063714,
-                                            "supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "outdoor_airflow": 80.02608286971454,
                                             "type": "ENTHALPY_HEAT_EXCHANGE"
                                         },
                                         "demand_control_ventilation_control": "NONE",
@@ -1385,23 +1434,28 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (West) FanSys",
-                                        "minimum_airflow": 1072.7348296527853,
-                                        "minimum_outdoor_airflow": 80.0260883063714,
+                                        "maximum_outdoor_airflow": 3599.448206734349,
+                                        "minimum_airflow": 1079.8345049290708,
+                                        "minimum_outdoor_airflow": 80.02608286971454,
+                                        "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "CYCLING",
                                         "relief_fans": [],
                                         "return_fans": [],
                                         "supply_fans": [
                                             {
-                                                "design_airflow": 3575.7826234204485,
-                                                "design_electric_power": 2272.920608520508,
+                                                "design_airflow": 3599.448206734349,
+                                                "design_electric_power": 2287.963390350342,
                                                 "id": "Baseline System 4 (West) SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": true,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
                                     "heating_system": {
-                                        "design_capacity": 59951.45307678223,
+                                        "design_capacity": 60348.232258843316,
+                                        "energy_source_type": "ELECTRICITY",
+                                        "heating_coil_setpoint": 32.222222222222285,
                                         "heatpump_auxiliary_heat_high_shutoff_temperature": 4.444444444444457,
                                         "heatpump_auxiliary_heat_type": "ELECTRIC_RESISTANCE",
                                         "heatpump_low_shutoff_temperature": -23.333333333333286,
@@ -1409,25 +1463,20 @@
                                         "id": "Baseline System 4 (West) HeatSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.25,
-                                        "rated_capacity": 59951.45307678223,
+                                        "rated_capacity": 60348.232258843316,
                                         "type": "HEAT_PUMP"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 45390.19238368682,
-                                        "design_total_cool_capacity": 61173.607656319444,
+                                        "design_sensible_cool_capacity": 45690.59734028987,
+                                        "design_total_cool_capacity": 61578.47165861111,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Baseline System 4 (West) CoolSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.1499999999999999,
-                                        "rated_sensible_cool_capacity": 49425.96086280243,
-                                        "rated_total_cool_capacity": 66612.72356590278,
+                                        "rated_sensible_cool_capacity": 49753.0789019704,
+                                        "rated_total_cool_capacity": 67053.5895225,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "id": "Baseline System 4 (West) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 },
                                 {
@@ -1441,11 +1490,11 @@
                                         "air_energy_recovery": {
                                             "design_latent_effectiveness": 0.5,
                                             "design_sensible_effectiveness": 0.5,
-                                            "exhaust_airflow": 600.1650760576587,
+                                            "energy_recovery_operation": "WHEN_MINIMUM_OUTSIDE_AIR",
+                                            "energy_recovery_supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "exhaust_airflow": 600.165040216837,
                                             "id": "Baseline System 4 (Core) AirEnergyRecovery",
-                                            "operation": "WHEN_MINIMUM_OUTSIDE_AIR",
-                                            "outdoor_airflow": 600.1650760576587,
-                                            "supply_air_temperature_control": "FIXED_SETPOINT",
+                                            "outdoor_airflow": 600.165040216837,
                                             "type": "ENTHALPY_HEAT_EXCHANGE"
                                         },
                                         "demand_control_ventilation_control": "NONE",
@@ -1453,23 +1502,28 @@
                                         "fan_control": "CONSTANT",
                                         "has_fully_ducted_return": true,
                                         "id": "Baseline System 4 (Core) FanSys",
-                                        "minimum_airflow": 2210.915867465109,
-                                        "minimum_outdoor_airflow": 600.1650760576587,
+                                        "maximum_outdoor_airflow": 12389.969858720395,
+                                        "minimum_airflow": 3716.991105316069,
+                                        "minimum_outdoor_airflow": 600.165040216837,
+                                        "operation_during_occupied": "CONTINUOUS",
                                         "operation_during_unoccupied": "CYCLING",
                                         "relief_fans": [],
                                         "return_fans": [],
                                         "supply_fans": [
                                             {
-                                                "design_airflow": 7369.719265370697,
-                                                "design_electric_power": 4684.50927734375,
+                                                "design_airflow": 12389.969858720395,
+                                                "design_electric_power": 7875.595569610596,
                                                 "id": "Baseline System 4 (Core) SupplyFan",
+                                                "is_airflow_sized_based_on_design_day": true,
                                                 "output_validation_points": [],
                                                 "specification_method": "SIMPLE"
                                             }
                                         ]
                                     },
                                     "heating_system": {
-                                        "design_capacity": 123560.47261528863,
+                                        "design_capacity": 207729.83746120878,
+                                        "energy_source_type": "ELECTRICITY",
+                                        "heating_coil_setpoint": 32.222222222222285,
                                         "heatpump_auxiliary_heat_high_shutoff_temperature": 4.444444444444457,
                                         "heatpump_auxiliary_heat_type": "ELECTRIC_RESISTANCE",
                                         "heatpump_low_shutoff_temperature": -23.333333333333286,
@@ -1477,25 +1531,20 @@
                                         "id": "Baseline System 4 (Core) HeatSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.25,
-                                        "rated_capacity": 123560.47261528863,
+                                        "rated_capacity": 207729.83746120878,
                                         "type": "HEAT_PUMP"
                                     },
                                     "cooling_system": {
-                                        "design_sensible_cool_capacity": 144810.60805604202,
-                                        "design_total_cool_capacity": 195165.22967805556,
+                                        "design_sensible_cool_capacity": 243455.54586359928,
+                                        "design_total_cool_capacity": 328111.7189044444,
                                         "efficiency_metric_types": [],
                                         "efficiency_metric_values": [],
                                         "id": "Baseline System 4 (Core) CoolSys",
                                         "is_sized_based_on_design_day": true,
                                         "oversizing_factor": 0.1499999999999999,
-                                        "rated_sensible_cool_capacity": 101867.34015124636,
-                                        "rated_total_cool_capacity": 137289.40927875,
+                                        "rated_sensible_cool_capacity": 171259.3459474087,
+                                        "rated_total_cool_capacity": 230810.91941416668,
                                         "type": "DIRECT_EXPANSION"
-                                    },
-                                    "preheat_system": {
-                                        "id": "Baseline System 4 (Core) PreheatSys",
-                                        "is_sized_based_on_design_day": true,
-                                        "type": "NONE"
                                     }
                                 }
                             ]
@@ -106710,7 +106759,8 @@
                     "compressor_power_validation_points": [],
                     "heater_fuel_type": "NATURAL_GAS",
                     "distribution_system": "DHW Plant 1 Loop",
-                    "rated_capacity": -17466834446.21528,
+                    "thermal_efficiency": 0.8,
+                    "rated_capacity": 17466.834446215278,
                     "heater_type": "CONVENTIONAL"
                 }
             ],
@@ -106718,7 +106768,211 @@
             "boilers": [],
             "chillers": [],
             "heat_rejections": [],
-            "external_fluid_sources": []
+            "external_fluid_sources": [],
+            "output": {
+                "id": "Output2019ASHRAE901",
+                "output_instance": {
+                    "id": "229 Test Case E-1 (PSZHP) Output",
+                    "unmet_load_hours_heating": 0.0,
+                    "unmet_load_hours_cooling": 0.0,
+                    "annual_source_results": [
+                        {
+                            "id": "ELECTRICITY",
+                            "energy_source": "ELECTRICITY",
+                            "annual_consumption": 373220.71875,
+                            "annual_demand": 124.0731201171875
+                        },
+                        {
+                            "id": "NATURAL-GAS",
+                            "energy_source": "NATURAL_GAS",
+                            "annual_consumption": 335.6202392578125,
+                            "annual_demand": 10184.0244140625
+                        }
+                    ],
+                    "annual_end_use_results": [
+                        {
+                            "id": "ELECTRICITY - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 45050.78125,
+                            "annual_site_coincident_demand": 17.41742706298828,
+                            "annual_site_non_coincident_demand": 17.41742706298828,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 54307.5234375,
+                            "annual_site_coincident_demand": 11.537089347839355,
+                            "annual_site_non_coincident_demand": 11.537089347839355,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 92552.1484375,
+                            "annual_site_coincident_demand": 37.25546646118164,
+                            "annual_site_non_coincident_demand": 72.9189453125,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 11771.26953125,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 26.136367797851562,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 2.1978726387023926,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.8827791213989258,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 169488.515625,
+                            "annual_site_coincident_demand": 57.863136291503906,
+                            "annual_site_non_coincident_demand": 57.863136291503906,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 48.46649169921875,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.9308745265007019,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "ELECTRICITY - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "ELECTRICITY",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 335.6202392578125,
+                            "annual_site_coincident_demand": 10184.0244140625,
+                            "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
+                        }
+                    ]
+                }
+            }
         }
     ],
     "calendar": {

@@ -18,6 +18,9 @@ $ ---------------------------------------------------------
 $              Title, Run Periods, Design Days, Holidays
 $ ---------------------------------------------------------
 
+TITLE           
+   LINE-1           = *229 Test Case 1 updated*
+   ..
 
 "Entire Year" = RUN-PERIOD-PD
    BEGIN-MONTH      = 1
@@ -467,6 +470,17 @@ $ ---------------------------------------------------------
    TYPE             = TEMPERATURE
    VALUES           = ( 80.06 )
    ..
+"OA Reset Day" = DAY-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   OUTSIDE-HI       = 60
+   OUTSIDE-LO       = 80
+   SUPPLY-HI        = 44
+   SUPPLY-LO        = 54
+   ..
+"All ON Day" = DAY-SCHEDULE-PD
+   TYPE             = ON/OFF
+   VALUES           = ( 1 )
+   ..
 
 $ ---------------------------------------------------------
 $              Week Schedules
@@ -529,6 +543,14 @@ $ ---------------------------------------------------------
          "Cooling setpoint saturday", "Cooling Setpoint Sunday", 
          "Cooling setpoint saturday", &D, &D, "Cooling setpoint saturday", 
          "Cooling setpoint saturday" )
+   ..
+"OA Reset Week" = WEEK-SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   DAY-SCHEDULES    = ( "OA Reset Day", &D, &D, &D, &D, "OA Reset Day" )
+   ..
+"All ON Wk" = WEEK-SCHEDULE-PD
+   TYPE             = ON/OFF
+   DAY-SCHEDULES    = ( "All ON Day", &D, &D, &D, &D, "All ON Day" )
    ..
 
 $ ---------------------------------------------------------
@@ -594,6 +616,21 @@ $ ---------------------------------------------------------
    MONTH            = ( 12 )
    DAY              = ( 31 )
    WEEK-SCHEDULES   = ( "Cooling setpoint week" )
+   ..
+"Hourly Report Schedule 23" = SCHEDULE-PD
+   LIBRARY-ENTRY "Hourly Report Schedule"
+   ..
+"OA Reset Annual" = SCHEDULE-PD
+   TYPE             = RESET-TEMP
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "OA Reset Week" )
+   ..
+"All ON Sch" = SCHEDULE-PD
+   TYPE             = ON/OFF
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "All ON Wk" )
    ..
 
 
@@ -700,14 +737,13 @@ $ *********************************************************
    FLOOR-HEIGHT     = 13
    AREA             = 17867
    SPACE-HEIGHT     = 13
-   C-DIAGRAM-DATA   = *Bldg Envelope & Loads 1 Diag Data*
+   C-DIAGRAM-DATA   = *Detailed UI DiagData*
    ..
-"Perimeter Space 1 (South)" = SPACE           
+"Prm Space 1 (South)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
    AIR-CHANGES/HR   = 0.5
-   INF-FLOW/AREA    = 0
    POLYGON          = "BL1 Space Polygon 1"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -780,21 +816,21 @@ $ *********************************************************
    INSIDE-RCONV     = 1.41
    ..
 "Perimeter Space 1 NE Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Perimeter Space 2 (East)"
+   NEXT-TO          = "Prm Space 2 (East)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
 "Perimeter Space 1 North Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Core Space 1 (Core)"
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V3
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
 "Perimeter Space 1 NW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Perimeter Space 4 (West)"
+   NEXT-TO          = "Prm Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V4
@@ -802,13 +838,14 @@ $ *********************************************************
    ..
 "Perimeter Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Perimeter Space 2 (East)" = SPACE           
+"Prm Space 2 (East)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
-   INF-FLOW/AREA    = 0.11594
+   INF-FLOW/AREA    = 0.1154
    POLYGON          = "BL1 Space Polygon 2"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -867,14 +904,14 @@ $ *********************************************************
    INSIDE-RCONV     = 1.41
    ..
 "Perimeter Space 2 NW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Perimeter Space 3 (North)"
+   NEXT-TO          = "Prm Space 3 (North)"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V2
    INSIDE-VIS-REFL  = ( 0.3 )
    ..
 "Perimeter Space 2 West Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Core Space 1 (Core)"
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
    INSIDE-SOL-ABS   = ( 0.7 )
    LOCATION         = SPACE-V3
@@ -882,9 +919,10 @@ $ *********************************************************
    ..
 "Perimeter Space 2 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Perimeter Space 3 (North)" = SPACE           
+"Prm Space 3 (North)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -962,25 +1000,26 @@ $ *********************************************************
    INSIDE-EMISS     = 0.9
    INSIDE-RCONV     = 1.41
    ..
-"Perimeter Space 3 SW Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Perimeter Space 4 (West)"
+"Perimeter Space 2 SW Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Prm Space 4 (West)"
    CONSTRUCTION     = "BL1 IWall Construction"
-   INSIDE-SOL-ABS   = ( 0.7 )
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V2
-   INSIDE-VIS-REFL  = ( 0.3 )
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
-"Perimeter Space 3 South Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Core Space 1 (Core)"
+"Perimeter Space 2 South Wall" = INTERIOR-WALL   
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
-   INSIDE-SOL-ABS   = ( 0.7 )
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
-   INSIDE-VIS-REFL  = ( 0.3 )
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 3 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
+   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Perimeter Space 4 (West)" = SPACE           
+"Prm Space 4 (West)" = SPACE           
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-SCHEDULE     = "ZG0-S1 (PSZ) P-Inf Sch"
@@ -1044,22 +1083,24 @@ $ *********************************************************
    INSIDE-RCONV     = 1.41
    ..
 "Perimeter Space 4 East Wall" = INTERIOR-WALL   
-   NEXT-TO          = "Core Space 1 (Core)"
+   NEXT-TO          = "Core Space 1"
    CONSTRUCTION     = "BL1 IWall Construction"
-   INSIDE-SOL-ABS   = ( 0.7 )
+   INSIDE-SOL-ABS   = ( 0.7, 0.7 )
    LOCATION         = SPACE-V3
-   INSIDE-VIS-REFL  = ( 0.3 )
+   INSIDE-VIS-REFL  = ( 0.3, 0.3 )
    ..
 "Perimeter Space 4 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 2"
+   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
-"Core Space 1 (Core)" = SPACE           
+"Core Space 1" = SPACE           
    X                = 15
    Y                = 15
    SHAPE            = POLYGON
    ZONE-TYPE        = CONDITIONED
    INF-METHOD       = AIR-CHANGE
+   AIR-CHANGES/HR   = 0
    POLYGON          = "BL1 Space Polygon 5"
    PEOPLE-SCHEDULE  = ( "Occupancy Annual" )
    AREA/PERSON      = ( 200 )
@@ -1086,6 +1127,7 @@ $ *********************************************************
    ..
 "Core Space 1 Slab on Grade" = UNDERGROUND-WALL
    CONSTRUCTION     = "Slab-on-grade Type 1"
+   INSIDE-SOL-ABS   = 0.7
    LOCATION         = BOTTOM
    ..
 
@@ -1128,6 +1170,13 @@ $ ---------------------------------------------------------
 $              Pumps
 $ ---------------------------------------------------------
 
+"Hot Water Pumps" = PUMP            
+   FLOW             = 20
+   NUMBER           = 1
+   HEAD             = 31
+   PUMP-KW          = 0.38
+   CAP-CTRL         = ONE-SPEED-PUMP
+   ..
 
 
 $ ---------------------------------------------------------
@@ -1140,12 +1189,23 @@ $ ---------------------------------------------------------
 $              Circulation Loops
 $ ---------------------------------------------------------
 
-"DHW Plant 1 Loop" = CIRCULATION-LOOP
+"DHW Plant 1 Loop (1)" = CIRCULATION-LOOP
    TYPE             = DHW
    DESIGN-HEAT-T    = 135
    PROCESS-FLOW     = ( 0.164632 )
    PROCESS-SCH      = ( "DHW Eqp NRes Sch" )
    PROCESS-T        = ( 135 )
+   ..
+"Hot Water Loop" = CIRCULATION-LOOP
+   TYPE             = HW
+   LOOP-DESIGN-DT   = 50
+   SIZING-OPTION    = COINCIDENT
+   LOOP-OPERATION   = SCHEDULED
+   HEATING-SCHEDULE = "All ON Sch"
+   DESIGN-HEAT-T    = 180
+   HEAT-SETPT-CTRL  = LOAD-RESET
+   MIN-RESET-T      = 160
+   LOOP-PUMP        = "Hot Water Pumps"
    ..
 
 
@@ -1159,17 +1219,30 @@ $ ---------------------------------------------------------
 $              Boilers
 $ ---------------------------------------------------------
 
+"Boiler 1" = BOILER          
+   TYPE             = HW-BOILER-W/DRAFT
+   CAPACITY         = 0.3
+   MIN-RATIO        = 0.33
+   ELEC-INPUT-RATIO = 0
+   HEAT-INPUT-RATIO = {1/0.9}
+   AQUASTAT-SETPT-T = 160
+   HW-LOOP          = "Hot Water Loop"
+   ..
 
 
 $ ---------------------------------------------------------
 $              Domestic Water Heaters
 $ ---------------------------------------------------------
 
-"DHW Plant 1 Wtr Htr" = DW-HEATER       
+"DHW Plant 1 Wtr Htr (1)" = DW-HEATER       
    TYPE             = GAS
+   TANK-VOLUME      = 44.7174
    CAPACITY         = 0.0595993
    HIR-FPLR         = "DW-Gas-Pilotless-HIR-fPLR"
-   DHW-LOOP         = "DHW Plant 1 Loop"
+   TANK-UA          = 1.86322
+   LOCATION         = ZONE
+   ZONE-NAME        = "Core Zone 1"
+   DHW-LOOP         = "DHW Plant 1 Loop (1)"
    C-ENERGY-FACTOR  = 0.535037
    C-TANK-EXT-RVAL  = 12
    ..
@@ -1241,237 +1314,116 @@ $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
 
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PSZ
-   FAN-CONTROL      = CONSTANT-VOLUME
-   ERV-RECOVER-TYPE = ENTHALPY-HX
-   ERV-RUN-CTRL     = WHEN-MIN-OA
+"Pkgd VAV" = SYSTEM          
+   TYPE             = PVAVS
+   HEAT-SOURCE      = NONE
+   ZONE-HEAT-SOURCE = HOT-WATER
+   PREHEAT-SOURCE   = HOT-WATER
+   BASEBOARD-SOURCE = HOT-WATER
+   HUMIDIFIER-TYPE  = NONE
+   MAX-SUPPLY-T     = 90
+   HEAT-CONTROL     = COLDEST
+   COOL-SET-T       = 60
+   ECONO-LIMIT-T    = 70
+   ECONO-LOCKOUT    = NO
+   PREHEAT-T        = 50
+   MIN-OA-METHOD    = DCV-RETURN-SENSOR
+   SUPPLY-FLOW      = 10000
+   OA-CONTROL       = DUAL-ENTHALPY
+   RECOVER-EXHAUST  = EXHAUST-ONLY
+   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
+   FAN-CONTROL      = SPEED
+   SUPPLY-KW/FLOW   = 0.000746
+   PHW-LOOP         = "Hot Water Loop"
+   BBRD-LOOP        = "Hot Water Loop"
+   COOLING-CAPACITY = 300000
+   COOLING-EIR      = {1/3}
+   PREHEAT-CAPACITY = -150000
+   ZONE-HW-LOOP     = "Hot Water Loop"
+   ERV-RECOVER-TYPE = SENSIBLE-WHEEL
+   ERV-OA-FLOW      = 1000
+   ERV-EXH-FLOW     = 900
+   ERV-SENSIBLE-EFF = 0.8
+   ERV-RUN-CTRL     = ERV-SCHEDULE
+   ERV-SCHEDULE     = "Hourly Report Schedule"
    ERV-TEMP-CTRL    = FIXED-SETPT
+   OA-HEAT-SETPT-T  = 55
+   OA-COOL-SETPT-T  = 90
+   ERV-CAP-CTRL     = MODULATE-HX
+   ERV-FANS         = SELF-CONTAINED
+   PREHEAT-LOCN     = MIXED-AIR
+   ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+   DOAS-ATTACHED-TO = MIXED-AIR
    ..
-
-SET-DEFAULT FOR ZONE            
-   TYPE = CONDITIONED
-   OA-FLOW/AREA     = ( 0.12 )
-   ..
-
-"Baseline System 4 (South)" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HEAT-PUMP
-   BASEBOARD-SOURCE = NONE
-   HEAT-SIZING-RATI = 1.25
-   COOL-SIZING-RATI = 1.15
-   HUMIDIFIER-TYPE  = NONE
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   MIN-SUPPLY-T     = 55
-   COOL-SET-T       = 55
-   MAX-HUMIDITY     = 100
-   MIN-HUMIDITY     = 0
-   ECONO-LOCKOUT    = NO
-   OA-CONTROL       = DUAL-TEMP
-   RECOVER-EXHAUST  = RELIEF-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   SUPPLY-KW/FLOW   = 0.0003
-   NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-   COOLING-EIR      = {1/3.1}
-   CRANKCASE-HEAT   = 0
-   HEATING-EIR      = {1/3.1}
-   MIN-HP-T         = -10
-   HUMIDIFIER-LOC   = IN-AIR-HANDLER
-   CONTROL-ZONE     = "Perimeter Zone 1 (South)"
-   ERV-SENSIBLE-EFF = 0.5
-   ERV-SEN-FILM-EXP = 1
-   ERV-LATENT-EFF   = 0.5
-   ERV-LAT-FILM-RES = 0.0001
-   ERV-LAT-FILM-EXP = 0.0001
-   OA-HEAT-SETPT-T  = 75
-   OA-COOL-SETPT-T  = 75
-   ERV-CAP-CTRL     = BYPASS-OA
-   SUPPLY-MTR-CLASS = HI-EFF
-   ..
-"Perimeter Zone 1 (South)" = ZONE            
+"Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   SPACE            = "Perimeter Space 1 (South)"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Prm Space 1 (South)"
+   OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"Baseline System 4 (East)" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HEAT-PUMP
-   ZONE-HEAT-SOURCE = NONE
-   BASEBOARD-SOURCE = NONE
-   HEAT-SIZING-RATI = 1.25
-   COOL-SIZING-RATI = 1.15
-   HUMIDIFIER-TYPE  = NONE
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   MIN-SUPPLY-T     = 55
-   COOL-SET-T       = 55
-   MAX-HUMIDITY     = 100
-   MIN-HUMIDITY     = 0
-   ECONO-LOCKOUT    = NO
-   OA-CONTROL       = DUAL-TEMP
-   RECOVER-EXHAUST  = RELIEF-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   SUPPLY-KW/FLOW   = 0.0003
-   NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-   COOLING-EIR      = {1/3.1}
-   CRANKCASE-HEAT   = 0
-   HEATING-EIR      = {1/3.1}
-   MIN-HP-T         = -10
-   HUMIDIFIER-LOC   = IN-AIR-HANDLER
-   CONTROL-ZONE     = "Perimeter Zone 2 (East)"
-   ERV-SENSIBLE-EFF = 0.5
-   ERV-SEN-FILM-EXP = 1
-   ERV-LATENT-EFF   = 0.5
-   ERV-LAT-FILM-RES = 0.0001
-   ERV-LAT-FILM-EXP = 0.0001
-   OA-HEAT-SETPT-T  = 75
-   OA-COOL-SETPT-T  = 75
-   ERV-CAP-CTRL     = BYPASS-OA
-   SUPPLY-MTR-CLASS = HI-EFF
-   ..
-"Perimeter Zone 2 (East)" = ZONE            
+"Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   SPACE            = "Perimeter Space 2 (East)"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Prm Space 2 (East)"
+   OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"Baseline System 4 (North)" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HEAT-PUMP
-   ZONE-HEAT-SOURCE = NONE
-   BASEBOARD-SOURCE = NONE
-   HEAT-SIZING-RATI = 1.25
-   COOL-SIZING-RATI = 1.15
-   HUMIDIFIER-TYPE  = NONE
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   MIN-SUPPLY-T     = 55
-   COOL-SET-T       = 55
-   MAX-HUMIDITY     = 100
-   MIN-HUMIDITY     = 0
-   ECONO-LOCKOUT    = NO
-   OA-CONTROL       = DUAL-TEMP
-   RECOVER-EXHAUST  = RELIEF-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   SUPPLY-KW/FLOW   = 0.0003
-   NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-   COOLING-EIR      = {1/3.1}
-   CRANKCASE-HEAT   = 0
-   HEATING-EIR      = {1/3.1}
-   MIN-HP-T         = -10
-   HUMIDIFIER-LOC   = IN-AIR-HANDLER
-   CONTROL-ZONE     = "Perimeter Zone 3 (North)"
-   ERV-SENSIBLE-EFF = 0.5
-   ERV-SEN-FILM-EXP = 1
-   ERV-LATENT-EFF   = 0.5
-   ERV-LAT-FILM-RES = 0.0001
-   ERV-LAT-FILM-EXP = 0.0001
-   OA-HEAT-SETPT-T  = 75
-   OA-COOL-SETPT-T  = 75
-   ERV-CAP-CTRL     = BYPASS-OA
-   SUPPLY-MTR-CLASS = HI-EFF
-   ..
-"Perimeter Zone 3 (North)" = ZONE            
+"Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   SPACE            = "Perimeter Space 3 (North)"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Prm Space 3 (North)"
+   OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"Baseline System 4 (West)" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HEAT-PUMP
-   ZONE-HEAT-SOURCE = NONE
-   BASEBOARD-SOURCE = NONE
-   HEAT-SIZING-RATI = 1.25
-   COOL-SIZING-RATI = 1.15
-   HUMIDIFIER-TYPE  = NONE
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   MIN-SUPPLY-T     = 55
-   COOL-SET-T       = 55
-   MAX-HUMIDITY     = 100
-   MIN-HUMIDITY     = 0
-   ECONO-LOCKOUT    = NO
-   OA-CONTROL       = DUAL-TEMP
-   RECOVER-EXHAUST  = RELIEF-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   SUPPLY-KW/FLOW   = 0.0003
-   NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-   COOLING-EIR      = {1/3.1}
-   CRANKCASE-HEAT   = 0
-   HEATING-EIR      = {1/3.1}
-   MIN-HP-T         = -10
-   HUMIDIFIER-LOC   = IN-AIR-HANDLER
-   CONTROL-ZONE     = "Perimeter Zone 4 (West)"
-   ERV-SENSIBLE-EFF = 0.5
-   ERV-SEN-FILM-EXP = 1
-   ERV-LATENT-EFF   = 0.5
-   ERV-LAT-FILM-RES = 0.0001
-   ERV-LAT-FILM-EXP = 0.0001
-   OA-HEAT-SETPT-T  = 75
-   OA-COOL-SETPT-T  = 75
-   ERV-CAP-CTRL     = BYPASS-OA
-   SUPPLY-MTR-CLASS = HI-EFF
-   ..
-"Perimeter Zone 4 (West)" = ZONE            
+"Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   SPACE            = "Perimeter Space 4 (West)"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Prm Space 4 (West)"
+   OUTSIDE-AIR-FLOW = ( 200 )
    ..
-"Baseline System 4 (Core)" = SYSTEM          
-   TYPE             = PSZ
-   HEAT-SOURCE      = HEAT-PUMP
-   ZONE-HEAT-SOURCE = NONE
-   BASEBOARD-SOURCE = NONE
-   HEAT-SIZING-RATI = 1.25
-   COOL-SIZING-RATI = 1.15
-   HUMIDIFIER-TYPE  = NONE
-   MAX-SUPPLY-T     = 90
-   HEAT-SET-T       = 90
-   MIN-SUPPLY-T     = 55
-   COOL-SET-T       = 55
-   MAX-HUMIDITY     = 100
-   MIN-HUMIDITY     = 0
-   ECONO-LOCKOUT    = NO
-   OA-CONTROL       = DUAL-TEMP
-   RECOVER-EXHAUST  = RELIEF-ONLY
-   FAN-SCHEDULE     = "S1 Sys1 (PSZ) Fan Sch"
-   SUPPLY-KW/FLOW   = 0.0003
-   NIGHT-CYCLE-CTRL = CYCLE-ON-ANY
-   COOLING-EIR      = {1/3.1}
-   CRANKCASE-HEAT   = 0
-   HEATING-EIR      = {1/3.1}
-   MIN-HP-T         = -10
-   HUMIDIFIER-LOC   = IN-AIR-HANDLER
-   CONTROL-ZONE     = "Core Zone 1 (Core)"
-   ERV-SENSIBLE-EFF = 0.5
-   ERV-SEN-FILM-EXP = 1
-   ERV-LATENT-EFF   = 0.5
-   ERV-LAT-FILM-RES = 0.0001
-   ERV-LAT-FILM-EXP = 0.0001
-   OA-HEAT-SETPT-T  = 75
-   OA-COOL-SETPT-T  = 75
-   ERV-CAP-CTRL     = BYPASS-OA
-   SUPPLY-MTR-CLASS = HI-EFF
-   ..
-"Core Zone 1 (Core)" = ZONE            
+"Core Zone 1" = ZONE            
    TYPE             = CONDITIONED
+   HEATING-CAPACITY = -24000
+   BASEBOARD-RATING = -6000
+   ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-   SPACE            = "Core Space 1 (Core)"
+   THERMOSTAT-TYPE  = REVERSE-ACTION
+   REHEAT-DELTA-T   = 40
+   SPACE            = "Core Space 1"
+   OUTSIDE-AIR-FLOW = ( 200 )
    ..
 
 
@@ -1573,6 +1525,10 @@ $ ---------------------------------------------------------
 $              Hourly Reporting
 $ ---------------------------------------------------------
 
+"Hourly Report Block 3" = REPORT-BLOCK    
+   VARIABLE-TYPE    = "Pkgd VAV"
+   VARIABLE-LIST    = ( 1 )
+   ..
 
 "Hourly Report" = HOURLY-REPORT   
    LIBRARY-ENTRY "Hourly Report"

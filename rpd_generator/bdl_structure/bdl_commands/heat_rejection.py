@@ -40,6 +40,7 @@ class HeatRejection(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.heat_rejection_names.append(u_name)
 
         self.heat_rejection_data_structure = {}
 
@@ -67,53 +68,43 @@ class HeatRejection(BaseNode):
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
 
-        self.loop = self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.CW_LOOP)
+        self.loop = self.get_inp(BDL_HeatRejectionKeywords.CW_LOOP)
 
         self.type = self.heat_rejection_type_map.get(
-            self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.TYPE)
+            self.get_inp(BDL_HeatRejectionKeywords.TYPE)
         )
 
         self.fan_speed_control = self.fan_spd_ctrl_map.get(
-            self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.CAPACITY_CTRL)
+            self.get_inp(BDL_HeatRejectionKeywords.CAPACITY_CTRL)
         )
 
-        self.range = self.try_float(
-            self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.RATED_RANGE)
-        )
+        self.range = self.try_float(self.get_inp(BDL_HeatRejectionKeywords.RATED_RANGE))
 
         self.approach = self.try_float(
-            self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.RATED_APPROACH)
+            self.get_inp(BDL_HeatRejectionKeywords.RATED_APPROACH)
         )
 
         self.design_wetbulb_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.DESIGN_WETBULB)
+            self.get_inp(BDL_HeatRejectionKeywords.DESIGN_WETBULB)
         )
 
         self.rated_water_flowrate = self.try_float(
             output_data.get("Cooling Tower - Flow (gal/min)")
         )
 
-        circulation_loop = self.rmd.bdl_obj_instances.get(self.loop)
+        circulation_loop = self.get_obj(self.loop)
         if circulation_loop is not None:
             self.leaving_water_setpoint_temperature = (
                 circulation_loop.design_supply_temperature[0]
             )
 
         # Assign pump data elements populated from the heat rejection keyword value pairs
-        cw_pump_name = self.keyword_value_pairs.get(BDL_HeatRejectionKeywords.CW_PUMP)
-        if cw_pump_name is not None:
-            pump = self.rmd.bdl_obj_instances.get(cw_pump_name)
-            if pump is not None:
-                pump.loop_or_piping = [self.loop] * pump.qty
+        pump = self.get_obj(self.get_inp(BDL_HeatRejectionKeywords.CW_PUMP))
+        if pump:
+            pump.loop_or_piping = [self.loop] * pump.qty
 
     def get_output_requests(self):
         """Return the output requests for the heat rejection object."""
-        #      2401021,  12,  1,  7, 21,  1,  1,  1,  0,  4, 2066,  8,  1,  0,    0   ; Cooling Tower - Capacity (Btu/hr)
-        #      2401022,  12,  1,  7, 22,  1,  1,  1,  0, 52, 2066,  8,  1,  0,    0   ; Cooling Tower - Flow (gal/min)
-        #      2401023,  12,  1,  7, 23,  0,  1,  1,  0,  1, 2066,  8,  1,  0,    0   ; Cooling Tower - Number of Cells
-        #      2401024,  12,  1,  7, 24,  1,  1,  1,  0, 28, 2066,  8,  1,  0,    0   ; Cooling Tower - Fan Power per Cell (kW)
-        #      2401025,  12,  1,  7, 25,  1,  1,  1,  0, 28, 2066,  8,  1,  0,    0   ; Cooling Tower - Spray Power per Cell (kW)
-        #      2401026,  12,  1,  7, 26,  1,  1,  1,  0, 28, 2066,  8,  1,  0,    0   ; Cooling Tower - Auxiliary (kW)
         requests = {
             "Cooling Tower - Capacity (Btu/hr)": (2401021, "", self.u_name),
             "Cooling Tower - Flow (gal/min)": (2401022, "", self.u_name),

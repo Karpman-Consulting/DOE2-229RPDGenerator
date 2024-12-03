@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch
 
+import os
+
 from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
 
@@ -19,6 +21,7 @@ EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 class TestElectricChillers(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+        validate_configuration.find_equest_installation()
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
@@ -62,6 +65,8 @@ class TestElectricChillers(unittest.TestCase):
             "design_capacity": 0.151941078125,
             "design_flow_condenser": 36.10254669189453,
             "design_flow_evaporator": 28.88204002380371,
+            "is_chilled_water_pump_interlocked": False,
+            "is_condenser_water_pump_interlocked": False,
             "capacity_validation_points": [],
             "power_validation_points": [],
             "part_load_efficiency": [],
@@ -107,6 +112,7 @@ class TestEngineChillers(unittest.TestCase):
             "compressor_type": "SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION",
             "cooling_loop": "Chilled Water Loop (Primary)",
             "condensing_loop": "Condenser Water Loop",
+            "energy_source_type": "NATURAL_GAS",
             "design_entering_condenser_temperature": 70.0,
             "design_leaving_evaporator_temperature": 50.0,
             "rated_entering_condenser_temperature": 85.0,
@@ -115,6 +121,8 @@ class TestEngineChillers(unittest.TestCase):
             "design_capacity": 0.151941078125,
             "design_flow_condenser": 35.50693130493164,
             "design_flow_evaporator": 28.40554428100586,
+            "is_chilled_water_pump_interlocked": False,
+            "is_condenser_water_pump_interlocked": False,
             "capacity_validation_points": [],
             "power_validation_points": [],
             "part_load_efficiency": [],

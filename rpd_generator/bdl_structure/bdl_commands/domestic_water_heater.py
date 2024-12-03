@@ -12,23 +12,14 @@ BDL_DWHeaterKeywords = BDLEnums.bdl_enums["DomesticWaterHeaterKeywords"]
 BDL_DWHeaterTypes = BDLEnums.bdl_enums["DomesticWaterHeaterTypes"]
 BDL_DWHeaterLocationOptions = BDLEnums.bdl_enums["DomesticWaterHeaterLocationOptions"]
 BDL_FuelTypes = BDLEnums.bdl_enums["FuelTypes"]
+BDL_MasterMeterKeywords = BDLEnums.bdl_enums["MasterMeterKeywords"]
+BDL_FuelMeterKeywords = BDLEnums.bdl_enums["FuelMeterKeywords"]
 
 
 class DomesticWaterHeater(BaseNode):
     """DomesticWaterHeater object in the tree."""
 
     bdl_command = BDL_Commands.DW_HEATER
-
-    fuel_type_map = {
-        BDL_FuelTypes.ELECTRICITY: EnergySourceOptions.ELECTRICITY,
-        BDL_FuelTypes.NATURAL_GAS: EnergySourceOptions.NATURAL_GAS,
-        BDL_FuelTypes.LPG: EnergySourceOptions.PROPANE,
-        BDL_FuelTypes.FUEL_OIL: EnergySourceOptions.FUEL_OIL,
-        BDL_FuelTypes.DIESEL_OIL: EnergySourceOptions.OTHER,
-        BDL_FuelTypes.COAL: EnergySourceOptions.OTHER,
-        BDL_FuelTypes.METHANOL: EnergySourceOptions.OTHER,
-        BDL_FuelTypes.OTHER_FUEL: EnergySourceOptions.OTHER,
-    }
 
     heater_type_map = {
         BDL_DWHeaterTypes.GAS: ServiceWaterHeaterOptions.CONVENTIONAL,
@@ -43,6 +34,7 @@ class DomesticWaterHeater(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.domestic_water_heater_names.append(u_name)
 
         self.data_structure = {}
 
@@ -92,64 +84,73 @@ class DomesticWaterHeater(BaseNode):
         """Populate data elements for domestic water heater object."""
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
+        for key in ["DW Heaters - Design Parameters - Capacity"]:
+            if key in output_data:
+                output_data[key] = self.try_convert_units(
+                    output_data[key], "Btu/hr", "MMbtu_h"
+                )
 
-        fuel_meter_ref = self.keyword_value_pairs.get(BDL_DWHeaterKeywords.FUEL_METER)
-        fuel_meter = self.rmd.bdl_obj_instances.get(fuel_meter_ref)
-        # If the fuel meter is not found, then it must be a MasterMeter.
-        if fuel_meter is None:
-            # This assumes the Master Fuel Meter is Natural Gas
-            self.heater_fuel_type = BDL_FuelTypes.NATURAL_GAS
-        else:
-            fuel_meter_type = fuel_meter.keyword_value_pairs.get(
-                BDL_DWHeaterKeywords.TYPE
+        self.heater_type = self.heater_type_map.get(
+            self.get_inp(BDL_DWHeaterKeywords.TYPE)
+        )
+        if self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.ELEC:
+            self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
+        elif self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.HEAT_PUMP:
+            self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
+            self.compressor_location = self.location_map.get(
+                self.get_inp(BDL_DWHeaterKeywords.LOCATION)
             )
-            self.heater_fuel_type = self.fuel_type_map.get(fuel_meter_type)
+            self.compressor_zone = self.get_inp(BDL_DWHeaterKeywords.ZONE_NAME)
+            self.compressor_heat_rejection_source = ComponentLocationOptions.OTHER
+            if self.compressor_zone:
+                self.notes = 'At the time of development, heat pump water heaters within a zone are not fully supported by eQUEST. The compressor heat rejection source is therefore populated as OTHER. According to help text Volume 2: Dictionary > HVAC Components > DW-HEATER > Energy Consumption: "Partially implemented; the program will use the zone temperature when calculating the tank losses or the performance of a HEAT-PUMP water heater, however these interactions do not have any effect on the zone temperature."'
 
-        self.distribution_system = self.keyword_value_pairs.get(
-            BDL_DWHeaterKeywords.DHW_LOOP
+        else:
+            fuel_meter_ref = self.get_inp(BDL_DWHeaterKeywords.FUEL_METER)
+            fuel_meter = self.get_obj(fuel_meter_ref)
+            # If the fuel meter is not found, then it must be a MasterMeter.
+            if fuel_meter is None:
+                master_meters = self.get_obj(self.rmd.master_meters)
+                if master_meters:
+                    dhw_fuel_meter_name = master_meters.get_inp(
+                        BDL_MasterMeterKeywords.DHW_FUEL_METER
+                    )
+                    dhw_fuel_meter = self.get_obj(dhw_fuel_meter_name)
+                    if dhw_fuel_meter:
+                        self.heater_fuel_type = dhw_fuel_meter.fuel_type
+            else:
+                self.heater_fuel_type = fuel_meter.fuel_type
+
+        self.distribution_system = self.get_inp(BDL_DWHeaterKeywords.DHW_LOOP)
+        self.rated_capacity = self.try_abs(
+            self.try_float(output_data.get("DW Heaters - Design Parameters - Capacity"))
         )
-
-        self.rated_capacity = self.try_float(
-            output_data.get("DW Heaters - Design Parameters - Capacity")
-        )
-
-        loop = self.rmd.bdl_obj_instances.get(self.distribution_system)
+        loop = self.get_obj(self.distribution_system)
         loop_stpt = None
         if loop is not None:
             loop_stpt = loop.design_supply_temperature[1]
-        tank_stpt = self.keyword_value_pairs.get(BDL_DWHeaterKeywords.AQUASTAT_SETPT_T)
+        tank_stpt = self.get_inp(BDL_DWHeaterKeywords.AQUASTAT_SETPT_T)
         if tank_stpt is not None and loop_stpt is not None:
             self.setpoint_temperature = max(loop_stpt, tank_stpt)
         elif tank_stpt is None:
             self.setpoint_temperature = loop_stpt
-
-        self.heater_type = self.heater_type_map.get(
-            self.keyword_value_pairs.get(BDL_DWHeaterKeywords.TYPE)
-        )
-
         self.storage_capacity = self.try_float(
-            self.keyword_value_pairs.get(BDL_DWHeaterKeywords.TANK_VOLUME)
+            self.get_inp(BDL_DWHeaterKeywords.TANK_VOLUME)
         )
-
         self.location = self.location_map.get(
-            self.keyword_value_pairs.get(BDL_DWHeaterKeywords.LOCATION)
+            self.get_inp(BDL_DWHeaterKeywords.LOCATION)
         )
-
-        self.location_zone = self.keyword_value_pairs.get(
-            BDL_DWHeaterKeywords.ZONE_NAME
+        self.location_zone = self.get_inp(BDL_DWHeaterKeywords.ZONE_NAME)
+        self.thermal_efficiency = 1 / (
+            (self.try_float(self.get_inp(BDL_DWHeaterKeywords.HEAT_INPUT_RATIO)) or 1.0)
+            * (
+                self.try_float(self.get_inp(BDL_DWHeaterKeywords.ELEC_INPUT_RATIO))
+                or 1.0
+            )
         )
 
     def get_output_requests(self):
         """Get the output requests for the domestic water heater object."""
-        #      2321001,  83,  1,  2,  5,  2,  1,  8,  0,  1,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Domestic Water Loop
-        #      2321002,  83,  1,  2,  1,  2,  1,  4,  0,  1,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Type
-        #      2321003,  83,  1,  2, 13,  1,  1,  1,  0,  4,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Capacity
-        #      2321004,  83,  1,  2, 14,  1,  1,  1,  0, 52,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Flow
-        #      2321005,  83,  1,  2, 15,  1,  1,  1,  0, 22,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Electric Input Ratio
-        #      2321006,  83,  1,  2, 16,  1,  1,  1,  0, 22,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Fuel Input Ratio
-        #      2321007,  83,  1,  2, 17,  1,  1,  1,  0, 28,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Auxiliary Power
-        #      2321008,  83,  1,  2, 18,  1,  1,  1,  0, 51,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Tank Volume
-        #      2321009,  83,  1,  2, 19,  1,  1,  1,  0, 14,    0,  0,  0,  0, 2065   ; DW Heaters - Design Parameters - Tank Loss Coefficient
         requests = {
             "DW Heaters - Design Parameters - Capacity": (2321003, self.u_name, ""),
             "DW Heaters - Design Parameters - Flow": (2321004, self.u_name, ""),

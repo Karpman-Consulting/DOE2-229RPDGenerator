@@ -4,7 +4,11 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 
 HeatingSourceOptions = SchemaEnums.schema_enums["HeatingSourceOptions"]
+CoolingSourceOptions = SchemaEnums.schema_enums["CoolingSourceOptions"]
 TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
+TerminalFanConfigurationOptions = SchemaEnums.schema_enums[
+    "TerminalFanConfigurationOptions"
+]
 FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
     "FanSystemSupplyFanControlOptions"
 ]
@@ -19,6 +23,10 @@ BDL_ZoneHeatSourceOptions = BDLEnums.bdl_enums["ZoneHeatSourceOptions"]
 BDL_TerminalTypes = BDLEnums.bdl_enums["TerminalTypes"]
 BDL_BaseboardControlOptions = BDLEnums.bdl_enums["BaseboardControlOptions"]
 BDL_ZoneFanRunOptions = BDLEnums.bdl_enums["ZoneFanRunOptions"]
+BDL_ZoneFanControlOptions = BDLEnums.bdl_enums["ZoneFanControlOptions"]
+BDL_ZoneInductionSourceOptions = BDLEnums.bdl_enums["ZoneInductionSourceOptions"]
+BDL_OutputCoolingTypes = BDLEnums.bdl_enums["OutputCoolingTypes"]
+BDL_OutputHeatingTypes = BDLEnums.bdl_enums["OutputHeatingTypes"]
 
 
 class Zone(ChildNode):
@@ -43,12 +51,17 @@ class Zone(ChildNode):
         BDL_ZoneFanRunOptions.HEATING_COOLING: False,
     }
 
+    terminal_fan_type_map = {
+        BDL_ZoneFanControlOptions.CONSTANT_VOLUME: TerminalOptions.CONSTANT_AIR_VOLUME,
+        BDL_ZoneFanControlOptions.VARIABLE_VOLUME: TerminalOptions.VARIABLE_AIR_VOLUME,
+    }
+
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.zone_names.append(u_name)
+
         # On initialization the parent building segment is not known. It will be set in the GUI.
-        self.parent_building_segment = rmd.bdl_obj_instances.get(
-            "Default Building Segment", None
-        )
+        self.parent_building_segment = self.get_obj("Default Building Segment")
 
         self.zone_data_structure = {}
 
@@ -131,6 +144,7 @@ class Zone(ChildNode):
         self.terminal_fan_specification_method = None
         self.terminal_fan_design_electric_power = None
         self.terminal_fan_design_pressure_rise = None
+        self.terminal_fan_motor_efficiency = None
         self.terminal_fan_total_efficiency = None
         self.terminal_fan_output_validation_points = []
 
@@ -161,84 +175,356 @@ class Zone(ChildNode):
 
     def populate_data_elements(self):
         """Populate data elements for zone object."""
-        has_doas = bool(
-            self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
-        )
-        has_baseboard = self.keyword_value_pairs.get(
-            BDL_ZoneKeywords.BASEBOARD_CTRL
-        ) not in [
+        has_baseboard = self.get_inp(BDL_ZoneKeywords.BASEBOARD_CTRL) not in [
             None,
             BDL_BaseboardControlOptions.NONE,
         ]
-        is_piu = self.keyword_value_pairs.get(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+        has_doas = bool(self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM))
+        has_induction = self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.TERMINAL_IU,
+            BDL_TerminalTypes.CEILING_IU,
             BDL_TerminalTypes.SERIES_PIU,
             BDL_TerminalTypes.PARALLEL_PIU,
         ]
 
         self.design_thermostat_cooling_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_ZoneKeywords.DESIGN_COOL_T)
+            self.get_inp(BDL_ZoneKeywords.DESIGN_COOL_T)
         )
-        self.thermostat_cooling_setpoint_schedule = self.keyword_value_pairs.get(
+        self.thermostat_cooling_setpoint_schedule = self.get_inp(
             BDL_ZoneKeywords.COOL_TEMP_SCH
         )
         self.design_thermostat_heating_setpoint = self.try_float(
-            self.keyword_value_pairs.get(BDL_ZoneKeywords.DESIGN_HEAT_T)
+            self.get_inp(BDL_ZoneKeywords.DESIGN_HEAT_T)
         )
-        self.thermostat_heating_setpoint_schedule = self.keyword_value_pairs.get(
+        self.thermostat_heating_setpoint_schedule = self.get_inp(
             BDL_ZoneKeywords.HEAT_TEMP_SCH
         )
-        self.exhaust_airflow_rate_multiplier_schedule = self.keyword_value_pairs.get(
+        self.exhaust_airflow_rate_multiplier_schedule = self.get_inp(
             BDL_ZoneKeywords.EXHAUST_FAN_SCH
         )
 
-        # if the zone is served by a SUM system don't populate the data elements
-        if (
-            self.parent.keyword_value_pairs.get(BDL_SystemKeywords.TYPE)
-            == BDL_SystemTypes.SUM
-        ):
+        # if the zone is served by a SUM system don't populate the data elements below
+        if self.parent.get_inp(BDL_SystemKeywords.TYPE) == BDL_SystemTypes.SUM:
             return
 
         requests = self.get_output_requests()
         output_data = self.get_output_data(requests)
-        supply_airflow = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow"
-        )
-        minimum_airflow_ratio = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio"
-        )
-        minimum_outdoor_airflow = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow"
-        )
+        for key in [
+            "Zone Heating Capacity",
+            "Zone Cooling Capacity",
+        ]:
+            if key in output_data:
+                output_data[key] = self.try_convert_units(
+                    output_data[key], "kBtu/hr", "Btu/hr"
+                )
+
+        zone_supply_airflow = output_data.get("Zone Supply Airflow")
+        minimum_airflow_ratio = output_data.get("Zone Minimum Airflow Ratio")
+        minimum_outdoor_airflow = output_data.get("Zone Outside Airflow")
+        exhaust_airflow = self.try_float(self.get_inp(BDL_ZoneKeywords.EXHAUST_FLOW))
+
+        if exhaust_airflow is not None and exhaust_airflow > 0:
+            self.zone_exhaust_fan_id = self.u_name + " EF"
+            self.zone_exhaust_fan_design_airflow = exhaust_airflow
+            self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
+
+            if self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC) is not None:
+                self.zone_exhaust_fan_specification_method = (
+                    FanSpecificationMethodOptions.DETAILED
+                )
+                self.zone_exhaust_fan_design_pressure_rise = self.try_float(
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC)
+                )
+                self.zone_exhaust_fan_total_efficiency = self.try_float(
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_EFF)
+                )
+                if (
+                    self.zone_exhaust_fan_design_pressure_rise
+                    and self.zone_exhaust_fan_total_efficiency
+                ):
+                    self.zone_exhaust_fan_design_electric_power = (
+                        self.calculate_fan_power(
+                            exhaust_airflow,
+                            self.zone_exhaust_fan_design_pressure_rise,
+                            self.zone_exhaust_fan_total_efficiency,
+                        )
+                    )
+
+            else:
+                self.zone_exhaust_fan_specification_method = (
+                    FanSpecificationMethodOptions.SIMPLE
+                )
+                zone_ef_power_per_flow = self.try_float(
+                    self.get_inp(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
+                )
+                if zone_ef_power_per_flow:
+                    self.zone_exhaust_fan_design_electric_power = (
+                        zone_ef_power_per_flow * exhaust_airflow
+                    )
 
         # Populate MainTerminal data elements
         self.terminals_id[0] = self.u_name + " MainTerminal"
         self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
             self.parent.u_name
         )
-        self.terminals_heating_source[0] = self.heat_source_map.get(
-            self.parent.keyword_value_pairs.get(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
-        )
-        self.terminals_heating_from_loop[0] = self.keyword_value_pairs.get(
-            BDL_ZoneKeywords.HW_LOOP
-        )
-        self.terminals_primary_airflow[0] = supply_airflow
-        self.terminals_heating_capacity[0] = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity"
-        )
-        self.terminals_cooling_capacity[0] = output_data.get(
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity"
-        )
-        exhaust_airflow = self.try_float(
-            self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_FLOW)
+        if self.parent.get_inp(BDL_SystemKeywords.TYPE) in [
+            BDL_SystemTypes.DDS,
+            BDL_SystemTypes.MZS,
+            BDL_SystemTypes.PMZS,
+            BDL_SystemTypes.SZRH,
+            BDL_SystemTypes.SZCI,
+            BDL_SystemTypes.UVT,
+            BDL_SystemTypes.UHT,
+            BDL_SystemTypes.HP,
+            BDL_SystemTypes.FC,
+            BDL_SystemTypes.PSZ,
+            BDL_SystemTypes.PVVT,
+            BDL_SystemTypes.RESVVT,
+            BDL_SystemTypes.DOAS,
+        ]:
+            self.terminals_supply_design_heating_setpoint_temperature[0] = (
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.MAX_SUPPLY_T))
+            )
+        self.terminals_supply_design_cooling_setpoint_temperature[0] = self.try_float(
+            self.parent.get_inp(BDL_SystemKeywords.MIN_SUPPLY_T)
         )
 
-        if supply_airflow is not None and minimum_airflow_ratio is not None:
-            self.terminals_minimum_airflow[0] = supply_airflow * minimum_airflow_ratio
+        # Only populate MainTerminal Fan data elements here if the parent system is_terminal is True
+        # (Systems that allow PIU terminals cannot be terminal)
+        if self.parent.is_terminal:
+            self.terminal_fan_id = self.u_name + " MainTerminal Fan"
+            self.terminal_fan_specification_method = (
+                FanSpecificationMethodOptions.DETAILED
+                if self.parent.get_inp(BDL_SystemKeywords.SUPPLY_STATIC) is not None
+                else FanSpecificationMethodOptions.SIMPLE
+            )
+            self.terminal_fan_design_pressure_rise = self.try_float(
+                self.parent.get_inp(BDL_SystemKeywords.SUPPLY_STATIC)
+            )
+            self.terminal_fan_motor_efficiency = self.try_float(
+                self.parent.get_inp(BDL_SystemKeywords.SUPPLY_MTR_EFF)
+            )
+            supply_mech_eff = self.try_float(
+                self.parent.get_inp(BDL_SystemKeywords.SUPPLY_MECH_EFF)
+            )
+            if self.terminal_fan_motor_efficiency and supply_mech_eff:
+                self.terminal_fan_total_efficiency = (
+                    self.terminal_fan_motor_efficiency * supply_mech_eff
+                )
+            self.terminals_fan_configuration[0] = TerminalFanConfigurationOptions.SERIES
+            if self.parent.get_inp(BDL_SystemKeywords.SUPPLY_FLOW) is not None:
+                self.terminal_fan_is_airflow_sized_based_on_design_day = False
+            if self.terminal_fan_is_airflow_sized_based_on_design_day is None:
+                self.terminal_fan_is_airflow_sized_based_on_design_day = (
+                    # If the zone has assigned flow rates, the fan is not sized based on design day
+                    not (
+                        self.get_inp(BDL_ZoneKeywords.ASSIGNED_FLOW)
+                        or self.get_inp(BDL_ZoneKeywords.HASSIGNED_FLOW)
+                        or self.get_inp(BDL_ZoneKeywords.FLOW_AREA)
+                        or self.get_inp(BDL_ZoneKeywords.HFLOW_AREA)
+                        or self.get_inp(BDL_ZoneKeywords.AIR_CHANGES_HR)
+                        or self.get_inp(BDL_ZoneKeywords.HAIR_CHANGES_HR)
+                        or self.get_inp(BDL_ZoneKeywords.MIN_FLOW_AREA)
+                        or self.get_inp(BDL_ZoneKeywords.HMIN_FLOW_AREA)
+                    )
+                )
 
-        if not has_doas:
+            self.terminals_heating_capacity[0] = self.try_abs(
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.HEATING_CAPACITY))
+            )
+            if not self.terminals_heating_capacity[0]:
+                self.terminals_heating_capacity[0] = self.try_abs(
+                    output_data.get("Rated Heating capacity")
+                )
+            if not self.terminals_heating_capacity[0]:
+                self.terminals_heating_capacity[0] = self.try_abs(
+                    output_data.get("Heating Capacity")
+                )
+            self.terminals_cooling_capacity[0] = self.try_abs(
+                self.try_float(self.parent.get_inp(BDL_SystemKeywords.COOLING_CAPACITY))
+            )
+            if not self.terminals_cooling_capacity[0]:
+                self.terminals_cooling_capacity[0] = self.try_abs(
+                    output_data.get("Rated Cooling capacity")
+                )
+            if not self.terminals_cooling_capacity[0]:
+                self.terminals_cooling_capacity[0] = self.try_abs(
+                    output_data.get("Cooling Capacity")
+                )
+            self.terminals_heating_source[0] = self.heat_source_map.get(
+                self.parent.get_inp(BDL_SystemKeywords.HEAT_SOURCE)
+            )
+            self.terminals_heating_from_loop[0] = self.parent.get_inp(
+                BDL_SystemKeywords.HW_LOOP
+            )
+            self.terminals_cooling_source[0] = (
+                CoolingSourceOptions.CHILLED_WATER
+                if self.terminals_cooling_capacity[0]
+                else None
+            )
+
+        if self.parent.is_terminal and self.parent.is_zonal_system:
+            self.terminal_fan_design_airflow = zone_supply_airflow
+            zone_fan_power = output_data.get("Zone Fan Power", 0)
+            self.terminal_fan_design_electric_power = max(
+                0,
+                (
+                    zone_fan_power
+                    if self.zone_exhaust_fan_design_electric_power is None
+                    else zone_fan_power - self.zone_exhaust_fan_design_electric_power
+                ),
+            )
+
+        elif self.parent.is_terminal and not self.parent.is_zonal_system:
+            self.terminal_fan_design_airflow = output_data.get("Supply Fan - Airflow")
+            self.terminal_fan_design_electric_power = output_data.get(
+                "Supply Fan - Power"
+            )
+
+        else:  # not self.parent.is_terminal:
+            if self.parent.is_zonal_system:
+                self.parent.fan_design_electric_power[0] = max(
+                    0,
+                    (
+                        self.parent.fan_design_electric_power[0]
+                        if self.zone_exhaust_fan_design_electric_power is None
+                        else self.parent.fan_design_electric_power[0]
+                        - self.zone_exhaust_fan_design_electric_power
+                    ),
+                )
+            if self.parent.is_derived_system:
+                self.terminals_served_by_heating_ventilating_air_conditioning_system[
+                    0
+                ] = self.parent.sys_id
+            else:
+                self.terminals_served_by_heating_ventilating_air_conditioning_system[
+                    0
+                ] = self.parent.u_name
+            self.terminals_heating_source[0] = self.heat_source_map.get(
+                self.parent.get_inp(BDL_SystemKeywords.ZONE_HEAT_SOURCE)
+            )
+            self.terminals_heating_from_loop[0] = self.get_inp(BDL_ZoneKeywords.HW_LOOP)
+            self.terminals_heating_capacity[0] = self.try_abs(
+                output_data.get("Zone Heating Capacity")
+            )
+            self.terminals_cooling_capacity[0] = output_data.get(
+                "Zone Cooling Capacity"
+            )
+            self.terminals_cooling_source[0] = (
+                CoolingSourceOptions.CHILLED_WATER
+                if self.terminals_cooling_capacity[0]
+                else None
+            )
+            if zone_supply_airflow is not None and minimum_airflow_ratio is not None:
+                self.terminals_minimum_airflow[0] = (
+                    zone_supply_airflow * minimum_airflow_ratio
+                )
+
+        if has_induction:
+            piu_fan_flow = output_data.get("Powered Induction Units - Fan Flow")
+            piu_fan_kw = output_data.get("Powered Induction Units - Fan kW")
+            piu_cd_flow = output_data.get("Powered Induction Units - Cold Deck Flow")
+            piu_cd_min_airflow_ratio = output_data.get(
+                "Powered Induction Units - Cold Deck Minimum Airflow Ratio"
+            )
+
+            if (
+                self.get_inp(BDL_ZoneKeywords.INDUCED_AIR_SRC)
+                == BDL_ZoneInductionSourceOptions.SUPPLY_AIR
+            ):
+                self.terminals_primary_airflow[0] = zone_supply_airflow
+                self.terminals_secondary_airflow[0] = 0
+
+            elif (
+                self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE)
+                == BDL_TerminalTypes.SERIES_PIU
+            ):
+                self.terminals_primary_airflow[0] = piu_cd_flow
+                if (
+                    self.terminals_primary_airflow[0]
+                    and piu_fan_flow
+                    and piu_cd_min_airflow_ratio
+                ):
+                    self.terminals_secondary_airflow[0] = (
+                        piu_fan_flow
+                        - self.terminals_primary_airflow[0] * piu_cd_min_airflow_ratio
+                    )
+                self.terminals_fan_configuration[0] = (
+                    TerminalFanConfigurationOptions.SERIES
+                )
+
+            else:
+                self.terminals_primary_airflow[0] = piu_cd_flow
+                self.terminals_secondary_airflow[0] = piu_fan_flow
+
+            # Only populate MainTerminal Fan data elements here if the zone TERMINAL-TYPE is SERIES-PIU or PARALLEL-PIU
+            if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+                BDL_TerminalTypes.SERIES_PIU,
+                BDL_TerminalTypes.PARALLEL_PIU,
+            ]:
+                self.terminal_fan_id = self.u_name + " MainTerminal Fan"
+                self.terminal_fan_design_airflow = piu_fan_flow
+                self.terminals_is_fan_first_stage_heat[0] = (
+                    self.is_fan_first_stage_map.get(
+                        self.get_inp(BDL_ZoneKeywords.ZONE_FAN_RUN)
+                    )
+                )
+                if self.get_inp(BDL_ZoneKeywords.ZONE_FAN_FLOW):
+                    self.terminal_fan_is_airflow_sized_based_on_design_day = False
+                self.terminal_fan_specification_method = (
+                    FanSpecificationMethodOptions.SIMPLE
+                )
+                self.terminal_fan_design_electric_power = piu_fan_kw
+                self.terminals_type[0] = self.terminal_fan_type_map.get(
+                    self.get_inp(BDL_ZoneKeywords.ZONE_FAN_CTRL)
+                )
+                self.terminals_fan_configuration[0] = (
+                    self.terminals_fan_configuration[0]
+                    or TerminalFanConfigurationOptions.PARALLEL
+                )
+
+        elif self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.DUAL_DUCT,
+            BDL_TerminalTypes.MULTIZONE,
+        ]:
+            self.terminals_primary_airflow[0] = output_data.get(
+                "Dual-Duct/Multizone Boxes - Outlet Airflow", 0
+            )
+            self.terminals_secondary_airflow[0] = 0
+
+        else:
+            self.terminals_primary_airflow[0] = zone_supply_airflow
+            self.terminals_secondary_airflow[0] = 0
+
+        # Populate DOAS Terminal data elements if applicable
+        if has_doas:
+            doas_system = self.get_obj(
+                self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM)
+            )
+            self.terminals_id[2] = self.u_name + " DOASTerminal"
+            self.terminals_cooling_capacity[2] = 0.0
+            self.terminals_heating_capacity[2] = 0.0
+            self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
+            self.terminals_minimum_outdoor_airflow_multiplier_schedule[2] = (
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
+            )
+            self.terminals_primary_airflow[2] = minimum_outdoor_airflow
+            self.terminals_minimum_airflow[2] = minimum_outdoor_airflow
+            if (
+                doas_system
+                and doas_system.fan_sys_fan_control
+                == FanSystemSupplyFanControlOptions.CONSTANT
+                or self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
+            ):
+                self.terminals_type[2] = TerminalOptions.CONSTANT_AIR_VOLUME
+            # TODO: Account for zone minimum air flow schedule(s)
+            else:
+                self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
+
+        else:
             self.terminals_minimum_outdoor_airflow[0] = minimum_outdoor_airflow
             self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.MIN_AIR_SCH)
+                self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
             )
 
         # Populate Baseboard Terminal data elements if applicable
@@ -249,108 +535,15 @@ class Zone(ChildNode):
             self.terminals_has_demand_control_ventilation[1] = False
             self.terminals_cooling_capacity[1] = 0.0
             self.terminals_heating_source[1] = self.heat_source_map.get(
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.BASEBOARD_SOURCE)
+                self.parent.get_inp(BDL_SystemKeywords.BASEBOARD_SOURCE)
             )
-            self.terminals_heating_from_loop[1] = self.parent.keyword_value_pairs.get(
+            self.terminals_heating_from_loop[1] = self.parent.get_inp(
                 BDL_SystemKeywords.BBRD_LOOP
             )
-            self.terminals_heating_capacity[1] = self.keyword_value_pairs.get(
-                BDL_ZoneKeywords.BASEBOARD_RATING
+            self.terminals_heating_capacity[1] = self.try_abs(
+                self.try_float(self.get_inp(BDL_ZoneKeywords.BASEBOARD_RATING))
             )
 
-        # Populate DOAS Terminal data elements if applicable
-        if has_doas:
-            doas_system = self.rmd.bdl_obj_instances.get(
-                self.parent.keyword_value_pairs.get(BDL_SystemKeywords.DOA_SYSTEM)
-            )
-            self.terminals_id[2] = self.u_name + " DOASTerminal"
-            self.terminals_cooling_capacity[2] = 0.0
-            self.terminals_heating_capacity[2] = 0.0
-            self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
-            self.terminals_primary_airflow[2] = minimum_outdoor_airflow
-            self.terminals_minimum_airflow[2] = minimum_outdoor_airflow
-            if (
-                doas_system.fan_sys_fan_control
-                == FanSystemSupplyFanControlOptions.CONSTANT
-                or self.keyword_value_pairs.get(BDL_ZoneKeywords.MIN_FLOW_RATIO) == 1
-            ):
-                self.terminals_type[2] = TerminalOptions.CONSTANT_AIR_VOLUME
-            # TODO: Account for zone minimum air flow schedule(s)
-            else:
-                self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
-
-        # Only populate MainTerminal Fan data elements here if the zone TERMINAL-TYPE is SERIES-PIU or PARALLEL-PIU
-        if is_piu:
-            self.terminal_fan_id = self.u_name + " MainTerminal Fan"
-            self.terminal_fan_design_airflow = self.try_float(
-                output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow"
-                )
-            )
-            self.terminals_is_fan_first_stage_heat[0] = self.is_fan_first_stage_map.get(
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.ZONE_FAN_RUN)
-            )
-            if self.keyword_value_pairs.get(BDL_ZoneKeywords.ZONE_FAN_FLOW):
-                self.terminal_fan_is_airflow_sized_based_on_design_day = False
-            self.terminal_fan_specification_method = (
-                FanSpecificationMethodOptions.SIMPLE
-            )
-            self.terminal_fan_design_electric_power = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW"
-            )
-
-        # Only populate MainTerminal Fan data elements here if the parent system type is FC with HW or no heat
-        elif self.parent.is_terminal:
-            self.terminal_fan_id = self.u_name + " MainTerminal Fan"
-            self.terminal_fan_design_airflow = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow"
-            )
-            self.terminal_fan_design_electric_power = output_data.get(
-                "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
-            )
-            self.terminal_fan_specification_method = (
-                FanSpecificationMethodOptions.SIMPLE
-            )
-
-        if exhaust_airflow is not None and exhaust_airflow > 0:
-            self.zone_exhaust_fan_id = self.u_name + " EF"
-            self.zone_exhaust_fan_design_airflow = exhaust_airflow
-            self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
-            if (
-                self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_STATIC)
-                is not None
-            ):
-                self.zone_exhaust_fan_specification_method = (
-                    FanSpecificationMethodOptions.DETAILED
-                )
-                self.zone_exhaust_fan_design_pressure_rise = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_STATIC)
-                )
-                self.zone_exhaust_fan_total_efficiency = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_EFF)
-                )
-                zone_fan_power = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
-                )
-                self.zone_exhaust_fan_design_electric_power = (
-                    None
-                    if zone_fan_power is None
-                    else (
-                        zone_fan_power
-                        if self.terminal_fan_design_electric_power is None
-                        else zone_fan_power - self.terminal_fan_design_electric_power
-                    )
-                )
-            else:
-                self.zone_exhaust_fan_specification_method = (
-                    FanSpecificationMethodOptions.SIMPLE
-                )
-                zone_ef_power_per_flow = self.try_float(
-                    self.keyword_value_pairs.get(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
-                )
-                self.zone_exhaust_fan_design_electric_power = (
-                    zone_ef_power_per_flow * exhaust_airflow
-                )
             return
 
     def populate_data_group(self):
@@ -411,94 +604,452 @@ class Zone(ChildNode):
 
     def get_output_requests(self):
         """Get the output requests for the zone."""
-        #      2201045,  38,  1,  6,  9,  1,  1,  1,  0, 25, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow
-        #      2201046,  38,  1,  6, 10,  1,  1,  1,  0, 25, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Exhaust Airflow
-        #      2201047,  38,  1,  6, 11,  1,  1,  1,  0, 28, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power
-        #      2201048,  38,  1,  6, 12,  1,  1,  1,  0, 22, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio
-        #      2201049,  38,  1,  6, 13,  1,  1,  1,  0, 25, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow
-        #      2201050,  38,  1,  6, 14,  1,  1,  1,  0, 64, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity
-        #      2201051,  38,  1,  6, 15,  1,  1,  1,  0, 22, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Sensible Heat Ratio
-        #      2201052,  38,  1,  6, 16,  1,  1,  1,  0, 64, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Heat Extraction Rate
-        #      2201053,  38,  1,  6, 17,  1,  1,  1,  0, 64, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity
-        #      2201054,  38,  1,  6, 18,  1,  1,  1,  0, 64, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Heat Addition Rate
-        #      2201055,  38,  1,  6, 19,  1,  1,  1,  0,  1, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - General - Zone Multiplier
-        requests = {
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Supply Airflow": (
-                2201045,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Exhaust Airflow": (
-                2201046,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power": (
-                2201047,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Minimum Airflow Ratio": (
-                2201048,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow": (
-                2201049,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Cooling Capacity": (
-                2201050,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Sensible Heat Ratio": (
-                2201051,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Heating Capacity": (
-                2201053,
-                self.parent.u_name,
-                self.u_name,
-            ),
-            "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Multiplier": (
-                2201055,
-                self.parent.u_name,
-                self.u_name,
-            ),
-        }
+        requests = {}
+        if self.parent.is_terminal and self.parent.is_zonal_system:
+            requests = {
+                "Zone Supply Airflow": (
+                    2201045,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Exhaust Airflow": (
+                    2201046,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Fan Power": (
+                    2201047,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Minimum Airflow Ratio": (
+                    2201048,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Outside Airflow": (
+                    2201049,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Cooling Capacity": (
+                    2201050,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Sensible Heat Ratio": (
+                    2201051,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Heating Capacity": (
+                    2201053,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+                "Zone Multiplier": (
+                    2201055,
+                    self.parent.u_name,
+                    self.u_name,
+                ),
+            }
 
-        if self.keyword_value_pairs.get(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            match self.parent.output_cool_type:
+                case BDL_OutputCoolingTypes.CHILLED_WATER:
+                    # Design data for Cooling - chilled water - ZONE - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203505,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Design data for Cooling - chilled water - ZONE - SHR
+                    requests["Design Cooling SHR"] = (
+                        2203506,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - chilled water - ZONE - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203516,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - chilled water - ZONE - SHR
+                    requests["Rated Cooling SHR"] = (
+                        2203517,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputCoolingTypes.DX_AIR_COOLED:
+                    # Design data for Cooling - DX air cooled - ZONE - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203557,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Design data for Cooling - DX air cooled - ZONE - SHR
+                    requests["Design Cooling SHR"] = (
+                        2203558,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - DX air cooled - ZONE - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203566,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - DX air cooled - ZONE - SHR
+                    requests["Rated Cooling SHR"] = (
+                        2203567,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputCoolingTypes.DX_WATER_COOLED:
+                    # Design data for Cooling - DX water cooled - ZONE - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203587,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Design data for Cooling - DX water cooled - ZONE - SHR
+                    requests["Design Cooling SHR"] = (
+                        2203588,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - DX water cooled - ZONE - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203596,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - DX water cooled - ZONE - SHR
+                    requests["Rated Cooling SHR"] = (
+                        2203597,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputCoolingTypes.VRF:
+                    # Design data for Cooling - VRF - ZONE - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203619,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Design data for Cooling - VRF - ZONE - SHR
+                    requests["Design Cooling SHR"] = (
+                        2203620,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - VRF - ZONE - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203628,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Cooling - VRF - ZONE - SHR
+                    requests["Rated Cooling SHR"] = (
+                        2203629,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+
+            match self.parent.output_heat_type:
+                case BDL_OutputHeatingTypes.FURNACE:
+                    # Design data for Heating - furnace - ZONE - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203708,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputHeatingTypes.HEAT_PUMP_AIR_COOLED:
+                    # Design data for Heating - heat pump air cooled - ZONE - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203784,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Heating - heat pump air cooled - ZONE - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203790,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputHeatingTypes.HEAT_PUMP_WATER_COOLED:
+                    # Design data for Heating - heat pump water cooled - ZONE - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203805,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Heating - heat pump water cooled - ZONE - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203811,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                case BDL_OutputHeatingTypes.VRF:
+                    # Design data for Heating - VRF - ZONE - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203828,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+                    # Rated data for Heating - VRF - ZONE - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203834,
+                        self.parent.u_name,
+                        self.u_name,
+                    )
+
+        elif self.parent.is_terminal and not self.parent.is_zonal_system:
+            requests = {
+                "Outside Air Ratio": (2201005, self.parent.u_name, ""),
+                "Cooling Capacity": (2201006, self.parent.u_name, ""),
+                "Heating Capacity": (2201008, self.parent.u_name, ""),
+                "Supply Fan - Airflow": (2201012, self.parent.u_name, ""),
+                "Supply Fan - Power": (2201014, self.parent.u_name, ""),
+                "Supply Fan - Min Flow Ratio": (2201022, self.parent.u_name, ""),
+            }
+
+            match self.parent.output_cool_type:
+                case BDL_OutputCoolingTypes.CHILLED_WATER:
+                    # Design data for Cooling - chilled water - SYSTEM - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203015,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Design data for Cooling - chilled water - SYSTEM - SHR
+                    requests["Design Cooling SHR"] = (2203016, self.parent.u_name, "")
+                    # Rated data for Cooling - chilled water - SYSTEM - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203026,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Cooling - chilled water - SYSTEM - SHR
+                    requests["Rated Cooling SHR"] = (2203027, self.parent.u_name, "")
+                case BDL_OutputCoolingTypes.DX_AIR_COOLED:
+                    # Design data for Cooling - DX air cooled - SYSTEM - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203083,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Design data for Cooling - DX air cooled - SYSTEM - SHR
+                    requests["Design Cooling SHR"] = (2203084, self.parent.u_name, "")
+                    # Rated data for Cooling - DX air cooled - SYSTEM - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203092,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Cooling - DX air cooled - SYSTEM - SHR
+                    requests["Rated Cooling SHR"] = (2203093, self.parent.u_name, "")
+                case BDL_OutputCoolingTypes.DX_WATER_COOLED:
+                    # Design data for Cooling - DX water cooled - SYSTEM - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203143,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Design data for Cooling - DX water cooled - SYSTEM - SHR
+                    requests["Design Cooling SHR"] = (2203144, self.parent.u_name, "")
+                    # Rated data for Cooling - DX water cooled - SYSTEM - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203152,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Cooling - DX water cooled - SYSTEM - SHR
+                    requests["Rated Cooling SHR"] = (2203153, self.parent.u_name, "")
+                case BDL_OutputCoolingTypes.VRF:
+                    # Design data for Cooling - VRF - SYSTEM - capacity, btu/hr
+                    requests["Design Cooling capacity"] = (
+                        2203207,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Design data for Cooling - VRF - SYSTEM - SHR
+                    requests["Design Cooling SHR"] = (2203208, self.parent.u_name, "")
+                    # Rated data for Cooling - VRF - SYSTEM - capacity, btu/hr
+                    requests["Rated Cooling capacity"] = (
+                        2203216,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Cooling - VRF - SYSTEM - SHR
+                    requests["Rated Cooling SHR"] = (2203217, self.parent.u_name, "")
+
+            match self.parent.output_heat_type:
+                case BDL_OutputHeatingTypes.FURNACE:
+                    requests["Design Heating capacity"] = (
+                        2203296,
+                        self.parent.u_name,
+                        "",
+                    )
+                case BDL_OutputHeatingTypes.HEAT_PUMP_AIR_COOLED:
+                    # Design data for Heating - heat pump air cooled - SYSTEM - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203372,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Heating - heat pump air cooled - SYSTEM - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203378,
+                        self.parent.u_name,
+                        "",
+                    )
+                case BDL_OutputHeatingTypes.HEAT_PUMP_WATER_COOLED:
+                    # Design data for Heating - heat pump water cooled - SYSTEM - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203414,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Heating - heat pump water cooled - SYSTEM - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203420,
+                        self.parent.u_name,
+                        "",
+                    )
+                case BDL_OutputHeatingTypes.VRF:
+                    # Design data for Heating - VRF - SYSTEM - capacity, btu/hr
+                    requests["Design Heating capacity"] = (
+                        2203460,
+                        self.parent.u_name,
+                        "",
+                    )
+                    # Rated data for Heating - VRF - SYSTEM - capacity, btu/hr
+                    requests["Rated Heating capacity"] = (
+                        2203466,
+                        self.parent.u_name,
+                        "",
+                    )
+
+        else:
+            requests.update(
+                {
+                    "Zone Supply Airflow": (
+                        2201045,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Exhaust Airflow": (
+                        2201046,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Minimum Airflow Ratio": (
+                        2201048,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Outside Airflow": (
+                        2201049,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Cooling Capacity": (
+                        2201050,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Sensible Heat Ratio": (
+                        2201051,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Heating Capacity": (
+                        2201053,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Zone Multiplier": (
+                        2201055,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                }
+            )
+
+        if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.TERMINAL_IU,
+            BDL_TerminalTypes.CEILING_IU,
             BDL_TerminalTypes.SERIES_PIU,
             BDL_TerminalTypes.PARALLEL_PIU,
         ]:
-            #      2202001,  57,  1,  2,  9,  1,  1,  1,  0, 25, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow
-            #      2202002,  57,  1,  2, 10,  1,  1,  1,  0, 25, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow
-            #      2202003,  57,  1,  2, 11,  1,  1,  1,  0, 22, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Minimum Airflow Ratio
-            #      2202004,  57,  1,  2, 12,  1,  1,  1,  0, 74, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Reheat Temperature Rise
-            #      2202005,  57,  1,  2, 13,  1,  1,  1,  0, 74, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Air Temperature Rise
-            #      2202006,  57,  1,  2, 14,  1,  1,  1,  0, 28, 2019,  8,  1,  0, 2010   ; HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW
             requests.update(
                 {
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan Flow": (
+                    "Powered Induction Units - Fan Flow": (
                         2202001,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Flow": (
+                    "Powered Induction Units - Cold Deck Flow": (
                         2202002,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Cold Deck Minimum Airflow Ratio": (
+                    "Powered Induction Units - Cold Deck Minimum Airflow Ratio": (
                         2202003,
                         self.parent.u_name,
                         self.u_name,
                     ),
-                    "HVAC Systems - Design Parameters - Zone Design Data - Powered Induction Units - Fan kW": (
+                }
+            )
+
+        if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.SERIES_PIU,
+            BDL_TerminalTypes.PARALLEL_PIU,
+        ]:
+            requests.update(
+                {
+                    "Powered Induction Units - Fan kW": (
                         2202006,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                }
+            )
+
+        if self.get_inp(BDL_ZoneKeywords.TERMINAL_TYPE) in [
+            BDL_TerminalTypes.DUAL_DUCT,
+            BDL_TerminalTypes.MULTIZONE,
+        ]:
+            requests.update(
+                {
+                    "Dual-Duct/Multizone Boxes - Cold Deck Airflow": (
+                        2201056,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Dual-Duct/Multizone Boxes - Cold Deck Minimum Flow Ratio": (
+                        2201057,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Dual-Duct/Multizone Boxes - Hot Deck Airflow": (
+                        2201058,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Dual-Duct/Multizone Boxes - Hot Deck Minimum Flow Ratio": (
+                        2201059,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Dual-Duct/Multizone Boxes - Outlet Airflow": (
+                        2201060,
+                        self.parent.u_name,
+                        self.u_name,
+                    ),
+                    "Dual-Duct/Multizone Boxes - Outlet Minimum Flow Ratio": (
+                        2201061,
                         self.parent.u_name,
                         self.u_name,
                     ),
@@ -510,3 +1061,10 @@ class Zone(ChildNode):
     def insert_to_rpd(self, rmd):
         """Insert zone object into the rpd data structure."""
         self.parent_building_segment.zones.append(self.zone_data_structure)
+
+    def calculate_fan_power(self, airflow, pressure_rise, total_efficiency):
+        pressure_rise_pa = self.try_convert_units(pressure_rise, "in_WC", "pascal")
+        airflow_m3_s = self.try_convert_units(airflow, "cfm", "m3/s")
+
+        if pressure_rise_pa and airflow_m3_s and total_efficiency:
+            return pressure_rise_pa * airflow_m3_s / total_efficiency / 1000

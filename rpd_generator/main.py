@@ -13,7 +13,6 @@ from rpd_generator.doe2_file_readers.bdlcio32 import process_input_file
 from rpd_generator.doe2_file_readers.model_input_reader import ModelInputReader
 from rpd_generator.bdl_structure import *
 from rpd_generator.config import Config
-from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.utilities import validate_configuration
 from rpd_generator.utilities import unit_converter
 from rpd_generator.utilities import ensure_valid_rpd
@@ -31,6 +30,7 @@ COMMAND_PROCESSING_ORDER = [
     "ELEC-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
     "STEAM-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
     "CHW-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
+    "UTILITY-RATE",
     "FIXED-SHADE",
     "GLASS-TYPE",
     "MATERIAL",  # Materials must populate before Layers, Constructions
@@ -42,9 +42,9 @@ COMMAND_PROCESSING_ORDER = [
     "SCHEDULE-PD",
     "PUMP",  # Pumps must populate before Boiler, Chiller, Heat-Rejection, Circulation-Loop
     "CIRCULATION-LOOP",  # Circulation loops must populate before Boiler, Chiller, DWHeater, Heat-Rejection
-    "BOILER",
-    "CHILLER",
-    "DW-HEATER",
+    "BOILER",  # Boilers must populate before systems
+    "CHILLER",  # Chillers must populate before systems
+    "DW-HEATER",  # DWHeaters must populate before systems
     "HEAT-REJECTION",
     "GROUND-LOOP-HX",
     "FLOOR",  # Floors must populate before Spaces
@@ -56,6 +56,10 @@ COMMAND_PROCESSING_ORDER = [
     "UNDERGROUND-WALL",
     "WINDOW",
     "DOOR",
+    "EQUIP-CTRL",
+    "LOAD-MANAGEMENT",
+    "ELEC-GENERATOR",
+    "UTILITY-RATE",
 ]
 
 
@@ -94,9 +98,6 @@ def write_rpd_json_from_inp(inp_path_str):
 
 
 def write_rpd_json_from_bdl(selected_models: list, json_file_path: str):
-    Config.set_active_ruleset("ASHRAE 90.1-2019")
-    SchemaEnums.update_schema_enum(Config.ACTIVE_RULESET)
-
     bdl_input_reader = ModelInputReader()
     RulesetProjectDescription.bdl_command_dict = bdl_input_reader.bdl_command_dict
     rpd = RulesetProjectDescription()
@@ -117,6 +118,7 @@ def write_rpd_json_from_bdl(selected_models: list, json_file_path: str):
         rmd.bdl_obj_instances["Default Building Segment"].insert_to_rpd()
         rmd.bdl_obj_instances["Default Building"].populate_data_group()
         rmd.bdl_obj_instances["Default Building"].insert_to_rpd(rmd)
+        rmd.populate_data_elements()
         rmd.populate_data_group()
         rmd.insert_to_rpd(rpd)
 
@@ -226,7 +228,7 @@ def copy_files_to_temp_dir(inp_path, temp_dir):
             print(f"File {model_file} not found in {model_dir}")
 
 
-def _create_obj_instance(command, command_dict, rmd):
+def _create_obj_instance(u_name, command, command_dict, rmd):
     command_class = RulesetProjectDescription.bdl_command_dict[command]
     is_child = command in [
         "SPACE",
@@ -241,36 +243,44 @@ def _create_obj_instance(command, command_dict, rmd):
 
     if inherits_base_node and is_child:
         obj_instance = command_class(
-            command_dict["unique_name"],
+            u_name,
             rmd.bdl_obj_instances[command_dict["parent"]],
             rmd,
         )
     else:
-        obj_instance = command_class(command_dict["unique_name"], rmd)
+        obj_instance = command_class(u_name, rmd)
     return obj_instance
 
 
 def _process_command_group(
-    data_group: str,
+    command_group: str,
     file_bdl_commands: dict,
     rmd: RulesetModelDescription,
     special_handling=None,
 ):
-    for cmd_dict in file_bdl_commands.get(data_group, []):
-        obj = _create_obj_instance(data_group, cmd_dict, rmd)
-        if special_handling and data_group in special_handling:
-            special_handling[data_group](obj, cmd_dict)
+    for u_name in file_bdl_commands.get(command_group, {}):
+        cmd_dict = file_bdl_commands[command_group][u_name]
+        obj = _create_obj_instance(u_name, command_group, cmd_dict, rmd)
+        if special_handling and command_group in special_handling:
+            special_handling[command_group](obj, cmd_dict)
         obj.add_inputs(cmd_dict)
-        rmd.bdl_obj_instances[cmd_dict["unique_name"]] = obj
+        rmd.bdl_obj_instances[u_name] = obj
 
 
 if __name__ == "__main__":
     validate_configuration.find_equest_installation()
     write_rpd_json_from_bdl(
-        [Path(__file__).parents[1] / "test" / "E-1" / "229 Test Case E-1 (PSZHP).BDL"],
+        [
+            Path(__file__).parents[1]
+            / "test"
+            / "full_rpd_test"
+            / "E-1"
+            / "229 Test Case E-1 (PSZHP).BDL"
+        ],
         str(
             Path(__file__).parents[1]
             / "test"
+            / "full_rpd_test"
             / "E-1"
             / "229 Test Case E-1 (PSZHP).json"
         ),

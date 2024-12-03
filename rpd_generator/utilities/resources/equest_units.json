@@ -86,7 +86,7 @@
         "efficiency_metric_values": null
     },
     "FanSystem": {
-        "reset_differential_temperature": "F",
+        "reset_differential_temperature": "delta_F",
         "minimum_airflow": "cfm",
         "minimum_outdoor_airflow": "cfm",
         "maximum_outdoor_airflow": "cfm"
@@ -146,8 +146,8 @@
         "design_capacity": "MMbtu_h",
         "rated_capacity": "MMbtu_h",
         "auxiliary_power": "kW",
-        "operation_lower_limit": "",
-        "operation_upper_limit": ""
+        "operation_lower_limit": "MMbtu_h",
+        "operation_upper_limit": "MMbtu_h"
     },
     "BoilerOutputValidationPoint": {
         "load": "",

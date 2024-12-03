@@ -25,6 +25,8 @@ class Pump(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.pump_names.append(u_name)
+
         self.qty = None
         self.pump_data_structures = []
         self.output_data = None
@@ -49,9 +51,7 @@ class Pump(BaseNode):
     def populate_data_elements(self):
         """Populate the schema data elements for the pump object."""
 
-        self.qty = self.try_int(
-            self.try_float(self.keyword_value_pairs.get(BDL_PumpKeywords.NUMBER))
-        )
+        self.qty = self.try_int(self.try_float(self.get_inp(BDL_PumpKeywords.NUMBER)))
         requests = self.get_output_requests()
         self.output_data = self.get_output_data(requests)
         self.loop_or_piping = [None] * self.qty
@@ -59,16 +59,14 @@ class Pump(BaseNode):
         self.is_flow_sized_based_on_design_day = [None] * self.qty
         spec_method = (
             PumpSpecificationMethodOptions.SIMPLE
-            if self.keyword_value_pairs.get(BDL_PumpKeywords.PUMP_KW) is not None
+            if self.get_inp(BDL_PumpKeywords.PUMP_KW) is not None
             else PumpSpecificationMethodOptions.DETAILED
         )
-        design_head = self.try_float(
-            self.keyword_value_pairs.get(BDL_PumpKeywords.HEAD)
-        )
+        design_head = self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
         self.specification_method = [spec_method] * self.qty
         if spec_method == PumpSpecificationMethodOptions.SIMPLE:
             self.design_electric_power = [
-                self.try_float(self.keyword_value_pairs.get(BDL_PumpKeywords.PUMP_KW))
+                self.try_float(self.get_inp(BDL_PumpKeywords.PUMP_KW))
             ] * self.qty
         else:
             self.design_electric_power = [
@@ -82,14 +80,12 @@ class Pump(BaseNode):
             self.output_data.get("Pump - Motor Eff (frac)")
         ] * self.qty
         self.design_flow = [self.output_data.get("Pump - Flow (gal/min)")] * self.qty
-        pump_cap_ctrl = self.keyword_value_pairs.get(BDL_PumpKeywords.CAP_CTRL)
+        pump_cap_ctrl = self.get_inp(BDL_PumpKeywords.CAP_CTRL)
         if pump_cap_ctrl:
             self.speed_control = [
                 self.pump_speed_control_map.get(pump_cap_ctrl)
             ] * self.qty
-        input_design_flow = self.try_float(
-            self.keyword_value_pairs.get(BDL_PumpKeywords.FLOW)
-        )
+        input_design_flow = self.try_float(self.get_inp(BDL_PumpKeywords.FLOW))
         if input_design_flow:
             self.is_flow_sized_based_on_design_day = [False] * self.qty
         else:

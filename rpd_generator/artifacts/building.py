@@ -1,5 +1,4 @@
 from rpd_generator.bdl_structure.base_definition import BaseDefinition
-from rpd_generator.bdl_structure.bdl_commands.project import FixedShade
 
 
 class Building(BaseDefinition):
@@ -23,16 +22,9 @@ class Building(BaseDefinition):
         self.reporting_name = None
         self.notes = None
         self.building_open_schedule = None
-        self.has_site_shading = None
+        self.has_site_shading = self.rmd.has_site_shading
         self.number_of_floors_above_grade = None
         self.number_of_floors_below_grade = None
-
-    def populate_data_elements(self):
-        """Populate data elements for building object."""
-        self.has_site_shading = any(
-            isinstance(value, FixedShade)
-            for value in self.rmd.bdl_obj_instances.values()
-        )
 
     def populate_data_group(self):
         """Populate the building data structure."""

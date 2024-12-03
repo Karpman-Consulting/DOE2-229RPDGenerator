@@ -17,22 +17,21 @@ class SiteParameters(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        rmd.site_parameter_name = u_name
 
     def __repr__(self):
         return f"SitePameters(u_name='{self.u_name}')"
 
     def populate_data_elements(self):
         """Populate schema structure for site parameters object."""
-        rpd = self.rmd.bdl_obj_instances["ASHRAE 229"]
+        rpd = self.get_obj("ASHRAE 229")
         rpd.calendar.setdefault(
             "has_daylight_saving_time",
             self.boolean_map.get(
-                self.keyword_value_pairs.get(BDL_SiteParameterKeywords.DAYLIGHT_SAVINGS)
+                self.get_inp(BDL_SiteParameterKeywords.DAYLIGHT_SAVINGS)
             ),
         )
-        monthly_ground_temps = self.keyword_value_pairs.get(
-            BDL_SiteParameterKeywords.GROUND_T
-        )
+        monthly_ground_temps = self.get_inp(BDL_SiteParameterKeywords.GROUND_T)
         if monthly_ground_temps:
             rpd.weather.setdefault(
                 "ground_temperature_schedule", "Ground Temperature Schedule"
@@ -67,9 +66,7 @@ class BuildingParameters(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate schema structure for building parameters object."""
-        self.rmd.building_azimuth = self.try_float(
-            self.keyword_value_pairs.get("AZIMUTH")
-        )
+        self.rmd.building_azimuth = self.try_float(self.get_inp("AZIMUTH"))
 
 
 class RunPeriod(BaseDefinition):
@@ -83,8 +80,8 @@ class RunPeriod(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate schema structure for site parameters object."""
-        rpd = self.rmd.bdl_obj_instances["ASHRAE 229"]
-        year = int(float(self.keyword_value_pairs.get(BDL_RunPeriodKeywords.END_YEAR)))
+        rpd = self.get_obj("ASHRAE 229")
+        year = int(float(self.get_inp(BDL_RunPeriodKeywords.END_YEAR)))
         rpd.calendar.setdefault(
             "day_of_week_for_january_1",
             schedule_funcs.get_day_of_week_jan_1(year),
@@ -96,13 +93,9 @@ class RunPeriod(BaseDefinition):
 class FixedShade(BaseDefinition):
     bdl_command = BDL_Commands.FIXED_SHADE
 
-    has_site_shading = False
-
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
-
-        if not self.has_site_shading:
-            self.has_site_shading = True
+        self.rmd.has_site_shading = True
 
 
 class Holidays(BaseDefinition):
@@ -112,7 +105,7 @@ class Holidays(BaseDefinition):
         super().__init__(u_name, rmd)
 
     def populate_data_elements(self):
-        Schedule.holiday_type = self.keyword_value_pairs.get(BDL_HolidayKeywords.TYPE)
+        Schedule.holiday_type = self.get_inp(BDL_HolidayKeywords.TYPE)
         calendar = schedule_funcs.generate_year_calendar(
             Schedule.year, Schedule.day_of_week_for_january_1
         )
@@ -120,12 +113,8 @@ class Holidays(BaseDefinition):
         if Schedule.holiday_type == BDL_HolidayTypes.OFFICIAL_US:
             calendar = schedule_funcs.get_official_us_holidays(calendar)
         elif Schedule.holiday_type == BDL_HolidayTypes.ALTERNATE:
-            Schedule.holiday_months = self.keyword_value_pairs.get(
-                BDL_HolidayKeywords.MONTHS
-            )
-            Schedule.holiday_days = self.keyword_value_pairs.get(
-                BDL_HolidayKeywords.DAYS
-            )
+            Schedule.holiday_months = self.get_inp(BDL_HolidayKeywords.MONTHS)
+            Schedule.holiday_days = self.get_inp(BDL_HolidayKeywords.DAYS)
             calendar = schedule_funcs.get_alternate_holidays(
                 calendar, Schedule.holiday_months, Schedule.holiday_days
             )

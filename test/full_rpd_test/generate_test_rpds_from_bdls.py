@@ -16,6 +16,5 @@ def generate_test_rpds_from_bdls():
 
 
 if __name__ == "__main__":
-
     validate_configuration.find_equest_installation()
     generate_test_rpds_from_bdls()

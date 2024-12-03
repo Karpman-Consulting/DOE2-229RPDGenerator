@@ -1,3 +1,5 @@
+import copy
+
 from rpd_generator.bdl_structure.child_node import ChildNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
@@ -11,9 +13,12 @@ AdditionalSurfaceAdjacencyOptions2019ASHRAE901 = SchemaEnums.schema_enums[
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_UndergroundWallKeywords = BDLEnums.bdl_enums["UndergroundWallKeywords"]
-BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]
+BDL_LayerKeywords = BDLEnums.bdl_enums["LayerKeywords"]
 BDL_SpaceKeywords = BDLEnums.bdl_enums["SpaceKeywords"]
 BDL_FloorKeywords = BDLEnums.bdl_enums["FloorKeywords"]
+BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
 
 
 class BelowGradeWall(ChildNode):
@@ -57,22 +62,14 @@ class BelowGradeWall(ChildNode):
     def populate_data_elements(self):
         """Populate data elements for below grade wall object."""
 
-        self.area = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.AREA)
-        )
+        self.area = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.AREA))
         if self.area is None:
-            height = self.try_float(
-                self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.HEIGHT)
-            )
-            width = self.try_float(
-                self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.WIDTH)
-            )
+            height = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.HEIGHT))
+            width = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.WIDTH))
             if height is not None and width is not None:
                 self.area = height * width
 
-        self.tilt = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.TILT)
-        )
+        self.tilt = self.try_float(self.get_inp(BDL_UndergroundWallKeywords.TILT))
         if self.tilt is not None and self.tilt < self.CEILING_TILT_THRESHOLD:
             self.classification = SurfaceClassificationOptions.CEILING
         elif self.tilt is not None and self.tilt >= self.FLOOR_TILT_THRESHOLD:
@@ -81,13 +78,13 @@ class BelowGradeWall(ChildNode):
             self.classification = SurfaceClassificationOptions.WALL
 
         parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.keyword_value_pairs.get(BDL_FloorKeywords.AZIMUTH)
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
         parent_space_azimuth = self.parent.try_float(
-            self.parent.keyword_value_pairs.get(BDL_SpaceKeywords.AZIMUTH)
+            self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.AZIMUTH)
+            self.get_inp(BDL_UndergroundWallKeywords.AZIMUTH)
         )
         self.azimuth = (
             self.rmd.building_azimuth
@@ -101,15 +98,15 @@ class BelowGradeWall(ChildNode):
         self.adjacent_to = SurfaceAdjacencyOptions.GROUND
 
         self.does_cast_shade = self.boolean_map.get(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.SHADING_SURFACE)
+            self.get_inp(BDL_UndergroundWallKeywords.SHADING_SURFACE)
         )
 
         self.absorptance_solar_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.INSIDE_SOL_ABS)
+            self.get_inp(BDL_UndergroundWallKeywords.INSIDE_SOL_ABS)
         )
 
         reflectance_visible_interior = self.try_float(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.INSIDE_VIS_REFL)
+            self.get_inp(BDL_UndergroundWallKeywords.INSIDE_VIS_REFL)
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
@@ -118,7 +115,7 @@ class BelowGradeWall(ChildNode):
     #     requests = {}
     #     if (
     #         self.area is None
-    #         and self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.LOCATION)
+    #         and self.get_inp(BDL_UndergroundWallKeywords.LOCATION)
     #         == BDL_WallLocationOptions.TOP
     #     ):
     #         requests["Roof Area"] = (1105003, "", self.u_name)
@@ -126,9 +123,12 @@ class BelowGradeWall(ChildNode):
 
     def populate_data_group(self):
         """Populate schema structure for below grade wall object."""
-        self.construction = self.rmd.bdl_obj_instances.get(
-            self.keyword_value_pairs.get(BDL_UndergroundWallKeywords.CONSTRUCTION)
-        ).construction_data_structure
+        self.construction = copy.deepcopy(
+            self.get_obj(
+                self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
+            ).construction_data_structure
+        )
+        self.account_for_air_film_resistance()
 
         optical_property_attributes = [
             "absorptance_thermal_exterior",
@@ -174,3 +174,24 @@ class BelowGradeWall(ChildNode):
         """Insert below grade wall object into the rpd data structure."""
         zone = rmd.space_map.get(self.parent.u_name)
         zone.surfaces.append(self.underground_wall_data_structure)
+
+    def account_for_air_film_resistance(self):
+        """
+        Remove interior air film resistance from a simplified construction's simplified material r_value.
+        """
+        construction_obj = self.get_obj(
+            self.get_inp(BDL_UndergroundWallKeywords.CONSTRUCTION)
+        )
+        spec_method = construction_obj.get_inp(BDL_ConstructionKeywords.TYPE)
+        u_factor = self.construction.get("u_factor")
+        if u_factor:
+            if spec_method == BDL_ConstructionTypes.U_VALUE:
+                location = self.get_inp(BDL_UndergroundWallKeywords.LOCATION)
+                int_air_film_resistance = (
+                    0.61
+                    if location == BDL_WallLocationOptions.TOP
+                    else 0.92 if location == BDL_WallLocationOptions.BOTTOM else 0.68
+                )
+                self.construction["primary_layers"][0]["r_value"] = (
+                    1 / u_factor - int_air_film_resistance
+                )

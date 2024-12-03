@@ -35,6 +35,7 @@ class Chiller(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.chiller_names.append(u_name)
 
         self.omit = False
         self.chiller_data_structure = {}
@@ -71,16 +72,11 @@ class Chiller(BaseNode):
     def populate_data_elements(self):
         """Populate data elements for chiller object."""
         absorp_or_engine = False
-        if (
-            self.compressor_type_map.get(
-                self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE)
-            )
-            == OMIT
-        ):
+        if self.compressor_type_map.get(self.get_inp(BDL_ChillerKeywords.TYPE)) == OMIT:
             self.omit = True
             return
 
-        elif self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE) in [
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ABSOR_1,
             BDL_ChillerTypes.ABSOR_2,
             BDL_ChillerTypes.GAS_ABSOR,
@@ -99,24 +95,35 @@ class Chiller(BaseNode):
                     output_data[key], "Btu/hr", "MMBtu/hr"
                 )
 
-        self.cooling_loop = self.keyword_value_pairs.get(BDL_ChillerKeywords.CHW_LOOP)
+        self.cooling_loop = self.get_inp(BDL_ChillerKeywords.CHW_LOOP)
 
-        self.condensing_loop = self.keyword_value_pairs.get(BDL_ChillerKeywords.CW_LOOP)
+        self.condensing_loop = self.get_inp(BDL_ChillerKeywords.CW_LOOP)
 
-        self.heat_recovery_loop = self.keyword_value_pairs.get(
-            BDL_ChillerKeywords.HTREC_LOOP
-        )
+        self.heat_recovery_loop = self.get_inp(BDL_ChillerKeywords.HTREC_LOOP)
 
         self.compressor_type = self.compressor_type_map.get(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.TYPE)
+            self.get_inp(BDL_ChillerKeywords.TYPE)
         )
 
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
-        else:
-            pass  # TODO: Add energy source type for absorp_or_engine
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
+            BDL_ChillerTypes.ENGINE,
+            BDL_ChillerTypes.GAS_ABSOR,
+        ]:
+            self.energy_source_type = EnergySourceOptions.NATURAL_GAS
+        elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
+            BDL_ChillerTypes.ABSOR_1,
+            BDL_ChillerTypes.ABSOR_2,
+        ]:
+            hot_water_loop_name = self.get_obj(
+                self.get_inp(BDL_ChillerKeywords.HW_LOOP)
+            )
+            hot_water_loop = self.get_obj(hot_water_loop_name)
+            if hot_water_loop:
+                self.energy_source_type = self.get_loop_energy_source(hot_water_loop)
 
-        # This value comes out in tons of refrigeration
+        # This value comes out in Btu/hr
         self.design_capacity = self.try_float(
             output_data.get("Design Parameters - Capacity")
         )
@@ -135,36 +142,41 @@ class Chiller(BaseNode):
         )
 
         self.rated_leaving_evaporator_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.RATED_CHW_T)
+            self.get_inp(BDL_ChillerKeywords.RATED_CHW_T)
         )
 
         self.rated_entering_condenser_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.RATED_COND_T)
+            self.get_inp(BDL_ChillerKeywords.RATED_COND_T)
         )
 
         self.design_leaving_evaporator_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.DESIGN_CHW_T)
+            self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T)
         )
 
         self.design_entering_condenser_temperature = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.DESIGN_COND_T)
+            self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T)
         )
 
         self.minimum_load_ratio = self.try_float(
-            self.keyword_value_pairs.get(BDL_ChillerKeywords.MIN_RATIO)
+            self.get_inp(BDL_ChillerKeywords.MIN_RATIO)
         )
 
+        (
+            self.is_chilled_water_pump_interlocked,
+            self.is_condenser_water_pump_interlocked,
+        ) = self.are_pumps_interlocked(self.cooling_loop, self.condensing_loop)
+
         # Assign pump data elements populated from the boiler keyword value pairs
-        chw_pump_name = self.keyword_value_pairs.get(BDL_ChillerKeywords.CHW_PUMP)
+        chw_pump_name = self.get_inp(BDL_ChillerKeywords.CHW_PUMP)
         if chw_pump_name is not None:
-            pump = self.rmd.bdl_obj_instances.get(chw_pump_name)
+            pump = self.get_obj(chw_pump_name)
             if pump is not None:
                 pump.loop_or_piping = [self.cooling_loop] * pump.qty
 
         # Assign pump data elements populated from the chiller keyword value pairs
-        cw_pump_name = self.keyword_value_pairs.get(BDL_ChillerKeywords.CW_PUMP)
+        cw_pump_name = self.get_inp(BDL_ChillerKeywords.CW_PUMP)
         if cw_pump_name is not None:
-            pump = self.rmd.bdl_obj_instances.get(cw_pump_name)
+            pump = self.get_obj(cw_pump_name)
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
@@ -282,3 +294,39 @@ class Chiller(BaseNode):
             return
 
         rmd.chillers.append(self.chiller_data_structure)
+
+    def get_loop_energy_source(self, hot_water_loop):
+        """Get the energy source type for the loop. Used for absorption chillers to populate the energy_source_type."""
+        energy_source_set = set()
+        for boiler_name in self.rmd.boiler_names:
+            boiler = self.get_obj(boiler_name)
+            if boiler.loop == hot_water_loop.u_name:
+                energy_source_set.add(boiler.energy_source_type)
+
+        for steam_meter_name in self.rmd.steam_meter_names:
+            steam_meter = self.get_obj(steam_meter_name)
+            if steam_meter.loop == hot_water_loop.u_name:
+                energy_source_set.add(steam_meter.energy_source_type)
+
+        for chiller_name in self.rmd.chiller_names:
+            chiller = self.get_obj(chiller_name)
+            if chiller.heat_recovery_loop == hot_water_loop.u_name:
+                energy_source_set.add(EnergySourceOptions.ELECTRICITY)
+
+        if len(energy_source_set) == 1:
+            return energy_source_set.pop()
+        else:
+            return EnergySourceOptions.OTHER
+
+    def are_pumps_interlocked(self, chw_loop_name, cw_loop_name):
+        """Check if the chiller has a pump with interlocked operation."""
+        chw_pump_interlocked = False
+        cw_pump_interlocked = False
+        for pump_name in self.rmd.pump_names:
+            pump = self.get_obj(pump_name)
+            if pump.loop_or_piping == chw_loop_name:  # pump is gauranteed to exist
+                chw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CHW_PUMP))
+
+            if pump.loop_or_piping == cw_loop_name:  # pump is gauranteed to exist
+                cw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CW_PUMP))
+        return chw_pump_interlocked, cw_pump_interlocked

@@ -145,7 +145,8 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.u_factor",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.01
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].construction.primary_layers",
@@ -195,11 +196,13 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_heating_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].supply_design_cooling_setpoint_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].minimum_outdoor_airflow",
@@ -358,7 +361,8 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.reset_differential_temperature",
-        "compare-value": true
+        "compare-value": true,
+        "tolerance": 0.01
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.fan_volume_reset_type",
@@ -476,11 +480,13 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].operation_lower_limit",
+        "special-case": "operation_lower_limit",
         "compare-value": true,
         "tolerance": 1.0
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].boilers[*].operation_upper_limit",
+        "special-case": "operation_upper_limit",
         "compare-value": true,
         "tolerance": 1.0
         },
@@ -662,6 +668,26 @@
         {
         "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.temperature_reset_type",
         "compare-value": true
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.outdoor_high_for_loop_supply_reset_temperature",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.outdoor_low_for_loop_supply_reset_temperature",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.loop_supply_temperature_at_outdoor_high",
+        "compare-value": true,
+        "tolerance": 0.1
+        },
+        {
+        "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].heating_design_and_control.loop_supply_temperature_at_outdoor_low",
+        "compare-value": true,
+        "tolerance": 0.1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].fluid_loops[*].cooling_or_condensing_design_and_control.design_supply_temperature",

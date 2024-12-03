@@ -69,6 +69,8 @@ class BDLEnums:
                 "EQUIP-CTRL",
                 "DESIGN-DAY",
                 "CONDENSING-UNIT",
+                "ELEC-GENERATOR",
+                "UTILITY-RATE",
             ]
         ),
         "FuelTypes": _ListEnum(
@@ -224,6 +226,8 @@ class BDLEnums:
                 "LOOP-MIN-FLOW",
                 "HEAT-SETPT-CTRL",
                 "COOL-SETPT-CTRL",
+                "HEAT-RESET-SCH",
+                "COOL-RESET-SCH",
                 "MIN-RESET-T",
                 "MAX-RESET-T",
                 "DHW-INLET-T",
@@ -232,11 +236,21 @@ class BDLEnums:
                 "HEATING-SCHEDULE",
             ]
         ),
-        "ConstructionKeywords": _ListEnum(["LAYERS", "ABSORPTANCE", "U-VALUE"]),
+        "ConstructionTypes": _ListEnum(
+            [
+                "LAYERS",
+                "U-VALUE",
+            ]
+        ),
+        "ConstructionKeywords": _ListEnum(["TYPE", "LAYERS", "ABSORPTANCE", "U-VALUE"]),
         "DayScheduleKeywords": _ListEnum(
             [
                 "TYPE",
                 "VALUES",
+                "OUTSIDE-HI",
+                "OUTSIDE-LO",
+                "SUPPLY-HI",
+                "SUPPLY-LO",
             ]
         ),
         "DomesticWaterHeaterTypes": _ListEnum(
@@ -262,6 +276,8 @@ class BDLEnums:
                 "TANK-VOLUME",
                 "AQUASTAT-SETPT-T",
                 "DHW-LOOP",
+                "ELEC-INPUT-RATIO",
+                "HEAT-INPUT-RATIO",
             ]
         ),
         "DoorKeywords": _ListEnum(
@@ -370,22 +386,56 @@ class BDLEnums:
         "LayerKeywords": _ListEnum(
             [
                 "MATERIAL",
+                "INSIDE-FILM-RES",
             ]
         ),
         "MasterMeterKeywords": _ListEnum(
             [
-                "TYPE",
+                "MSTR-ELEC-METER",
+                "LIGHT-ELEC-METER",
+                "TASK-ELEC-METER",
+                "EQUIP-ELEC-METER",
+                "SOURCE-ELEC-METER",
+                "HEAT-ELEC-METER",
+                "COOL-ELEC-METER",
+                "HTREJ-ELEC-METER",
+                "AUX-ELEC-METER",
+                "VENT-ELEC-METER",
+                "REFG-ELEC-METER",
+                "SUPP-ELEC-METER",
+                "DHW-ELEC-METER",
+                "MSTR-FUEL-METER",
+                "SOURCE-FUEL-METER",
+                "HEAT-FUEL-METER",
+                "COOL-FUEL-METER",
+                "SUPP-FUEL-METER",
+                "DHW-FUEL-METER",
+                "EXCLUDE-FROM-TDV",
             ]
         ),
         "FuelMeterKeywords": _ListEnum(
             [
                 "TYPE",
+                "ENERGY/UNIT",
+                "SOURCE-SITE-EFF",
+                "UNIT-INDEX",
+                "DEM-UNIT-INDEX",
+            ]
+        ),
+        "AirflowConditionOptions": _ListEnum(
+            [
+                "SEA-LEVEL",
+                "BLDG-ALTITUDE",
             ]
         ),
         "SiteParameterKeywords": _ListEnum(
             [
                 "DAYLIGHT-SAVINGS",
                 "GROUND-T",
+                "SPECIFY-AIRFLOWS",
+                "ALTITUDE",
+                "LATITUDE",
+                "LONGITUDE",
             ]
         ),
         "RunPeriodKeywords": _ListEnum(
@@ -506,13 +556,23 @@ class BDLEnums:
         ),
         "SystemHeatingTypes": _ListEnum(
             [
-                "HEAT-PUMP",
-                "FURNACE",
+                "NONE",
                 "ELECTRIC",
                 "HOT-WATER",
-                "NONE",
-                "STEAM",
+                "FURNACE",
+                "HEAT-PUMP",
+                "CONDENSING-UNIT",
                 "DHW-LOOP",
+                "STEAM",
+            ]
+        ),
+        "SystemHeatControlOptions": _ListEnum(
+            [
+                "CONSTANT",
+                "WARMEST",
+                "COLDEST",
+                "RESET",
+                "SCHEDULED",
             ]
         ),
         "SystemHeatingValveTypes": _ListEnum(
@@ -545,25 +605,32 @@ class BDLEnums:
         ),
         "SystemTypes": _ListEnum(
             [
-                "PTAC",
+                "SUM",
+                "SZRH",
+                "MZS",
+                "DDS",
+                "SZCI",
+                "UVT",
+                "UHT",
+                "FC",
+                "IU",
+                "VAVS",
+                "RHFS",
+                "HP",
+                "HVSYS",
+                "RESYS",
+                "CBVAV",
                 "PSZ",
                 "PMZS",
                 "PVAVS",
-                "PVVT",
-                "HP",
-                "SZRH",
-                "VAVS",
-                "RHFS",
-                "DDS",
-                "MZS",
+                "PTAC",
                 "PIU",
-                "FC",
-                "IU",
-                "UVT",
-                "UHT",
+                "FNSYS",
+                "PTGSD",
+                "PVVT",
                 "RESYS2",
-                "CBVAV",
-                "SUM",
+                "RESVVT",
+                "EVAP-COOL",
                 "DOAS",
             ]
         ),
@@ -664,32 +731,37 @@ class BDLEnums:
         "SystemKeywords": _ListEnum(
             [
                 "TYPE",
+                "SIZING-RATIO",
                 "HEAT-SOURCE",
-                "COOL-SOURCE",
-                "PHW-LOOP",
                 "HW-LOOP",
+                "HW-VALVE-TYPE",
+                "HEAT-CONTROL",
+                "HEAT-SET-T",
+                "HEAT-SIZING-RATI",
+                "HEATING-CAPACITY",
+                "COOL-SOURCE",
                 "CHW-LOOP",
                 "CW-LOOP",
                 "CHW-VALVE-TYPE",
-                "HW-VALVE-TYPE",
+                "COOL-CONTROL",
+                "COOL-MIN-RESET-T",
+                "COOL-MAX-RESET-T",
+                "COOL-SIZING-RATI",
+                "COOL-SH-CAP",
+                "COOLING-CAPACITY",
+                "PREHEAT-SOURCE",
+                "PHW-LOOP",
                 "PHW-VALVE-TYPE",
+                "PREHEAT-CAPACITY",
+                "PREHEAT-T",
                 "DDS-TYPE",
                 "FAN-CONTROL",
                 "FAN-SCHEDULE",
                 "INDOOR-FAN-MODE",
                 "NIGHT-CYCLE-CTRL",
                 "MIN-OA-METHOD",
-                "SIZING-RATIO",
-                "HEAT-SIZING-RATI",
-                "COOL-SIZING-RATI",
-                "HEATING-CAPACITY",
-                "COOLING-CAPACITY",
-                "COOL-SH-CAP",
-                "COOL-CONTROL",
-                "COOL-MIN-RESET-T",
-                "COOL-MAX-RESET-T",
                 "HUMIDIFIER-TYPE",
-                "HEAT-T",
+                "HEAT-SET-T",
                 "PREHEAT-SOURCE",
                 "PREHEAT-CAPACITY",
                 "PREHEAT-T",
@@ -702,10 +774,13 @@ class BDLEnums:
                 "RETURN-MTR-EFF",
                 "RETURN-MECH-EFF",
                 "RETURN-AIR-PATH",
-                "HSUPPLY-FLOW",
-                "HSUPPLY-STATIC",
                 "RETURN-KW/FLOW",
                 "RETURN-FAN-LOC",
+                "HSUPPLY-FLOW",
+                "HSUPPLY-STATIC",
+                "HSUPPLY-MTR-EFF",
+                "HSUPPLY-MECH-EFF",
+                "HSUPPLY-KW/FLOW",
                 "OA-CONTROL",
                 "DOA-SYSTEM",
                 "ECONO-LIMIT-T",
@@ -719,10 +794,15 @@ class BDLEnums:
                 "ERV-OA-FLOW",
                 "ERV-EXH-FLOW",
                 "ZONE-HEAT-SOURCE",
+                "BASEBOARD-SOURCE",
                 "BBRD-LOOP",
                 "HP-SUPP-SOURCE",
                 "MAX-HP-SUPP-T",
                 "MIN-HP-T",
+                "INDUCTION-RATIO",
+                "MAX-SUPPLY-T",
+                "MIN-SUPPLY-T",
+                "HEAT-FUEL-METER",
             ]
         ),
         "UndergroundWallKeywords": _ListEnum(
@@ -765,6 +845,7 @@ class BDLEnums:
                 "SERIES-PIU",
                 "PARALLEL-PIU",
                 "TERMINAL-IU",
+                "CEILING-IU",
                 "DUAL-DUCT",
                 "MULTIZONE",
                 "SUBZONE",
@@ -802,9 +883,24 @@ class BDLEnums:
                 "NO",
             ]
         ),
+        "ZoneInductionSourceOptions": _ListEnum(
+            [
+                "ZONE-RECIRC",
+                "RETURN-PLENUM",
+                "RETURN-AIR",
+                "SUPPLY-AIR",
+            ]
+        ),
+        "ZoneFanControlOptions": _ListEnum(
+            [
+                "CONSTANT-VOLUME",
+                "VARIABLE-VOLUME",
+            ]
+        ),
         "ZoneKeywords": _ListEnum(
             [
                 "TERMINAL-TYPE",
+                "ZONE-FAN-CTRL",
                 "DESIGN-HEAT-T",
                 "DESIGN-COOL-T",
                 "HEATING-CAPACITY",
@@ -818,11 +914,17 @@ class BDLEnums:
                 "HW-LOOP",
                 "EXHAUST-FLOW",
                 "BASEBOARD-CTRL",
-                "BASEBOARD-SOURCE",
                 "BASEBOARD-RATING",
+                "ASSIGNED-FLOW",
+                "HASSIGNED-FLOW",
+                "FLOW/AREA",
+                "HFLOW/AREA",
+                "AIR-CHANGES/HR",
+                "HAIR-CHANGES/HR",
+                "MIN-FLOW/AREA",
+                "HMIN-FLOW/AREA",
                 "MIN-FLOW-SCH",
                 "MIN-FLOW-RATIO",
-                "MIN-FLOW/AREA",
                 "EXHAUST-STATIC",
                 "EXHAUST-EFF",
                 "EXHAUST-KW/FLOW",
@@ -837,6 +939,8 @@ class BDLEnums:
                 "CHW-VALVE-TYPE",
                 "CW-VALVE",
                 "WSE-VALVE-TYPE",
+                "INDUCTION-RATIO",
+                "INDUCED-AIR-SRC",
             ]
         ),
         "HPSupplementSourceOptions": _ListEnum(
@@ -844,6 +948,86 @@ class BDLEnums:
                 "ELECTRIC",
                 "HOT-WATER",
                 "FURNACE",
+            ]
+        ),
+        "EquipCtrlKeywords": _ListEnum(
+            [
+                "CIRCULATION-LOOP",
+                "LOADS-THRU-1",
+                "LOADS-THRU-2",
+                "LOADS-THRU-3",
+                "LOADS-THRU-4",
+                "LOADS-THRU-5",
+                "BOILERS-1",
+                "BOILERS-2",
+                "BOILERS-3",
+                "BOILERS-4",
+                "BOILERS-5",
+                "CHILLERS-1",
+                "CHILLERS-2",
+                "CHILLERS-3",
+                "CHILLERS-4",
+                "CHILLERS-5",
+                "DW-HEATERS-1",
+                "DW-HEATERS-2",
+                "DW-HEATERS-3",
+                "DW-HEATERS-4",
+                "DW-HEATERS-5",
+                "HEAT-REJ-1",
+                "HEAT-REJ-2",
+                "HEAT-REJ-3",
+                "HEAT-REJ-4",
+                "HEAT-REJ-5",
+                "GLHX-1",
+                "GLHX-2",
+                "GLHX-3",
+                "GLHX-4",
+                "GLHX-5",
+            ]
+        ),
+        "ElecGeneratorKeywords": _ListEnum(
+            [
+                "TYPE",
+                "ELEC-METER",
+                "SURPLUS-METER",
+                "CAPACITY",
+                "PV-MODULE",
+                "ELEC-INPUT-RATIO",
+                "HEAT-INPUT-RATIO",
+                "NUM-INVERTERS",
+                "MOUNT-TYPE",
+                "MOUNT-TILT",
+                "MIN-TRACK-VOLTS",
+                "MAX-TRACK-VOLTS",
+            ]
+        ),
+        "ElecGeneratorTypes": _ListEnum(
+            [
+                "ENGINE-GENERATOR",
+                "GAS-TURBINE-GENERATOR",
+                "STEAM-TURBINE-GENERATOR",
+                "PV-ARRAY",
+            ]
+        ),
+        "UtilityRateKeywords": _ListEnum(
+            [
+                "TYPE",
+                "ENERGY-CHG",
+            ]
+        ),
+        "UtilityRateTypes": _ListEnum(
+            [
+                "STEAM",
+                "CHILLED-WATER",
+                "ELECTRICITY",
+                "ELECTRIC-SALE",
+                "NATURAL-GAS",
+                "LPG",
+                "FUEL-OIL",
+                "DIESEL-OIL",
+                "COAL",
+                "METHANOL",
+                "OTHER-FUEL",
             ]
         ),
         "OutputCoolingTypes": _ListEnum(
@@ -867,17 +1051,18 @@ class BDLEnums:
     }
 
 
-# def print_schema_enums():
-#     """Print all the schema enumerations with their names and values
-#
-#     This is primarily useful for debugging purposes
-#     """
-#
-#     for key in BDLEnums.bdl_enums:
-#         print(f"{key}:")
-#         for e in BDLEnums.bdl_enums[key].get_list():
-#             print(f"    {e}")
-#         print()
-#
-#
-# print_schema_enums()
+def print_schema_enums():
+    """Print all the schema enumerations with their names and values
+
+    This is primarily useful for debugging purposes
+    """
+
+    for key in BDLEnums.bdl_enums:
+        print(f"{key}:")
+        for e in BDLEnums.bdl_enums[key].get_list():
+            print(f"    {e}")
+        print()
+
+
+if __name__ == "__main__":
+    print_schema_enums()
