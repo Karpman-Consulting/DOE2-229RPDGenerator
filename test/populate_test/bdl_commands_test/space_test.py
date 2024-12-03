@@ -3,10 +3,6 @@ from unittest.mock import patch
 
 from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
-
-Config.set_active_ruleset("ASHRAE 90.1-2019")
-SchemaEnums.update_schema_enum(Config.ACTIVE_RULESET)
-
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import *

@@ -252,7 +252,7 @@ class Boiler(BaseNode):
                     "",
                 )
         output_data = self.get_output_data(requests)
-        for boiler_name, capacity in output_data.items():
+        for boiler_name, capacity in boiler_capacities.items():
             boiler_capacities[boiler_name] = self.try_abs(
                 self.try_convert_units(capacity, "Btu/hr", "MMBtu/hr")
             )

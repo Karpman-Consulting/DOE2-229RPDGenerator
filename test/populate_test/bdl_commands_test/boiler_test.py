@@ -3,14 +3,9 @@ from unittest.mock import patch
 import os
 
 from rpd_generator.config import Config
-from rpd_generator.schema.schema_enums import SchemaEnums
-
-Config.set_active_ruleset("ASHRAE 90.1-2019")
-SchemaEnums.update_schema_enum(Config.ACTIVE_RULESET)
-
+from rpd_generator.utilities import validate_configuration
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.boiler import *
-from rpd_generator.bdl_structure.bdl_commands.meters import FuelMeter
 from rpd_generator.bdl_structure.bdl_commands.boiler import Boiler
 from rpd_generator.bdl_structure.bdl_commands.circulation_loop import CirculationLoop
 from rpd_generator.bdl_structure.bdl_commands.utility_and_economics import (
@@ -35,7 +30,6 @@ BoilerEfficiencyMetricOptions = SchemaEnums.schema_enums[
 class TestFuelBoiler(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        validate_configuration.find_equest_installation()
 
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"

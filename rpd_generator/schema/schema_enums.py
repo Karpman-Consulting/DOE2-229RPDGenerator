@@ -34,12 +34,12 @@ class SchemaEnums:
     @staticmethod
     def update_schema_enum(ruleset: Ruleset):
         # Load the output schema file
-        _output_schema_path = Path(__file__).parent / ruleset["output_filename"]
+        _output_schema_path = Path(__file__).parent / ruleset.output_schema_filename
         with open(_output_schema_path) as json_file:
             _output_schema_obj = json.load(json_file)
 
         # Load the enumeration schema file
-        _enum_schema_path = Path(__file__).parent / ruleset["enum_filename"]
+        _enum_schema_path = Path(__file__).parent / ruleset.enum_schema_filename
         with open(_enum_schema_path) as json_file:
             _enum_schema_obj = json.load(json_file)
 
