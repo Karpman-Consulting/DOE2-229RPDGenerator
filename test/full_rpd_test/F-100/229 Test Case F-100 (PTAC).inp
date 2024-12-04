@@ -474,8 +474,8 @@ $ ---------------------------------------------------------
    TYPE             = RESET-TEMP
    OUTSIDE-HI       = 50
    OUTSIDE-LO       = 20
-   SUPPLY-HI        = 150
-   SUPPLY-LO        = 180
+   SUPPLY-HI        = 180
+   SUPPLY-LO        = 150
    ..
 "All ON Day" = DAY-SCHEDULE-PD
    TYPE             = ON/OFF
@@ -1320,13 +1320,11 @@ $ *********************************************************
 "PTAC 1" = SYSTEM          
    TYPE             = PSZ
    HEAT-SOURCE      = HOT-WATER
-   ZONE-HEAT-SOURCE = HOT-WATER
-   HUMIDIFIER-TYPE  = NONE
    MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
    COOL-SET-T       = 60
    SUPPLY-FLOW      = 2000
    SUPPLY-KW/FLOW   = 0.0003
-   REHEAT-DELTA-T   = 0
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    COOLING-CAPACITY = 60000
@@ -1353,6 +1351,8 @@ $ *********************************************************
 "PTAC 2" = SYSTEM          
    TYPE             = PSZ
    HEAT-SOURCE      = HOT-WATER
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
    SUPPLY-FLOW      = 2000
    SUPPLY-KW/FLOW   = 0.0003
    HW-VALVE-TYPE    = TWO-WAY
@@ -1380,6 +1380,8 @@ $ *********************************************************
 "PTAC 3" = SYSTEM          
    TYPE             = PSZ
    HEAT-SOURCE      = HOT-WATER
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
    SUPPLY-FLOW      = 2000
    SUPPLY-KW/FLOW   = 0.0003
    HW-VALVE-TYPE    = TWO-WAY
@@ -1407,6 +1409,8 @@ $ *********************************************************
 "PTAC 4" = SYSTEM          
    TYPE             = PSZ
    HEAT-SOURCE      = HOT-WATER
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
    SUPPLY-FLOW      = 2000
    SUPPLY-KW/FLOW   = 0.0003
    HW-VALVE-TYPE    = TWO-WAY
@@ -1434,6 +1438,8 @@ $ *********************************************************
 "PTAC 5" = SYSTEM          
    TYPE             = PSZ
    HEAT-SOURCE      = HOT-WATER
+   MAX-SUPPLY-T     = 90
+   HEAT-SET-T       = 90
    SUPPLY-FLOW      = 2000
    SUPPLY-KW/FLOW   = 0.0003
    HW-VALVE-TYPE    = TWO-WAY
