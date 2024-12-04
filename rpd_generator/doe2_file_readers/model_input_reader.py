@@ -97,54 +97,47 @@ class ModelInputReader:
             record_data_for = False
 
             for line in bdl_file:
+
+                # Skip empty lines
                 if not line.strip():
+                    record_data_for = False
                     continue
 
+                # Extract the DOE-2 version from the file
                 if "JJHirsch DOE-2 Version:" in line:
                     doe2_version = line.split(":")[1].split()[0].strip()
                     continue
 
+                # When the data record is complete, reset the flag and add the command to the file_commands dictionary
                 if record_data_for and line[0] != "-":
                     record_data_for = False
 
+                # If the line contains a command, parse the command and set the active command dictionary
                 if '" = ' in line or "$LIBRARY-ENTRY" in line:
                     unique_name, command = (
                         self._parse_command_line(line)
                         if '" = ' in line
                         else self._parse_library_entry(line)
                     )
+                    # check if the command type is one that the RPD Generator uses:
                     if command in self.bdl_command_dict:
-                        command_dict = {"unique_name": unique_name}
-                        self._track_current_parents(command, command_dict)
+                        command_dict = {"command": command}
+                        self._track_current_parents(unique_name, command)
                         command_dict = self._set_parent(command, command_dict)
-                        if command_dict not in file_commands.setdefault(command, []):
-                            file_commands[command].append(command_dict)
-                        active_command_dict = command_dict
+                        # Ensure every BDL command is accessible by unique name
+                        file_commands[unique_name] = command_dict
                     continue
 
+                # Flag the start of the data record and set the active command dictionary
                 elif "DATA FOR" in line:
-                    record_data_for = True
                     obj_u_name = line.split("DATA FOR ")[1].strip()
-                    if (
-                        active_command_dict is None
-                        or obj_u_name != active_command_dict["unique_name"]
-                    ):
-                        active_command_dict = next(
-                            (
-                                cmd_dict
-                                for cmd_list in file_commands.values()
-                                for cmd_dict in cmd_list
-                                if cmd_dict["unique_name"] == obj_u_name
-                            ),
-                            None,
-                        )
+                    active_command_dict = file_commands.get(obj_u_name)
+                    if active_command_dict:
+                        record_data_for = True
                     continue
 
-                elif (
-                    record_data_for
-                    and " = " in line
-                    and active_command_dict is not None
-                ):
+                # Parse the definition line and add the keyword and value to the active command dictionary
+                elif record_data_for and " = " in line:
                     keyword, value, units = self._parse_definition_line(line)
 
                     if keyword in active_command_dict and isinstance(
@@ -161,6 +154,7 @@ class ModelInputReader:
                     else:
                         active_command_dict[keyword] = value
 
+            file_commands = self._group_by_command(file_commands)
             return {"doe2_version": doe2_version, "file_commands": file_commands}
 
     @staticmethod
@@ -186,7 +180,18 @@ class ModelInputReader:
         """
         unique_name = line[28:60].strip()
         command = line[60:76].strip()
+        command = command.replace("MAT", "MATERIAL")
         return unique_name, command
+
+    @staticmethod
+    def _group_by_command(commands_dict):
+        grouped_dict = {}
+        for key, val in commands_dict.items():
+            command = val["command"]
+            if command not in grouped_dict:
+                grouped_dict[command] = {}
+            grouped_dict[command][key] = val
+        return grouped_dict
 
     def _parse_definition_line(self, line):
         """
@@ -210,22 +215,22 @@ class ModelInputReader:
             value = parts[1].strip()
             return keyword, value, None
 
-    def _track_current_parents(self, command, command_dict):
+    def _track_current_parents(self, u_name, command):
         """
         Keep track of the most recent floor, space, or other parent objects. Floor and space parents are stored
         separately to ensure that the correct parent is set for child objects in multi-tiered nodes.
-        :param command:
-        :param command_dict:
+        :param u_name: Unique name of the object.
+        :param command: Command type of the object.
         :return: None
         """
         # plain parents are parents that cannot have grandchildren
         plain_parent_commands = ["SYSTEM", "EXTERIOR-WALL", "INTERIOR-WALL"]
         if command == "FLOOR":
-            self.current_parent_floor = command_dict["unique_name"]
+            self.current_parent_floor = u_name
         elif command == "SPACE":
-            self.current_parent_space = command_dict["unique_name"]
+            self.current_parent_space = u_name
         elif command in plain_parent_commands:
-            self.current_parent = command_dict["unique_name"]
+            self.current_parent = u_name
         return
 
     def _set_parent(self, command, command_dict):

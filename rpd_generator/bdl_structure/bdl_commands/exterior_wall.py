@@ -1,3 +1,5 @@
+import copy
+
 from rpd_generator.bdl_structure.parent_node import ParentNode
 from rpd_generator.bdl_structure.child_node import ChildNode
 from rpd_generator.schema.schema_enums import SchemaEnums
@@ -10,12 +12,17 @@ AdditionalSurfaceAdjacencyOptions2019ASHRAE901 = SchemaEnums.schema_enums[
     "AdditionalSurfaceAdjacencyOptions2019ASHRAE901"
 ]
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
+SurfaceConstructionInputOptions = SchemaEnums.schema_enums[
+    "SurfaceConstructionInputOptions"
+]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]
-BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_LayerKeywords = BDLEnums.bdl_enums["LayerKeywords"]
 BDL_SpaceKeywords = BDLEnums.bdl_enums["SpaceKeywords"]
 BDL_FloorKeywords = BDLEnums.bdl_enums["FloorKeywords"]
+BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
 
 
 class ExteriorWall(ChildNode, ParentNode):
@@ -127,8 +134,12 @@ class ExteriorWall(ChildNode, ParentNode):
 
     def populate_data_group(self):
         """Populate schema structure for exterior wall object."""
-        construction = self.get_obj(self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION))
-        self.construction = construction.construction_data_structure
+        self.construction = copy.deepcopy(
+            self.get_obj(
+                self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION)
+            ).construction_data_structure
+        )
+        self.account_for_air_film_resistance()
 
         optical_property_attributes = [
             "absorptance_thermal_exterior",
@@ -173,3 +184,28 @@ class ExteriorWall(ChildNode, ParentNode):
         """Insert exterior wall object into the rpd data structure."""
         zone = rmd.space_map.get(self.parent.u_name)
         zone.surfaces.append(self.exterior_wall_data_structure)
+
+    def account_for_air_film_resistance(self):
+        """
+        Add exterior air film resistance to the construction object's u_factor.
+        Remove interior air film resistance from a simplified construction's simplified material r_value.
+        """
+        construction_obj = self.get_obj(
+            self.get_inp(BDL_ExteriorWallKeywords.CONSTRUCTION)
+        )
+        spec_method = construction_obj.get_inp(BDL_ConstructionKeywords.TYPE)
+        u_factor = self.construction.get("u_factor")
+        ext_air_film_resistance = 0.17
+        if u_factor:
+            if spec_method == BDL_ConstructionTypes.U_VALUE:
+                location = self.get_inp(BDL_ExteriorWallKeywords.LOCATION)
+                int_air_film_resistance = (
+                    0.61
+                    if location == BDL_WallLocationOptions.TOP
+                    else 0.92 if location == BDL_WallLocationOptions.BOTTOM else 0.68
+                )
+                self.construction["primary_layers"][0]["r_value"] = (
+                    1 / u_factor - int_air_film_resistance
+                )
+
+            self.construction["u_factor"] = 1 / (1 / u_factor + ext_air_film_resistance)

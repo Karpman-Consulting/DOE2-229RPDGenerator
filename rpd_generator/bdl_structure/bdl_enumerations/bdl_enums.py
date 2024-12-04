@@ -236,7 +236,13 @@ class BDLEnums:
                 "HEATING-SCHEDULE",
             ]
         ),
-        "ConstructionKeywords": _ListEnum(["LAYERS", "ABSORPTANCE", "U-VALUE"]),
+        "ConstructionTypes": _ListEnum(
+            [
+                "LAYERS",
+                "U-VALUE",
+            ]
+        ),
+        "ConstructionKeywords": _ListEnum(["TYPE", "LAYERS", "ABSORPTANCE", "U-VALUE"]),
         "DayScheduleKeywords": _ListEnum(
             [
                 "TYPE",
@@ -386,6 +392,7 @@ class BDLEnums:
         "LayerKeywords": _ListEnum(
             [
                 "MATERIAL",
+                "INSIDE-FILM-RES",
             ]
         ),
         "MasterMeterKeywords": _ListEnum(
@@ -421,10 +428,20 @@ class BDLEnums:
                 "DEM-UNIT-INDEX",
             ]
         ),
+        "AirflowConditionOptions": _ListEnum(
+            [
+                "SEA-LEVEL",
+                "BLDG-ALTITUDE",
+            ]
+        ),
         "SiteParameterKeywords": _ListEnum(
             [
                 "DAYLIGHT-SAVINGS",
                 "GROUND-T",
+                "SPECIFY-AIRFLOWS",
+                "ALTITUDE",
+                "LATITUDE",
+                "LONGITUDE",
             ]
         ),
         "RunPeriodKeywords": _ListEnum(
@@ -594,30 +611,33 @@ class BDLEnums:
         ),
         "SystemTypes": _ListEnum(
             [
-                "PTAC",
+                "SUM",
+                "SZRH",
+                "MZS",
+                "DDS",
+                "SZCI",
+                "UVT",
+                "UHT",
+                "FC",
+                "IU",
+                "VAVS",
+                "RHFS",
+                "HP",
+                "HVSYS",
+                "RESYS",
+                "CBVAV",
                 "PSZ",
                 "PMZS",
                 "PVAVS",
-                "PVVT",
-                "HP",
-                "SZRH",
-                "VAVS",
-                "RHFS",
-                "DDS",
-                "MZS",
+                "PTAC",
                 "PIU",
-                "FC",
-                "IU",
-                "UVT",
-                "UHT",
+                "FNSYS",
+                "PTGSD",
+                "PVVT",
                 "RESYS2",
                 "RESVVT",
                 "EVAP-COOL",
-                "CBVAV",
-                "SUM",
                 "DOAS",
-                "SZCI",
-                "HVSYS",
                 "FNSYS",
                 "PTGSD",
             ]
@@ -795,12 +815,15 @@ class BDLEnums:
                 "ERV-OA-FLOW",
                 "ERV-EXH-FLOW",
                 "ZONE-HEAT-SOURCE",
+                "BASEBOARD-SOURCE",
                 "ZONE-OA-METHOD",
                 "BBRD-LOOP",
                 "HP-SUPP-SOURCE",
                 "MAX-HP-SUPP-T",
                 "MIN-HP-T",
                 "INDUCTION-RATIO",
+                "MAX-SUPPLY-T",
+                "MIN-SUPPLY-T",
                 "HEAT-FUEL-METER",
             ]
         ),
@@ -921,7 +944,6 @@ class BDLEnums:
                 "HW-LOOP",
                 "EXHAUST-FLOW",
                 "BASEBOARD-CTRL",
-                "BASEBOARD-SOURCE",
                 "BASEBOARD-RATING",
                 "ASSIGNED-FLOW",
                 "HASSIGNED-FLOW",

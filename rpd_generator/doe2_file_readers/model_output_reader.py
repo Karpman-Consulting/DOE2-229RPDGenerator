@@ -72,6 +72,10 @@ def get_multiple_results(
     and row_key: (string) to use when KT > 0 and when a report has multiple row where each row provides results for a separate building component or month of the year
     :return: list of returned values from the binary simulation output files
     """
+
+    if not os.path.exists(d2_result_dll):
+        raise FileNotFoundError(f"D2Result.dll not found at {d2_result_dll}")
+
     d2_result_dll = ctypes.CDLL(d2_result_dll)
     multiple_result_dll = d2_result_dll.D2R_GetMultipleResult
     nhr_list_path = str(Path(doe2_data_dir) / "DOE23" / "NHRList.txt")

@@ -616,12 +616,13 @@ class CirculationLoop(BaseNode):
         self.swh_design_supply_temperature = self.try_float(
             self.get_inp(BDL_CirculationLoopKeywords.DESIGN_HEAT_T)
         )
-        inlet_t = self.get_inp(BDL_CirculationLoopKeywords.DHW_INLET_T)
-        inlet_t_sch = self.get_inp(BDL_CirculationLoopKeywords.DHW_INLET_T_SCH)
-        if inlet_t is not None or inlet_t_sch is not None:
-            self.is_ground_temperature_used_for_entering_water = False
-        else:
-            self.is_ground_temperature_used_for_entering_water = True
+        self.design_supply_temperature_difference = self.try_float(
+            self.get_inp(BDL_CirculationLoopKeywords.LOOP_DESIGN_DT)
+        )
+        self.is_ground_temperature_used_for_entering_water = not (
+            self.get_inp(BDL_CirculationLoopKeywords.DHW_INLET_T)
+            or self.get_inp(BDL_CirculationLoopKeywords.DHW_INLET_T_SCH)
+        )
 
     def populate_service_water_piping(self):
         pass
@@ -669,11 +670,17 @@ class CirculationLoop(BaseNode):
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.HW:
-                heating_loop = system.get_inp(BDL_SystemKeywords.HW_LOOP)
-                valve_type = system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE)
+                heating_loops = [
+                    system.get_inp(BDL_SystemKeywords.HW_LOOP),
+                    system.get_inp(BDL_SystemKeywords.PHW_LOOP),
+                ]
+                valve_types = [
+                    system.get_inp(BDL_SystemKeywords.HW_VALVE_TYPE),
+                    system.get_inp(BDL_SystemKeywords.PHW_VALVE_TYPE),
+                ]
                 if (
-                    heating_loop == self.u_name
-                    and valve_type == BDL_SystemHeatingValveTypes.TWO_WAY
+                    self.u_name in heating_loops
+                    and BDL_SystemHeatingValveTypes.TWO_WAY in valve_types
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.CW:

@@ -17,16 +17,21 @@ class Config:
     EQUEST_INSTALL_PATH = None
     DOE22_DATA_PATH = None
     DOE23_DATA_PATH = None
-    ACTIVE_RULESET = RULESETS["ASHRAE 90.1-2019"]
+    ACTIVE_RULESET_DICT = RULESETS["ASHRAE 90.1-2019"]
+    ACTIVE_RULESET = Ruleset(
+        name="ASHRAE 90.1-2019",
+        enum_filename=ACTIVE_RULESET_DICT.get("enum_filename"),
+        output_filename=ACTIVE_RULESET_DICT.get("output_filename"),
+    )
     SchemaEnums.update_schema_enum(ACTIVE_RULESET)
 
     @staticmethod
     def set_active_ruleset(ruleset_name: str):
-        ruleset = Config.RULESETS.get(ruleset_name)
-        if ruleset:
+        ruleset_dict = Config.RULESETS.get(ruleset_name)
+        if ruleset_dict:
             Config.ACTIVE_RULESET = Ruleset(
                 name=ruleset_name,
-                enum_filename=ruleset.get("enum_filename"),
-                output_filename=ruleset.get("output_filename"),
+                enum_filename=ruleset_dict.get("enum_filename"),
+                output_filename=ruleset_dict.get("output_filename"),
             )
             SchemaEnums.update_schema_enum(Config.ACTIVE_RULESET)
