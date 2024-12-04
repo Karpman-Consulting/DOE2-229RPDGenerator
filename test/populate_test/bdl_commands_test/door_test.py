@@ -21,15 +21,60 @@ class TestDoor(unittest.TestCase):
         self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
         self.door = Door("Door 1", self.exterior_wall, self.rmd)
 
-    # @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    # def test_populate_data_with_door(self, mock_get_output_data):
-    #     mock_get_output_data.return_value = {}
-    #
-    #     self.door.keyword_value_pairs = {}
-    #
-    #     self.door.populate_data_elements()
-    #     self.door.populate_data_group()
-    #
-    #     expected_data_structure = {}
-    #
-    #     self.assertEqual(expected_data_structure, self.door.door_data_structure)
+    def test_populate_data_with_door(self):
+        self.door.keyword_value_pairs = {
+            BDL_DoorKeywords.HEIGHT: 7,
+            BDL_DoorKeywords.WIDTH: 4
+        }
+
+        self.door.populate_data_elements()
+        self.door.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "DOOR",
+            "id": "Door 1",
+            "opaque_area": 28
+        }
+
+        self.assertEqual(expected_data_structure, self.door.door_data_structure)
+
+    def test_populate_data_with_door_no_height(self):
+        self.door.keyword_value_pairs = {
+            BDL_DoorKeywords.WIDTH: 4
+        }
+
+        self.door.populate_data_elements()
+        self.door.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "DOOR",
+            "id": "Door 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.door.door_data_structure)
+
+    def test_populate_data_with_door_no_width(self):
+        self.door.keyword_value_pairs = {
+            BDL_DoorKeywords.HEIGHT: 7
+        }
+
+        self.door.populate_data_elements()
+        self.door.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "DOOR",
+            "id": "Door 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.door.door_data_structure)
+
+    def test_populate_data_with_door_no_height_or_width(self):
+        self.door.populate_data_elements()
+        self.door.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "DOOR",
+            "id": "Door 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.door.door_data_structure)

@@ -21,15 +21,109 @@ class TestWindows(unittest.TestCase):
         self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
         self.window = Window("Window 1", self.exterior_wall, self.rmd)
 
-    # @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    # def test_populate_data_with_window(self, mock_get_output_data):
-    #     mock_get_output_data.return_value = {}
-    #
-    #     self.window.keyword_value_pairs = {}
-    #
-    #     self.window.populate_data_elements()
-    #     self.window.populate_data_group()
-    #
-    #     expected_data_structure = {}
-    #
-    #     self.assertEqual(expected_data_structure, self.window.window_data_structure)
+    def test_populate_data_with_window(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.HEIGHT: 4,
+            BDL_WindowKeywords.WIDTH: 3,
+            BDL_WindowKeywords.FRAME_WIDTH: 2,
+            BDL_WindowKeywords.LEFT_FIN_D: 1.0,
+            BDL_WindowKeywords.OVERHANG_D: 1.5,
+            BDL_WindowKeywords.SHADING_SCHEDULE: "Schedule",
+            BDL_WindowKeywords.WIN_SHADE_TYPE: "MOVABLE-SHADE"
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1",
+            "glazed_area": 12.0,
+            "opaque_area": 44.0,
+            "has_shading_sidefins": True,
+            "depth_of_overhang": 1.5,
+            "has_shading_overhang": True,
+            "has_manual_interior_shades": True
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
+
+    def test_populate_data_with_window_no_frame_width(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.HEIGHT: 4,
+            BDL_WindowKeywords.WIDTH: 3,
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1",
+            "glazed_area": 12.0,
+            "opaque_area": 0.0,
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
+
+    def test_populate_data_with_window_no_width(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.HEIGHT: 4,
+            BDL_WindowKeywords.FRAME_WIDTH: 2
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1",
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
+
+    def test_populate_data_with_window_bad_fin_depth(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.LEFT_FIN_D: 0.0
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
+
+    def test_populate_data_with_window_bad_overhang_depth(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.SHADING_SCHEDULE: "Schedule",
+            BDL_WindowKeywords.WIN_SHADE_TYPE: "FIXED-SHADE"
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
+
+    def test_populate_data_with_window_fixed_shade(self):
+        self.window.keyword_value_pairs = {
+            BDL_WindowKeywords.LEFT_FIN_D: 0.0
+        }
+
+        self.window.populate_data_elements()
+        self.window.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "WINDOW",
+            "id": "Window 1"
+        }
+
+        self.assertEqual(expected_data_structure, self.window.window_data_structure)
