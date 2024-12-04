@@ -1109,6 +1109,10 @@ class Zone(ChildNode):
             self.parent.get_inp(BDL_SystemKeywords.ZONE_OA_METHOD)
             == BDL_ZoneOAMethodsOptions.SUM_OCC_AND_AREA
         )
+        min_oa_sch_allows_dcv_to_take_effect = (
+            self.parent.get_obj(self.parent.get_inp(BDL_SystemKeywords.MIN_AIR_SCH))
+            is None
+        )
         zone_is_attached_to_sys_with_terminal_inputs = (
             self.parent.get_inp(BDL_SystemKeywords.TYPE)
             in self.parent.terminal_selection_system_types
@@ -1120,10 +1124,10 @@ class Zone(ChildNode):
             == BDL_ZoneOAMethodsOptions.MAX_OCC_OR_AREA
         ):
             space = self.get_obj(self.get_inp(BDL_ZoneKeywords.SPACE))
-            space_occ_sched = space.get_obj(
+            space_occ_sch = space.get_obj(
                 space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE)
             )
-            max_occ_fraction = self.try_max(space_occ_sched.hourly_values)
+            max_occ_fraction = self.try_max(space_occ_sch.hourly_values)
             space_number_of_people = self.try_float(
                 space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
             )
@@ -1153,12 +1157,9 @@ class Zone(ChildNode):
             )
 
             # Determine whether the OA/person rate exceeds the OA CFM/sf and the ACH rate during max occupancy periods
-            if ach_based_cfm > occ_based_cfm or area_based_cfm > occ_based_cfm:
-                # The OA/person rate is never the MAX so never takes priority
-                occ_cfm_allows_dcv_to_take_effect = False
-            else:
-                # The OA/person rate can take priority during max occupancy periods
-                occ_cfm_allows_dcv_to_take_effect = True
+            occ_cfm_allows_dcv_to_take_effect = (
+                occ_based_cfm > ach_based_cfm and occ_based_cfm > area_based_cfm
+            )
 
         min_oa_sch = self.parent.get_obj(
             self.parent.get_inp(BDL_SystemKeywords.MIN_AIR_SCH)
@@ -1171,7 +1172,7 @@ class Zone(ChildNode):
             BDL_MinFlowControlOptions.DCV_RESET_UP_DOWN,
         ]
 
-        if min_oa_sch is not None and (
+        if min_oa_sch and (
             not zone_is_attached_to_sys_with_terminal_inputs
             or (
                 zone_is_attached_to_sys_with_terminal_inputs
@@ -1179,20 +1180,12 @@ class Zone(ChildNode):
                 not in dcv_flow_control_options
             )
         ):
-            dcv_never_takes_precedence_due_to_min_air_sch = (
-                False
-                if min_oa_sch is None
-                else not any(
-                    min_oa_sch.hourly_values[i] == -999
-                    for i in range(len(fan_sch.hourly_values))
-                    if fan_sch.hourly_values[i] == 1
-                )
+            min_oa_sch_allows_dcv_to_take_effect = any(
+                min_oa_sch.hourly_values[i] == -999
+                for i in range(len(fan_sch.hourly_values))
+                if fan_sch.hourly_values[i] == 1
             )
-        else:
-            dcv_never_takes_precedence_due_to_min_air_sch = False
 
-        # For units with terminal inputs ,
-        # their hourly specified values will always be used, for the appropriate VAV box minimum flow setting
         min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
 
         if (
@@ -1212,44 +1205,29 @@ class Zone(ChildNode):
             # if MIN-FLOW-SCH, CMIN-FLOW-SCH or HMIN-FLOW-SCH are specified
             if any(terminal_flow_schedules):
 
-                if fan_sch is None:
-                    sch_length = max(len(lst.hourly_values) for lst in terminal_flow_schedules)
-                else:
-                    sch_length = len(fan_sch.hourly_values)
-                # check if hourly value is -999 for all flow schedules while the fan schedule value is 1
-                for i in range(0, sch_length):
+                if min_oa_method in [
+                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                ]:
+                    min_oa_sch_allows_dcv_to_take_effect = True
 
-                    if fan_sch is None:
-                        if all(
-                                lst.hourly_values[i] == -999
-                                for lst in terminal_flow_schedules
-                        ) or min_oa_method in [
-                            BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                            BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-                        ]:
-                            dcv_never_takes_precedence_due_to_min_air_sch = False
-                            break
-                    else:
-                        if fan_sch.hourly_values[i] == 1:
+                else:
+                    # check if hourly value is -999 for all flow schedules while the fan schedule value is 1
+                    for i in range(len(terminal_flow_schedules[0].hourly_values)):
+                        if fan_sch is None or fan_sch.hourly_values[i] == 1:
                             if all(
-                                lst.hourly_values[i] == -999
-                                for lst in terminal_flow_schedules
-                            ) or min_oa_method in [
-                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-                            ]:
-                                dcv_never_takes_precedence_due_to_min_air_sch = False
+                                sched.hourly_values[i] == -999
+                                for sched in terminal_flow_schedules
+                            ):
+                                min_oa_sch_allows_dcv_to_take_effect = True
                                 break
 
-
-                else:
-                    dcv_never_takes_precedence_due_to_min_air_sch = True
             else:
-                dcv_never_takes_precedence_due_to_min_air_sch = False
+                min_oa_sch_allows_dcv_to_take_effect = True
 
-        # Check if DCV was modeled, there are some caveats for DOAS hence the variable is named "likely_has_dcv"
+        # Check if DCV conditions are met
         dcv_condition = (
-            not dcv_never_takes_precedence_due_to_min_air_sch
+            min_oa_sch_allows_dcv_to_take_effect
             and occ_cfm_allows_dcv_to_take_effect
             and (
                 (
@@ -1264,4 +1242,5 @@ class Zone(ChildNode):
                 ]
             )
         )
+
         return dcv_condition
