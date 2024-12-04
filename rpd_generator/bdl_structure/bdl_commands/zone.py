@@ -2,7 +2,6 @@ from rpd_generator.bdl_structure.child_node import ChildNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
-
 HeatingSourceOptions = SchemaEnums.schema_enums["HeatingSourceOptions"]
 CoolingSourceOptions = SchemaEnums.schema_enums["CoolingSourceOptions"]
 TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
@@ -15,7 +14,6 @@ FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
 FanSpecificationMethodOptions = SchemaEnums.schema_enums[
     "FanSpecificationMethodOptions"
 ]
-
 
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ZoneKeywords = BDLEnums.bdl_enums["ZoneKeywords"]
@@ -237,74 +235,73 @@ class Zone(ChildNode):
             "HVAC Systems - Design Parameters - Zone Design Data - General - Outside Airflow"
         )
         exhaust_airflow = self.try_float(self.get_inp(BDL_ZoneKeywords.EXHAUST_FLOW))
+        oa_flow_per_person = self.try_float(self.get_inp(BDL_ZoneKeywords.OA_FLOW_PER))
 
         # Populate MainTerminal data elements
         self.terminals_id[0] = self.u_name + " MainTerminal"
 
-        # Populate terminals_has_demand_control_ventilation
-        # DCV is not modeled when a zone has the OUTSIDE-AIR-FLOW keyword populated or when OA-FLOW/PER is not populated.
-        cfm_per_pps = self.get_inp(BDL_ZoneKeywords.OA_FLOW_PER)
-        cfm_per_pps = float(cfm_per_pps) if cfm_per_pps is not None else None
-        if cfm_per_pps and self.get_inp(BDL_ZoneKeywords.OUTSIDE_AIR_FLOW) is None:
-            # If MAX-OCC-OR-AREA was input as the ZONE-OA-METHOD then it will need to be determined whether the OA CFM per person rate is
-            # high enough such that it is greater than the OA CFM/sf and the ACH rate during max occupancy periods. If it is not then DCV will not be modeled.
-            # Create boolean for if the occupancy based cfm is greater enough for dcv to be modeled.
+        # Populate Terminal.has_demand_control_ventilation when 'OUTSIDE-AIR-FLOW' IS NOT populated, and when the 'OA-FLOW/PERSON' IS populated >0
+        has_dcv = False
+        if (
+            self.get_inp(BDL_ZoneKeywords.OUTSIDE_AIR_FLOW) is None
+            and oa_flow_per_person
+        ):
+            # Default flag value
+            occ_cfm_allows_dcv_to_take_effect = False
+
+            zone_is_attached_to_sys_with_terminal_inputs = (
+                self.parent.get_inp(BDL_SystemKeywords.TYPE)
+                in self.parent.terminal_selection_system_types
+            )
+            # If MAX-OCC-OR-AREA was input as the parent system's ZONE-OA-METHOD
             if (
                 self.parent.get_inp(BDL_SystemKeywords.ZONE_OA_METHOD)
                 == BDL_ZoneOAMethodsOptions.MAX_OCC_OR_AREA
             ):
-                # Get the space occupancy schedule and number of occupants so that cfm per pps can be converted to cfm for comparison
                 space = self.get_obj(self.get_inp(BDL_ZoneKeywords.SPACE))
-                spc_occ_sch = space.get_obj(
+                space_occ_sched = space.get_obj(
                     space.get_inp(BDL_SpaceKeywords.PEOPLE_SCHEDULE)
                 )
-                spc_num_pp = float(space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE))
-                occ_cfm = cfm_per_pps * spc_num_pp * max(spc_occ_sch.hourly_values)
-                # Assess whether ACH or CFM per sf have been populated and if so calculate the total cfm for each for comparison
-                ach = self.get_inp(BDL_ZoneKeywords.OA_CHANGES)
-                ach = float(ach) if ach is not None else None
-                cfm_sf = self.get_inp(BDL_ZoneKeywords.OA_FLOW_AREA)
-                cfm_sf = float(cfm_sf) if cfm_sf is not None else None
-                ach_cfm = (
-                    (float(space.get_inp(BDL_SpaceKeywords.VOLUME)) * ach) / 60
-                    if ach is not None
+                max_occ_fraction = self.try_max(space_occ_sched.hourly_values)
+                space_number_of_people = self.try_float(
+                    space.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
+                )
+
+                # Calculate the total cfm for each scenario
+                occ_based_cfm = (
+                    oa_flow_per_person * space_number_of_people * max_occ_fraction
+                    if (space_number_of_people and max_occ_fraction)
+                    else None
+                )
+                ach_based_cfm = (
+                    (
+                        self.try_float(space.get_inp(BDL_SpaceKeywords.VOLUME))
+                        * self.try_float(self.get_inp(BDL_ZoneKeywords.OA_CHANGES))
+                    )
+                    / 60
+                    if self.try_float(self.get_inp(BDL_ZoneKeywords.OA_CHANGES))
                     else 0
                 )
-                sf_cfm = (
-                    float(space.get_inp(BDL_SpaceKeywords.AREA)) * cfm_sf
-                    if cfm_sf is not None
+                area_based_cfm = (
+                    self.try_float(space.get_inp(BDL_SpaceKeywords.AREA))
+                    * self.try_float(self.get_inp(BDL_ZoneKeywords.OA_FLOW_AREA))
+                    if self.try_float(self.get_inp(BDL_ZoneKeywords.OA_FLOW_AREA))
                     else 0
                 )
-                if occ_cfm <= ach_cfm or occ_cfm <= sf_cfm:
-                    occ_cfm_allows_dcv_to_be_modeled = False
+
+                # Determine whether the OA/person rate exceeds the OA CFM/sf and the ACH rate during max occupancy periods
+                if ach_based_cfm > occ_based_cfm or area_based_cfm > occ_based_cfm:
+                    # The OA/person rate is never the MAX so never takes priority
+                    occ_cfm_allows_dcv_to_take_effect = False
                 else:
-                    occ_cfm_allows_dcv_to_be_modeled = True
-            else:
-                occ_cfm_allows_dcv_to_be_modeled = True
+                    # The OA/person rate can take priority during max occupancy periods
+                    occ_cfm_allows_dcv_to_take_effect = True
 
-            # Determine if the system associated with the zone has active model inputs associated with the terminal unit. The system
-            # types listed below do
-            system_types_with_terminal_inputs_lst = [
-                BDL_SystemTypes.MZS,
-                BDL_SystemTypes.DDS,
-                BDL_SystemTypes.SZCI,
-                BDL_SystemTypes.IU,
-                BDL_SystemTypes.VAVS,
-                BDL_SystemTypes.RHFS,
-                BDL_SystemTypes.RHFS,
-                BDL_SystemTypes.HVSYS,
-                BDL_SystemTypes.CBVAV,
-                BDL_SystemTypes.PMZS,
-                BDL_SystemTypes.PVAVS,
-                BDL_SystemTypes.PIU,
-                BDL_SystemTypes.FNSYS,
-                BDL_SystemTypes.PTGSD,
-            ]
-
-            zone_is_attached_to_sys_with_terminal_inputs = (
-                self.parent.get_inp(BDL_SystemKeywords.TYPE)
-                in system_types_with_terminal_inputs_lst
-            )
+            if (
+                self.parent.get_inp(BDL_SystemKeywords.ZONE_OA_METHOD)
+                == BDL_ZoneOAMethodsOptions.SUM_OCC_AND_AREA
+            ):
+                occ_cfm_allows_dcv_to_take_effect = True
 
             # Check if there is a Min-AIR-SCH populated for the system. Sent chat to Jackson on options here. Maybe need to account for
             # scenarios where DCV is modeled anyway like for systems where DCV is modeled at the terminal unit where it still appears to
@@ -319,12 +316,12 @@ class Zone(ChildNode):
                 BDL_MinFlowControlOptions.DCV_RESET_DOWN,
                 BDL_MinFlowControlOptions.DCV_RESET_UP_DOWN,
             ]
-            terminal_min_flow_control = self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
+
             if min_oa_sch is not None and (
                 not zone_is_attached_to_sys_with_terminal_inputs
                 or (
                     zone_is_attached_to_sys_with_terminal_inputs
-                    and terminal_min_flow_control
+                    and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
                     not in terminal_flow_control_defined_as_dcv_lst
                 )
             ):
@@ -342,14 +339,10 @@ class Zone(ChildNode):
 
             # For units with terminal inputs if MIN-FLOW-SCH, CMIN-FLOW-SCH or HMIN-FLOW-SCH are specified,
             # their hourly specified values will always be used, for the appropriate VAV box minimum flow setting, unless the hourly scheduled value is -999
-            system_DCV_control_min_oa_method_lst = [
-                BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-            ]
             min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
             if (
                 zone_is_attached_to_sys_with_terminal_inputs
-                and terminal_min_flow_control
+                and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
                 in terminal_flow_control_defined_as_dcv_lst
             ):
                 terminal_schedules = [
@@ -363,39 +356,46 @@ class Zone(ChildNode):
 
                     for i in range(len(fan_sch.hourly_values)):
                         if fan_sch.hourly_values[i] == 1:
-                            if (
-                                all(lst.hourly_values[i] == -999 for lst in lists)
-                                or min_oa_method in system_DCV_control_min_oa_method_lst
-                            ):
+                            if all(
+                                lst.hourly_values[i] == -999 for lst in lists
+                            ) or min_oa_method in [
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                            ]:
                                 dcv_never_takes_precedence_due_to_min_air_sch = False
                                 break
                         if fan_sch is None:
-                            if (
-                                all(lst.hourly_values[i] == -999 for lst in lists)
-                                or min_oa_method in system_DCV_control_min_oa_method_lst
-                            ):
+                            if all(
+                                lst.hourly_values[i] == -999 for lst in lists
+                            ) or min_oa_method in [
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                            ]:
                                 dcv_never_takes_precedence_due_to_min_air_sch = False
                                 break
                     else:
                         dcv_never_takes_precedence_due_to_min_air_sch = True
                 else:
                     dcv_never_takes_precedence_due_to_min_air_sch = False
-            # Check if DCV was modeled, there are some caveats for DOAS hence the variable is named likely_has_dcv
+
+            # Check if DCV was modeled, there are some caveats for DOAS hence the variable is named "likely_has_dcv"
             dcv_condition = (
                 not dcv_never_takes_precedence_due_to_min_air_sch
-                and occ_cfm_allows_dcv_to_be_modeled
+                and occ_cfm_allows_dcv_to_take_effect
                 and (
                     (
                         zone_is_attached_to_sys_with_terminal_inputs
-                        and terminal_min_flow_control
+                        and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
                         in terminal_flow_control_defined_as_dcv_lst
                     )
-                    or min_oa_method in system_DCV_control_min_oa_method_lst
+                    or min_oa_method
+                    in [
+                        BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                        BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                    ]
                 )
             )
-            likely_has_dcv = dcv_condition
-        else:
-            likely_has_dcv = False
+            has_dcv = dcv_condition
 
         # Only populate MainTerminal Fan data elements here if the parent system is_terminal is True
         # (Systems that allow PIU terminals cannot be terminal)
@@ -605,19 +605,25 @@ class Zone(ChildNode):
             # TODO: Account for zone minimum air flow schedule(s)
             else:
                 self.terminals_type[2] = TerminalOptions.VARIABLE_AIR_VOLUME
-            # Special condition for DOAS attached to conditioned zone where the terminal DCV parameters are ignored.
-            doas_attached_to = self.parent.get_inp(BDL_SystemKeywords.DOAS_ATTACHED_TO)
-            is_attached_to_conditioned_zone = (
-                doas_attached_to == BDL_DOASAttachedToOptions.CONDITIONED_ZONES
-            )
-            min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
 
-            self.terminals_has_demand_control_ventilation[2] = likely_has_dcv and (
-                min_oa_method in system_DCV_control_min_oa_method_lst
-                or not is_attached_to_conditioned_zone
+            # Special condition for DOAS attached to conditioned zone where the terminal DCV parameters are ignored.
+            is_doas_attached_to_system = (
+                self.parent.get_inp(BDL_SystemKeywords.DOAS_ATTACHED_TO)
+                == BDL_DOASAttachedToOptions.AHU_MIXED_AIR
             )
+
+            self.terminals_has_demand_control_ventilation[2] = has_dcv and (
+                self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
+                in [
+                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                ]
+                or is_doas_attached_to_system
+            )
+
+            # Overwrite Main Terminal DCV to False when the DOAS provides DCV directly to the zone
             self.terminals_has_demand_control_ventilation[0] = (
-                not is_attached_to_conditioned_zone and likely_has_dcv
+                has_dcv and is_doas_attached_to_system
             )
 
         else:
@@ -625,7 +631,7 @@ class Zone(ChildNode):
             self.terminals_minimum_outdoor_airflow_multiplier_schedule[0] = (
                 self.get_inp(BDL_ZoneKeywords.MIN_AIR_SCH)
             )
-            self.terminals_has_demand_control_ventilation[0] = likely_has_dcv
+            self.terminals_has_demand_control_ventilation[0] = has_dcv
 
         # Populate Baseboard Terminal data elements if applicable
         if has_baseboard:
@@ -682,7 +688,6 @@ class Zone(ChildNode):
                     self.zone_exhaust_fan_design_electric_power = (
                         zone_ef_power_per_flow * exhaust_airflow
                     )
-        return
 
     def populate_data_group(self):
         """Populate schema structure for zone object."""
