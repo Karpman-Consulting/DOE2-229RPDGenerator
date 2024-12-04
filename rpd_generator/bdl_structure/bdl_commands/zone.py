@@ -1180,13 +1180,17 @@ class Zone(ChildNode):
                 not in dcv_flow_control_options
             )
         ):
-            min_oa_sch_allows_dcv_to_take_effect = any(
-                min_oa_sch.hourly_values[i] == -999
-                for i in range(len(min_oa_sch.hourly_values))
-            ) if fan_sch is None else any(
-                min_oa_sch.hourly_values[i] == -999
-                for i in range(len(fan_sch.hourly_values))
-                if fan_sch.hourly_values[i] == 1
+            min_oa_sch_allows_dcv_to_take_effect = (
+                any(
+                    min_oa_sch.hourly_values[i] == -999
+                    for i in range(len(min_oa_sch.hourly_values))
+                )
+                if fan_sch is None
+                else any(
+                    min_oa_sch.hourly_values[i] == -999
+                    for i in range(len(fan_sch.hourly_values))
+                    if fan_sch.hourly_values[i] == 1
+                )
             )
 
         min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
