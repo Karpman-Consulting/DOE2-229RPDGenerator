@@ -1212,30 +1212,36 @@ class Zone(ChildNode):
             # if MIN-FLOW-SCH, CMIN-FLOW-SCH or HMIN-FLOW-SCH are specified
             if any(terminal_flow_schedules):
 
+                if fan_sch is None:
+                    sch_length = max(len(lst.hourly_values) for lst in terminal_flow_schedules)
+                else:
+                    sch_length = len(fan_sch.hourly_values)
                 # check if hourly value is -999 for all flow schedules while the fan schedule value is 1
-                for i in range(len(fan_sch.hourly_values)):
-
-                    if fan_sch.hourly_values[i] == 1:
-                        if all(
-                            lst.hourly_values[i] == -999
-                            for lst in terminal_flow_schedules
-                        ) or min_oa_method in [
-                            BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                            BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-                        ]:
-                            dcv_never_takes_precedence_due_to_min_air_sch = False
-                            break
+                for i in range(0, sch_length):
 
                     if fan_sch is None:
                         if all(
-                            lst.hourly_values[i] == -999
-                            for lst in terminal_flow_schedules
+                                lst.hourly_values[i] == -999
+                                for lst in terminal_flow_schedules
                         ) or min_oa_method in [
                             BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
                             BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
                         ]:
                             dcv_never_takes_precedence_due_to_min_air_sch = False
                             break
+                    else:
+                        if fan_sch.hourly_values[i] == 1:
+                            if all(
+                                lst.hourly_values[i] == -999
+                                for lst in terminal_flow_schedules
+                            ) or min_oa_method in [
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+                                BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+                            ]:
+                                dcv_never_takes_precedence_due_to_min_air_sch = False
+                                break
+
+
                 else:
                     dcv_never_takes_precedence_due_to_min_air_sch = True
             else:
