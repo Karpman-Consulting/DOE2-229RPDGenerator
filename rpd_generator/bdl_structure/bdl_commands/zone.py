@@ -511,7 +511,7 @@ class Zone(ChildNode):
                 or is_doas_attached_to_system
             )
 
-            # Overwrite Main Terminal DCV to False when the DOAS provides DCV directly to the zone
+            # Set Main Terminal DCV to False when the DOAS provides DCV directly to the zone
             self.terminals_has_demand_control_ventilation[0] = (
                 has_dcv and is_doas_attached_to_system
             )
@@ -1182,6 +1182,9 @@ class Zone(ChildNode):
         ):
             min_oa_sch_allows_dcv_to_take_effect = any(
                 min_oa_sch.hourly_values[i] == -999
+                for i in range(len(min_oa_sch.hourly_values))
+            ) if fan_sch is None else any(
+                min_oa_sch.hourly_values[i] == -999
                 for i in range(len(fan_sch.hourly_values))
                 if fan_sch.hourly_values[i] == 1
             )
@@ -1213,6 +1216,7 @@ class Zone(ChildNode):
 
                 else:
                     # check if hourly value is -999 for all flow schedules while the fan schedule value is 1
+                    min_oa_sch_allows_dcv_to_take_effect = False
                     for i in range(len(terminal_flow_schedules[0].hourly_values)):
                         if fan_sch is None or fan_sch.hourly_values[i] == 1:
                             if all(
