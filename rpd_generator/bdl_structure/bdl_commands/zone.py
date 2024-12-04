@@ -231,45 +231,6 @@ class Zone(ChildNode):
         exhaust_airflow = self.try_float(self.get_inp(BDL_ZoneKeywords.EXHAUST_FLOW))
         oa_flow_per_person = self.try_float(self.get_inp(BDL_ZoneKeywords.OA_FLOW_PER))
 
-        if exhaust_airflow is not None and exhaust_airflow > 0:
-            self.zone_exhaust_fan_id = self.u_name + " EF"
-            self.zone_exhaust_fan_design_airflow = exhaust_airflow
-            self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
-
-            if self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC) is not None:
-                self.zone_exhaust_fan_specification_method = (
-                    FanSpecificationMethodOptions.DETAILED
-                )
-                self.zone_exhaust_fan_design_pressure_rise = self.try_float(
-                    self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC)
-                )
-                self.zone_exhaust_fan_total_efficiency = self.try_float(
-                    self.get_inp(BDL_ZoneKeywords.EXHAUST_EFF)
-                )
-                if (
-                    self.zone_exhaust_fan_design_pressure_rise
-                    and self.zone_exhaust_fan_total_efficiency
-                ):
-                    self.zone_exhaust_fan_design_electric_power = (
-                        self.calculate_fan_power(
-                            exhaust_airflow,
-                            self.zone_exhaust_fan_design_pressure_rise,
-                            self.zone_exhaust_fan_total_efficiency,
-                        )
-                    )
-
-            else:
-                self.zone_exhaust_fan_specification_method = (
-                    FanSpecificationMethodOptions.SIMPLE
-                )
-                zone_ef_power_per_flow = self.try_float(
-                    self.get_inp(BDL_ZoneKeywords.EXHAUST_KW_FLOW)
-                )
-                if zone_ef_power_per_flow:
-                    self.zone_exhaust_fan_design_electric_power = (
-                        zone_ef_power_per_flow * exhaust_airflow
-                    )
-
         # Populate MainTerminal data elements
         self.terminals_id[0] = self.u_name + " MainTerminal"
         self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
@@ -735,10 +696,8 @@ class Zone(ChildNode):
             self.zone_exhaust_fan_id = self.u_name + " EF"
             self.zone_exhaust_fan_design_airflow = exhaust_airflow
             self.zone_exhaust_fan_is_airflow_sized_based_on_design_day = False
+
             if self.get_inp(BDL_ZoneKeywords.EXHAUST_STATIC) is not None:
-                zone_fan_power = output_data.get(
-                    "HVAC Systems - Design Parameters - Zone Design Data - General - Zone Fan Power"
-                )
                 self.zone_exhaust_fan_specification_method = (
                     FanSpecificationMethodOptions.DETAILED
                 )
@@ -748,15 +707,18 @@ class Zone(ChildNode):
                 self.zone_exhaust_fan_total_efficiency = self.try_float(
                     self.get_inp(BDL_ZoneKeywords.EXHAUST_EFF)
                 )
-                self.zone_exhaust_fan_design_electric_power = (
-                    None
-                    if zone_fan_power is None
-                    else (
-                        zone_fan_power
-                        if self.terminal_fan_design_electric_power is None
-                        else zone_fan_power - self.terminal_fan_design_electric_power
+                if (
+                    self.zone_exhaust_fan_design_pressure_rise
+                    and self.zone_exhaust_fan_total_efficiency
+                ):
+                    self.zone_exhaust_fan_design_electric_power = (
+                        self.calculate_fan_power(
+                            exhaust_airflow,
+                            self.zone_exhaust_fan_design_pressure_rise,
+                            self.zone_exhaust_fan_total_efficiency,
+                        )
                     )
-                )
+
             else:
                 self.zone_exhaust_fan_specification_method = (
                     FanSpecificationMethodOptions.SIMPLE
