@@ -1161,43 +1161,47 @@ class Zone(ChildNode):
                 occ_based_cfm > ach_based_cfm and occ_based_cfm > area_based_cfm
             )
 
-        min_oa_sch = self.parent.get_obj(
+        system_min_oa_sch = self.parent.get_obj(
             self.parent.get_inp(BDL_SystemKeywords.MIN_AIR_SCH)
         )
-        fan_sch = self.parent.get_obj(
+        system_min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
+        system_fan_sch = self.parent.get_obj(
             self.parent.get_inp(BDL_SystemKeywords.FAN_SCHEDULE)
         )
-        dcv_flow_control_options = [
+        system_dcv_oa_methods = [
+            BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
+            BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
+        ]
+        zone_dcv_flow_reset_options = [
             BDL_MinFlowControlOptions.DCV_RESET_DOWN,
             BDL_MinFlowControlOptions.DCV_RESET_UP_DOWN,
         ]
 
-        if min_oa_sch and (
+        if system_min_oa_sch and (
             not zone_is_attached_to_sys_with_terminal_inputs
             or (
                 zone_is_attached_to_sys_with_terminal_inputs
                 and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
-                not in dcv_flow_control_options
+                not in zone_dcv_flow_reset_options
             )
         ):
             min_oa_sch_allows_dcv_to_take_effect = (
                 any(
-                    min_oa_sch.hourly_values[i] == -999
-                    for i in range(len(min_oa_sch.hourly_values))
+                    system_min_oa_sch.hourly_values[i] == -999
+                    for i in range(len(system_min_oa_sch.hourly_values))
                 )
-                if fan_sch is None
+                if system_fan_sch is None
                 else any(
-                    min_oa_sch.hourly_values[i] == -999
-                    for i in range(len(fan_sch.hourly_values))
-                    if fan_sch.hourly_values[i] == 1
+                    system_min_oa_sch.hourly_values[i] == -999
+                    for i in range(len(system_fan_sch.hourly_values))
+                    if system_fan_sch.hourly_values[i] == 1
                 )
             )
 
-        min_oa_method = self.parent.get_inp(BDL_SystemKeywords.MIN_OA_METHOD)
-
         if (
             zone_is_attached_to_sys_with_terminal_inputs
-            and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL) in dcv_flow_control_options
+            and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
+            in zone_dcv_flow_reset_options
         ):
             terminal_flow_schedules = [
                 sch
@@ -1211,18 +1215,18 @@ class Zone(ChildNode):
 
             # if MIN-FLOW-SCH, CMIN-FLOW-SCH or HMIN-FLOW-SCH are specified
             if any(terminal_flow_schedules):
-
-                if min_oa_method in [
-                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-                ]:
+                # check the system min OA method to determine if the terminal flow schedules could affect DCV
+                if system_min_oa_method in system_dcv_oa_methods:
                     min_oa_sch_allows_dcv_to_take_effect = True
 
                 else:
                     # check if hourly value is -999 for all flow schedules while the fan schedule value is 1
                     min_oa_sch_allows_dcv_to_take_effect = False
                     for i in range(len(terminal_flow_schedules[0].hourly_values)):
-                        if fan_sch is None or fan_sch.hourly_values[i] == 1:
+                        if (
+                            system_fan_sch is None
+                            or system_fan_sch.hourly_values[i] == 1
+                        ):
                             if all(
                                 sched.hourly_values[i] == -999
                                 for sched in terminal_flow_schedules
@@ -1234,21 +1238,17 @@ class Zone(ChildNode):
                 min_oa_sch_allows_dcv_to_take_effect = True
 
         # Check if DCV conditions are met
-        dcv_condition = (
+        dcv_conditions_are_met = (
             min_oa_sch_allows_dcv_to_take_effect
             and occ_cfm_allows_dcv_to_take_effect
             and (
                 (
                     zone_is_attached_to_sys_with_terminal_inputs
                     and self.get_inp(BDL_ZoneKeywords.MIN_FLOW_CTRL)
-                    in dcv_flow_control_options
+                    in zone_dcv_flow_reset_options
                 )
-                or min_oa_method
-                in [
-                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_RETURN_SENSOR,
-                    BDL_SystemMinimumOutdoorAirControlOptions.DCV_ZONE_SENSORS,
-                ]
+                or system_min_oa_method in system_dcv_oa_methods
             )
         )
 
-        return dcv_condition
+        return dcv_conditions_are_met
