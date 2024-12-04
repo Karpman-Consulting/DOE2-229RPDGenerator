@@ -45109,8 +45109,8 @@
                     "draft_type": "FORCED",
                     "energy_source_type": "NATURAL_GAS",
                     "rated_capacity": 87921,
-                    "efficiency_metric_types": ["THERMAL"],
-                    "efficiency_metric_values": [0.9],
+                    "efficiency_metric": "THERMAL",
+                    "efficiency": 0.9,
                     "output_validation_points": [
                         {
                             "load": 0,
@@ -45140,7 +45140,7 @@
                 {
                     "id": "Primary HW Loop",
                     "type": "HEATING",
-                    "pump_power_per_flow_rate": 301,
+                    "pump_power_per_flow_rate": 301.2,
                     "heating_design_and_control": {
                         "id": "Heating Design and Control",
                         "design_supply_temperature": 82.2,

@@ -64,7 +64,7 @@
      *   1 * INPUT ..
                      B D L   P R O C E S S O R   I N P U T   D A T A
 
-                           11/19/2024    10:15:19  BDL RUN   4
+                           12/02/2024    15:11:45  BDL RUN   4
 
 
 
@@ -2478,10 +2478,10 @@
      * 474 *    TYPE             = RESET-TEMP
      * 475 *    OUTSIDE-HI       = 50
      * 476 *    OUTSIDE-LO       = 20
-     * 477 *    SUPPLY-HI        = 150
+     * 477 *    SUPPLY-HI        = 180
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1200E+03
-     * 478 *    SUPPLY-LO        = 180
+     * 478 *    SUPPLY-LO        = 150
 -CAUTION-------------------------- === -------------------------------------------------------
 -CAUTION--- VALUE GREATER THAN MAXIMUM OF 0.1200E+03
      * 479 *    ..
@@ -2490,8 +2490,8 @@
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = RESET-TEMP
 -INPUT - -                                              OUTSIDE-HI       =                      50.0000 F
 -INPUT - -                                              OUTSIDE-LO       =                      20.0000 F
--INPUT - -                                              SUPPLY-HI        =                     150.0000 F
--INPUT - -                                              SUPPLY-LO        =                     180.0000 F
+-INPUT - -                                              SUPPLY-HI        =                     180.0000 F
+-INPUT - -                                              SUPPLY-LO        =                     150.0000 F
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  DAY-HOURS        =                       1.0000
 -DEFAULT -                                              DAY-HOURS        =                      24.0000
      * 480 * "All ON Day" = DAY-SCHEDULE-PD
@@ -6539,22 +6539,20 @@
      *1320 * "PTAC 1" = SYSTEM
      *1321 *    TYPE             = PSZ
      *1322 *    HEAT-SOURCE      = HOT-WATER
-     *1323 *    ZONE-HEAT-SOURCE = HOT-WATER
-     *1324 *    HUMIDIFIER-TYPE  = NONE
-     *1325 *    MAX-SUPPLY-T     = 90
-     *1326 *    COOL-SET-T       = 60
-     *1327 *    SUPPLY-FLOW      = 2000
-     *1328 *    SUPPLY-KW/FLOW   = 0.0003
-     *1329 *    REHEAT-DELTA-T   = 0
-     *1330 *    HW-VALVE-TYPE    = TWO-WAY
-     *1331 *    HW-LOOP          = "Hot Water Loop"
-     *1332 *    COOLING-CAPACITY = 60000
-     *1333 *    COOLING-EIR      = {1/3.1
-     *1334 * }
-     *1335 *    HEATING-CAPACITY = -60000
-     *1336 *    CONTROL-ZONE     = "Core Zone 1"
-     *1337 *    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
-     *1338 *    ..
+     *1323 *    MAX-SUPPLY-T     = 90
+     *1324 *    HEAT-SET-T       = 90
+     *1325 *    COOL-SET-T       = 60
+     *1326 *    SUPPLY-FLOW      = 2000
+     *1327 *    SUPPLY-KW/FLOW   = 0.0003
+     *1328 *    HW-VALVE-TYPE    = TWO-WAY
+     *1329 *    HW-LOOP          = "Hot Water Loop"
+     *1330 *    COOLING-CAPACITY = 60000
+     *1331 *    COOLING-EIR      = {1/3.1
+     *1332 * }
+     *1333 *    HEATING-CAPACITY = -60000
+     *1334 *    CONTROL-ZONE     = "Core Zone 1"
+     *1335 *    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+     *1336 *    ..
      *   1 * $LIBRARY-ENTRY DX-Cool-Cap-fEWB&OAT            CURVE-FIT       DX Cool/Heat
      *   2 *   TYPE=BI-QUADRATIC-T COEF=( 0.87403018,-0.00114160, 0.00017110,
      *   3 *                             -0.00295700, 0.00001018,-0.00005917)
@@ -6632,13 +6630,11 @@
 -NOTE- - -         DATA FOR     PTAC 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
 -INPUT - -                                              HEAT-SOURCE      = HOT-WATER
--INPUT - -                                              ZONE-HEAT-SOURCE = HOT-WATER
--INPUT - -                                              HUMIDIFIER-TYPE  = NONE
 -INPUT - -                                              MAX-SUPPLY-T     =                      90.0000 F
+-INPUT - -                                              HEAT-SET-T       =                      90.0000 F
 -INPUT - -                                              COOL-SET-T       =                      60.0000 F
 -INPUT - -                                              SUPPLY-FLOW      =                    2000.0000 CFM
 -INPUT - -                                              SUPPLY-KW/FLOW   =                       0.0003 KW/CFM
--INPUT - -                                              REHEAT-DELTA-T   =                       0.0000 F (DELTA)
 -INPUT - -                                              HW-VALVE-TYPE    = TWO-WAY
 -INPUT - -                                              HW-LOOP          = Hot Water Loop
 -INPUT - -                                              COOLING-CAPACITY =                   60000.0000 BTU/HR
@@ -6646,12 +6642,12 @@
 -INPUT - -                                              HEATING-CAPACITY =                  -60000.0000 BTU/HR
 -INPUT - -                                              CONTROL-ZONE     = Core Zone 1
 -INPUT - -                                              ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+-DEFAULT -                                              ZONE-HEAT-SOURCE = NONE
 -DEFAULT -                                              PREHEAT-SOURCE   = NONE
 -DEFAULT -                                              BASEBOARD-SOURCE = NONE
 -DEFAULT -                                              VARIABLE-T       = ON
 -DEFAULT -                                              SIZING-RATIO     =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              RETURN-AIR-PATH  = DUCT
--DEFAULT -                                              HEAT-SET-T       =                     110.0000 F
 -DEFAULT -                                              MIN-SUPPLY-T     =                      55.0000 F
 -DEFAULT -                                              MAX-HUMIDITY     =                     100.0000 PERCENT
 -DEFAULT -                                              MIN-HUMIDITY     =                       0.0000 PERCENT
@@ -6690,7 +6686,6 @@
 -DEFAULT -                                              COOL-CLOSS-MIN   =                       0.8000 FRAC.OR MULT.
 -DEFAULT -                                              COIL-CONFIG      = SPLIT-FACE
 -DEFAULT -                                              NUM-CIRCUITS     =                       2.0000
--DEFAULT -                                              ZONE-HW-LOOP     = Hot Water Loop
 -DEFAULT -                                              OA-SIZING-METHOD = SUM-OF-ZONE-OA
 -DEFAULT -                                              SYSTEM-REPORTS   = YES
 -DEFAULT -                                              LIGHT-ELEC-METER = EM1
@@ -6717,7 +6712,6 @@
 -DEFAULT -                                              RATED-ECT        =                      95.0000 F
 -DEFAULT -                                              NUMBER-OF-UNITS  =                       1.0000
 -DEFAULT -                                              MAX-OA-METHOD    = FRAC-OF-DESIGN-FLOW
--DEFAULT -                                              RHT-SIZING-METHO = REHEAT-DELTA-T
 -DEFAULT -                                              CRANKCASE-EIR    =                       0.0028 FRAC.OR MULT.
 -DEFAULT -                                              spare-keyword    = NO
 -DEFAULT -                                              C-NUM-OF-UNITS   =                       1.0000
@@ -6985,20 +6979,20 @@
 -DEFAULT -                                              C-C-PROP-SR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-3    =                       0.0000
-     *1339 * "Core Zone 1" = ZONE
-     *1340 *    TYPE             = CONDITIONED
-     *1341 *    HEATING-CAPACITY = -24000
-     *1342 *    BASEBOARD-RATING = -6000
-     *1343 *    ASSIGNED-FLOW    = 2000
-     *1344 *    DESIGN-HEAT-T    = 70
-     *1345 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1346 *    DESIGN-COOL-T    = 75
-     *1347 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1348 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1349 *    REHEAT-DELTA-T   = 40
-     *1350 *    SPACE            = "Core Space 1"
-     *1351 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1352 *    ..
+     *1337 * "Core Zone 1" = ZONE
+     *1338 *    TYPE             = CONDITIONED
+     *1339 *    HEATING-CAPACITY = -24000
+     *1340 *    BASEBOARD-RATING = -6000
+     *1341 *    ASSIGNED-FLOW    = 2000
+     *1342 *    DESIGN-HEAT-T    = 70
+     *1343 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1344 *    DESIGN-COOL-T    = 75
+     *1345 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1346 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1347 *    REHEAT-DELTA-T   = 40
+     *1348 *    SPACE            = "Core Space 1"
+     *1349 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1350 *    ..
 
 -NOTE- - -         DATA FOR     Core Zone 1
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
@@ -7071,9 +7065,11 @@
 -DEFAULT -                                              C-C-PROP-ZR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
-     *1353 * "PTAC 2" = SYSTEM
-     *1354 *    TYPE             = PSZ
-     *1355 *    HEAT-SOURCE      = HOT-WATER
+     *1351 * "PTAC 2" = SYSTEM
+     *1352 *    TYPE             = PSZ
+     *1353 *    HEAT-SOURCE      = HOT-WATER
+     *1354 *    MAX-SUPPLY-T     = 90
+     *1355 *    HEAT-SET-T       = 90
      *1356 *    SUPPLY-FLOW      = 2000
      *1357 *    SUPPLY-KW/FLOW   = 0.0003
      *1358 *    HW-VALVE-TYPE    = TWO-WAY
@@ -7088,6 +7084,8 @@
 -NOTE- - -         DATA FOR     PTAC 2
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
 -INPUT - -                                              HEAT-SOURCE      = HOT-WATER
+-INPUT - -                                              MAX-SUPPLY-T     =                      90.0000 F
+-INPUT - -                                              HEAT-SET-T       =                      90.0000 F
 -INPUT - -                                              SUPPLY-FLOW      =                    2000.0000 CFM
 -INPUT - -                                              SUPPLY-KW/FLOW   =                       0.0003 KW/CFM
 -INPUT - -                                              HW-VALVE-TYPE    = TWO-WAY
@@ -7102,8 +7100,6 @@
 -DEFAULT -                                              VARIABLE-T       = ON
 -DEFAULT -                                              SIZING-RATIO     =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              RETURN-AIR-PATH  = DUCT
--DEFAULT -                                              MAX-SUPPLY-T     =                     105.0000 F
--DEFAULT -                                              HEAT-SET-T       =                     125.0000 F
 -DEFAULT -                                              MIN-SUPPLY-T     =                      55.0000 F
 -DEFAULT -                                              COOL-SET-T       =                      45.0000 F
 -DEFAULT -                                              MAX-HUMIDITY     =                     100.0000 PERCENT
@@ -7526,20 +7522,24 @@
      *1380 * "PTAC 3" = SYSTEM
      *1381 *    TYPE             = PSZ
      *1382 *    HEAT-SOURCE      = HOT-WATER
-     *1383 *    SUPPLY-FLOW      = 2000
-     *1384 *    SUPPLY-KW/FLOW   = 0.0003
-     *1385 *    HW-VALVE-TYPE    = TWO-WAY
-     *1386 *    HW-LOOP          = "Hot Water Loop"
-     *1387 *    COOLING-CAPACITY = 60000
-     *1388 *    COOLING-EIR      = {1/3.1
-     *1389 * }
-     *1390 *    HEATING-CAPACITY = -60000
-     *1391 *    CONTROL-ZONE     = "Prm Zone 2 (East) Zn"
-     *1392 *    ..
+     *1383 *    MAX-SUPPLY-T     = 90
+     *1384 *    HEAT-SET-T       = 90
+     *1385 *    SUPPLY-FLOW      = 2000
+     *1386 *    SUPPLY-KW/FLOW   = 0.0003
+     *1387 *    HW-VALVE-TYPE    = TWO-WAY
+     *1388 *    HW-LOOP          = "Hot Water Loop"
+     *1389 *    COOLING-CAPACITY = 60000
+     *1390 *    COOLING-EIR      = {1/3.1
+     *1391 * }
+     *1392 *    HEATING-CAPACITY = -60000
+     *1393 *    CONTROL-ZONE     = "Prm Zone 2 (East) Zn"
+     *1394 *    ..
 
 -NOTE- - -         DATA FOR     PTAC 3
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
 -INPUT - -                                              HEAT-SOURCE      = HOT-WATER
+-INPUT - -                                              MAX-SUPPLY-T     =                      90.0000 F
+-INPUT - -                                              HEAT-SET-T       =                      90.0000 F
 -INPUT - -                                              SUPPLY-FLOW      =                    2000.0000 CFM
 -INPUT - -                                              SUPPLY-KW/FLOW   =                       0.0003 KW/CFM
 -INPUT - -                                              HW-VALVE-TYPE    = TWO-WAY
@@ -7554,8 +7554,6 @@
 -DEFAULT -                                              VARIABLE-T       = ON
 -DEFAULT -                                              SIZING-RATIO     =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              RETURN-AIR-PATH  = DUCT
--DEFAULT -                                              MAX-SUPPLY-T     =                     105.0000 F
--DEFAULT -                                              HEAT-SET-T       =                     125.0000 F
 -DEFAULT -                                              MIN-SUPPLY-T     =                      55.0000 F
 -DEFAULT -                                              COOL-SET-T       =                      45.0000 F
 -DEFAULT -                                              MAX-HUMIDITY     =                     100.0000 PERCENT
@@ -7889,20 +7887,20 @@
 -DEFAULT -                                              C-C-PROP-SR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-3    =                       0.0000
-     *1393 * "Prm Zone 2 (East) Zn" = ZONE
-     *1394 *    TYPE             = CONDITIONED
-     *1395 *    HEATING-CAPACITY = -24000
-     *1396 *    BASEBOARD-RATING = -6000
-     *1397 *    ASSIGNED-FLOW    = 2000
-     *1398 *    DESIGN-HEAT-T    = 70
-     *1399 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1400 *    DESIGN-COOL-T    = 75
-     *1401 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1402 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1403 *    REHEAT-DELTA-T   = 40
-     *1404 *    SPACE            = "Prm Space 2 (East)"
-     *1405 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1406 *    ..
+     *1395 * "Prm Zone 2 (East) Zn" = ZONE
+     *1396 *    TYPE             = CONDITIONED
+     *1397 *    HEATING-CAPACITY = -24000
+     *1398 *    BASEBOARD-RATING = -6000
+     *1399 *    ASSIGNED-FLOW    = 2000
+     *1400 *    DESIGN-HEAT-T    = 70
+     *1401 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1402 *    DESIGN-COOL-T    = 75
+     *1403 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1404 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1405 *    REHEAT-DELTA-T   = 40
+     *1406 *    SPACE            = "Prm Space 2 (East)"
+     *1407 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1408 *    ..
 
 -NOTE- - -         DATA FOR     Prm Zone 2 (East) Zn
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
@@ -7975,23 +7973,27 @@
 -DEFAULT -                                              C-C-PROP-ZR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
-     *1407 * "PTAC 4" = SYSTEM
-     *1408 *    TYPE             = PSZ
-     *1409 *    HEAT-SOURCE      = HOT-WATER
-     *1410 *    SUPPLY-FLOW      = 2000
-     *1411 *    SUPPLY-KW/FLOW   = 0.0003
-     *1412 *    HW-VALVE-TYPE    = TWO-WAY
-     *1413 *    HW-LOOP          = "Hot Water Loop"
-     *1414 *    COOLING-CAPACITY = 60000
-     *1415 *    COOLING-EIR      = {1/3.1
-     *1416 * }
-     *1417 *    HEATING-CAPACITY = -60000
-     *1418 *    CONTROL-ZONE     = "Prm Zone 3 (North)"
-     *1419 *    ..
+     *1409 * "PTAC 4" = SYSTEM
+     *1410 *    TYPE             = PSZ
+     *1411 *    HEAT-SOURCE      = HOT-WATER
+     *1412 *    MAX-SUPPLY-T     = 90
+     *1413 *    HEAT-SET-T       = 90
+     *1414 *    SUPPLY-FLOW      = 2000
+     *1415 *    SUPPLY-KW/FLOW   = 0.0003
+     *1416 *    HW-VALVE-TYPE    = TWO-WAY
+     *1417 *    HW-LOOP          = "Hot Water Loop"
+     *1418 *    COOLING-CAPACITY = 60000
+     *1419 *    COOLING-EIR      = {1/3.1
+     *1420 * }
+     *1421 *    HEATING-CAPACITY = -60000
+     *1422 *    CONTROL-ZONE     = "Prm Zone 3 (North)"
+     *1423 *    ..
 
 -NOTE- - -         DATA FOR     PTAC 4
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
 -INPUT - -                                              HEAT-SOURCE      = HOT-WATER
+-INPUT - -                                              MAX-SUPPLY-T     =                      90.0000 F
+-INPUT - -                                              HEAT-SET-T       =                      90.0000 F
 -INPUT - -                                              SUPPLY-FLOW      =                    2000.0000 CFM
 -INPUT - -                                              SUPPLY-KW/FLOW   =                       0.0003 KW/CFM
 -INPUT - -                                              HW-VALVE-TYPE    = TWO-WAY
@@ -8006,8 +8008,6 @@
 -DEFAULT -                                              VARIABLE-T       = ON
 -DEFAULT -                                              SIZING-RATIO     =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              RETURN-AIR-PATH  = DUCT
--DEFAULT -                                              MAX-SUPPLY-T     =                     105.0000 F
--DEFAULT -                                              HEAT-SET-T       =                     125.0000 F
 -DEFAULT -                                              MIN-SUPPLY-T     =                      55.0000 F
 -DEFAULT -                                              COOL-SET-T       =                      45.0000 F
 -DEFAULT -                                              MAX-HUMIDITY     =                     100.0000 PERCENT
@@ -8341,20 +8341,20 @@
 -DEFAULT -                                              C-C-PROP-SR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-3    =                       0.0000
-     *1420 * "Prm Zone 3 (North)" = ZONE
-     *1421 *    TYPE             = CONDITIONED
-     *1422 *    HEATING-CAPACITY = -24000
-     *1423 *    BASEBOARD-RATING = -6000
-     *1424 *    ASSIGNED-FLOW    = 2000
-     *1425 *    DESIGN-HEAT-T    = 70
-     *1426 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1427 *    DESIGN-COOL-T    = 75
-     *1428 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1429 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1430 *    REHEAT-DELTA-T   = 40
-     *1431 *    SPACE            = "Prm Space 3 (North)"
-     *1432 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1433 *    ..
+     *1424 * "Prm Zone 3 (North)" = ZONE
+     *1425 *    TYPE             = CONDITIONED
+     *1426 *    HEATING-CAPACITY = -24000
+     *1427 *    BASEBOARD-RATING = -6000
+     *1428 *    ASSIGNED-FLOW    = 2000
+     *1429 *    DESIGN-HEAT-T    = 70
+     *1430 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1431 *    DESIGN-COOL-T    = 75
+     *1432 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1433 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1434 *    REHEAT-DELTA-T   = 40
+     *1435 *    SPACE            = "Prm Space 3 (North)"
+     *1436 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1437 *    ..
 
 -NOTE- - -         DATA FOR     Prm Zone 3 (North)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
@@ -8427,23 +8427,27 @@
 -DEFAULT -                                              C-C-PROP-ZR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
-     *1434 * "PTAC 5" = SYSTEM
-     *1435 *    TYPE             = PSZ
-     *1436 *    HEAT-SOURCE      = HOT-WATER
-     *1437 *    SUPPLY-FLOW      = 2000
-     *1438 *    SUPPLY-KW/FLOW   = 0.0003
-     *1439 *    HW-VALVE-TYPE    = TWO-WAY
-     *1440 *    HW-LOOP          = "Hot Water Loop"
-     *1441 *    COOLING-CAPACITY = 60000
-     *1442 *    COOLING-EIR      = {1/3.1
-     *1443 * }
-     *1444 *    HEATING-CAPACITY = -60000
-     *1445 *    CONTROL-ZONE     = "Prm Zone 4 (West)"
-     *1446 *    ..
+     *1438 * "PTAC 5" = SYSTEM
+     *1439 *    TYPE             = PSZ
+     *1440 *    HEAT-SOURCE      = HOT-WATER
+     *1441 *    MAX-SUPPLY-T     = 90
+     *1442 *    HEAT-SET-T       = 90
+     *1443 *    SUPPLY-FLOW      = 2000
+     *1444 *    SUPPLY-KW/FLOW   = 0.0003
+     *1445 *    HW-VALVE-TYPE    = TWO-WAY
+     *1446 *    HW-LOOP          = "Hot Water Loop"
+     *1447 *    COOLING-CAPACITY = 60000
+     *1448 *    COOLING-EIR      = {1/3.1
+     *1449 * }
+     *1450 *    HEATING-CAPACITY = -60000
+     *1451 *    CONTROL-ZONE     = "Prm Zone 4 (West)"
+     *1452 *    ..
 
 -NOTE- - -         DATA FOR     PTAC 5
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = PSZ
 -INPUT - -                                              HEAT-SOURCE      = HOT-WATER
+-INPUT - -                                              MAX-SUPPLY-T     =                      90.0000 F
+-INPUT - -                                              HEAT-SET-T       =                      90.0000 F
 -INPUT - -                                              SUPPLY-FLOW      =                    2000.0000 CFM
 -INPUT - -                                              SUPPLY-KW/FLOW   =                       0.0003 KW/CFM
 -INPUT - -                                              HW-VALVE-TYPE    = TWO-WAY
@@ -8458,8 +8462,6 @@
 -DEFAULT -                                              VARIABLE-T       = ON
 -DEFAULT -                                              SIZING-RATIO     =                       1.0000 FRAC.OR MULT.
 -DEFAULT -                                              RETURN-AIR-PATH  = DUCT
--DEFAULT -                                              MAX-SUPPLY-T     =                     105.0000 F
--DEFAULT -                                              HEAT-SET-T       =                     125.0000 F
 -DEFAULT -                                              MIN-SUPPLY-T     =                      55.0000 F
 -DEFAULT -                                              COOL-SET-T       =                      45.0000 F
 -DEFAULT -                                              MAX-HUMIDITY     =                     100.0000 PERCENT
@@ -8793,20 +8795,20 @@
 -DEFAULT -                                              C-C-PROP-SR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-SR-3    =                       0.0000
-     *1447 * "Prm Zone 4 (West)" = ZONE
-     *1448 *    TYPE             = CONDITIONED
-     *1449 *    HEATING-CAPACITY = -24000
-     *1450 *    BASEBOARD-RATING = -6000
-     *1451 *    ASSIGNED-FLOW    = 2000
-     *1452 *    DESIGN-HEAT-T    = 70
-     *1453 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
-     *1454 *    DESIGN-COOL-T    = 75
-     *1455 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
-     *1456 *    THERMOSTAT-TYPE  = REVERSE-ACTION
-     *1457 *    REHEAT-DELTA-T   = 40
-     *1458 *    SPACE            = "Prm Space 4 (West)"
-     *1459 *    OUTSIDE-AIR-FLOW = ( 200 )
-     *1460 *    ..
+     *1453 * "Prm Zone 4 (West)" = ZONE
+     *1454 *    TYPE             = CONDITIONED
+     *1455 *    HEATING-CAPACITY = -24000
+     *1456 *    BASEBOARD-RATING = -6000
+     *1457 *    ASSIGNED-FLOW    = 2000
+     *1458 *    DESIGN-HEAT-T    = 70
+     *1459 *    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
+     *1460 *    DESIGN-COOL-T    = 75
+     *1461 *    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
+     *1462 *    THERMOSTAT-TYPE  = REVERSE-ACTION
+     *1463 *    REHEAT-DELTA-T   = 40
+     *1464 *    SPACE            = "Prm Space 4 (West)"
+     *1465 *    OUTSIDE-AIR-FLOW = ( 200 )
+     *1466 *    ..
 
 -NOTE- - -         DATA FOR     Prm Zone 4 (West)
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = CONDITIONED
@@ -8879,51 +8881,51 @@
 -DEFAULT -                                              C-C-PROP-ZR-1    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-2    =                       0.0000
 -DEFAULT -                                              C-C-PROP-ZR-3    =                       0.0000
-     *1461 *  
-     *1462 *  
-     *1463 * $ *********************************************************
-     *1464 * $ **                                                     **
-     *1465 * $ **                Metering & Misc HVAC                 **
-     *1466 * $ **                                                     **
-     *1467 * $ *********************************************************
+     *1467 *  
      *1468 *  
-     *1469 * $ ---------------------------------------------------------
-     *1470 * $              Equipment Controls
-     *1471 * $ ---------------------------------------------------------
-     *1472 *  
-     *1473 *  
+     *1469 * $ *********************************************************
+     *1470 * $ **                                                     **
+     *1471 * $ **                Metering & Misc HVAC                 **
+     *1472 * $ **                                                     **
+     *1473 * $ *********************************************************
      *1474 *  
      *1475 * $ ---------------------------------------------------------
-     *1476 * $              Load Management
+     *1476 * $              Equipment Controls
      *1477 * $ ---------------------------------------------------------
      *1478 *  
      *1479 *  
      *1480 *  
-     *1481 * $ *********************************************************
-     *1482 * $ **                                                     **
-     *1483 * $ **                    Utility Rates                    **
-     *1484 * $ **                                                     **
-     *1485 * $ *********************************************************
+     *1481 * $ ---------------------------------------------------------
+     *1482 * $              Load Management
+     *1483 * $ ---------------------------------------------------------
+     *1484 *  
+     *1485 *  
      *1486 *  
-     *1487 * $ ---------------------------------------------------------
-     *1488 * $              Ratchets
-     *1489 * $ ---------------------------------------------------------
-     *1490 *  
-     *1491 *  
+     *1487 * $ *********************************************************
+     *1488 * $ **                                                     **
+     *1489 * $ **                    Utility Rates                    **
+     *1490 * $ **                                                     **
+     *1491 * $ *********************************************************
      *1492 *  
      *1493 * $ ---------------------------------------------------------
-     *1494 * $              Block Charges
+     *1494 * $              Ratchets
      *1495 * $ ---------------------------------------------------------
      *1496 *  
      *1497 *  
      *1498 *  
      *1499 * $ ---------------------------------------------------------
-     *1500 * $              Utility Rates
+     *1500 * $              Block Charges
      *1501 * $ ---------------------------------------------------------
      *1502 *  
-     *1503 * "Custom Elec Rate" = UTILITY-RATE
-     *1504 *    TYPE             = ELECTRICITY
-     *1505 *    ..
+     *1503 *  
+     *1504 *  
+     *1505 * $ ---------------------------------------------------------
+     *1506 * $              Utility Rates
+     *1507 * $ ---------------------------------------------------------
+     *1508 *  
+     *1509 * "Custom Elec Rate" = UTILITY-RATE
+     *1510 *    TYPE             = ELECTRICITY
+     *1511 *    ..
 
 -NOTE- - -         DATA FOR     Custom Elec Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = ELECTRICITY
@@ -8948,9 +8950,9 @@
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      15.0000 MINUTES
 -DEFAULT -                                              BUY/SELL-MODE    = BUY/SELL
-     *1506 * "Custom Gas Rate" = UTILITY-RATE
-     *1507 *    TYPE             = NATURAL-GAS
-     *1508 *    ..
+     *1512 * "Custom Gas Rate" = UTILITY-RATE
+     *1513 *    TYPE             = NATURAL-GAS
+     *1514 *    ..
 
 -NOTE- - -         DATA FOR     Custom Gas Rate
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  TYPE             = NATURAL-GAS
@@ -8972,54 +8974,54 @@
 -DEFAULT -                                              PCT-TAXES-APPLY  = BASE
 -DEFAULT -                                              PCT-SRCHGS-APPLY = BASE
 -DEFAULT -                                              DEMAND-INTERVAL  =                      60.0000 MINUTES
-     *1509 *  
-     *1510 *  
-     *1511 * $ *********************************************************
-     *1512 * $ **                                                     **
-     *1513 * $ **                 Output Reporting                    **
-     *1514 * $ **                                                     **
-     *1515 * $ *********************************************************
+     *1515 *  
      *1516 *  
-     *1517 * $ ---------------------------------------------------------
-     *1518 * $              Loads Non-Hourly Reporting
-     *1519 * $ ---------------------------------------------------------
-     *1520 *  
-     *1521 * LOADS-REPORT
-     *1522 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1523 *    SUMMARY          = ( ALL-SUMMARY )
-     *1524 *    ..
+     *1517 * $ *********************************************************
+     *1518 * $ **                                                     **
+     *1519 * $ **                 Output Reporting                    **
+     *1520 * $ **                                                     **
+     *1521 * $ *********************************************************
+     *1522 *  
+     *1523 * $ ---------------------------------------------------------
+     *1524 * $              Loads Non-Hourly Reporting
+     *1525 * $ ---------------------------------------------------------
+     *1526 *  
+     *1527 * LOADS-REPORT
+     *1528 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1529 *    SUMMARY          = ( ALL-SUMMARY )
+     *1530 *    ..
 
 -NOTE- - -         DATA FOR     LOADS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
-     *1525 *  
-     *1526 *  
-     *1527 * $ ---------------------------------------------------------
-     *1528 * $              Systems Non-Hourly Reporting
-     *1529 * $ ---------------------------------------------------------
-     *1530 *  
-     *1531 * SYSTEMS-REPORT
-     *1532 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1533 *    SUMMARY          = ( ALL-SUMMARY )
-     *1534 *    ..
+     *1531 *  
+     *1532 *  
+     *1533 * $ ---------------------------------------------------------
+     *1534 * $              Systems Non-Hourly Reporting
+     *1535 * $ ---------------------------------------------------------
+     *1536 *  
+     *1537 * SYSTEMS-REPORT
+     *1538 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1539 *    SUMMARY          = ( ALL-SUMMARY )
+     *1540 *    ..
 
 -NOTE- - -         DATA FOR     SYSTEMS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
 -INPUT - -                                              SUMMARY          = ALL-SUMMARY
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
-     *1535 *  
-     *1536 *  
-     *1537 * $ ---------------------------------------------------------
-     *1538 * $              Plant Non-Hourly Reporting
-     *1539 * $ ---------------------------------------------------------
-     *1540 *  
-     *1541 * PLANT-REPORT
-     *1542 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1543 *    SUMMARY          = ( ALL-SUMMARY )
-     *1544 *    ..
+     *1541 *  
+     *1542 *  
+     *1543 * $ ---------------------------------------------------------
+     *1544 * $              Plant Non-Hourly Reporting
+     *1545 * $ ---------------------------------------------------------
+     *1546 *  
+     *1547 * PLANT-REPORT
+     *1548 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1549 *    SUMMARY          = ( ALL-SUMMARY )
+     *1550 *    ..
 
 -NOTE- - -         DATA FOR     PLANT-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -9028,16 +9030,16 @@
 -INPUT - -                                              SUMMARY          = BEPS
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
-     *1545 *  
-     *1546 *  
-     *1547 * $ ---------------------------------------------------------
-     *1548 * $              Economics Non-Hourly Reporting
-     *1549 * $ ---------------------------------------------------------
-     *1550 *  
-     *1551 * ECONOMICS-REPORT
-     *1552 *    VERIFICATION     = ( ALL-VERIFICATION )
-     *1553 *    SUMMARY          = ( ALL-SUMMARY )
-     *1554 *    ..
+     *1551 *  
+     *1552 *  
+     *1553 * $ ---------------------------------------------------------
+     *1554 * $              Economics Non-Hourly Reporting
+     *1555 * $ ---------------------------------------------------------
+     *1556 *  
+     *1557 * ECONOMICS-REPORT
+     *1558 *    VERIFICATION     = ( ALL-VERIFICATION )
+     *1559 *    SUMMARY          = ( ALL-SUMMARY )
+     *1560 *    ..
 
 -NOTE- - -         DATA FOR     ECONOMICS-REPORT
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VERIFICATION     = ALL-VERIFICATION
@@ -9045,23 +9047,23 @@
 -INPUT - -                                              SUMMARY          = ES-D
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  REPORT-FREQUENCY = HOURLY
 -DEFAULT -                                              HOURLY-DATA-SAVE = NO-SAVE
-     *1555 *  
-     *1556 *  
-     *1557 * $ ---------------------------------------------------------
-     *1558 * $              Hourly Reporting
-     *1559 * $ ---------------------------------------------------------
-     *1560 *  
-     *1561 * "Hourly Report Block 3" = REPORT-BLOCK
-     *1562 *    VARIABLE-TYPE    = "PTAC 1"
-     *1563 *    VARIABLE-LIST    = ( 1 )
-     *1564 *    ..
+     *1561 *  
+     *1562 *  
+     *1563 * $ ---------------------------------------------------------
+     *1564 * $              Hourly Reporting
+     *1565 * $ ---------------------------------------------------------
+     *1566 *  
+     *1567 * "Hourly Report Block 3" = REPORT-BLOCK
+     *1568 *    VARIABLE-TYPE    = "PTAC 1"
+     *1569 *    VARIABLE-LIST    = ( 1 )
+     *1570 *    ..
 
 -NOTE- - -         DATA FOR     Hourly Report Block 3
 -INPUT - - - - - - - - - - - - - - - - - - - - - - - -  VARIABLE-TYPE    = PTAC 1
 -INPUT - -                                              VARIABLE-LIST    =                       1.0000
-     *1565 *  
-     *1566 * "Hourly Report" = HOURLY-REPORT
-     *1567 *    LIBRARY-ENTRY "Hourly Report"
+     *1571 *  
+     *1572 * "Hourly Report" = HOURLY-REPORT
+     *1573 *    LIBRARY-ENTRY "Hourly Report"
 -NOTE- - - ------------------ =============== ------------------------------------------------THIS ITEM HAS BEEN FETCHED FROM LIBRARY 
      *   1 * $LIBRARY-ENTRY Hourly Report                   HOURLY-REPORT   Hourly Reports
      *   2 *    REPORT-SCHEDULE = "Hourly Report Schedule"
@@ -9117,7 +9119,7 @@
 -LIBRARY -                                              DAY              =                      31.0000
 -LIBRARY -                                              WEEK-SCHEDULES   = Hourly Report Week Sched
 -DEFAULT - - - - - - - - - - - - - - - - - - - - - - -  PHOTOCELL-CTRL   = NONE
-     *1568 *    ..
+     *1574 *    ..
 
 -NOTE- - -         DATA FOR     Hourly Report
 -LIBRARY - - - - - - - - - - - - - - - - - - - - - - -  REPORT-SCHEDULE  = Hourly Report Schedule
@@ -9136,20 +9138,20 @@
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
 -DEFAULT -                                              DIVIDE           =                       1.0000 UNITS
-     *1569 *  
-     *1570 *  
-     *1571 * $ ---------------------------------------------------------
-     *1572 * $              THE END
-     *1573 * $ ---------------------------------------------------------
-     *1574 *  
-     *1575 * END ..
+     *1575 *  
+     *1576 *  
+     *1577 * $ ---------------------------------------------------------
+     *1578 * $              THE END
+     *1579 * $ ---------------------------------------------------------
+     *1580 *  
+     *1581 * END ..
 *WARNING**************************************************************************************
 *WARNING***SPACE Prm Space 4 (West) has 0 delayed walls, 1 delayed floors and
             0 delayed ceilings. There should be at least a delayed wall and
             floor, a delayed wall and ceiling, or a delayed ceiling and floor
             for custom weighting factors to be calculated. ASHRAE weighting
             factors with floor weight of 70 lb/ft2 (342 kg/m2) will be used for
-            this space.229 Test Case 1 updated                                                                   11/19/2024    10:15:19  BDL  RUN 4
+            this space.229 Test Case 1 updated                                                                   12/02/2024    15:11:45  BDL  RUN 4
                                                                                                                         
 REPORT- LV-K  WEIGHTING FACTOR SUMMARY
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -9210,5 +9212,5 @@ G3*         -0.00032         -0.00134         -0.00226          0.00000         
 P1          -1.22253         -1.19835         -1.15653         -0.87000         -1.21901
 P2           0.32990          0.30962          0.21469          0.00000          0.32625
 -CAUTION--------------------------------------------------------------------------------------NO COOLING EQUIPMENT HAS BEEN DEFINED   
-     *1576 * COMPUTE ..
-     *1577 * STOP ..
+     *1582 * COMPUTE ..
+     *1583 * STOP ..

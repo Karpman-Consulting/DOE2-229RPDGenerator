@@ -115,7 +115,7 @@ class Schedule(BaseNode):
         BDL_ScheduleTypes.FRACTION,
         BDL_ScheduleTypes.MULTIPLIER,
         BDL_ScheduleTypes.TEMPERATURE,
-        # BDL_ScheduleTypes.FRAC_DESIGN,
+        BDL_ScheduleTypes.FRAC_DESIGN,
     ]
 
     def __init__(self, u_name, rmd):
