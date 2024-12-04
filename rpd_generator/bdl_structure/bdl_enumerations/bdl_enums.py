@@ -236,6 +236,12 @@ class BDLEnums:
                 "HEATING-SCHEDULE",
             ]
         ),
+        "ConstructionTypes": _ListEnum(
+            [
+                "LAYERS",
+                "U-VALUE",
+            ]
+        ),
         "ConstructionKeywords": _ListEnum(["TYPE", "LAYERS", "ABSORPTANCE", "U-VALUE"]),
         "DayScheduleKeywords": _ListEnum(
             [
