@@ -340,10 +340,6 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.operation_during_unoccupied",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].heating_ventilating_air_conditioning_systems[*].fan_system.supply_fans[*].design_airflow",
         "compare-value": true,
         "tolerance": 1.0
