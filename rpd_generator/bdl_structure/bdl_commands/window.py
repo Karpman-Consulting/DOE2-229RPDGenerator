@@ -81,9 +81,8 @@ class Window(ChildNode):
         else:
             self.classification = SubsurfaceClassificationOptions.WINDOW
 
-        glass_type_name = self.get_inp(BDL_WindowKeywords.GLASS_TYPE)
-        glass_type = self.get_obj(glass_type_name)
-        if glass_type is not None:
+        glass_type = self.get_obj(self.get_inp(BDL_WindowKeywords.GLASS_TYPE))
+        if glass_type:
             self.u_factor = glass_type.u_factor
             self.visible_transmittance = glass_type.visible_transmittance
             if glass_type.shading_coefficient is not None:
