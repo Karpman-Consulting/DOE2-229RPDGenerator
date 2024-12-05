@@ -123,7 +123,7 @@ KEYOBJ,  2063,  "Chiller",  0
 
 
 KEYOBJ,  2064,  "Boiler",  1
-      "Boiler 1",  2
+      "Boiler 1",  1
 
 
 KEYOBJ,  2065,  "DW Heater",  1

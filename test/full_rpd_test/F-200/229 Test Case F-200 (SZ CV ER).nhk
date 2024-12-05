@@ -124,7 +124,7 @@ KEYOBJ,  2062,  "Circulation Loop",  2
 
 
 KEYOBJ,  2063,  "Chiller",  1
-      "Chiller 1",  1
+      "Chiller 1",  12
 
 
 KEYOBJ,  2064,  "Boiler",  0

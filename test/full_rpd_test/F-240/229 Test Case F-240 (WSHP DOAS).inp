@@ -1189,9 +1189,10 @@ $              Pumps
 $ ---------------------------------------------------------
 
 "CW-PUMP" = PUMP            
-   FLOW             = 60
+   FLOW             = 75
    HEAD             = 40
-   PUMP-KW          = 1.32
+   PUMP-KW          = {1.425
+}
    CAP-CTRL         = VAR-SPEED-PUMP
    ..
 
@@ -1215,8 +1216,10 @@ $ ---------------------------------------------------------
    ..
 "Condenser Water Loop" = CIRCULATION-LOOP
    TYPE             = WLHP
+   SIZING-OPTION    = COINCIDENT
+   LOOP-MIN-FLOW    = 0.25
    DESIGN-HEAT-T    = 70
-   DESIGN-COOL-T    = 80
+   DESIGN-COOL-T    = 70
    GLHX-BYPASS      = NO
    LOOP-PUMP        = "CW-PUMP"
    ..
@@ -1233,7 +1236,8 @@ $              Boilers
 $ ---------------------------------------------------------
 
 "Boiler 1" = BOILER          
-   TYPE             = HW-BOILER-W/DRAFT
+   TYPE             = HW-BOILER
+   CAPACITY         = 0.3
    ELEC-INPUT-RATIO = 0
    HW-LOOP          = "Condenser Water Loop"
    ..
@@ -1263,7 +1267,7 @@ $ ---------------------------------------------------------
 
 "Heat Rejection 1" = HEAT-REJECTION  
    TYPE             = OPEN-TWR
-   CAPACITY         = 300000
+   CAPACITY         = {.375}
    NUMBER-OF-CELLS  = 1
    CAPACITY-CTRL    = VARIABLE-SPEED-FAN
    CW-LOOP          = "Condenser Water Loop"
@@ -1355,6 +1359,7 @@ $ *********************************************************
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    SPACE            = "Core Space 1"
    OUTSIDE-AIR-FLOW = ( 200 )
@@ -1369,6 +1374,7 @@ $ *********************************************************
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    SPACE            = "Prm Space 1 (South)"
    OUTSIDE-AIR-FLOW = ( 200 )
@@ -1383,6 +1389,7 @@ $ *********************************************************
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    SPACE            = "Prm Space 2 (East)"
    OUTSIDE-AIR-FLOW = ( 200 )
@@ -1397,6 +1404,7 @@ $ *********************************************************
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    SPACE            = "Prm Space 3 (North)"
    OUTSIDE-AIR-FLOW = ( 200 )
@@ -1411,6 +1419,7 @@ $ *********************************************************
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    THERMOSTAT-TYPE  = REVERSE-ACTION
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    SPACE            = "Prm Space 4 (West)"
    OUTSIDE-AIR-FLOW = ( 200 )
@@ -1420,7 +1429,10 @@ $ *********************************************************
    HEAT-SOURCE      = FURNACE
    COOL-SOURCE      = ELEC-DX
    SUPPLY-FLOW      = 1000
+   FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.001
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
    ..
 
 

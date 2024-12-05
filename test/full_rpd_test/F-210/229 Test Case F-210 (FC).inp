@@ -1256,8 +1256,10 @@ $ ---------------------------------------------------------
    TONS             = 25
    MIN-RATIO        = 0.25
    CHW-LOOP         = "Chilled Water Loop (Primary)"
+   RATED-CHW-T      = 50
    DESIGN-CHW-T     = 50
    CONDENSER-TYPE   = AIR-COOLED
+   RATED-COND-T     = 85
    DESIGN-COND-T    = 85
    ..
 
@@ -1374,12 +1376,12 @@ $ *********************************************************
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
    CHW-LOOP         = "Chilled Water Loop (Primary)"
+   COOLING-CAPACITY = 60000
+   HEATING-CAPACITY = -60000
    ZONE-OA-METHOD   = SUM-OCC-AND-AREA
    ..
 "Core Zone 1" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -60000
-   COOLING-CAPACITY = 60000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
@@ -1391,8 +1393,6 @@ $ *********************************************************
    ..
 "Prm Zone 1 (South) Zn" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -60000
-   COOLING-CAPACITY = 60000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
@@ -1404,8 +1404,6 @@ $ *********************************************************
    ..
 "Prm Zone 2 (East) Zn" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -60000
-   COOLING-CAPACITY = 60000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
@@ -1417,8 +1415,6 @@ $ *********************************************************
    ..
 "Prm Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -60000
-   COOLING-CAPACITY = 60000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"
@@ -1430,8 +1426,6 @@ $ *********************************************************
    ..
 "Prm Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
-   HEATING-CAPACITY = -60000
-   COOLING-CAPACITY = 60000
    ASSIGNED-FLOW    = 2000
    DESIGN-HEAT-T    = 70
    HEAT-TEMP-SCH    = "Heating Setpoint Annual"

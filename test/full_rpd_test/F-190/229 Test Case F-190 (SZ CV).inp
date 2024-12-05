@@ -1259,6 +1259,7 @@ $ ---------------------------------------------------------
 
 "Chiller 1" = CHILLER         
    TYPE             = ELEC-SCREW
+   TONS             = 25
    CAPACITY-FT      = "ScrewAir-Cap-fCHWT&DBT"
    MIN-RATIO        = 0.25
    EIR-FT           = "ScrewAir-EIR-fCHWT&DBT"
@@ -1309,6 +1310,9 @@ $ ---------------------------------------------------------
 
 "Heat Rejection 1" = HEAT-REJECTION  
    TYPE             = FLUID-COOLER
+   CAPACITY         = {.375}
+   CAPACITY-RATIO   = 1
+   NUMBER-OF-CELLS  = 1
    CAPACITY-CTRL    = TWO-SPEED-FAN
    CW-LOOP          = "Condenser Water Loop"
    ..

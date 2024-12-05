@@ -1189,9 +1189,9 @@ $              Pumps
 $ ---------------------------------------------------------
 
 "CW-PUMP" = PUMP            
-   FLOW             = 60
+   FLOW             = 75
    HEAD             = 40
-   PUMP-KW          = 1.32
+   PUMP-KW          = {1.425}
    CAP-CTRL         = VAR-SPEED-PUMP
    ..
 
@@ -1215,8 +1215,10 @@ $ ---------------------------------------------------------
    ..
 "Condenser Water Loop" = CIRCULATION-LOOP
    TYPE             = WLHP
+   SIZING-OPTION    = COINCIDENT
+   LOOP-MIN-FLOW    = 0.25
    DESIGN-HEAT-T    = 70
-   DESIGN-COOL-T    = 80
+   DESIGN-COOL-T    = 70
    GLHX-BYPASS      = NO
    LOOP-PUMP        = "CW-PUMP"
    ..
@@ -1233,7 +1235,8 @@ $              Boilers
 $ ---------------------------------------------------------
 
 "Boiler 1" = BOILER          
-   TYPE             = HW-BOILER-W/DRAFT
+   TYPE             = HW-BOILER
+   CAPACITY         = -0.3
    ELEC-INPUT-RATIO = 0
    HW-LOOP          = "Condenser Water Loop"
    ..
@@ -1263,7 +1266,7 @@ $ ---------------------------------------------------------
 
 "Heat Rejection 1" = HEAT-REJECTION  
    TYPE             = OPEN-TWR
-   CAPACITY         = 300000
+   CAPACITY         = {.375}
    NUMBER-OF-CELLS  = 1
    CAPACITY-CTRL    = VARIABLE-SPEED-FAN
    CW-LOOP          = "Condenser Water Loop"
@@ -1339,6 +1342,7 @@ $ *********************************************************
    FAN-SCHEDULE     = "All ON Sch"
    SUPPLY-KW/FLOW   = 0.0003
    WLHP-CATEGORY    = WATER-LOOP
+   CW-VALVE         = YES
    CW-LOOP          = "Condenser Water Loop"
    COOLING-CAPACITY = 60000
    HEATING-CAPACITY = -60000
@@ -1514,12 +1518,14 @@ $              Hourly Reporting
 $ ---------------------------------------------------------
 
 "Hourly Report Block 3" = REPORT-BLOCK    
-   VARIABLE-TYPE    = "WSHP Units"
-   VARIABLE-LIST    = ( 1 )
+   VARIABLE-TYPE    = "Condenser Water Loop"
+   VARIABLE-LIST    = ( 3 )
    ..
 
 "Hourly Report" = HOURLY-REPORT   
    LIBRARY-ENTRY "Hourly Report"
+   REPORT-BLOCK     = ( "EM1 Hourly Report Block", "FM1 Hourly Report Block", 
+         "Hourly Report Block 3" )
    ..
 
 
