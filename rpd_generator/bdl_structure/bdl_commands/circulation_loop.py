@@ -41,7 +41,7 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopTypes.HW: FluidLoopOptions.HEATING,
         BDL_CirculationLoopTypes.CW: FluidLoopOptions.CONDENSER,
         BDL_CirculationLoopTypes.PIPE2: FluidLoopOptions.HEATING_AND_COOLING,
-        BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.OTHER,
+        BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.CONDENSER,
     }
 
     sizing_option_map = {
