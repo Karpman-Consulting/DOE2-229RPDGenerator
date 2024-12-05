@@ -18,6 +18,7 @@ SubsurfaceDynamicGlazingOptions = SchemaEnums.schema_enums[
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_WindowKeywords = BDLEnums.bdl_enums["WindowKeywords"]
+BDL_WindowShadeTypes = BDLEnums.bdl_enums["WindowShadeTypes"]
 BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
 
@@ -80,29 +81,29 @@ class Window(ChildNode):
         else:
             self.classification = SubsurfaceClassificationOptions.WINDOW
 
-        glass_type_name = self.get_inp(BDL_WindowKeywords.GLASS_TYPE)
-        glass_type = self.get_obj(glass_type_name)
-        if glass_type is not None:
+        glass_type = self.get_obj(self.get_inp(BDL_WindowKeywords.GLASS_TYPE))
+        if glass_type:
             self.u_factor = glass_type.u_factor
             self.visible_transmittance = glass_type.visible_transmittance
             if glass_type.shading_coefficient is not None:
                 self.solar_heat_gain_coefficient = glass_type.shading_coefficient / 1.15
 
-        left_fin_depth = self.try_float(self.get_inp(BDL_WindowKeywords.LEFT_FIN_D))
-        right_fin_depth = self.try_float(self.get_inp(BDL_WindowKeywords.RIGHT_FIN_D))
-        if left_fin_depth not in [None, 0.0] or right_fin_depth not in [None, 0.0]:
+        if self.try_float(
+            self.get_inp(BDL_WindowKeywords.LEFT_FIN_D)
+        ) or self.try_float(self.get_inp(BDL_WindowKeywords.RIGHT_FIN_D)):
             self.has_shading_sidefins = True
-        overhang_depth = self.get_inp(BDL_WindowKeywords.OVERHANG_D)
-        if overhang_depth not in [None, 0.0]:
-            self.depth_of_overhang = overhang_depth
+
+        if self.get_inp(BDL_WindowKeywords.OVERHANG_D):
+            self.depth_of_overhang = self.try_float(
+                self.get_inp(BDL_WindowKeywords.OVERHANG_D)
+            )
             self.has_shading_overhang = True
 
-        shade_schedule = self.get_inp(BDL_WindowKeywords.SHADING_SCHEDULE)
-        shade_type = self.get_inp(BDL_WindowKeywords.WIN_SHADE_TYPE)
-        if shade_type is not None:
-            adjustable_shade = shade_type.startswith("MOVABLE-")
-            if shade_schedule is not None and adjustable_shade:
-                self.has_manual_interior_shades = True
+        if self.get_inp(BDL_WindowKeywords.WIN_SHADE_TYPE) in [
+            BDL_WindowShadeTypes.MOVABLE_INTERIOR,
+            BDL_WindowShadeTypes.MOVABLE_EXTERIOR,
+        ] and self.get_inp(BDL_WindowKeywords.SHADING_SCHEDULE):
+            self.has_manual_interior_shades = True
 
     def populate_data_group(self):
         """Populate schema structure for window object."""

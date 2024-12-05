@@ -253,6 +253,12 @@ class BDLEnums:
                 "SUPPLY-LO",
             ]
         ),
+        "DOASAttachedToOptions": _ListEnum(
+            [
+                "AHU-MIXED-AIR",
+                "CONDITIONED-ZONES",
+            ]
+        ),
         "DomesticWaterHeaterTypes": _ListEnum(
             [
                 "GAS",
@@ -632,6 +638,8 @@ class BDLEnums:
                 "RESVVT",
                 "EVAP-COOL",
                 "DOAS",
+                "FNSYS",
+                "PTGSD",
             ]
         ),
         "SystemSupplyFanTypes": _ListEnum(
@@ -721,6 +729,12 @@ class BDLEnums:
                 "RELIEF",
             ]
         ),
+        "ZoneOAMethodOptions": _ListEnum(
+            [
+                "MAX-OCC-OR-AREA",
+                "SUM-OCC-AND-AREA",
+            ]
+        ),
         "SystemIndoorFanModeOptions": _ListEnum(
             [
                 "CONTINUOUS",
@@ -760,6 +774,12 @@ class BDLEnums:
                 "INDOOR-FAN-MODE",
                 "NIGHT-CYCLE-CTRL",
                 "MIN-OA-METHOD",
+                "MIN-AIR-SCH",
+                "SIZING-RATIO",
+                "HEAT-SIZING-RATI",
+                "COOL-SIZING-RATI",
+                "HEATING-CAPACITY",
+                "COOLING-CAPACITY",
                 "HUMIDIFIER-TYPE",
                 "HEAT-SET-T",
                 "PREHEAT-SOURCE",
@@ -783,6 +803,7 @@ class BDLEnums:
                 "HSUPPLY-KW/FLOW",
                 "OA-CONTROL",
                 "DOA-SYSTEM",
+                "DOAS-ATTACHED-TO",
                 "ECONO-LIMIT-T",
                 "ECONO-LOCKOUT",
                 "RECOVER-EXHAUST",
@@ -795,6 +816,7 @@ class BDLEnums:
                 "ERV-EXH-FLOW",
                 "ZONE-HEAT-SOURCE",
                 "BASEBOARD-SOURCE",
+                "ZONE-OA-METHOD",
                 "BBRD-LOOP",
                 "HP-SUPP-SOURCE",
                 "MAX-HP-SUPP-T",
@@ -823,6 +845,14 @@ class BDLEnums:
             [
                 "TYPE",
                 "DAY-SCHEDULES",
+            ]
+        ),
+        "WindowShadeTypes": _ListEnum(
+            [
+                "MOVABLE-INTERIOR",
+                "MOVABLE-EXTERIOR",
+                "FIXED-INTERIOR",
+                "FIXED-EXTERIOR",
             ]
         ),
         "WindowKeywords": _ListEnum(
@@ -860,6 +890,14 @@ class BDLEnums:
                 "DHW-LOOP",
                 "STEAM",
                 "HEAT-PUMP",
+            ]
+        ),
+        "MinFlowControlOptions": _ListEnum(
+            [
+                "FIXED/SCHEDULED",
+                "DCV-RESET-UP",
+                "DCV-RESET-DOWN",
+                "DCV-RESET-UP/DOWN",
             ]
         ),
         "BaseboardControlOptions": _ListEnum(
@@ -924,7 +962,15 @@ class BDLEnums:
                 "MIN-FLOW/AREA",
                 "HMIN-FLOW/AREA",
                 "MIN-FLOW-SCH",
+                "CMIN-FLOW-SCH",
+                "HMIN-FLOW-SCH",
+                "MIN-FLOW-CTRL",
                 "MIN-FLOW-RATIO",
+                "MIN-FLOW/AREA",
+                "OA-FLOW/PER",
+                "OUTSIDE-AIR-FLOW",
+                "OA-CHANGES",
+                "OA-FLOW/AREA",
                 "EXHAUST-STATIC",
                 "EXHAUST-EFF",
                 "EXHAUST-KW/FLOW",
@@ -941,6 +987,7 @@ class BDLEnums:
                 "WSE-VALVE-TYPE",
                 "INDUCTION-RATIO",
                 "INDUCED-AIR-SRC",
+                "SPACE",
             ]
         ),
         "HPSupplementSourceOptions": _ListEnum(
