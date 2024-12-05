@@ -21,6 +21,7 @@ BDL_WindowKeywords = BDLEnums.bdl_enums["WindowKeywords"]
 BDL_WindowShadeTypes = BDLEnums.bdl_enums["WindowShadeTypes"]
 BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_GlassTypeKeywords = BDLEnums.bdl_enums["GlassTypeKeywords"]
 
 
 class Window(ChildNode):
@@ -93,7 +94,9 @@ class Window(ChildNode):
         ) or self.try_float(self.get_inp(BDL_WindowKeywords.RIGHT_FIN_D)):
             self.has_shading_sidefins = True
 
-        if self.get_inp(BDL_WindowKeywords.OVERHANG_D):
+        if self.try_float(
+            self.get_inp(BDL_WindowKeywords.OVERHANG_D)
+        ):
             self.depth_of_overhang = self.try_float(
                 self.get_inp(BDL_WindowKeywords.OVERHANG_D)
             )

@@ -88,14 +88,15 @@ class ExteriorWall(ChildNode, ParentNode):
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AZIMUTH))
-        self.azimuth = (
-            self.rmd.building_azimuth
-            + parent_floor_azimuth
-            + parent_space_azimuth
-            + surface_azimuth
-        ) % 360
-        if self.azimuth < 0:
-            self.azimuth += 360
+        if parent_floor_azimuth is not None and parent_space_azimuth is not None and surface_azimuth is not None:
+            self.azimuth = (
+                self.rmd.building_azimuth
+                + parent_floor_azimuth
+                + parent_space_azimuth
+                + surface_azimuth
+            ) % 360
+            if self.azimuth < 0:
+                self.azimuth += 360
 
         self.adjacent_to = SurfaceAdjacencyOptions.EXTERIOR
         self.does_cast_shade = self.boolean_map.get(
