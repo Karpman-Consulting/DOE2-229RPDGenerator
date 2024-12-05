@@ -12,7 +12,7 @@ BDL_SteamAndCHWaterMeterKeywords = BDLEnums.bdl_enums[
     "SteamAndChilledWaterMeterKeywords"
 ]
 CHILLED_WATER = "CHILLED_WATER"
-STEAM = "STEAM"
+HOT_WATER = "HOT_WATER"
 OTHER = "OTHER"
 
 
@@ -108,7 +108,7 @@ class SteamMeter(BaseNode):
 
         # data elements with no children
         self.loop = None
-        self.type = STEAM
+        self.type = HOT_WATER
         self.energy_source_type = OTHER
 
     def __repr__(self):
