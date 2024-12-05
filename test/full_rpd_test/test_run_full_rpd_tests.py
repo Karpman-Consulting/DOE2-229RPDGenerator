@@ -1,5 +1,5 @@
 import unittest
-from .full_rpd_test import run_full_rpd_tests as rpd_tests
+from ..full_rpd_test import run_full_rpd_tests as rpd_tests
 
 
 class TestRunFullRPDTests(unittest.TestCase):

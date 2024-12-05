@@ -184,6 +184,17 @@ class BaseNode(Base):
             return None
 
     @staticmethod
+    def try_max(lst: list):
+        """Attempt to get the maximum value from a list, returning None if it fails."""
+        if isinstance(lst, list):
+            try:
+                return max(lst)
+            except ValueError:
+                return None
+        else:
+            return None
+
+    @staticmethod
     def try_access_index(lst: list, index: int):
         """Attempt to access an index in a list, returning None if it fails."""
         if isinstance(lst, list):

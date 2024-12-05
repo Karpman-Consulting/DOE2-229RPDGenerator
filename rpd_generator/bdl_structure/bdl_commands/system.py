@@ -89,6 +89,22 @@ class System(ParentNode):
         BDL_SystemTypes.SZRH,
         BDL_SystemTypes.DOAS,
     ]
+    terminal_selection_system_types = [
+        BDL_SystemTypes.MZS,
+        BDL_SystemTypes.DDS,
+        BDL_SystemTypes.SZCI,
+        BDL_SystemTypes.IU,
+        BDL_SystemTypes.VAVS,
+        BDL_SystemTypes.RHFS,
+        BDL_SystemTypes.RHFS,
+        BDL_SystemTypes.HVSYS,
+        BDL_SystemTypes.CBVAV,
+        BDL_SystemTypes.PMZS,
+        BDL_SystemTypes.PVAVS,
+        BDL_SystemTypes.PIU,
+        BDL_SystemTypes.FNSYS,
+        BDL_SystemTypes.PTGSD,
+    ]
     heat_type_map = {
         BDL_SystemHeatingTypes.NONE: HeatingSystemOptions.NONE,
         BDL_SystemHeatingTypes.ELECTRIC: HeatingSystemOptions.ELECTRIC_RESISTANCE,

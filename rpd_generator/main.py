@@ -228,7 +228,7 @@ def copy_files_to_temp_dir(inp_path, temp_dir):
             print(f"File {model_file} not found in {model_dir}")
 
 
-def _create_obj_instance(command, command_dict, rmd):
+def _create_obj_instance(u_name, command, command_dict, rmd):
     command_class = RulesetProjectDescription.bdl_command_dict[command]
     is_child = command in [
         "SPACE",
@@ -243,27 +243,28 @@ def _create_obj_instance(command, command_dict, rmd):
 
     if inherits_base_node and is_child:
         obj_instance = command_class(
-            command_dict["unique_name"],
+            u_name,
             rmd.bdl_obj_instances[command_dict["parent"]],
             rmd,
         )
     else:
-        obj_instance = command_class(command_dict["unique_name"], rmd)
+        obj_instance = command_class(u_name, rmd)
     return obj_instance
 
 
 def _process_command_group(
-    data_group: str,
+    command_group: str,
     file_bdl_commands: dict,
     rmd: RulesetModelDescription,
     special_handling=None,
 ):
-    for cmd_dict in file_bdl_commands.get(data_group, []):
-        obj = _create_obj_instance(data_group, cmd_dict, rmd)
-        if special_handling and data_group in special_handling:
-            special_handling[data_group](obj, cmd_dict)
+    for u_name in file_bdl_commands.get(command_group, {}):
+        cmd_dict = file_bdl_commands[command_group][u_name]
+        obj = _create_obj_instance(u_name, command_group, cmd_dict, rmd)
+        if special_handling and command_group in special_handling:
+            special_handling[command_group](obj, cmd_dict)
         obj.add_inputs(cmd_dict)
-        rmd.bdl_obj_instances[cmd_dict["unique_name"]] = obj
+        rmd.bdl_obj_instances[u_name] = obj
 
 
 if __name__ == "__main__":
