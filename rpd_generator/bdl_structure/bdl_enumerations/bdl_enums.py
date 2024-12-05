@@ -847,6 +847,14 @@ class BDLEnums:
                 "DAY-SCHEDULES",
             ]
         ),
+        "WindowShadeTypes": _ListEnum(
+            [
+                "MOVABLE-INTERIOR",
+                "MOVABLE-EXTERIOR",
+                "FIXED-INTERIOR",
+                "FIXED-EXTERIOR",
+            ]
+        ),
         "WindowKeywords": _ListEnum(
             [
                 "HEIGHT",
