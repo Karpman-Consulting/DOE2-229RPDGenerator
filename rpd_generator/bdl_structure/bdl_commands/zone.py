@@ -477,6 +477,9 @@ class Zone(ChildNode):
                 self.parent.get_inp(BDL_SystemKeywords.DOA_SYSTEM)
             )
             self.terminals_id[2] = self.u_name + " DOASTerminal"
+            self.terminals_served_by_heating_ventilating_air_conditioning_system[2] = (
+                doas_system.u_name
+            )
             self.terminals_cooling_capacity[2] = 0.0
             self.terminals_heating_capacity[2] = 0.0
             self.terminals_minimum_outdoor_airflow[2] = minimum_outdoor_airflow
