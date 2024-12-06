@@ -19,6 +19,7 @@ BDL_CirculationLoopTemperatureResetOptions = BDLEnums.bdl_enums[
 ]
 BDL_SecondaryLoopValveTypes = BDLEnums.bdl_enums["CirculationLoopSecondaryValveTypes"]
 BDL_SystemCoolingValveTypes = BDLEnums.bdl_enums["SystemCoolingValveTypes"]
+BDL_SystemCondenserValveTypes = BDLEnums.bdl_enums["SystemCondenserValveTypes"]
 BDL_SystemHeatingValveTypes = BDLEnums.bdl_enums["SystemHeatingValveTypes"]
 BDL_FlowControlOptions = BDLEnums.bdl_enums["FlowControlOptions"]
 BDL_ZoneCondenserValveOptions = BDLEnums.bdl_enums["ZoneCWValveOptions"]
@@ -41,7 +42,7 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopTypes.HW: FluidLoopOptions.HEATING,
         BDL_CirculationLoopTypes.CW: FluidLoopOptions.CONDENSER,
         BDL_CirculationLoopTypes.PIPE2: FluidLoopOptions.HEATING_AND_COOLING,
-        BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.OTHER,
+        BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.CONDENSER,
     }
 
     sizing_option_map = {
@@ -701,6 +702,7 @@ class CirculationLoop(BaseNode):
                 ):
                     return FluidLoopFlowControlOptions.VARIABLE_FLOW
             elif loop_type == BDL_CirculationLoopTypes.WLHP:
+                # This only sets the default value for zones, which are captured below
                 pass
 
         for zone_name in self.rmd.zone_names:
@@ -802,6 +804,7 @@ class CirculationLoop(BaseNode):
                 BDL_CirculationLoopTypes.CW,
             ]:
                 pass  # Unused for boilers
+
             elif loop_type in [
                 BDL_CirculationLoopTypes.HW,
                 BDL_CirculationLoopTypes.PIPE2,

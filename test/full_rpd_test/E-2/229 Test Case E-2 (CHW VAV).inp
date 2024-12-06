@@ -1450,7 +1450,7 @@ SET-DEFAULT FOR SYSTEM
    RETURN-MECH-EFF  = 1
    RETURN-MTR-EFF   = 0.6
    PREHEAT-LOCN     = MIXED-AIR
-   ZONE-OA-METHOD   = SUM-OCC-AND-AREA
+   ZONE-OA-METHOD   = MAX-OCC-OR-AREA
    RHT-SIZING-METHO = MAX-SUPPLY-T
    ..
 "Perimeter Zone 1 (South)" = ZONE            
@@ -1461,7 +1461,8 @@ SET-DEFAULT FOR SYSTEM
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Perimeter Space 1 (South)"
-   OUTSIDE-AIR-FLOW = ( 200 )
+   OA-FLOW/PER      = ( 10 )
+   OA-FLOW/AREA     = ( 0.01 )
    ..
 "Perimeter Zone 2 (East)" = ZONE            
    TYPE             = CONDITIONED
@@ -1471,7 +1472,8 @@ SET-DEFAULT FOR SYSTEM
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Perimeter Space 2 (East)"
-   OUTSIDE-AIR-FLOW = ( 200 )
+   OA-FLOW/PER      = ( 10 )
+   OA-FLOW/AREA     = ( 0.01 )
    ..
 "Perimeter Zone 3 (North)" = ZONE            
    TYPE             = CONDITIONED
@@ -1481,7 +1483,8 @@ SET-DEFAULT FOR SYSTEM
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Perimeter Space 3 (North)"
-   OUTSIDE-AIR-FLOW = ( 200 )
+   OA-FLOW/PER      = ( 10 )
+   OA-FLOW/AREA     = ( 0.01 )
    ..
 "Perimeter Zone 4 (West)" = ZONE            
    TYPE             = CONDITIONED
@@ -1491,7 +1494,8 @@ SET-DEFAULT FOR SYSTEM
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Perimeter Space 4 (West)"
-   OUTSIDE-AIR-FLOW = ( 200 )
+   OA-FLOW/PER      = ( 10 )
+   OA-FLOW/AREA     = ( 0.01 )
    ..
 "Core Zone" = ZONE            
    TYPE             = CONDITIONED
@@ -1501,7 +1505,8 @@ SET-DEFAULT FOR SYSTEM
    DESIGN-COOL-T    = 75
    COOL-TEMP-SCH    = "Cooling Setpoint Annual"
    SPACE            = "Core Space 1"
-   OUTSIDE-AIR-FLOW = ( 200 )
+   OA-FLOW/PER      = ( 10 )
+   OA-FLOW/AREA     = ( 0.01 )
    ..
 
 
