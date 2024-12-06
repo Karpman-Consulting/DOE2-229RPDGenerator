@@ -186,6 +186,10 @@
         "compare-value": true
         },
         {
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].has_demand_control_ventilation",
+        "compare-value": true
+        },
+        {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].terminals[*].type",
         "compare-value": true
         },
