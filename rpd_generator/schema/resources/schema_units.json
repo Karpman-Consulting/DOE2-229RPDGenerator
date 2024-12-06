@@ -17,8 +17,8 @@
         "occupant_latent_heat_gain": "W"
     },
     "Infiltration": {
-        "measured_air_leakage_rate": "m^3/s",
-        "flow_rate": "m^3/s"
+        "measured_air_leakage_rate": "L/s",
+        "flow_rate": "L/s"
     },
     "Surface": {
         "area": "m^2",
