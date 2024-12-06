@@ -84,7 +84,7 @@ def compare_json_values(spec, generated_values, reference_values, generated_ids)
 def get_zones_from_json(json_data):
     """Extracts zones from the given JSON data."""
     return find_all(
-        "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*]",
+        "$.ruleset_model_descriptions[*].buildings[*].building_segments[*].zones[*]",
         json_data,
     )
 
@@ -178,12 +178,16 @@ def get_mapping(
 
     # TODO: Expand capabilities when length of mapping is less than length of generated_values -e.g. unmatched objects
     if len(mapping) < len(generated_values):
-        unmatched_objects = [
-            generated_object
-            for generated_object in generated_values
-            if generated_object.get("id") not in mapping
-        ]
-        print(f"Unmatched {match_type} objects: {unmatched_objects}")
+        unmatched_object_ids = []
+        for generated_object in generated_values:
+            if (
+                isinstance(generated_object, dict)
+                and generated_object.get("id") not in mapping
+            ):
+                unmatched_object_ids.append(generated_object.get("id"))
+            elif isinstance(generated_object, str) and generated_object not in mapping:
+                unmatched_object_ids.append(generated_object)
+        print(f"Unmatched {match_type} objects: {unmatched_object_ids}")
 
     return mapping
 
@@ -959,6 +963,12 @@ def handle_special_cases(path_spec, object_id_map, generated_json, reference_jso
             generated_surface_id = generated_surface["id"]
             reference_surface_id = object_id_map.get(generated_surface_id)
 
+            if not reference_surface_id:
+                errors.append(
+                    f"Could not map '{generated_surface_id}' to a reference surface"
+                )
+                continue
+
             aligned_reference_surface = find_one(
                 json_key_path[
                     : json_key_path.index("].", json_key_path.index("surfaces")) + 1
@@ -967,6 +977,12 @@ def handle_special_cases(path_spec, object_id_map, generated_json, reference_jso
                 reference_json,
                 None,
             )
+
+            if not aligned_reference_surface:
+                errors.append(
+                    f"Could not find reference surface with id '{reference_surface_id}'"
+                )
+                continue
 
             generated_parent_zone = next(
                 zone
@@ -1228,9 +1244,12 @@ def handle_ordered_comparisons(
         generated_hvac_ids = [hvac["id"] for hvac in generated_hvacs]
 
         # Populate data for each zone individually and ensure correct alignment via object mapping
-        for generated_boiler in generated_hvacs:
-            generated_boiler_id = generated_boiler["id"]
-            reference_boiler_id = object_id_map[generated_boiler_id]
+        for generated_hvac in generated_hvacs:
+            generated_hvac_id = generated_hvac["id"]
+            reference_hvac_id = object_id_map.get(generated_hvac_id)
+
+            if not reference_hvac_id:
+                continue
 
             hvac_data_path = json_key_path[
                 json_key_path.index(
@@ -1239,19 +1258,19 @@ def handle_ordered_comparisons(
                 )
                 + 2 :
             ]
-            generated_value = find_one(hvac_data_path, generated_boiler)
-            aligned_generated_values[generated_boiler_id] = generated_value
+            generated_value = find_one(hvac_data_path, generated_hvac)
+            aligned_generated_values[generated_hvac_id] = generated_value
             # Extract values from aligned zones using the specified key path
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "heating_ventilating_air_conditioning_systems[*]",
-                    f'heating_ventilating_air_conditioning_systems[*][?(@.id="{reference_boiler_id}")]',
+                    f'heating_ventilating_air_conditioning_systems[*][?(@.id="{reference_hvac_id}")]',
                 ),
                 reference_json,
                 None,
             )
 
-            aligned_reference_values[generated_boiler_id] = aligned_reference_value
+            aligned_reference_values[generated_hvac_id] = aligned_reference_value
 
         if all(value is None for value in aligned_generated_values.values()):
             warnings.append(f"Missing key {json_key_path.split('.')[-1]}")
@@ -1279,7 +1298,10 @@ def handle_ordered_comparisons(
 
         for generated_boiler in generated_boilers:
             generated_boiler_id = generated_boiler["id"]
-            reference_boiler_id = object_id_map[generated_boiler_id]
+            reference_boiler_id = object_id_map.get(generated_boiler_id)
+
+            if not reference_boiler_id:
+                continue
 
             boiler_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("boilers")) + 2 :
@@ -1324,7 +1346,10 @@ def handle_ordered_comparisons(
 
         for generated_chiller in generated_chillers:
             generated_chiller_id = generated_chiller["id"]
-            reference_chiller_id = object_id_map[generated_chiller_id]
+            reference_chiller_id = object_id_map.get(generated_chiller_id)
+
+            if not reference_chiller_id:
+                continue
 
             chiller_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("chillers")) + 2 :
@@ -1371,7 +1396,10 @@ def handle_ordered_comparisons(
 
         for generated_heat_rejection in generated_heat_rejections:
             generated_heat_rejection_id = generated_heat_rejection["id"]
-            reference_heat_rejection_id = object_id_map[generated_heat_rejection_id]
+            reference_heat_rejection_id = object_id_map.get(generated_heat_rejection_id)
+
+            if not reference_heat_rejection_id:
+                continue
 
             heat_rejection_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("heat_rejections")) + 2 :
@@ -1422,7 +1450,10 @@ def handle_ordered_comparisons(
 
         for generated_fluid_loop in generated_fluid_loops:
             generated_fluid_loop_id = generated_fluid_loop["id"]
-            reference_fluid_loop_id = object_id_map[generated_fluid_loop_id]
+            reference_fluid_loop_id = object_id_map.get(generated_fluid_loop_id)
+
+            if not reference_fluid_loop_id:
+                continue
 
             fluid_loop_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("fluid_loops")) + 2 :
@@ -1467,7 +1498,10 @@ def handle_ordered_comparisons(
 
         for generated_pump in generated_pumps:
             generated_pump_id = generated_pump["id"]
-            reference_pump_id = object_id_map[generated_pump_id]
+            reference_pump_id = object_id_map.get(generated_pump_id)
+
+            if not reference_pump_id:
+                continue
 
             pump_data_path = json_key_path[
                 json_key_path.index("].", json_key_path.index("pumps")) + 2 :
@@ -1620,6 +1654,7 @@ def run_comparison_for_all_tests(test_dir):
     for test in os.listdir(test_dir):
         # Only recognize directories starting with "E-" or "F-" as test cases
         if os.path.isdir(test_dir) and (test.startswith("E-") or test.startswith("F-")):
+            # if os.path.isdir(test_dir) and (test == "F-170"):
 
             test_case_dir = os.path.join(test_dir, test)
             generated_json_file = next(

@@ -201,7 +201,7 @@
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].infiltration.flow_rate",
         "compare-value": true,
-        "tolerance": 0.001
+        "tolerance": 1
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*].classification",

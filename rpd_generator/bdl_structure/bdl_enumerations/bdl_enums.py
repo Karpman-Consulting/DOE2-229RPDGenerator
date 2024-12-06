@@ -609,6 +609,12 @@ class BDLEnums:
                 "THREE-WAY",
             ]
         ),
+        "SystemCondenserValveTypes": _ListEnum(
+            [
+                "YES",
+                "NO",
+            ]
+        ),
         "SystemTypes": _ListEnum(
             [
                 "SUM",
@@ -757,6 +763,7 @@ class BDLEnums:
                 "CHW-LOOP",
                 "CW-LOOP",
                 "CHW-VALVE-TYPE",
+                "CW_VALVE",
                 "COOL-CONTROL",
                 "COOL-MIN-RESET-T",
                 "COOL-MAX-RESET-T",

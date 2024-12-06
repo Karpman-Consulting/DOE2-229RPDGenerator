@@ -1459,7 +1459,7 @@ class System(ParentNode):
                 )
             if is_all_1:
                 self.fan_sys_operation_during_unoccupied = (
-                    FanSystemOperationOptions.CONTINUOUS
+                    FanSystemOperationOptions.KEEP_OFF
                 )
 
             mixed_operation = has_one and has_neg_999
@@ -1478,7 +1478,7 @@ class System(ParentNode):
                 )
             if all(value == 1 for value in fan_sch.hourly_values):
                 self.fan_sys_operation_during_unoccupied = (
-                    FanSystemOperationOptions.CONTINUOUS
+                    FanSystemOperationOptions.KEEP_OFF
                 )
 
             if any(value == -999 for value in fan_sch.hourly_values):
