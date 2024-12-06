@@ -66,7 +66,7 @@ class TestPumps(unittest.TestCase):
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_pump_single_detailed(self, mock_get_output_data):
+    def test_populate_data_with_pump_detailed(self, mock_get_output_data):
         """ Tests that specification_method is DETAILED when no PUMP_KW value is provided """
         mock_get_output_data.return_value = {
             "Pump - Power (kW)": 125,
