@@ -615,7 +615,7 @@
                                     "infiltration": {
                                         "id": "Prm Zone 1 INFILTRATION",
                                         "modeling_method": "WEATHER_DRIVEN",
-                                        "flow_rate": 0.114117,
+                                        "flow_rate": 114.1,
                                         "multiplier_schedule": "Prm Zone 1 INFILTRATION SCH"
                                     },
                                     "terminals": [
@@ -834,7 +834,7 @@
                                     "infiltration": {
                                         "id": "Prm Zone 2 INFILTRATION",
                                         "modeling_method": "CONSTANT",
-                                        "flow_rate": 0.077315
+                                        "flow_rate": 77.3
                                     },
                                     "terminals": [
                                         {
@@ -1062,7 +1062,7 @@
                                     "infiltration": {
                                         "id": "Prm Zone 3 INFILTRATION",
                                         "modeling_method": "CONSTANT_SCHEDULED",
-                                        "flow_rate": 0.080542,
+                                        "flow_rate": 80.5,
                                         "multiplier_schedule": "Prm Zone 3 INFILTRATION SCH"
                                     },
                                     "terminals": [
@@ -1253,7 +1253,7 @@
                                     "infiltration": {
                                         "id": "Prm Zone 4 INFILTRATION",
                                         "modeling_method": "CONSTANT_SCHEDULED",
-                                        "flow_rate": 0.053702,
+                                        "flow_rate": 53.7,
                                         "multiplier_schedule": "Prm Zone 4 INFILTRATION SCH"
                                     },
                                     "terminals": [
@@ -45171,7 +45171,6 @@
                     "design_capacity": 87921,
                     "rated_entering_condenser_temperature": 29.4,
                     "rated_leaving_evaporator_temperature": 10,
-                    "minimum_load_ratio": 0.25,
                     "part_load_efficiency": 0.5,
                     "part_load_efficiency_metric": "NONSTANDARD_PART_LOAD_VALUE",
                     "capacity_validation_points": [
