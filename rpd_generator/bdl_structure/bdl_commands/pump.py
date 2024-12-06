@@ -62,7 +62,6 @@ class Pump(BaseNode):
             if self.get_inp(BDL_PumpKeywords.PUMP_KW) is not None
             else PumpSpecificationMethodOptions.DETAILED
         )
-        design_head = self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
         self.specification_method = [spec_method] * self.qty
         if spec_method == PumpSpecificationMethodOptions.SIMPLE:
             self.design_electric_power = [
@@ -72,7 +71,9 @@ class Pump(BaseNode):
             self.design_electric_power = [
                 self.output_data.get("Pump - Power (kW)")
             ] * self.qty
-        self.design_head = [design_head] * self.qty
+        self.design_head = [
+            self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
+        ] * self.qty
         self.impeller_efficiency = [
             self.output_data.get("Pump - Mechanical Eff (frac)")
         ] * self.qty
@@ -80,13 +81,11 @@ class Pump(BaseNode):
             self.output_data.get("Pump - Motor Eff (frac)")
         ] * self.qty
         self.design_flow = [self.output_data.get("Pump - Flow (gal/min)")] * self.qty
-        pump_cap_ctrl = self.get_inp(BDL_PumpKeywords.CAP_CTRL)
-        if pump_cap_ctrl:
+        if self.get_inp(BDL_PumpKeywords.CAP_CTRL):
             self.speed_control = [
-                self.pump_speed_control_map.get(pump_cap_ctrl)
+                self.pump_speed_control_map.get(self.get_inp(BDL_PumpKeywords.CAP_CTRL))
             ] * self.qty
-        input_design_flow = self.try_float(self.get_inp(BDL_PumpKeywords.FLOW))
-        if input_design_flow:
+        if self.try_float(self.get_inp(BDL_PumpKeywords.FLOW)):
             self.is_flow_sized_based_on_design_day = [False] * self.qty
         else:
             self.is_flow_sized_based_on_design_day = [True] * self.qty
