@@ -62,7 +62,6 @@ class Pump(BaseNode):
             if self.get_inp(BDL_PumpKeywords.PUMP_KW) is not None
             else PumpSpecificationMethodOptions.DETAILED
         )
-        design_head = self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
         self.specification_method = [spec_method] * self.qty
         if spec_method == PumpSpecificationMethodOptions.SIMPLE:
             self.design_electric_power = [
@@ -72,6 +71,7 @@ class Pump(BaseNode):
             self.design_electric_power = [
                 self.output_data.get("Pump - Power (kW)")
             ] * self.qty
+        design_head = self.try_float(self.get_inp(BDL_PumpKeywords.HEAD))
         self.design_head = [design_head] * self.qty
         self.impeller_efficiency = [
             self.output_data.get("Pump - Mechanical Eff (frac)")
