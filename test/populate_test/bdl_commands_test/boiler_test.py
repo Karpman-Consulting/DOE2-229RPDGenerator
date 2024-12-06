@@ -52,6 +52,8 @@ class TestFuelBoiler(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_with_fuel_meter(self, mock_get_output_data):
+        """Tests that all values populate for a fuel boiler with expected values, given valid inputs,
+        with a fuel meter defined"""
         mock_get_output_data.return_value = {
             "Boilers - Design Parameters - Capacity": 188203.578125,
             "Boilers - Design Parameters - Flow": 28.88204002380371,

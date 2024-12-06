@@ -1,8 +1,6 @@
 import unittest
-from unittest.mock import patch
 
 from rpd_generator.config import Config
-from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import Space
@@ -24,7 +22,7 @@ class TestDoor(unittest.TestCase):
     def test_populate_data_with_door(self):
         self.door.keyword_value_pairs = {
             BDL_DoorKeywords.HEIGHT: 7,
-            BDL_DoorKeywords.WIDTH: 4
+            BDL_DoorKeywords.WIDTH: 4,
         }
 
         self.door.populate_data_elements()
@@ -33,38 +31,28 @@ class TestDoor(unittest.TestCase):
         expected_data_structure = {
             "classification": "DOOR",
             "id": "Door 1",
-            "opaque_area": 28
+            "opaque_area": 28,
         }
 
         self.assertEqual(expected_data_structure, self.door.door_data_structure)
 
     def test_populate_data_with_door_no_height(self):
-        self.door.keyword_value_pairs = {
-            BDL_DoorKeywords.WIDTH: 4
-        }
+        self.door.keyword_value_pairs = {BDL_DoorKeywords.WIDTH: 4}
 
         self.door.populate_data_elements()
         self.door.populate_data_group()
 
-        expected_data_structure = {
-            "classification": "DOOR",
-            "id": "Door 1"
-        }
+        expected_data_structure = {"classification": "DOOR", "id": "Door 1"}
 
         self.assertEqual(expected_data_structure, self.door.door_data_structure)
 
     def test_populate_data_with_door_no_width(self):
-        self.door.keyword_value_pairs = {
-            BDL_DoorKeywords.HEIGHT: 7
-        }
+        self.door.keyword_value_pairs = {BDL_DoorKeywords.HEIGHT: 7}
 
         self.door.populate_data_elements()
         self.door.populate_data_group()
 
-        expected_data_structure = {
-            "classification": "DOOR",
-            "id": "Door 1"
-        }
+        expected_data_structure = {"classification": "DOOR", "id": "Door 1"}
 
         self.assertEqual(expected_data_structure, self.door.door_data_structure)
 
@@ -72,9 +60,6 @@ class TestDoor(unittest.TestCase):
         self.door.populate_data_elements()
         self.door.populate_data_group()
 
-        expected_data_structure = {
-            "classification": "DOOR",
-            "id": "Door 1"
-        }
+        expected_data_structure = {"classification": "DOOR", "id": "Door 1"}
 
         self.assertEqual(expected_data_structure, self.door.door_data_structure)
