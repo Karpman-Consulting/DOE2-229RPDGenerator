@@ -22,6 +22,7 @@ class TestElectricChillers(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_centrif_chiller(self, mock_get_output_data):
+        """Tests that all values populate with expected values, given valid inputs"""
         mock_get_output_data.return_value = {
             "Design Parameters - Capacity": 151941.078125,
             "Design Parameters - Condenser Flow": 36.10254669189453,
@@ -79,6 +80,7 @@ class TestEngineChillers(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_engine_chiller(self, mock_get_output_data):
+        """Tests the branch of logic associated with engine chillers to ensure the correct values are populated"""
         mock_get_output_data.return_value = {
             "Design Parameters - Capacity": 151941.078125,
             "Design Parameters - Condenser Flow": 35.50693130493164,

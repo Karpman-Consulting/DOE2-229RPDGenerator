@@ -52,6 +52,8 @@ class TestFuelBoiler(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_with_fuel_meter(self, mock_get_output_data):
+        """Tests that all values populate for a fuel boiler with expected values, given valid inputs,
+        with a fuel meter defined"""
         mock_get_output_data.return_value = {
             "Boilers - Design Parameters - Capacity": 188203.578125,
             "Boilers - Design Parameters - Flow": 28.88204002380371,
@@ -97,6 +99,8 @@ class TestFuelBoiler(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_without_fuel_meter(self, mock_get_output_data):
+        """Test the branch of logic for fuel boilers where a fuel meter is not defined for the boiler, so the fuel type
+        defaults to that of the master meter"""
         mock_get_output_data.return_value = {
             "Boilers - Design Parameters - Capacity": 188203.578125,
             "Boilers - Design Parameters - Flow": 28.88204002380371,
@@ -164,6 +168,7 @@ class TestElectricBoiler(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_electric_boiler(self, mock_get_output_data):
+        """Test the branch of logic for electric boilers with an EIR other than 1.0"""
         mock_get_output_data.return_value = {
             "Boilers - Design Parameters - Capacity": 882239.8125,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 882239.8125,
@@ -202,6 +207,7 @@ class TestElectricBoiler(unittest.TestCase):
     def test_populate_data_elements_electric_steam_boiler_1EIR(
         self, mock_get_output_data
     ):
+        """Test the branch of logic for electric boilers with an EIR of 1.0"""
         mock_get_output_data.return_value = {
             "Boilers - Design Parameters - Capacity": 882239.8125,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 882239.8125,
