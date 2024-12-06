@@ -88,7 +88,11 @@ class ExteriorWall(ChildNode, ParentNode):
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AZIMUTH))
-        if parent_floor_azimuth is not None and parent_space_azimuth is not None and surface_azimuth is not None:
+        if (
+            parent_floor_azimuth is not None
+            and parent_space_azimuth is not None
+            and surface_azimuth is not None
+        ):
             self.azimuth = (
                 self.rmd.building_azimuth
                 + parent_floor_azimuth
