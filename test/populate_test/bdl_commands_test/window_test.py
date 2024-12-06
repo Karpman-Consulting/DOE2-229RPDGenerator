@@ -30,6 +30,7 @@ class TestWindows(unittest.TestCase):
         self.rmd.bdl_obj_instances["Test glass type"] = self.glass_type
 
     def test_populate_data_with_window(self):
+        """ Tests that all values populate with expected values, given valid inputs """
         self.glass_type.keyword_value_pairs = {
             BDL_GlassTypeKeywords.GLASS_CONDUCT: "1",
             BDL_GlassTypeKeywords.SHADING_COEF: "2.3",
@@ -68,6 +69,7 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_is_skylight(self):
+        """ Tests that window is classified as a SKYLIGHT when it's on an exterior ceiling wall """
         self.exterior_wall.keyword_value_pairs = {
             BDL_ExteriorWallKeywords.LOCATION: BDL_WallLocationOptions.TOP
         }
@@ -92,6 +94,7 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_no_frame_width(self):
+        """ Tests that opaque_area is 0 when no window frame width is specified """
         self.window.keyword_value_pairs = {
             BDL_WindowKeywords.HEIGHT: "4",
             BDL_WindowKeywords.WIDTH: "3",
@@ -110,6 +113,7 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_no_width(self):
+        """ Tests that no opaque_area or glazed_area is specified if no width is provided"""
         self.window.keyword_value_pairs = {
             BDL_WindowKeywords.HEIGHT: "4",
             BDL_WindowKeywords.FRAME_WIDTH: "2"
@@ -126,6 +130,7 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_bad_fin_depth(self):
+        """ Tests that has_shading_sidefins is not populated when an invalid fin depth is provided """
         self.window.keyword_value_pairs = {
             BDL_WindowKeywords.LEFT_FIN_D: "0.0"
         }
@@ -141,6 +146,8 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_bad_overhang_depth(self):
+        """ Tests that has_shading_overhand and overhand_depth are not populated when an invalid overhang depth
+                is provided """
         self.window.keyword_value_pairs = {
             BDL_WindowKeywords.OVERHANG_D: "0.0",
         }
@@ -156,6 +163,7 @@ class TestWindows(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.window.window_data_structure)
 
     def test_populate_data_with_window_fixed_shade(self):
+        """ Tests that has_manual_interior_shades is not populated when an existing shade is a fixed type """
         self.window.keyword_value_pairs = {
             BDL_WindowKeywords.SHADING_SCHEDULE: "Test shading schedule",
             BDL_WindowKeywords.WIN_SHADE_TYPE: BDL_WindowShadeTypes.FIXED_INTERIOR
