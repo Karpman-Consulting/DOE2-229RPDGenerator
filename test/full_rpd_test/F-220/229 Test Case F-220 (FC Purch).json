@@ -185,7 +185,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -194,7 +194,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -203,7 +203,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -505,7 +505,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -514,7 +514,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.203291617364128,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -775,7 +775,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -784,7 +784,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -793,7 +793,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -1046,7 +1046,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.2032916173641275,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -1055,7 +1055,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 3.287714933763201,
+                                                    "u_factor": 2.203291617364128,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -133074,6 +133074,12 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
+                            "id": "PURCHASED_HOT_WATER",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_consumption": 835906368.0,
+                            "annual_demand": 302843.96875
+                        },
+                        {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
                             "annual_consumption": 128163.1953125,
@@ -133086,12 +133092,6 @@
                             "annual_demand": 94784.21875
                         },
                         {
-                            "id": "PURCHASED_HOT_WATER",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_consumption": 835906368.0,
-                            "annual_demand": 302843.96875
-                        },
-                        {
                             "id": "NATURAL-GAS",
                             "energy_source": "NATURAL_GAS",
                             "annual_consumption": 216.7266387939453,
@@ -133099,6 +133099,96 @@
                         }
                     ],
                     "annual_end_use_results": [
+                        {
+                            "id": "PURCHASED_HOT_WATER - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 835906368.0,
+                            "annual_site_coincident_demand": 302843.96875,
+                            "annual_site_non_coincident_demand": 302843.96875,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "PURCHASED_HOT_WATER - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "PURCHASED_HOT_WATER",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
                         {
                             "id": "ELECTRICITY - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -133274,96 +133364,6 @@
                             "id": "PURCHASED_CHILLED_WATER - Domestic Hot Water",
                             "type": "SERVICE_WATER_HEATING",
                             "energy_source": "PURCHASED_CHILLED_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 835906368.0,
-                            "annual_site_coincident_demand": 302843.96875,
-                            "annual_site_non_coincident_demand": 302843.96875,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "PURCHASED_HOT_WATER",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "PURCHASED_HOT_WATER - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "PURCHASED_HOT_WATER",
                             "annual_site_energy_use": 0.0,
                             "annual_site_coincident_demand": 0.0,
                             "annual_site_non_coincident_demand": 0.0,

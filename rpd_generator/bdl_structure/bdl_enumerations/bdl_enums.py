@@ -312,8 +312,10 @@ class BDLEnums:
                 "AZIMUTH",
             ]
         ),
+        "GlassTypeOptions": _ListEnum(["GLASS-TYPE-CODE", "SHADING-COEF"]),
         "GlassTypeKeywords": _ListEnum(
             [
+                "TYPE",
                 "GLASS-CONDUCT",
                 "SHADING-COEF",
                 "VIS-TRANS",
@@ -854,6 +856,14 @@ class BDLEnums:
                 "DAY-SCHEDULES",
             ]
         ),
+        "WindowTypes": _ListEnum(
+            [
+                "STANDARD",
+                "SKYLIGHT-FLAT",
+                "SKYLIGHT-DOME",
+                "SKYLIGHT-TUBULAR",
+            ]
+        ),
         "WindowShadeTypes": _ListEnum(
             [
                 "MOVABLE-INTERIOR",
@@ -864,9 +874,13 @@ class BDLEnums:
         ),
         "WindowKeywords": _ListEnum(
             [
+                "WINDOW-TYPE",
                 "HEIGHT",
                 "WIDTH",
                 "FRAME-WIDTH",
+                "FRAME-CONDUCT",
+                "CURB-HEIGHT",
+                "CURB-CONDUCT",
                 "LOCATION",
                 "GLASS-TYPE",
                 "LEFT-FIN-D",
