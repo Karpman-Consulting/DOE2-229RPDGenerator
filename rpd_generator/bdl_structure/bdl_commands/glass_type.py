@@ -14,7 +14,7 @@ class GlassType(BaseDefinition):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
 
-        self.u_factor = None
+        self.glass_conductance = None
         self.shading_coefficient = None
         self.visible_transmittance = None
         self.absorptance_thermal_exterior = None
@@ -24,7 +24,7 @@ class GlassType(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate schema structure for glass type object."""
-        self.u_factor = self.try_float(
+        self.glass_conductance = self.try_float(
             self.get_inp(BDL_GlassTypeKeywords.GLASS_CONDUCT)
         )
 

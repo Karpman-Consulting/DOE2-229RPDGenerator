@@ -17,7 +17,10 @@ SubsurfaceDynamicGlazingOptions = SchemaEnums.schema_enums[
 ]
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
+BDL_GlassTypeOptions = BDLEnums.bdl_enums["GlassTypeOptions"]
+BDL_GlassTypeKeywords = BDLEnums.bdl_enums["GlassTypeKeywords"]
 BDL_WindowKeywords = BDLEnums.bdl_enums["WindowKeywords"]
+BDL_WindowTypes = BDLEnums.bdl_enums["WindowTypes"]
 BDL_WindowShadeTypes = BDLEnums.bdl_enums["WindowShadeTypes"]
 BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
@@ -61,11 +64,20 @@ class Window(ChildNode):
 
     def populate_data_elements(self):
         """Populate data elements for window object."""
+
+        output_requests = self.get_output_requests()
+        output_data = self.get_output_data(output_requests)
+
         height = self.try_float(self.get_inp(BDL_WindowKeywords.HEIGHT))
         width = self.try_float(self.get_inp(BDL_WindowKeywords.WIDTH))
         if height is not None and width is not None:
             self.glazed_area = height * width
-            frame_width = self.try_float(self.get_inp(BDL_WindowKeywords.FRAME_WIDTH))
+            frame_width = (
+                self.try_float(self.get_inp(BDL_WindowKeywords.FRAME_WIDTH))
+                if self.get_inp(BDL_WindowKeywords.WINDOW_TYPE)
+                == BDL_WindowTypes.STANDARD
+                else self.try_float(self.get_inp(BDL_WindowKeywords.CURB_HEIGHT))
+            )
             if frame_width is None or frame_width == 0.0:
                 self.opaque_area = 0
             else:
@@ -80,13 +92,6 @@ class Window(ChildNode):
             self.classification = SubsurfaceClassificationOptions.SKYLIGHT
         else:
             self.classification = SubsurfaceClassificationOptions.WINDOW
-
-        glass_type = self.get_obj(self.get_inp(BDL_WindowKeywords.GLASS_TYPE))
-        if glass_type:
-            self.u_factor = glass_type.u_factor
-            self.visible_transmittance = glass_type.visible_transmittance
-            if glass_type.shading_coefficient is not None:
-                self.solar_heat_gain_coefficient = glass_type.shading_coefficient / 1.15
 
         if self.try_float(
             self.get_inp(BDL_WindowKeywords.LEFT_FIN_D)
@@ -104,6 +109,69 @@ class Window(ChildNode):
             BDL_WindowShadeTypes.MOVABLE_EXTERIOR,
         ] and self.get_inp(BDL_WindowKeywords.SHADING_SCHEDULE):
             self.has_manual_interior_shades = True
+
+        glass_type = self.get_obj(self.get_inp(BDL_WindowKeywords.GLASS_TYPE))
+        if not glass_type:
+            return
+
+        self.visible_transmittance = glass_type.visible_transmittance
+        if glass_type.shading_coefficient is not None:
+            self.solar_heat_gain_coefficient = glass_type.shading_coefficient / 1.15
+
+        specification_method = glass_type.get_inp(BDL_GlassTypeKeywords.TYPE)
+        glass_conductance = glass_type.glass_conductance
+        ext_air_film_resistance = 0.17
+
+        if (
+            specification_method == BDL_GlassTypeOptions.SHADING_COEF
+            and self.get_inp(BDL_WindowKeywords.WINDOW_TYPE) == BDL_WindowTypes.STANDARD
+        ):
+            opaque_conductance = self.try_float(
+                self.get_inp(BDL_WindowKeywords.FRAME_CONDUCT)
+            )
+            int_air_film_resistance = 0.68
+
+        elif (
+            specification_method == BDL_GlassTypeOptions.SHADING_COEF
+        ):  # Window Type is a type of Skylight
+            opaque_conductance = self.try_float(
+                self.get_inp(BDL_WindowKeywords.CURB_CONDUCT)
+            )
+            int_air_film_resistance = 0.61
+
+        elif (
+            self.get_inp(BDL_WindowKeywords.WINDOW_TYPE) == BDL_WindowTypes.STANDARD
+        ):  # Glass Type is from the Glass Library
+            opaque_conductance = self.try_float(
+                self.get_inp(BDL_WindowKeywords.FRAME_CONDUCT)
+            )
+            glass_conductance = output_data.get("Window - Input - Glass center u-value")
+            int_air_film_resistance = 0.68
+
+        else:  # Glass Type is from the Glass Library and Window Type is a type of Skylight
+            opaque_conductance = self.try_float(
+                self.get_inp(BDL_WindowKeywords.CURB_CONDUCT)
+            )
+            glass_conductance = output_data.get("Window - Input - Glass center u-value")
+            int_air_film_resistance = 0.61
+
+        if not self.glazed_area and not self.opaque_area:
+            return
+
+        if not glass_conductance:
+            glass_resistance = float("inf")
+        else:
+            glass_resistance = 1 / glass_conductance + int_air_film_resistance
+
+        if not opaque_conductance:
+            opaque_resistance = float("inf")
+        else:
+            opaque_resistance = 1 / opaque_conductance + ext_air_film_resistance
+
+        self.u_factor = (
+            (self.glazed_area or 0) / glass_resistance
+            + (self.opaque_area or 0) / opaque_resistance
+        ) / ((self.glazed_area or 0) + (self.opaque_area or 0))
 
     def populate_data_group(self):
         """Populate schema structure for window object."""
@@ -148,3 +216,16 @@ class Window(ChildNode):
         """Insert window object into the rpd data structure."""
         surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.window_data_structure)
+
+    def get_output_requests(self):
+        """Get the output requests for the window object."""
+
+        requests = {
+            "Window - Input - Glass center u-value": (
+                1108007,
+                self.u_name,
+                "",
+            )
+        }
+
+        return requests
