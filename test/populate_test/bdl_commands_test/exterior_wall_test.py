@@ -1,12 +1,12 @@
 import unittest
-from unittest.mock import patch
 
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.config import Config
-from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
-from rpd_generator.bdl_structure.bdl_commands.space import Space
+from rpd_generator.bdl_structure.bdl_commands.space import Space, BDL_SpaceKeywords
+from rpd_generator.bdl_structure.bdl_commands.system import System
+from rpd_generator.bdl_structure.bdl_commands.zone import Zone
 from rpd_generator.bdl_structure.bdl_commands.exterior_wall import *
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
@@ -23,6 +23,9 @@ class TestExteriorWall(unittest.TestCase):
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
+        self.system = System("System 1", self.rmd)
+        self.zone = Zone("Zone 1", self.system, self.rmd)
+        self.rmd.space_map = {"Space 1": self.zone}
         self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
 
@@ -33,6 +36,9 @@ class TestExteriorWall(unittest.TestCase):
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
 
         self.floor.populate_data_elements()
+
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "0"}
+        self.space.populate_data_elements()
 
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
