@@ -650,12 +650,14 @@ class BDLEnums:
                 "PTGSD",
             ]
         ),
-        "SystemSupplyFanTypes": _ListEnum(
+        "SystemFanControlOptions": _ListEnum(
             [
-                "CONSTANT-VOLUME",
                 "SPEED",
                 "INLET",
                 "DISCHARGE",
+                "CYCLING",
+                "TWO-SPEED",
+                "CONSTANT-VOLUME",
                 "FAN-EIR-FPLR",
             ]
         ),
@@ -759,6 +761,8 @@ class BDLEnums:
                 "HW-VALVE-TYPE",
                 "HEAT-CONTROL",
                 "HEAT-SET-T",
+                "HEAT-MIN-RESET-T",
+                "HEAT-MAX-RESET-T",
                 "HEAT-SIZING-RATI",
                 "HEATING-CAPACITY",
                 "COOL-SOURCE",
@@ -767,6 +771,7 @@ class BDLEnums:
                 "CHW-VALVE-TYPE",
                 "CW_VALVE",
                 "COOL-CONTROL",
+                "COOL-SET-T",
                 "COOL-MIN-RESET-T",
                 "COOL-MAX-RESET-T",
                 "COOL-SIZING-RATI",
@@ -784,13 +789,13 @@ class BDLEnums:
                 "NIGHT-CYCLE-CTRL",
                 "MIN-OA-METHOD",
                 "MIN-AIR-SCH",
+                "MIN-FLOW-RATIO",
                 "SIZING-RATIO",
                 "HEAT-SIZING-RATI",
                 "COOL-SIZING-RATI",
                 "HEATING-CAPACITY",
                 "COOLING-CAPACITY",
                 "HUMIDIFIER-TYPE",
-                "HEAT-SET-T",
                 "PREHEAT-SOURCE",
                 "PREHEAT-CAPACITY",
                 "PREHEAT-T",

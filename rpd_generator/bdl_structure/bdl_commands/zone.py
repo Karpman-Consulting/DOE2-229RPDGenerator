@@ -8,6 +8,9 @@ TerminalOptions = SchemaEnums.schema_enums["TerminalOptions"]
 TerminalFanConfigurationOptions = SchemaEnums.schema_enums[
     "TerminalFanConfigurationOptions"
 ]
+TerminalTemperatureControlOptions = SchemaEnums.schema_enums[
+    "TerminalTemperatureControlOptions"
+]
 FanSystemSupplyFanControlOptions = SchemaEnums.schema_enums[
     "FanSystemSupplyFanControlOptions"
 ]
@@ -19,6 +22,8 @@ BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ZoneKeywords = BDLEnums.bdl_enums["ZoneKeywords"]
 BDL_SystemKeywords = BDLEnums.bdl_enums["SystemKeywords"]
 BDL_SystemTypes = BDLEnums.bdl_enums["SystemTypes"]
+BDL_SystemCoolControlOptions = BDLEnums.bdl_enums["SystemCoolControlOptions"]
+BDL_SystemHeatControlOptions = BDLEnums.bdl_enums["SystemHeatControlOptions"]
 BDL_ZoneHeatSourceOptions = BDLEnums.bdl_enums["ZoneHeatSourceOptions"]
 BDL_TerminalTypes = BDLEnums.bdl_enums["TerminalTypes"]
 BDL_BaseboardControlOptions = BDLEnums.bdl_enums["BaseboardControlOptions"]
@@ -326,7 +331,9 @@ class Zone(ChildNode):
                 self.terminal_fan_total_efficiency = (
                     self.terminal_fan_motor_efficiency * supply_mech_eff
                 )
-            self.terminals_fan_configuration[0] = TerminalFanConfigurationOptions.SERIES
+            self.terminals_temperature_control[0] = (
+                self.get_terminal_system_temperature_control()
+            )
             if self.parent.get_inp(BDL_SystemKeywords.SUPPLY_FLOW) is not None:
                 self.terminal_fan_is_airflow_sized_based_on_design_day = False
             if self.terminal_fan_is_airflow_sized_based_on_design_day is None:
@@ -1256,3 +1263,45 @@ class Zone(ChildNode):
         )
 
         return dcv_conditions_are_met
+
+    def get_terminal_system_temperature_control(self):
+        system_type = self.parent.get_inp(BDL_SystemKeywords.TYPE)
+        cool_control = self.parent.get_inp(BDL_SystemKeywords.COOL_CONTROL)
+        cool_set_t = self.parent.get_inp(BDL_SystemKeywords.COOL_SET_T)
+        cool_max_reset_t = self.parent.get_inp(BDL_SystemKeywords.COOL_MAX_RESET_T)
+        heat_control = self.parent.get_inp(BDL_SystemKeywords.HEAT_CONTROL)
+        heat_set_t = self.parent.get_inp(BDL_SystemKeywords.HEAT_SET_T)
+        heat_max_reset_t = self.parent.get_inp(BDL_SystemKeywords.HEAT_MAX_RESET_T)
+        min_flow_ratio = self.try_float(
+            self.parent.get_inp(BDL_SystemKeywords.MIN_FLOW_RATIO)
+        )
+
+        if system_type in self.parent.multi_duct_system_types:
+            return TerminalTemperatureControlOptions.OTHER
+
+        elif system_type in self.parent.single_duct_system_types:
+
+            if (
+                cool_control == BDL_SystemCoolControlOptions.CONSTANT
+                and heat_control == BDL_SystemHeatControlOptions.CONSTANT
+            ):
+                if heat_set_t and cool_set_t and heat_set_t >= cool_set_t:
+                    return TerminalTemperatureControlOptions.CONSTANT
+
+            elif cool_control == BDL_SystemCoolControlOptions.WARMEST:
+                return TerminalTemperatureControlOptions.OTHER
+
+            elif cool_control == BDL_SystemCoolControlOptions.SCHEDULED:
+                return TerminalTemperatureControlOptions.SCHEDULED
+
+            elif cool_control == BDL_SystemCoolControlOptions.RESET:
+                return TerminalTemperatureControlOptions.OTHER
+
+        elif system_type in self.parent.single_zone_system_types:
+            if min_flow_ratio and min_flow_ratio < 1:
+                if cool_set_t and heat_set_t and cool_set_t == heat_set_t:
+                    return TerminalTemperatureControlOptions.CONSTANT
+                else:
+                    return TerminalTemperatureControlOptions.OTHER
+            else:
+                return TerminalTemperatureControlOptions.OTHER

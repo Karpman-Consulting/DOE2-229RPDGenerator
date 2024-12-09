@@ -104,5 +104,5 @@ def print_schema_enums():
         print()
 
 
-# Uncomment this for checking the enumerations after a schema change
-# print_schema_enums()
+if __name__ == "__main__":
+    print_schema_enums()
