@@ -21,7 +21,6 @@ BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
 BDL_LayerKeywords = BDLEnums.bdl_enums["LayerKeywords"]
 BDL_InteriorWallTypes = BDLEnums.bdl_enums["InteriorWallTypes"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
-BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class InteriorWall(

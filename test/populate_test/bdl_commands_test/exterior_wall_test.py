@@ -6,12 +6,12 @@ from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
+from rpd_generator.bdl_structure.bdl_commands.space import Space
 from rpd_generator.bdl_structure.bdl_commands.exterior_wall import *
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
-BDL_Commands = BDLEnums.bdl_enums["Commands"]
-BDL_ChillerKeywords = BDLEnums.bdl_enums["ChillerKeywords"]
-EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
+
+BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestExteriorWall(unittest.TestCase):
@@ -22,7 +22,8 @@ class TestExteriorWall(unittest.TestCase):
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
-        self.exterior_wall = ExteriorWall("Exterior Wall 1", self.floor, self.rmd)
+        self.space = Space("Space 1", self.floor, self.rmd)
+        self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
 
         self.rmd.bdl_obj_instances["Test Construction"] = self.construction

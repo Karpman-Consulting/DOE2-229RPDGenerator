@@ -5,8 +5,12 @@ from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
+from rpd_generator.bdl_structure.bdl_commands.space import Space
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.underground_wall import *
+
+
+BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestUndergroundWalls(unittest.TestCase):
@@ -17,8 +21,9 @@ class TestUndergroundWalls(unittest.TestCase):
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
+        self.space = Space("Space 1", self.floor, self.rmd)
         self.underground_wall = BelowGradeWall(
-            "Below Grade Wall 1", self.floor, self.rmd
+            "Below Grade Wall 1", self.space, self.rmd
         )
         self.construction = Construction("Construction 1", self.rmd)
 
@@ -30,6 +35,7 @@ class TestUndergroundWalls(unittest.TestCase):
 
         self.floor.populate_data_elements()
 
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,

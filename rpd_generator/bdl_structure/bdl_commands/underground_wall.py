@@ -19,7 +19,6 @@ BDL_SpaceKeywords = BDLEnums.bdl_enums["SpaceKeywords"]
 BDL_FloorKeywords = BDLEnums.bdl_enums["FloorKeywords"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
 BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
-BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class BelowGradeWall(ChildNode):
@@ -81,7 +80,7 @@ class BelowGradeWall(ChildNode):
         parent_floor_azimuth = self.parent.try_float(
             self.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
-        # TODO: Parent is Floor object 'Floor 1'. What is proper Space hierarchy?
+
         parent_space_azimuth = self.parent.try_float(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
@@ -90,13 +89,13 @@ class BelowGradeWall(ChildNode):
         )
         if (
             parent_floor_azimuth is not None
-            # and parent_space_azimuth is not None TODO: Put Space back
+            and parent_space_azimuth is not None
             and surface_azimuth is not None
         ):
             self.azimuth = (
                 self.rmd.building_azimuth
                 + parent_floor_azimuth
-                # + parent_space_azimuth TODO: Put Space back
+                + parent_space_azimuth
                 + surface_azimuth
             ) % 360
             if self.azimuth < 0:

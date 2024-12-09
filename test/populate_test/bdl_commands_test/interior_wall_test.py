@@ -1,14 +1,16 @@
 import unittest
 from unittest.mock import patch
 
-from rpd_generator.bdl_structure.bdl_commands.construction import Construction
-from rpd_generator.bdl_structure.bdl_commands.space import Space
-from rpd_generator.bdl_structure.bdl_commands.system import BDL_ZoneKeywords
 from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
+from rpd_generator.bdl_structure.bdl_commands.space import Space
+from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.bdl_structure.bdl_commands.interior_wall import *
+
+
+BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestInteriorWalls(unittest.TestCase):
@@ -19,6 +21,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
+        self.space = Space("Space 1", self.floor, self.rmd)
         self.interior_wall = InteriorWall("Interior Wall 1", self.floor, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
