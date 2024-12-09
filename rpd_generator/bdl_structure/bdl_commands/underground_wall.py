@@ -77,10 +77,9 @@ class BelowGradeWall(ChildNode):
         else:
             self.classification = SurfaceClassificationOptions.WALL
 
-        parent_floor_azimuth = self.parent.try_float(
-            self.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
+        parent_floor_azimuth = self.parent.parent.try_float(
+            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
-
         parent_space_azimuth = self.parent.try_float(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
