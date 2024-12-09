@@ -1289,16 +1289,7 @@ class Zone(ChildNode):
                     return TerminalTemperatureControlOptions.CONSTANT
 
             elif cool_control == BDL_SystemCoolControlOptions.WARMEST:
-                if heat_set_t and cool_max_reset_t and heat_set_t >= cool_max_reset_t:
-                    return TerminalTemperatureControlOptions.OTHER
-                elif (
-                    heat_max_reset_t
-                    and cool_max_reset_t
-                    and heat_max_reset_t >= cool_max_reset_t
-                ):
-                    return TerminalTemperatureControlOptions.OTHER
-                else:
-                    return TerminalTemperatureControlOptions.OTHER
+                return TerminalTemperatureControlOptions.OTHER
 
             elif cool_control == BDL_SystemCoolControlOptions.SCHEDULED:
                 return TerminalTemperatureControlOptions.SCHEDULED
