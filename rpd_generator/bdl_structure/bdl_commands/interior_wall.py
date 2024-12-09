@@ -21,6 +21,7 @@ BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
 BDL_LayerKeywords = BDLEnums.bdl_enums["LayerKeywords"]
 BDL_InteriorWallTypes = BDLEnums.bdl_enums["InteriorWallTypes"]
 BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class InteriorWall(
@@ -96,47 +97,54 @@ class InteriorWall(
         else:
             self.classification = SurfaceClassificationOptions.WALL
 
-        parent_floor_azimuth = self.parent.parent.try_float(
-            self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
+        parent_floor_azimuth = self.parent.try_float(
+            self.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
+        # TODO: Parent is Floor object 'Floor 1'. What is proper Space hierarchy?
         parent_space_azimuth = self.parent.try_float(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AZIMUTH))
-        self.azimuth = (
-            self.rmd.building_azimuth
-            + parent_floor_azimuth
-            + parent_space_azimuth
-            + surface_azimuth
-        ) % 360
-        if self.azimuth < 0:
-            self.azimuth += 360
+        if (
+            parent_floor_azimuth is not None
+            # and parent_space_azimuth is not None TODO: Put Space back
+            and surface_azimuth is not None
+        ):
+            self.azimuth = (
+                self.rmd.building_azimuth
+                + parent_floor_azimuth
+                # + parent_space_azimuth TODO: Put Space back
+                + surface_azimuth
+            ) % 360
+            if self.azimuth < 0:
+                self.azimuth += 360
 
-        if self.adjacent_to == SurfaceAdjacencyOptions.INTERIOR:
-            self.adjacent_zone = self.rmd.space_map[
-                self.get_inp(BDL_InteriorWallKeywords.NEXT_TO)
-            ].u_name
+        # TODO: Need some help here. Do I populate the map?
+        # if self.adjacent_to == SurfaceAdjacencyOptions.INTERIOR:
+        #     self.adjacent_zone = self.rmd.space_map[
+        #         self.get_inp(BDL_InteriorWallKeywords.NEXT_TO)
+        #     ].u_name
 
         self.does_cast_shade = self.boolean_map.get(
             self.get_inp(BDL_InteriorWallKeywords.SHADING_SURFACE)
         )
 
+        absorptance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)
         self.absorptance_solar_interior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[0]
+            self.try_access_index(absorptance_list, 0)
         )
-
         self.absorptance_solar_exterior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[1]
+            self.try_access_index(absorptance_list, 1)
         )
 
+        reflectance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)
         reflectance_visible_interior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[0]
+            self.try_access_index(reflectance_list, 0)
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
-
         reflectance_visible_exterior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[1]
+            self.try_access_index(reflectance_list, 1)
         )
         if reflectance_visible_exterior is not None:
             self.absorptance_visible_exterior = 1 - reflectance_visible_exterior
