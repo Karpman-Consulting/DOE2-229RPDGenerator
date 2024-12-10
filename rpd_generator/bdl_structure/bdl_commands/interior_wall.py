@@ -103,14 +103,20 @@ class InteriorWall(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AZIMUTH))
-        self.azimuth = (
+        if (
             self.rmd.building_azimuth
-            + parent_floor_azimuth
-            + parent_space_azimuth
-            + surface_azimuth
-        ) % 360
-        if self.azimuth < 0:
-            self.azimuth += 360
+            and parent_floor_azimuth
+            and parent_space_azimuth
+            and surface_azimuth
+        ):
+            self.azimuth = (
+                self.rmd.building_azimuth
+                + parent_floor_azimuth
+                + parent_space_azimuth
+                + surface_azimuth
+            ) % 360
+            if self.azimuth < 0:
+                self.azimuth += 360
 
         if self.adjacent_to == SurfaceAdjacencyOptions.INTERIOR:
             self.adjacent_zone = self.rmd.space_map[
@@ -122,21 +128,29 @@ class InteriorWall(
         )
 
         self.absorptance_solar_interior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[0]
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 0
+            )
         )
 
         self.absorptance_solar_exterior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)[1]
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 1
+            )
         )
 
         reflectance_visible_interior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[0]
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 0
+            )
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
 
         reflectance_visible_exterior = self.try_float(
-            self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)[1]
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 1
+            )
         )
         if reflectance_visible_exterior is not None:
             self.absorptance_visible_exterior = 1 - reflectance_visible_exterior

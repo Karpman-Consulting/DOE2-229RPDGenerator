@@ -116,7 +116,7 @@ class Door(ChildNode):
         ext_air_film_resistance = 0.17
         int_air_film_resistance = 0.68
         if self.parent.adjacent_to == SurfaceAdjacencyOptions.EXTERIOR:
-            if construction_obj.u_factor is not None:
+            if construction_obj and construction_obj.u_factor is not None:
                 u_factor = 1 / (
                     1 / construction_obj.u_factor
                     + ext_air_film_resistance
@@ -124,7 +124,7 @@ class Door(ChildNode):
                 )
                 return u_factor
         else:
-            if construction_obj.u_factor is not None:
+            if construction_obj and construction_obj.u_factor is not None:
                 u_factor = 1 / (
                     1 / construction_obj.u_factor + 2 * int_air_film_resistance
                 )
