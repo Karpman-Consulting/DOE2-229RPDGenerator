@@ -16,8 +16,13 @@ SubsurfaceSubclassificationOptions2019ASHRAE901 = SchemaEnums.schema_enums[
 SubsurfaceFrameOptions2019ASHRAE901 = SchemaEnums.schema_enums[
     "SubsurfaceFrameOptions2019ASHRAE901"
 ]
+SurfaceAdjacencyOptions = SchemaEnums.schema_enums["SurfaceAdjacencyOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_DoorKeywords = BDLEnums.bdl_enums["DoorKeywords"]
+BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]
+BDL_ConstructionTypes = BDLEnums.bdl_enums["ConstructionTypes"]
+BDL_WallLocationOptions = BDLEnums.bdl_enums["WallLocationOptions"]
+BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 
 
 class Door(ChildNode):
@@ -59,11 +64,12 @@ class Door(ChildNode):
     def populate_data_elements(self):
         """Populate data elements for door object."""
         self.classification = SubsurfaceClassificationOptions.DOOR
-
+        self.u_factor = self.calc_u_factor()
         height = self.try_float(self.get_inp(BDL_DoorKeywords.HEIGHT))
         width = self.try_float(self.get_inp(BDL_DoorKeywords.WIDTH))
         if height is not None and width is not None:
             self.opaque_area = height * width
+            self.glazed_area = 0
 
     def populate_data_group(self):
         """Populate schema structure for door object."""
@@ -103,3 +109,23 @@ class Door(ChildNode):
         """Insert window object into the rpd data structure."""
         surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.door_data_structure)
+
+    def calc_u_factor(self):
+        """Calculate the U-factor for the door."""
+        construction_obj = self.get_obj(self.get_inp(BDL_DoorKeywords.CONSTRUCTION))
+        ext_air_film_resistance = 0.17
+        int_air_film_resistance = 0.68
+        if self.parent.adjacent_to == SurfaceAdjacencyOptions.EXTERIOR:
+            if construction_obj.u_factor is not None:
+                u_factor = 1 / (
+                    1 / construction_obj.u_factor
+                    + ext_air_film_resistance
+                    + int_air_film_resistance
+                )
+                return u_factor
+        else:
+            if construction_obj.u_factor is not None:
+                u_factor = 1 / (
+                    1 / construction_obj.u_factor + 2 * int_air_film_resistance
+                )
+                return u_factor
