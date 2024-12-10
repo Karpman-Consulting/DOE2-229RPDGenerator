@@ -1,21 +1,21 @@
 import unittest
 import os
 import sys
-import signal
+import threading
+
+# Timeout value (in seconds)
+TIMEOUT_SECONDS = 300  # 5 minutes
 
 
 # Define a timeout handler
-def timeout_handler(signum, frame):
+def timeout_handler():
     print("Test execution timed out!")
     sys.exit(1)
 
 
-# Set the timeout (in seconds)
-TIMEOUT_SECONDS = 300  # Set timeout for 5 minutes
-
-# Apply the timeout
-signal.signal(signal.SIGALRM, timeout_handler)
-signal.alarm(TIMEOUT_SECONDS)
+# Start the timeout timer
+timeout_timer = threading.Timer(TIMEOUT_SECONDS, timeout_handler)
+timeout_timer.start()
 
 try:
     # Set up test discovery and execution
@@ -29,8 +29,8 @@ try:
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
 
-    # Cancel the timeout if execution completes
-    signal.alarm(0)
+    # Cancel the timeout timer if tests complete in time
+    timeout_timer.cancel()
 
     # Check test results
     if not result.wasSuccessful():
@@ -38,6 +38,7 @@ try:
     sys.exit(0)
 
 except Exception as e:
-    # Handle any unexpected errors
+    # Cancel the timeout timer in case of an unexpected error
+    timeout_timer.cancel()
     print(f"Error during test execution: {e}")
     sys.exit(1)
