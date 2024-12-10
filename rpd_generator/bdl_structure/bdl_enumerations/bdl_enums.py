@@ -288,6 +288,7 @@ class BDLEnums:
         ),
         "DoorKeywords": _ListEnum(
             [
+                "CONSTRUCTION",
                 "HEIGHT",
                 "WIDTH",
             ]
