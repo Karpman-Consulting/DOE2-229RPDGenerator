@@ -56,7 +56,7 @@ jobs:
           pipenv install -e .
 
       - name: Run Unit Tests
-        run: pipenv run python test/run_unit_tests.py
+        run: pipenv run python -m unittest discover test/populate_test/bdl_commands_test "*_test.py"
 
       - name: Run Full RPD Tests
         run: pipenv run python test/full_rpd_test/run_full_rpd_tests.py
