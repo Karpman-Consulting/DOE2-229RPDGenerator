@@ -17,6 +17,7 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_BoilerKeywords = BDLEnums.bdl_enums["BoilerKeywords"]
 BDL_BoilerTypes = BDLEnums.bdl_enums["BoilerTypes"]
+BDL_CirculationLoopKeywords = BDLEnums.bdl_enums["CirculationLoopKeywords"]
 BDL_FuelTypes = BDLEnums.bdl_enums["FuelTypes"]
 BDL_FuelMeterKeywords = BDLEnums.bdl_enums["FuelMeterKeywords"]
 BDL_MasterMeterKeywords = BDLEnums.bdl_enums["MasterMeterKeywords"]
@@ -44,6 +45,9 @@ class TestFuelBoiler(unittest.TestCase):
         self.fuel_meter = FuelMeter("Test Fuel Meter", self.rmd)
         self.boiler = Boiler("Boiler 1", self.rmd)
         self.loop = CirculationLoop("Test HW Loop", self.rmd)
+        self.loop.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.TYPE: "HOT_WATER",
+        }
 
         self.rmd.bdl_obj_instances["Boiler 1"] = self.boiler
         self.rmd.bdl_obj_instances["Test HW Loop"] = self.loop
@@ -159,6 +163,9 @@ class TestElectricBoiler(unittest.TestCase):
         self.fuel_meter = FuelMeter("Test Fuel Meter", self.rmd)
         self.boiler = Boiler("Boiler 1", self.rmd)
         self.loop = CirculationLoop("Test HW Loop", self.rmd)
+        self.loop.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.TYPE: "HOT_WATER",
+        }
 
         self.rmd.bdl_obj_instances["Boiler 1"] = self.boiler
         self.rmd.bdl_obj_instances["Test HW Loop"] = self.loop
@@ -181,8 +188,7 @@ class TestElectricBoiler(unittest.TestCase):
             BDL_BoilerKeywords.MIN_RATIO: "0.33",
         }
 
-        self.boiler.populate_data_elements()
-        self.boiler.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "Boiler 1",
