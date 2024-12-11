@@ -31,6 +31,7 @@ class BelowGradeWall(ChildNode):
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.underground_wall_data_structure = {}
 
@@ -87,7 +88,8 @@ class BelowGradeWall(ChildNode):
             self.get_inp(BDL_UndergroundWallKeywords.AZIMUTH)
         )
         if (
-            parent_floor_azimuth is not None
+            self.rmd.building_azimuth is not None
+            and parent_floor_azimuth is not None
             and parent_space_azimuth is not None
             and surface_azimuth is not None
         ):

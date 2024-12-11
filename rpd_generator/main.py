@@ -18,51 +18,6 @@ from rpd_generator.utilities import unit_converter
 from rpd_generator.utilities import ensure_valid_rpd
 
 
-"""Once development is complete, this can be replaced with a list of all bdl_command attribute values from classes that 
-inherit from BaseNode or BaseDefinition. Each class will also need a priority attribute in this case.
-For now, this is a list of BDL commands that are ready to be processed, in the order they should be processed."""
-COMMAND_PROCESSING_ORDER = [
-    "RUN-PERIOD-PD",
-    "SITE-PARAMETERS",
-    "BUILD-PARAMETERS",  # Building Parameters must populate before Exterior-Walls, Interior-Walls, Underground-Walls, Windows, Doors
-    "MASTER-METERS",  # Master meters must populate bofore other meters and before Systems, Boilers, DW-Heaters, Chillers
-    "FUEL-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
-    "ELEC-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
-    "STEAM-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
-    "CHW-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
-    "UTILITY-RATE",
-    "FIXED-SHADE",
-    "GLASS-TYPE",
-    "MATERIAL",  # Materials must populate before Layers, Constructions
-    "LAYERS",  # Layers must populate before Constructions
-    "CONSTRUCTION",  # Constructions must populate before Exterior-Walls, Interior-Walls, Underground-Walls, Doors
-    "HOLIDAYS",
-    "DAY-SCHEDULE-PD",
-    "WEEK-SCHEDULE-PD",
-    "SCHEDULE-PD",
-    "PUMP",  # Pumps must populate before Boiler, Chiller, Heat-Rejection, Circulation-Loop
-    "CIRCULATION-LOOP",  # Circulation loops must populate before Boiler, Chiller, DWHeater, Heat-Rejection
-    "BOILER",  # Boilers must populate before systems
-    "CHILLER",  # Chillers must populate before systems
-    "DW-HEATER",  # DWHeaters must populate before systems
-    "HEAT-REJECTION",
-    "GROUND-LOOP-HX",
-    "FLOOR",  # Floors must populate before Spaces
-    "SYSTEM",  # Systems must populate before Zones
-    "ZONE",  # Zones must populate before Spaces
-    "SPACE",  # Spaces must populate before Exterior-Walls, Interior-Walls, Underground-Walls
-    "EXTERIOR-WALL",  # Exterior walls must populate before Windows, Doors
-    "INTERIOR-WALL",  # Interior walls must populate before Windows, Doors
-    "UNDERGROUND-WALL",
-    "WINDOW",
-    "DOOR",
-    "EQUIP-CTRL",
-    "LOAD-MANAGEMENT",
-    "ELEC-GENERATOR",
-    "UTILITY-RATE",
-]
-
-
 def write_rpd_json_from_inp(inp_path_str):
     inp_path = Path(inp_path_str)
     # Create a temporary directory to store the files for processing
@@ -103,23 +58,11 @@ def write_rpd_json_from_bdl(selected_models: list, json_file_path: str):
     rpd = RulesetProjectDescription()
     rmds = generate_rmds(bdl_input_reader, selected_models)
     for rmd in rmds:
+        # Add the RPD object to the bdl_obj_instances dictionary
         rmd.bdl_obj_instances["ASHRAE 229"] = rpd
-
-        for obj_instance in list(rmd.bdl_obj_instances.values()):
-            if isinstance(obj_instance, (BaseNode, BaseDefinition)):
-                obj_instance.populate_data_elements()
-
-        for obj_instance in rmd.bdl_obj_instances.values():
-            if isinstance(obj_instance, BaseNode):
-                obj_instance.populate_data_group()
-                obj_instance.insert_to_rpd(rmd)
-
-        rmd.bdl_obj_instances["Default Building Segment"].populate_data_group()
-        rmd.bdl_obj_instances["Default Building Segment"].insert_to_rpd()
-        rmd.bdl_obj_instances["Default Building"].populate_data_group()
-        rmd.bdl_obj_instances["Default Building"].insert_to_rpd(rmd)
-        rmd.populate_data_elements()
-        rmd.populate_data_group()
+        # Populate 229 data structures associated with the BDL objects
+        rmd.populate_rmd_data()
+        # Insert the RMD data into the RPD data structure
         rmd.insert_to_rpd(rpd)
 
     rpd.populate_data_group()
@@ -154,7 +97,7 @@ def generate_rmds(bdl_input_reader: ModelInputReader, selected_models: list):
                 else Config.DOE22_DATA_PATH
             )
 
-        for command in COMMAND_PROCESSING_ORDER:
+        for command in rmd.COMMAND_PROCESSING_ORDER:
             special_handling = {}
             if command == "ZONE":
                 special_handling["ZONE"] = (

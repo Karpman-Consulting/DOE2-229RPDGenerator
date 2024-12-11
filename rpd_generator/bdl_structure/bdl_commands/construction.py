@@ -17,6 +17,7 @@ class Construction(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.construction_data_structure = {}
         self.material_references = None

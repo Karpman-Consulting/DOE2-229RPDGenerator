@@ -13,6 +13,7 @@ class GroundLoopHX(BaseDefinition):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         self.rmd.ground_loop_hx_names.append(u_name)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"GroundLoopHX(u_name='{self.u_name}')"

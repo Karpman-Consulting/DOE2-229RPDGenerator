@@ -71,6 +71,7 @@ class CirculationLoop(BaseNode):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         self.rmd.circulation_loop_names.append(u_name)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         # keep track of the type of circulation loop (different from self.type which is the schema data element: FluidLoop.type)
         self.circulation_loop_type = None  # "ServiceWaterPiping", "ServiceWaterHeatingDistributionSystem", "FluidLoop", or "SecondaryFluidLoop"

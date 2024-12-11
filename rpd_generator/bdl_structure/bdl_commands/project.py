@@ -18,6 +18,7 @@ class SiteParameters(BaseDefinition):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         rmd.site_parameter_name = u_name
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"SitePameters(u_name='{self.u_name}')"
@@ -60,6 +61,7 @@ class BuildingParameters(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"BuildingPameters(u_name='{self.u_name}')"
@@ -74,6 +76,7 @@ class RunPeriod(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"SitePameters(u_name='{self.u_name}')"
@@ -96,6 +99,7 @@ class FixedShade(BaseDefinition):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         self.rmd.has_site_shading = True
+        self.rmd.bdl_obj_instances[u_name] = self
 
 
 class Holidays(BaseDefinition):
@@ -103,6 +107,7 @@ class Holidays(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def populate_data_elements(self):
         Schedule.holiday_type = self.get_inp(BDL_HolidayKeywords.TYPE)
@@ -129,6 +134,7 @@ class DesignDay(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"DesignDay(u_name='{self.u_name}')"
