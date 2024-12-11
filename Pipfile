@@ -7,17 +7,16 @@ name = "pypi"
 customtkinter = "*"
 pillow = "*"
 tksheet = "*"
-jsonpath2 = "*"
 pint = "*"
 pip = "==23.2"
-jsonschema = "*"
 rpd-generator = {file = ".", editable = true}
+jsonschema = "*"
+jsonpath-ng = "*"
 
 [dev-packages]
 pytest = "*"
 black = "*"
 xlsxwriter = "*"
-jsonschema = "*"
 pre-commit = "*"
 
 [requires]

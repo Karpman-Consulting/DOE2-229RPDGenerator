@@ -49,7 +49,6 @@ class SchemaEnums:
             _schema_obj = json.load(json_file)
 
         # Query for all objects having an enum field
-        # See jsonpath2 docs for parse syntax: https://jsonpath2.readthedocs.io/en/latest/exampleusage.html
         _output_schema_enum_jsonpath_value_dict = create_jsonpath_value_dict(
             "$..*[?(@.enum)]", _output_schema_obj
         )

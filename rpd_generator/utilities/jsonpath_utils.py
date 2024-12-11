@@ -1,5 +1,5 @@
 from itertools import chain
-from jsonpath2 import match
+from jsonpath_ng.ext import parse
 from typing import TypedDict
 
 
@@ -9,9 +9,8 @@ class ZonesTerminalsServedByHVACSys(TypedDict):
 
 
 def create_jsonpath_value_dict(jpath, obj):
-    return {
-        m.node.tojsonpath(): m.current_value for m in match(ensure_root(jpath), obj)
-    }
+    jsonpath_expr = parse(ensure_root(jpath))
+    return {str(m.path): m.value for m in jsonpath_expr.find(obj)}
 
 
 def ensure_root(jpath):
@@ -19,7 +18,8 @@ def ensure_root(jpath):
 
 
 def find_all(jpath, obj):
-    return [m.current_value for m in match(ensure_root(jpath), obj) if m]
+    jsonpath_expr = parse(jpath)
+    return [match.value for match in jsonpath_expr.find(obj)]
 
 
 def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:
@@ -27,10 +27,8 @@ def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:
 
 
 def find_all_with_field_value(jpath, field, value, obj):
-    return [
-        m.current_value
-        for m in match(ensure_root(f'{jpath}[?(@.{field}="{value}")]'), obj)
-    ]
+    jsonpath_expr = parse(ensure_root(f'{jpath}[?(@.{field}="{value}")]'))
+    return [m.value for m in jsonpath_expr.find(obj)]
 
 
 def find_all_with_filters(jpath, filters, obj):
@@ -39,9 +37,8 @@ def find_all_with_filters(jpath, filters, obj):
         [f'@.{field}="{value}"' for field, value in filters.items()]
     )
 
-    return [
-        m.current_value for m in match(ensure_root(f"{jpath}[?({filter_expr})]"), obj)
-    ]
+    jsonpath_expr = parse(ensure_root(f"{jpath}[?({filter_expr})]"))
+    return [m.value for m in jsonpath_expr.find(obj)]
 
 
 def find_one(jpath, obj, default=None):
