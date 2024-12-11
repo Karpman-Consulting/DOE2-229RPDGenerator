@@ -150,7 +150,6 @@ class TestFuelBoiler(unittest.TestCase):
 class TestElectricBoiler(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        validate_configuration.find_equest_installation()
 
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
