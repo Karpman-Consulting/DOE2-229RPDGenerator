@@ -36,6 +36,7 @@ class Space(ChildNode, ParentNode):
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
         ParentNode.__init__(self, u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.space_data_structure = {}
         self.zone = None

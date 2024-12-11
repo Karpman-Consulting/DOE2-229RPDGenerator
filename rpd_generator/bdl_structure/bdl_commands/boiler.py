@@ -43,6 +43,7 @@ class Boiler(BaseNode):
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
         self.rmd.boiler_names.append(u_name)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.boiler_data_structure = {}
 
