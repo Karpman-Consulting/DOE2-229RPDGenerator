@@ -300,7 +300,10 @@ class System(ParentNode):
         super().__init__(u_name, rmd)
         # On initialization the parent building segment is not known. It will be set in the GUI.
         self.parent_building_segment = self.get_obj("Default Building Segment")
-        self.rmd.system_names.append(u_name)
+
+        if u_name not in self.rmd.bdl_obj_instances:
+            self.rmd.system_names.append(u_name)
+            self.rmd.bdl_obj_instances[u_name] = self
 
         self.sys_id = None  # used to store the implicit system id for zonal systems
         self.system_data_structure = {}

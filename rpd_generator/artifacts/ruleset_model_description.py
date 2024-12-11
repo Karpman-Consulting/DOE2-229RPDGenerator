@@ -2,7 +2,8 @@ import copy
 
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 from rpd_generator.schema.schema_enums import SchemaEnums
-from rpd_generator.bdl_structure.base_node import Base
+from rpd_generator.bdl_structure.base_node import Base, BaseNode
+from rpd_generator.bdl_structure.base_definition import BaseDefinition
 
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 EndUseOptions = SchemaEnums.schema_enums["EndUseOptions"]
@@ -35,6 +36,52 @@ class RulesetModelDescription(Base):
     """
     This class is used to represent the RulesetModelDescription object in the 229 schema. It also stores additional model-level data.
     """
+
+    """Once development is complete, this can be replaced with a list of all bdl_command attribute values from classes that 
+    inherit from BaseNode or BaseDefinition. Each class will also need a priority attribute in this case.
+    For now, this is a list of BDL commands that are ready to be processed, in the order they should be processed."""
+    COMMAND_PROCESSING_ORDER = [
+        "RUN-PERIOD-PD",
+        "SITE-PARAMETERS",
+        "BUILD-PARAMETERS",
+        # Building Parameters must populate before Exterior-Walls, Interior-Walls, Underground-Walls, Windows, Doors
+        "MASTER-METERS",
+        # Master meters must populate bofore other meters and before Systems, Boilers, DW-Heaters, Chillers
+        "FUEL-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
+        "ELEC-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
+        "STEAM-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
+        "CHW-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
+        "UTILITY-RATE",
+        "FIXED-SHADE",
+        "GLASS-TYPE",
+        "MATERIAL",  # Materials must populate before Layers, Constructions
+        "LAYERS",  # Layers must populate before Constructions
+        "CONSTRUCTION",  # Constructions must populate before Exterior-Walls, Interior-Walls, Underground-Walls, Doors
+        "HOLIDAYS",
+        "DAY-SCHEDULE-PD",
+        "WEEK-SCHEDULE-PD",
+        "SCHEDULE-PD",
+        "PUMP",  # Pumps must populate before Boiler, Chiller, Heat-Rejection, Circulation-Loop
+        "CIRCULATION-LOOP",  # Circulation loops must populate before Boiler, Chiller, DWHeater, Heat-Rejection
+        "BOILER",  # Boilers must populate before systems
+        "CHILLER",  # Chillers must populate before systems
+        "DW-HEATER",  # DWHeaters must populate before systems
+        "HEAT-REJECTION",
+        "GROUND-LOOP-HX",
+        "FLOOR",  # Floors must populate before Spaces
+        "SYSTEM",  # Systems must populate before Zones
+        "ZONE",  # Zones must populate before Spaces
+        "SPACE",  # Spaces must populate before Exterior-Walls, Interior-Walls, Underground-Walls
+        "EXTERIOR-WALL",  # Exterior walls must populate before Windows, Doors
+        "INTERIOR-WALL",  # Interior walls must populate before Windows, Doors
+        "UNDERGROUND-WALL",
+        "WINDOW",
+        "DOOR",
+        "EQUIP-CTRL",
+        "LOAD-MANAGEMENT",
+        "ELEC-GENERATOR",
+        "UTILITY-RATE",
+    ]
 
     def __init__(self, obj_id):
         self.file_path = None
@@ -128,6 +175,40 @@ class RulesetModelDescription(Base):
         self.output_instance_building_peak_heating_load = None
         self.output_instance_building_peak_cooling_load = None
         self.output_instance_annual_end_use_results = []
+
+    def populate_rmd_data(self, testing=False):
+        sorted_commands = self.sort_commands()
+        for obj_instance in sorted_commands:
+            if isinstance(obj_instance, (BaseNode, BaseDefinition)):
+                obj_instance.populate_data_elements()
+
+        # Repopulate the sorted commands in case objects were added during the populate_data_elements method
+        sorted_commands = self.sort_commands()
+        for obj_instance in sorted_commands:
+            if isinstance(obj_instance, BaseNode):
+                obj_instance.populate_data_group()
+                if not testing:
+                    obj_instance.insert_to_rpd(self)
+
+        if not testing:
+            self.bdl_obj_instances["Default Building Segment"].populate_data_group()
+            self.bdl_obj_instances["Default Building Segment"].insert_to_rpd()
+            self.bdl_obj_instances["Default Building"].populate_data_group()
+            self.bdl_obj_instances["Default Building"].insert_to_rpd(self)
+            self.populate_data_elements()
+            self.populate_data_group()
+
+    def sort_commands(self):
+        command_tuples = [
+            (obj.bdl_command, obj)
+            for obj in self.bdl_obj_instances.values()
+            if isinstance(obj, (BaseNode, BaseDefinition))
+        ]
+        order_map = {cmd: i for i, cmd in enumerate(self.COMMAND_PROCESSING_ORDER)}
+        sorted_tuples = sorted(
+            command_tuples, key=lambda x: order_map.get(x[0], float("inf"))
+        )
+        return [t[1] for t in sorted_tuples]
 
     def populate_data_elements(self):
         site_parameter_obj = self.bdl_obj_instances.get(self.site_parameter_name)
