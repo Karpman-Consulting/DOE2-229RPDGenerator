@@ -28,12 +28,6 @@ class TestCHWLoop(unittest.TestCase):
         self.schedule2 = DaySchedulePD("Schedule 2", self.rmd)
         self.system = System("System 1", self.rmd)
 
-        self.rmd.bdl_obj_instances["Test Pump"] = self.pump
-        self.rmd.bdl_obj_instances["Test Schedule"] = self.schedule
-        self.rmd.bdl_obj_instances["Test Schedule 2"] = self.schedule2
-        self.rmd.bdl_obj_instances["CHW Loop 1"] = self.circulation_loop
-        self.rmd.bdl_obj_instances["System 1"] = self.system
-
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_chw_loop(self, mock_get_output_data):
         """Tests that circulation_loop output contains expected values, given valid inputs"""
@@ -53,29 +47,34 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
 
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+        }
+
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.FIXED,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 2",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
+        # self.pump.populate_data_elements()
+        # self.schedule.populate_data_elements()
+        # self.circulation_loop.populate_data_elements()
+        #
+        # self.pump.populate_data_group()
+        # self.circulation_loop.populate_data_group()
 
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "CHW Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -121,28 +120,27 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
 
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+        }
+
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -203,32 +201,26 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Test Schedule 2",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
         }
 
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CW,
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule 2",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -289,32 +281,26 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Test Schedule 2",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
         }
 
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.WLHP,
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule 2",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -362,32 +348,26 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Test Schedule 2",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
         }
 
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.HW,
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MIN_RESET_T: "24.0",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -437,18 +417,18 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Test Schedule 2",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
         }
 
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Test Pump",
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.PIPE2,
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Test Schedule",
+            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MIN_RESET_T: "24.0",
@@ -456,16 +436,10 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Test Schedule",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -521,6 +495,10 @@ class TestCHWLoop(unittest.TestCase):
             BDL_PumpKeywords.NUMBER: "2",
         }
 
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+        }
+
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
@@ -528,13 +506,7 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DHW_INLET_T: "10",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
@@ -562,6 +534,10 @@ class TestCHWLoop(unittest.TestCase):
             BDL_PumpKeywords.NUMBER: "2",
         }
 
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+        }
+
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
             BDL_CirculationLoopKeywords.SUBTYPE: BDL_CirculationLoopSubtypes.SECONDARY,
@@ -570,13 +546,7 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DHW_INLET_T: "10",
         }
 
-        self.pump.populate_data_elements()
-        self.schedule.populate_data_elements()
-        self.schedule2.populate_data_elements()
-        self.circulation_loop.populate_data_elements()
-
-        self.pump.populate_data_group()
-        self.circulation_loop.populate_data_group()
+        self.rmd.populate_rmd_data(testing=True)
 
         expected_data_structure = {
             "id": "CHW Loop 1",
