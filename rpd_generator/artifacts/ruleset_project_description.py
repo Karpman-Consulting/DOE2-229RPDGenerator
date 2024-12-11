@@ -1,3 +1,5 @@
+from time import strftime, gmtime
+
 OUTPUT_SCHEMA_ASHRAE901_2019 = "OUTPUT_SCHEMA_ASHRAE901_2019"
 
 
@@ -29,8 +31,8 @@ class RulesetProjectDescription:
         # data elements with no children
         self.reporting_name = None
         self.notes = None
-        self.data_timestamp = None
-        self.data_version = None
+        self.data_timestamp = strftime("%Y-%m-%dT%H:%MZ", gmtime())
+        self.data_version = "0.1.0"
         self.compliance_path = None
         self.output_format_type = OUTPUT_SCHEMA_ASHRAE901_2019
 

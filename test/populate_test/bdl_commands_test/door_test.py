@@ -5,6 +5,17 @@ from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescri
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import Space
 from rpd_generator.bdl_structure.bdl_commands.exterior_wall import ExteriorWall
+from rpd_generator.bdl_structure.bdl_commands.interior_wall import (
+    InteriorWall,
+    BDL_InteriorWallKeywords,
+    BDL_InteriorWallTypes,
+)
+from rpd_generator.bdl_structure.bdl_commands.construction import (
+    Construction,
+    BDL_ConstructionKeywords,
+)
+from rpd_generator.bdl_structure.bdl_commands.system import System
+from rpd_generator.bdl_structure.bdl_commands.zone import Zone
 from rpd_generator.bdl_structure.bdl_commands.door import *
 
 
@@ -14,13 +25,26 @@ class TestDoor(unittest.TestCase):
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
+        self.system = System("System 1", self.rmd)
+        self.zone = Zone("Zone 1", self.system, self.rmd)
+        self.rmd.space_map = {"Space 1": self.zone}
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
         self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
+        self.exterior_wall.populate_data_elements()
         self.door = Door("Door 1", self.exterior_wall, self.rmd)
+        self.construction = Construction("Construction 1", self.rmd)
+
+        self.rmd.bdl_obj_instances["Construction 1"] = self.construction
 
     def test_populate_data_with_door(self):
+        self.construction.keyword_value_pairs = {
+            BDL_ConstructionKeywords.U_VALUE: 0.5,
+        }
+        self.construction.populate_data_elements()
+
         self.door.keyword_value_pairs = {
+            BDL_DoorKeywords.CONSTRUCTION: "Construction 1",
             BDL_DoorKeywords.HEIGHT: 7,
             BDL_DoorKeywords.WIDTH: 4,
         }
@@ -32,6 +56,45 @@ class TestDoor(unittest.TestCase):
             "classification": "DOOR",
             "id": "Door 1",
             "opaque_area": 28,
+            "glazed_area": 0,
+            "u_factor": 0.3508771929824561,
+        }
+
+        self.assertEqual(expected_data_structure, self.door.door_data_structure)
+
+    def test_populate_data_with_interior_door(self):
+        space2 = Space("Space 2", self.floor, self.rmd)
+        zone2 = Zone("Zone 2", self.system, self.rmd)
+        self.rmd.space_map["Space 2"] = zone2
+        self.interior_wall = InteriorWall("Interior Wall 1", self.space, self.rmd)
+        self.interior_wall.keyword_value_pairs = {
+            BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
+            BDL_InteriorWallKeywords.NEXT_TO: "Space 2",
+        }
+        self.interior_wall.populate_data_elements()
+
+        self.door = Door("Door 1", self.interior_wall, self.rmd)
+
+        self.construction.keyword_value_pairs = {
+            BDL_ConstructionKeywords.U_VALUE: 0.5,
+        }
+        self.construction.populate_data_elements()
+
+        self.door.keyword_value_pairs = {
+            BDL_DoorKeywords.CONSTRUCTION: "Construction 1",
+            BDL_DoorKeywords.HEIGHT: 7,
+            BDL_DoorKeywords.WIDTH: 4,
+        }
+
+        self.door.populate_data_elements()
+        self.door.populate_data_group()
+
+        expected_data_structure = {
+            "classification": "DOOR",
+            "id": "Door 1",
+            "opaque_area": 28,
+            "glazed_area": 0,
+            "u_factor": 0.2976190476190476,
         }
 
         self.assertEqual(expected_data_structure, self.door.door_data_structure)

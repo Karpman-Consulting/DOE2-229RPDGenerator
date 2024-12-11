@@ -18,8 +18,8 @@ jobs:
         with:
           version: "24.2.0"
 
-  rpd-tests:
-    name: Run RPD Tests
+  run-tests:
+    name: Run Testing
     runs-on: windows-latest
     steps:
       - name: Checkout Code
@@ -54,6 +54,9 @@ jobs:
           pipenv install --dev 
           # Install your project package in editable mode
           pipenv install -e .
+
+      - name: Run Unit Tests
+        run: pipenv run pytest -v test/populate_test
 
       - name: Run Full RPD Tests
         run: pipenv run python test/full_rpd_test/run_full_rpd_tests.py
