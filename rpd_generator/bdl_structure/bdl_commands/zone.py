@@ -72,6 +72,7 @@ class Zone(ChildNode):
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
         self.rmd.zone_names.append(u_name)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         # On initialization the parent building segment is not known. It will be set in the GUI.
         self.parent_building_segment = self.get_obj("Default Building Segment")

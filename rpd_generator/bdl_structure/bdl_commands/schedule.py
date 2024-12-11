@@ -17,6 +17,7 @@ class DaySchedulePD(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.hourly_values = []
         self.outdoor_high_for_loop_supply_reset_temperature = None
@@ -58,6 +59,7 @@ class WeekSchedulePD(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         # All lists will store 12 values, Mon-Sun, Holidays and then 4 design day schedules
         self.outdoor_high_for_loop_supply_reset_temperature = []
@@ -120,6 +122,7 @@ class Schedule(BaseNode):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.schedule_data_structure = {}
         self.outdoor_high_for_loop_supply_reset_temperature = None

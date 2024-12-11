@@ -3,7 +3,6 @@ from unittest.mock import patch
 import os
 
 from rpd_generator.config import Config
-from rpd_generator.utilities import validate_configuration
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.boiler import *
 from rpd_generator.bdl_structure.bdl_commands.boiler import Boiler
@@ -49,11 +48,6 @@ class TestFuelBoiler(unittest.TestCase):
             BDL_CirculationLoopKeywords.TYPE: "HOT_WATER",
         }
 
-        self.rmd.bdl_obj_instances["Boiler 1"] = self.boiler
-        self.rmd.bdl_obj_instances["Test HW Loop"] = self.loop
-        self.rmd.bdl_obj_instances["Master Meters"] = self.master_meter
-        self.rmd.bdl_obj_instances["Test Fuel Meter"] = self.fuel_meter
-
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_with_fuel_meter(self, mock_get_output_data):
         """Tests that all values populate for a fuel boiler with expected values, given valid inputs,
@@ -67,12 +61,9 @@ class TestFuelBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 188203.578125,
         }
-
         self.fuel_meter.keyword_value_pairs = {
             BDL_FuelMeterKeywords.TYPE: BDL_FuelTypes.METHANOL
         }
-        self.fuel_meter.populate_data_elements()
-
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.HW_BOILER,
             BDL_BoilerKeywords.FUEL_METER: "Test Fuel Meter",
@@ -80,9 +71,7 @@ class TestFuelBoiler(unittest.TestCase):
             BDL_BoilerKeywords.MIN_RATIO: "0.33",
         }
 
-        self.boiler.populate_data_elements()
-        self.boiler.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
             "draft_type": "NATURAL",
@@ -98,7 +87,6 @@ class TestFuelBoiler(unittest.TestCase):
             "efficiency": [0.900009000090001, 0.920009000090001, 0.9085817143885725],
             "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
         }
-
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -114,24 +102,19 @@ class TestFuelBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
             "Boilers - Rated Capacity at Peak (Btu/hr)": 188203.578125,
         }
-
         self.master_meter.keyword_value_pairs = {
             BDL_MasterMeterKeywords.HEAT_FUEL_METER: "Test Fuel Meter"
         }
         self.fuel_meter.keyword_value_pairs = {
             BDL_FuelMeterKeywords.TYPE: BDL_FuelTypes.NATURAL_GAS
         }
-        self.fuel_meter.populate_data_elements()
-
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.HW_BOILER_W_DRAFT,
             BDL_BoilerKeywords.HW_LOOP: "Test HW Loop",
             BDL_BoilerKeywords.MIN_RATIO: "0.33",
         }
 
-        self.boiler.populate_data_elements()
-        self.boiler.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
             "draft_type": "FORCED",
@@ -147,7 +130,6 @@ class TestFuelBoiler(unittest.TestCase):
             "efficiency": [0.900009000090001, 0.920009000090001, 0.9085817143885725],
             "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
         }
-
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
 
@@ -167,11 +149,6 @@ class TestElectricBoiler(unittest.TestCase):
             BDL_CirculationLoopKeywords.TYPE: "HOT_WATER",
         }
 
-        self.rmd.bdl_obj_instances["Boiler 1"] = self.boiler
-        self.rmd.bdl_obj_instances["Test HW Loop"] = self.loop
-        self.rmd.bdl_obj_instances["Master Meters"] = self.master_meter
-        self.rmd.bdl_obj_instances["Test Fuel Meter"] = self.master_meter
-
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_elements_electric_boiler(self, mock_get_output_data):
         """Test the branch of logic for electric boilers with an EIR other than 1.0"""
@@ -181,7 +158,6 @@ class TestElectricBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Electric Input Ratio": 1.02,
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
         }
-
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.ELEC_HW_BOILER,
             BDL_BoilerKeywords.HW_LOOP: "Test HW Loop",
@@ -189,7 +165,6 @@ class TestElectricBoiler(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "Boiler 1",
             "draft_type": "NATURAL",
@@ -205,7 +180,6 @@ class TestElectricBoiler(unittest.TestCase):
             "efficiency": [0.9803921568627451],
             "efficiency_metrics": ["THERMAL"],
         }
-
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -219,16 +193,13 @@ class TestElectricBoiler(unittest.TestCase):
             "Boilers - Design Parameters - Electric Input Ratio": 1.0,
             "Boilers - Design Parameters - Auxiliary Power": 0.0,
         }
-
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.ELEC_STM_BOILER,
             BDL_BoilerKeywords.HW_LOOP: "Test HW Loop",
             BDL_BoilerKeywords.MIN_RATIO: "0.33",
         }
 
-        self.boiler.populate_data_elements()
-        self.boiler.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
             "draft_type": "NATURAL",
@@ -244,5 +215,4 @@ class TestElectricBoiler(unittest.TestCase):
             "efficiency": [1, 1, 1],
             "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
         }
-
         self.assertDictEqual(self.boiler.boiler_data_structure, expected_data_structure)

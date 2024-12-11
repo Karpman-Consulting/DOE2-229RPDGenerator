@@ -182,6 +182,8 @@ class RulesetModelDescription(Base):
             if isinstance(obj_instance, (BaseNode, BaseDefinition)):
                 obj_instance.populate_data_elements()
 
+        # Repopulate the sorted commands in case objects were added during the populate_data_elements method
+        sorted_commands = self.sort_commands()
         for obj_instance in sorted_commands:
             if isinstance(obj_instance, BaseNode):
                 obj_instance.populate_data_group()

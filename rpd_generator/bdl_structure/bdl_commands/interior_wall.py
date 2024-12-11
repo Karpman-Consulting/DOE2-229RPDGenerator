@@ -42,6 +42,7 @@ class InteriorWall(
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.interior_wall_data_structure = {}
         self.omit = False
@@ -96,18 +97,18 @@ class InteriorWall(
         else:
             self.classification = SurfaceClassificationOptions.WALL
 
-        parent_floor_azimuth = self.parent.parent.try_float(
+        parent_floor_azimuth = self.try_float(
             self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
-        parent_space_azimuth = self.parent.try_float(
+        parent_space_azimuth = self.try_float(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AZIMUTH))
         if (
-            self.rmd.building_azimuth
-            and parent_floor_azimuth
-            and parent_space_azimuth
-            and surface_azimuth
+            self.rmd.building_azimuth is not None
+            and parent_floor_azimuth is not None
+            and parent_space_azimuth is not None
+            and surface_azimuth is not None
         ):
             self.azimuth = (
                 self.rmd.building_azimuth
