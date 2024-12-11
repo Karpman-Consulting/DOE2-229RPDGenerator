@@ -37,7 +37,7 @@ BDL_SystemHeatingTypes = BDLEnums.bdl_enums["SystemHeatingTypes"]
 BDL_SystemCoolingTypes = BDLEnums.bdl_enums["SystemCoolingTypes"]
 BDL_CoolControlOptions = BDLEnums.bdl_enums["SystemCoolControlOptions"]
 BDL_HeatControlOptions = BDLEnums.bdl_enums["SystemHeatControlOptions"]
-BDL_SupplyFanTypes = BDLEnums.bdl_enums["SystemSupplyFanTypes"]
+BDL_SystemFanControlOptions = BDLEnums.bdl_enums["SystemFanControlOptions"]
 BDL_NightCycleControlOptions = BDLEnums.bdl_enums["SystemNightCycleControlOptions"]
 BDL_EconomizerOptions = BDLEnums.bdl_enums["SystemEconomizerOptions"]
 BDL_EnergyRecoveryTypes = BDLEnums.bdl_enums["SystemEnergyRecoveryTypes"]
@@ -105,6 +105,32 @@ class System(ParentNode):
         BDL_SystemTypes.FNSYS,
         BDL_SystemTypes.PTGSD,
     ]
+    multi_duct_system_types = [
+        BDL_SystemTypes.MZS,
+        BDL_SystemTypes.PMZS,
+        BDL_SystemTypes.DDS,
+    ]
+    single_duct_system_types = [
+        BDL_SystemTypes.PVAVS,
+        BDL_SystemTypes.VAVS,
+        BDL_SystemTypes.CBVAV,
+        BDL_SystemTypes.RHFS,
+        BDL_SystemTypes.PIU,
+        BDL_SystemTypes.IU,
+    ]
+    single_zone_system_types = [
+        BDL_SystemTypes.PSZ,
+        BDL_SystemTypes.SZRH,
+        BDL_SystemTypes.SZCI,
+        BDL_SystemTypes.PVVT,
+        BDL_SystemTypes.FC,
+        BDL_SystemTypes.HP,
+        BDL_SystemTypes.UHT,
+        BDL_SystemTypes.UVT,
+        BDL_SystemTypes.PTAC,
+        BDL_SystemTypes.RESYS,
+        BDL_SystemTypes.RESYS2,
+    ]
     heat_type_map = {
         BDL_SystemHeatingTypes.NONE: HeatingSystemOptions.NONE,
         BDL_SystemHeatingTypes.ELECTRIC: HeatingSystemOptions.ELECTRIC_RESISTANCE,
@@ -131,13 +157,13 @@ class System(ParentNode):
         BDL_SystemCoolingTypes.CHILLED_WATER: BDL_OutputCoolingTypes.CHILLED_WATER,
         BDL_SystemCoolingTypes.NONE: None,
     }
-    supply_fan_map = {
-        BDL_SupplyFanTypes.CONSTANT_VOLUME: FanSystemSupplyFanControlOptions.CONSTANT,
-        BDL_SupplyFanTypes.SPEED: FanSystemSupplyFanControlOptions.VARIABLE_SPEED_DRIVE,
+    supply_fan_control_map = {
+        BDL_SystemFanControlOptions.CONSTANT_VOLUME: FanSystemSupplyFanControlOptions.CONSTANT,
+        BDL_SystemFanControlOptions.SPEED: FanSystemSupplyFanControlOptions.VARIABLE_SPEED_DRIVE,
         #  "": FanSystemSupplyFanControlOptions.MULTISPEED",  no eQUEST options map to MULTISPEED in DOE2.3
-        BDL_SupplyFanTypes.INLET: FanSystemSupplyFanControlOptions.INLET_VANE,
-        BDL_SupplyFanTypes.DISCHARGE: FanSystemSupplyFanControlOptions.DISCHARGE_DAMPER,
-        BDL_SupplyFanTypes.FAN_EIR_FPLR: FanSystemSupplyFanControlOptions.VARIABLE_SPEED_DRIVE,
+        BDL_SystemFanControlOptions.INLET: FanSystemSupplyFanControlOptions.INLET_VANE,
+        BDL_SystemFanControlOptions.DISCHARGE: FanSystemSupplyFanControlOptions.DISCHARGE_DAMPER,
+        BDL_SystemFanControlOptions.FAN_EIR_FPLR: FanSystemSupplyFanControlOptions.VARIABLE_SPEED_DRIVE,
     }
     unoccupied_fan_operation_map = {
         BDL_NightCycleControlOptions.CYCLE_ON_ANY: FanSystemOperationOptions.CYCLING,
@@ -148,13 +174,6 @@ class System(ParentNode):
     occupied_fan_operation_map = {
         BDL_IndoorFanModeOptions.CONTINUOUS: FanSystemOperationOptions.CONTINUOUS,
         BDL_IndoorFanModeOptions.INTERMITTENT: FanSystemOperationOptions.CYCLING,
-    }
-    temperature_control_map = {
-        BDL_CoolControlOptions.CONSTANT: FanSystemTemperatureControlOptions.CONSTANT,
-        BDL_CoolControlOptions.RESET: FanSystemTemperatureControlOptions.OUTDOOR_AIR_RESET,
-        BDL_CoolControlOptions.WARMEST: FanSystemTemperatureControlOptions.ZONE_RESET,
-        BDL_CoolControlOptions.COLDEST: FanSystemTemperatureControlOptions.ZONE_RESET,
-        BDL_CoolControlOptions.SCHEDULED: FanSystemTemperatureControlOptions.SCHEDULED,
     }
     system_cooling_type_map = {
         BDL_SystemTypes.PTAC: CoolingSystemOptions.DIRECT_EXPANSION,  # Unavailable in DOE 2.3
@@ -967,7 +986,7 @@ class System(ParentNode):
             self.get_inp(BDL_SystemKeywords.RETURN_AIR_PATH)
             == BDL_ReturnAirPathOptions.DUCT
         )
-        self.fan_sys_fan_control = self.supply_fan_map.get(
+        self.fan_sys_fan_control = self.supply_fan_control_map.get(
             self.get_inp(BDL_SystemKeywords.FAN_CONTROL)
         )
         self.fan_sys_temperature_control = self.get_temperature_control()
@@ -1513,20 +1532,62 @@ class System(ParentNode):
         return occupied_hours
 
     def get_temperature_control(self):
-        heat_control = self.get_inp(BDL_SystemKeywords.HEAT_CONTROL)
+        system_type = self.get_inp(BDL_SystemKeywords.TYPE)
         cool_control = self.get_inp(BDL_SystemKeywords.COOL_CONTROL)
+        cool_set_t = self.try_float(self.get_inp(BDL_SystemKeywords.COOL_SET_T))
+        cool_max_reset_t = self.try_float(
+            self.get_inp(BDL_SystemKeywords.COOL_MAX_RESET_T)
+        )
+        heat_control = self.get_inp(BDL_SystemKeywords.HEAT_CONTROL)
+        heat_set_t = self.try_float(self.get_inp(BDL_SystemKeywords.HEAT_SET_T))
+        heat_max_reset_t = self.try_float(
+            self.get_inp(BDL_SystemKeywords.HEAT_MAX_RESET_T)
+        )
+        min_flow_ratio = self.try_float(self.get_inp(BDL_SystemKeywords.MIN_FLOW_RATIO))
 
-        if not heat_control:
-            return self.temperature_control_map.get(cool_control)
-        if not cool_control:
-            return self.temperature_control_map.get(heat_control)
-        if cool_control == heat_control:
-            return self.temperature_control_map.get(cool_control)
-        if (
-            cool_control == BDL_CoolControlOptions.WARMEST
-            and heat_control == BDL_HeatControlOptions.COLDEST
-        ):
-            return FanSystemTemperatureControlOptions.ZONE_RESET
+        if system_type in self.multi_duct_system_types:
+            return FanSystemTemperatureControlOptions.OTHER
+
+        elif system_type in self.single_duct_system_types:
+
+            if (
+                cool_control == BDL_CoolControlOptions.CONSTANT
+                and heat_control == BDL_HeatControlOptions.CONSTANT
+            ):
+                if heat_set_t and cool_set_t and heat_set_t >= cool_set_t:
+                    return FanSystemTemperatureControlOptions.CONSTANT
+                else:
+                    return FanSystemTemperatureControlOptions.OTHER
+
+            elif cool_control == BDL_CoolControlOptions.WARMEST:
+                if heat_set_t and cool_max_reset_t and heat_set_t >= cool_max_reset_t:
+                    return FanSystemTemperatureControlOptions.ZONE_RESET
+                elif (
+                    heat_max_reset_t
+                    and cool_max_reset_t
+                    and heat_max_reset_t >= cool_max_reset_t
+                ):
+                    return FanSystemTemperatureControlOptions.ZONE_RESET
+                else:
+                    return FanSystemTemperatureControlOptions.OTHER
+
+            elif cool_control == BDL_CoolControlOptions.SCHEDULED:
+                return FanSystemTemperatureControlOptions.SCHEDULED
+
+            elif cool_control == BDL_CoolControlOptions.RESET:
+                return FanSystemTemperatureControlOptions.OUTDOOR_AIR_RESET
+
+        elif system_type in self.single_zone_system_types:
+            if min_flow_ratio and min_flow_ratio < 1:
+                if cool_set_t and heat_set_t and cool_set_t == heat_set_t:
+                    return FanSystemTemperatureControlOptions.CONSTANT
+                else:
+                    return FanSystemTemperatureControlOptions.OTHER
+            else:
+                return FanSystemTemperatureControlOptions.ZONE_RESET
+
+        elif system_type == BDL_SystemTypes.DOAS:
+            pass
 
     def get_loop_energy_source(self, loop):
         """Get the energy source type for the loop. Used to populate the energy_source_type."""

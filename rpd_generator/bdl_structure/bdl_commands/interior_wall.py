@@ -104,9 +104,10 @@ class InteriorWall(
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AZIMUTH))
         if (
-            parent_floor_azimuth is not None
-            and parent_space_azimuth is not None
-            and surface_azimuth is not None
+            self.rmd.building_azimuth
+            and parent_floor_azimuth
+            and parent_space_azimuth
+            and surface_azimuth
         ):
             self.azimuth = (
                 self.rmd.building_azimuth
@@ -128,20 +129,28 @@ class InteriorWall(
 
         absorptance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)
         self.absorptance_solar_interior = self.try_float(
-            self.try_access_index(absorptance_list, 0)
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 0
+            )
         )
         self.absorptance_solar_exterior = self.try_float(
-            self.try_access_index(absorptance_list, 1)
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 1
+            )
         )
 
         reflectance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)
         reflectance_visible_interior = self.try_float(
-            self.try_access_index(reflectance_list, 0)
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 0
+            )
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
         reflectance_visible_exterior = self.try_float(
-            self.try_access_index(reflectance_list, 1)
+            self.try_access_index(
+                self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 1
+            )
         )
         if reflectance_visible_exterior is not None:
             self.absorptance_visible_exterior = 1 - reflectance_visible_exterior

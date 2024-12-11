@@ -317,7 +317,7 @@ $ ---------------------------------------------------------
 "BL1 Window Type #1 GT" = GLASS-TYPE      
    TYPE             = SHADING-COEF
    SHADING-COEF     = 0.44
-   GLASS-CONDUCT    = {.5271}
+   GLASS-CONDUCT    = 0.579
    VIS-TRANS        = 0.417
    ..
 
@@ -1422,9 +1422,7 @@ SET-DEFAULT FOR SYSTEM
    FAN-SCHEDULE     = "Fan Sched"
    FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
-   MIN-FAN-RATIO    = 0.15
    NIGHT-CYCLE-CTRL = STAY-OFF
-   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
@@ -1456,9 +1454,7 @@ SET-DEFAULT FOR SYSTEM
    FAN-SCHEDULE     = "Fan Sched"
    FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
-   MIN-FAN-RATIO    = 0.15
    NIGHT-CYCLE-CTRL = STAY-OFF
-   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
@@ -1490,9 +1486,7 @@ SET-DEFAULT FOR SYSTEM
    FAN-SCHEDULE     = "Fan Sched"
    FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
-   MIN-FAN-RATIO    = 0.15
    NIGHT-CYCLE-CTRL = STAY-OFF
-   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
@@ -1524,9 +1518,7 @@ SET-DEFAULT FOR SYSTEM
    FAN-SCHEDULE     = "Fan Sched"
    FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
-   MIN-FAN-RATIO    = 0.15
    NIGHT-CYCLE-CTRL = STAY-OFF
-   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
@@ -1558,9 +1550,7 @@ SET-DEFAULT FOR SYSTEM
    FAN-SCHEDULE     = "Fan Sched"
    FAN-CONTROL      = CONSTANT-VOLUME
    SUPPLY-KW/FLOW   = 0.0003
-   MIN-FAN-RATIO    = 0.15
    NIGHT-CYCLE-CTRL = STAY-OFF
-   MIN-FLOW-RATIO   = 0.15
    HW-VALVE-TYPE    = TWO-WAY
    HW-LOOP          = "Hot Water Loop"
    CHW-VALVE-TYPE   = TWO-WAY
