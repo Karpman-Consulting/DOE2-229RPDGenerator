@@ -44,10 +44,10 @@ class DaySchedulePD(BaseDefinition):
                 self.get_inp(BDL_DayScheduleKeywords.OUTSIDE_LO)
             )
             self.loop_supply_temperature_at_outdoor_high = self.try_float(
-                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_LO)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_HI)
             )
             self.loop_supply_temperature_at_outdoor_low = self.try_float(
-                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_HI)
+                self.get_inp(BDL_DayScheduleKeywords.SUPPLY_LO)
             )
 
 
