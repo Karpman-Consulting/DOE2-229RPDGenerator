@@ -331,7 +331,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.floor.populate_data_elements()
 
-        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "0"}
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.space.populate_data_elements()
 
         self.material1.keyword_value_pairs = {
@@ -421,7 +421,7 @@ class TestInteriorWalls(unittest.TestCase):
             "area": 300.0,
             "classification": SurfaceClassificationOptions.CEILING,
             "tilt": 5.0,
-            "azimuth": 2.0,
+            "azimuth": 12.0,
             "adjacent_to": SurfaceAdjacencyOptions.INTERIOR,
             "adjacent_zone": "Zone 1",
             "does_cast_shade": False,
@@ -441,7 +441,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.floor.populate_data_elements()
 
-        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "0"}
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.space.populate_data_elements()
 
         self.material1.keyword_value_pairs = {
@@ -528,7 +528,7 @@ class TestInteriorWalls(unittest.TestCase):
             "area": 300.0,
             "classification": SurfaceClassificationOptions.CEILING,
             "tilt": 5.0,
-            "azimuth": 2.0,
+            "azimuth": 12.0,
             "adjacent_to": SurfaceAdjacencyOptions.INTERIOR,
             "adjacent_zone": "Zone 1",
             "does_cast_shade": False,
