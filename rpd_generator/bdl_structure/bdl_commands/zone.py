@@ -22,6 +22,7 @@ BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ZoneKeywords = BDLEnums.bdl_enums["ZoneKeywords"]
 BDL_SystemKeywords = BDLEnums.bdl_enums["SystemKeywords"]
 BDL_SystemTypes = BDLEnums.bdl_enums["SystemTypes"]
+BDL_SystemFanControlOptions = BDLEnums.bdl_enums["SystemFanControlOptions"]
 BDL_SystemCoolControlOptions = BDLEnums.bdl_enums["SystemCoolControlOptions"]
 BDL_SystemHeatControlOptions = BDLEnums.bdl_enums["SystemHeatControlOptions"]
 BDL_ZoneHeatSourceOptions = BDLEnums.bdl_enums["ZoneHeatSourceOptions"]
@@ -277,21 +278,7 @@ class Zone(ChildNode):
 
         # Populate MainTerminal data elements
         self.terminals_id[0] = self.u_name + " MainTerminal"
-        self.terminals_type[0] = (
-            TerminalOptions.VARIABLE_AIR_VOLUME
-            if (
-                self.try_float(self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO))
-                and self.try_float(self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO)) < 1
-                or self.try_float(
-                    self.parent.get_inp(BDL_SystemKeywords.MIN_FLOW_RATIO)
-                )
-                and self.try_float(
-                    self.parent.get_inp(BDL_SystemKeywords.MIN_FLOW_RATIO)
-                )
-                < 1
-            )
-            else TerminalOptions.CONSTANT_AIR_VOLUME
-        )
+        self.terminals_type[0] = self.populate_main_terminal_type()
         self.terminals_served_by_heating_ventilating_air_conditioning_system[0] = (
             self.parent.u_name
         )
@@ -1305,3 +1292,24 @@ class Zone(ChildNode):
                     return TerminalTemperatureControlOptions.OTHER
             else:
                 return TerminalTemperatureControlOptions.OTHER
+
+    def populate_main_terminal_type(self):
+        system_min_flow_ratio = self.try_float(
+            self.parent.get_inp(BDL_SystemKeywords.MIN_FLOW_RATIO)
+        )
+        system_fan_control = self.parent.get_inp(BDL_SystemKeywords.FAN_CONTROL)
+        zone_min_flow_ratio = self.try_float(
+            self.get_inp(BDL_ZoneKeywords.MIN_FLOW_RATIO)
+        )
+
+        if system_min_flow_ratio is None and zone_min_flow_ratio is None:
+            if system_fan_control == BDL_SystemFanControlOptions.CONSTANT_VOLUME:
+                return TerminalOptions.CONSTANT_AIR_VOLUME
+            else:
+                return TerminalOptions.VARIABLE_AIR_VOLUME
+        elif (zone_min_flow_ratio and zone_min_flow_ratio < 1) or (
+            system_min_flow_ratio and system_min_flow_ratio < 1
+        ):
+            return TerminalOptions.VARIABLE_AIR_VOLUME
+        else:
+            return TerminalOptions.CONSTANT_AIR_VOLUME
