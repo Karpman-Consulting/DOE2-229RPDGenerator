@@ -1,6 +1,12 @@
 import unittest
 
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
+from rpd_generator.bdl_structure.bdl_commands.material_layers import (
+    Layer,
+    Material,
+    BDL_MaterialKeywords,
+    BDL_MaterialTypes,
+)
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.space import Space
@@ -24,8 +30,16 @@ class TestUndergroundWalls(unittest.TestCase):
             "Below Grade Wall 1", self.space, self.rmd
         )
         self.construction = Construction("Construction 1", self.rmd)
+        self.layer = Layer("Layer 1", self.rmd)
+        self.material1 = Material("Material 1", self.rmd)
+        self.material2 = Material("Material 2", self.rmd)
+        self.material3 = Material("Material 3", self.rmd)
 
         self.rmd.bdl_obj_instances["Test Construction"] = self.construction
+        self.rmd.bdl_obj_instances["Test Layer"] = self.layer
+        self.rmd.bdl_obj_instances["Test Material 1"] = self.material1
+        self.rmd.bdl_obj_instances["Test Material 2"] = self.material2
+        self.rmd.bdl_obj_instances["Test Material 3"] = self.material3
 
     def test_populate_data_with_underground_wall(self):
         """Tests that Underground Wall outputs contains expected values, given valid inputs"""
@@ -37,7 +51,7 @@ class TestUndergroundWalls(unittest.TestCase):
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
-            BDL_ConstructionKeywords.U_VALUE: "0",
+            BDL_ConstructionKeywords.U_VALUE: "12.5",
         }
 
         self.construction.populate_data_elements()
@@ -69,13 +83,15 @@ class TestUndergroundWalls(unittest.TestCase):
                 "framing_layers": [],
                 "id": "Construction 1",
                 "insulation_locations": [],
-                "primary_layers": [{"id": "Simplified Material"}],
+                "primary_layers": [
+                    {"id": "Simplified Material", "r_value": -0.6000000000000001}
+                ],
                 "r_values": [],
                 "surface_construction_input_option": "SIMPLIFIED",
-                "u_factor": 0.0,
+                "u_factor": 12.5,
             },
             "adjacent_to": "GROUND",
-            "azimuth": 340.0,
+            "azimuth": 350.0,
             "does_cast_shade": True,
         }
 
@@ -102,7 +118,7 @@ class TestUndergroundWalls(unittest.TestCase):
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
-            "tilt": 10.0,
+            "tilt": 120.0,
             "classification": "FLOOR",
             "optical_properties": {},
             "construction": {},
@@ -131,6 +147,223 @@ class TestUndergroundWalls(unittest.TestCase):
             "optical_properties": {},
             "construction": {},
             "adjacent_to": "GROUND",
+        }
+
+        self.assertEqual(
+            expected_data_structure,
+            self.underground_wall.underground_wall_data_structure,
+        )
+
+    def test_populate_data_with_interior_wall_construction_layers_mixed_material_types(
+        self,
+    ):
+        """Tests that construction layers with mixed material types produce expected values
+        and that surface_construction_input_option is LAYERS when >= 1 detailed material type is provided
+        """
+        self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
+        self.floor.populate_data_elements()
+
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
+
+        self.material1.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.PROPERTIES,
+            BDL_MaterialKeywords.THICKNESS: "2",
+            BDL_MaterialKeywords.CONDUCTIVITY: "3",
+            BDL_MaterialKeywords.DENSITY: "20.1",
+            BDL_MaterialKeywords.SPECIFIC_HEAT: "4",
+        }
+        self.material1.populate_data_elements()
+        self.material1.populate_data_group()
+
+        self.material2.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
+            BDL_MaterialKeywords.RESISTANCE: "2",
+        }
+        self.material2.populate_data_elements()
+        self.material2.populate_data_group()
+
+        self.material3.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
+            BDL_MaterialKeywords.RESISTANCE: "3",
+        }
+        self.material3.populate_data_elements()
+        self.material3.populate_data_group()
+
+        self.layer.keyword_value_pairs = {
+            BDL_LayerKeywords.MATERIAL: [
+                "Test Material 1",
+                "Test Material 2",
+                "Test Material 3",
+            ]
+        }
+        self.layer.populate_data_elements()
+
+        self.construction.keyword_value_pairs = {
+            BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
+            BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
+            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
+        }
+        self.construction.populate_data_elements()
+        self.construction.populate_data_group()
+
+        self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.AREA: "400",
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
+            BDL_UndergroundWallKeywords.TILT: "10",
+            BDL_UndergroundWallKeywords.AZIMUTH: "110",
+            BDL_UndergroundWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
+            BDL_UndergroundWallKeywords.INSIDE_SOL_ABS: 2.0,
+            BDL_UndergroundWallKeywords.INSIDE_VIS_REFL: 0.5,
+        }
+
+        self.underground_wall.populate_data_elements()
+        self.underground_wall.populate_data_group()
+
+        expected_data_structure = {
+            "id": "Below Grade Wall 1",
+            "area": 400.0,
+            "tilt": 10.0,
+            "classification": "CEILING",
+            "optical_properties": {
+                "absorptance_solar_interior": 2.0,
+                "absorptance_visible_interior": 0.5,
+            },
+            "construction": {
+                "framing_layers": [],
+                "id": "Construction 1",
+                "insulation_locations": [],
+                "primary_layers": [
+                    {
+                        "id": "Material 1",
+                        "thickness": 2.0,
+                        "thermal_conductivity": 3.0,
+                        "specific_heat": 4.0,
+                        "density": 20.1,
+                    },
+                    {
+                        "id": "Material 2",
+                        "r_value": 2.0,
+                    },
+                    {
+                        "id": "Material 3",
+                        "r_value": 3.0,
+                    },
+                ],
+                "r_values": [],
+                "surface_construction_input_option": "LAYERS",
+                "u_factor": 0.5,
+            },
+            "adjacent_to": "GROUND",
+            "azimuth": 350.0,
+            "does_cast_shade": True,
+        }
+
+        self.assertEqual(
+            expected_data_structure,
+            self.underground_wall.underground_wall_data_structure,
+        )
+
+    def test_populate_data_with_interior_wall_construction_layers_homogeneous_material_types(
+        self,
+    ):
+        """Tests that construction layers with all material types of RESISTANCE produce expected values
+        and that surface_construction_input_option is SIMPLIFIED no detailed material types are provided
+        """
+        self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
+        self.floor.populate_data_elements()
+
+        self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
+
+        self.material1.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
+            BDL_MaterialKeywords.RESISTANCE: "1",
+        }
+        self.material1.populate_data_elements()
+        self.material1.populate_data_group()
+
+        self.material2.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
+            BDL_MaterialKeywords.RESISTANCE: "2",
+        }
+        self.material2.populate_data_elements()
+        self.material2.populate_data_group()
+
+        self.material3.keyword_value_pairs = {
+            BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
+            BDL_MaterialKeywords.RESISTANCE: "3",
+        }
+        self.material3.populate_data_elements()
+        self.material3.populate_data_group()
+
+        self.layer.keyword_value_pairs = {
+            BDL_LayerKeywords.MATERIAL: [
+                "Test Material 1",
+                "Test Material 2",
+                "Test Material 3",
+            ]
+        }
+        self.layer.populate_data_elements()
+
+        self.construction.keyword_value_pairs = {
+            BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
+            BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
+            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
+        }
+        self.construction.populate_data_elements()
+        self.construction.populate_data_group()
+
+        self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.AREA: "400",
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
+            BDL_UndergroundWallKeywords.TILT: "10",
+            BDL_UndergroundWallKeywords.AZIMUTH: "110",
+            BDL_UndergroundWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
+            BDL_UndergroundWallKeywords.INSIDE_SOL_ABS: 2.0,
+            BDL_UndergroundWallKeywords.INSIDE_VIS_REFL: 0.5,
+        }
+
+        self.underground_wall.populate_data_elements()
+        self.underground_wall.populate_data_group()
+
+        expected_data_structure = {
+            "id": "Below Grade Wall 1",
+            "area": 400.0,
+            "tilt": 10.0,
+            "classification": "CEILING",
+            "optical_properties": {
+                "absorptance_solar_interior": 2.0,
+                "absorptance_visible_interior": 0.5,
+            },
+            "construction": {
+                "framing_layers": [],
+                "id": "Construction 1",
+                "insulation_locations": [],
+                "primary_layers": [
+                    {
+                        "id": "Simplified Material",
+                    },
+                    {
+                        "id": "Material 1",
+                        "r_value": 1.0,
+                    },
+                    {
+                        "id": "Material 2",
+                        "r_value": 2.0,
+                    },
+                    {
+                        "id": "Material 3",
+                        "r_value": 3.0,
+                    },
+                ],
+                "r_values": [],
+                "surface_construction_input_option": "SIMPLIFIED",
+                "u_factor": 0.5,
+            },
+            "adjacent_to": "GROUND",
+            "azimuth": 350.0,
+            "does_cast_shade": True,
         }
 
         self.assertEqual(
