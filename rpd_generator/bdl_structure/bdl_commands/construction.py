@@ -59,10 +59,7 @@ class Construction(BaseNode):
             else SurfaceConstructionInputOptions.SIMPLIFIED
         )
 
-        if (
-            self.surface_construction_input_option
-            == SurfaceConstructionInputOptions.SIMPLIFIED
-        ):
+        if len(self.material_references) == 0:
             simplified_material = {"id": "Simplified Material"}
             # This simplified material will have its r_value added when used for a surface based on Ext/Int/Underground Wall air film resistances
             self.primary_layers.append(simplified_material)
