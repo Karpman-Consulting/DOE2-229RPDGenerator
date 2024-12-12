@@ -35,28 +35,15 @@ class TestUndergroundWalls(unittest.TestCase):
         self.material2 = Material("Material 2", self.rmd)
         self.material3 = Material("Material 3", self.rmd)
 
-        self.rmd.bdl_obj_instances["Test Construction"] = self.construction
-        self.rmd.bdl_obj_instances["Test Layer"] = self.layer
-        self.rmd.bdl_obj_instances["Test Material 1"] = self.material1
-        self.rmd.bdl_obj_instances["Test Material 2"] = self.material2
-        self.rmd.bdl_obj_instances["Test Material 3"] = self.material3
-
     def test_populate_data_with_underground_wall(self):
         """Tests that Underground Wall outputs contains expected values, given valid inputs"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
-
-        self.floor.populate_data_elements()
-
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
             BDL_ConstructionKeywords.U_VALUE: "12.5",
         }
-
-        self.construction.populate_data_elements()
-        self.construction.populate_data_group()
-
         self.underground_wall.keyword_value_pairs = {
             BDL_UndergroundWallKeywords.AREA: "400",
             BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
@@ -67,9 +54,7 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_UndergroundWallKeywords.INSIDE_VIS_REFL: 0.5,
         }
 
-        self.underground_wall.populate_data_elements()
-        self.underground_wall.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
@@ -94,7 +79,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "azimuth": 350.0,
             "does_cast_shade": True,
         }
-
         self.assertEqual(
             expected_data_structure,
             self.underground_wall.underground_wall_data_structure,
@@ -112,9 +96,7 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_UndergroundWallKeywords.TILT: "120",
         }
 
-        self.underground_wall.populate_data_elements()
-        self.underground_wall.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
@@ -124,7 +106,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "construction": {},
             "adjacent_to": "GROUND",
         }
-
         self.assertEqual(
             expected_data_structure,
             self.underground_wall.underground_wall_data_structure,
@@ -137,9 +118,7 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
-        self.underground_wall.populate_data_elements()
-        self.underground_wall.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
@@ -148,7 +127,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "construction": {},
             "adjacent_to": "GROUND",
         }
-
         self.assertEqual(
             expected_data_structure,
             self.underground_wall.underground_wall_data_structure,
@@ -161,10 +139,7 @@ class TestUndergroundWalls(unittest.TestCase):
         and that surface_construction_input_option is LAYERS when >= 1 detailed material type is provided
         """
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
-        self.floor.populate_data_elements()
-
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
-
         self.material1.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.PROPERTIES,
             BDL_MaterialKeywords.THICKNESS: "2",
@@ -172,23 +147,14 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_MaterialKeywords.DENSITY: "20.1",
             BDL_MaterialKeywords.SPECIFIC_HEAT: "4",
         }
-        self.material1.populate_data_elements()
-        self.material1.populate_data_group()
-
         self.material2.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
             BDL_MaterialKeywords.RESISTANCE: "2",
         }
-        self.material2.populate_data_elements()
-        self.material2.populate_data_group()
-
         self.material3.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
             BDL_MaterialKeywords.RESISTANCE: "3",
         }
-        self.material3.populate_data_elements()
-        self.material3.populate_data_group()
-
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
                 "Test Material 1",
@@ -196,17 +162,12 @@ class TestUndergroundWalls(unittest.TestCase):
                 "Test Material 3",
             ]
         }
-        self.layer.populate_data_elements()
-
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
             BDL_ConstructionKeywords.LAYERS: "Test Layer",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
-        self.construction.populate_data_elements()
-        self.construction.populate_data_group()
-
         self.underground_wall.keyword_value_pairs = {
             BDL_UndergroundWallKeywords.AREA: "400",
             BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
@@ -217,9 +178,7 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_UndergroundWallKeywords.INSIDE_VIS_REFL: 0.5,
         }
 
-        self.underground_wall.populate_data_elements()
-        self.underground_wall.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
@@ -258,7 +217,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "azimuth": 350.0,
             "does_cast_shade": True,
         }
-
         self.assertEqual(
             expected_data_structure,
             self.underground_wall.underground_wall_data_structure,
@@ -271,31 +229,19 @@ class TestUndergroundWalls(unittest.TestCase):
         and that surface_construction_input_option is SIMPLIFIED no detailed material types are provided
         """
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
-        self.floor.populate_data_elements()
-
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
-
         self.material1.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
             BDL_MaterialKeywords.RESISTANCE: "1",
         }
-        self.material1.populate_data_elements()
-        self.material1.populate_data_group()
-
         self.material2.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
             BDL_MaterialKeywords.RESISTANCE: "2",
         }
-        self.material2.populate_data_elements()
-        self.material2.populate_data_group()
-
         self.material3.keyword_value_pairs = {
             BDL_MaterialKeywords.TYPE: BDL_MaterialTypes.RESISTANCE,
             BDL_MaterialKeywords.RESISTANCE: "3",
         }
-        self.material3.populate_data_elements()
-        self.material3.populate_data_group()
-
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
                 "Test Material 1",
@@ -303,17 +249,12 @@ class TestUndergroundWalls(unittest.TestCase):
                 "Test Material 3",
             ]
         }
-        self.layer.populate_data_elements()
-
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
             BDL_ConstructionKeywords.LAYERS: "Test Layer",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
-        self.construction.populate_data_elements()
-        self.construction.populate_data_group()
-
         self.underground_wall.keyword_value_pairs = {
             BDL_UndergroundWallKeywords.AREA: "400",
             BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
@@ -324,9 +265,7 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_UndergroundWallKeywords.INSIDE_VIS_REFL: 0.5,
         }
 
-        self.underground_wall.populate_data_elements()
-        self.underground_wall.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Below Grade Wall 1",
             "area": 400.0,
@@ -365,7 +304,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "azimuth": 350.0,
             "does_cast_shade": True,
         }
-
         self.assertEqual(
             expected_data_structure,
             self.underground_wall.underground_wall_data_structure,
