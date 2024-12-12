@@ -35,22 +35,16 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
             BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -66,13 +60,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
             BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 2",
         }
-
-        # self.pump.populate_data_elements()
-        # self.schedule.populate_data_elements()
-        # self.circulation_loop.populate_data_elements()
-        #
-        # self.pump.populate_data_group()
-        # self.circulation_loop.populate_data_group()
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
@@ -93,7 +80,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -107,11 +93,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -119,11 +104,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -141,7 +121,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -164,7 +143,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -178,11 +156,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -190,7 +167,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
         self.schedule2.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
             BDL_DayScheduleKeywords.VALUES: "[1, 2]",
@@ -199,11 +175,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -221,7 +192,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -244,7 +214,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -258,11 +227,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -270,7 +238,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
         self.schedule2.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
             BDL_DayScheduleKeywords.VALUES: "[1, 2]",
@@ -279,11 +246,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -301,7 +263,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -324,7 +285,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -334,11 +294,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -346,11 +305,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -368,7 +322,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "heating_design_and_control": {
@@ -391,7 +344,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -403,11 +355,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
         }
-
         self.schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -415,11 +366,6 @@ class TestCHWLoop(unittest.TestCase):
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
-
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2",
-        }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -440,7 +386,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "heating_design_and_control": {
@@ -477,7 +422,6 @@ class TestCHWLoop(unittest.TestCase):
             "child_loops": [],
             "pump_power_per_flow_rate": 5000.0,
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -490,15 +434,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
-        }
-
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
         }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
@@ -507,7 +446,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
             "design_supply_temperature": 78.5,
@@ -516,7 +454,6 @@ class TestCHWLoop(unittest.TestCase):
             "tanks": {},
             "service_water_piping": {},
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -529,15 +466,10 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-
-        self.pump.keyword_value_pairs = {
-            BDL_PumpKeywords.NUMBER: "2",
-        }
-
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1",
+            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
         }
-
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
             BDL_CirculationLoopKeywords.SUBTYPE: BDL_CirculationLoopSubtypes.SECONDARY,
@@ -547,9 +479,7 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "CHW Loop 1",
         }
-
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
