@@ -128,7 +128,6 @@ class InteriorWall(
             self.get_inp(BDL_InteriorWallKeywords.SHADING_SURFACE)
         )
 
-        absorptance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS)
         self.absorptance_solar_interior = self.try_float(
             self.try_access_index(
                 self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 0
@@ -140,7 +139,6 @@ class InteriorWall(
             )
         )
 
-        reflectance_list = self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL)
         reflectance_visible_interior = self.try_float(
             self.try_access_index(
                 self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 0
