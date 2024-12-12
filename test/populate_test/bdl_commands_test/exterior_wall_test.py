@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.bdl_structure.bdl_commands.material_layers import (
@@ -11,8 +12,6 @@ from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import Space, BDL_SpaceKeywords
-from rpd_generator.bdl_structure.bdl_commands.system import System
-from rpd_generator.bdl_structure.bdl_commands.zone import Zone
 from rpd_generator.bdl_structure.bdl_commands.exterior_wall import *
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
@@ -21,7 +20,8 @@ BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestExteriorWall(unittest.TestCase):
-    def setUp(self):
+    @patch("rpd_generator.bdl_structure.bdl_commands.zone.Zone")
+    def setUp(self, MockZone):
         self.maxDiff = None
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
@@ -29,8 +29,7 @@ class TestExteriorWall(unittest.TestCase):
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
-        self.system = System("System 1", self.rmd)
-        self.zone = Zone("Zone 1", self.system, self.rmd)
+        self.zone = MockZone.return_value
         self.rmd.space_map = {"Space 1": self.zone}
         self.exterior_wall = ExteriorWall("Exterior Wall 1", self.space, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
@@ -49,6 +48,7 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "12.5",
         }
         self.exterior_wall.keyword_value_pairs = {
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_ExteriorWallKeywords.AREA: "300",
             BDL_ExteriorWallKeywords.TILT: "5",
             BDL_ExteriorWallKeywords.AZIMUTH: "132",
@@ -56,7 +56,6 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ExteriorWallKeywords.OUTSIDE_EMISS: "2.5",
             BDL_ExteriorWallKeywords.INSIDE_SOL_ABS: "3",
             BDL_ExteriorWallKeywords.INSIDE_VIS_REFL: "0.25",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -99,9 +98,10 @@ class TestExteriorWall(unittest.TestCase):
         self.exterior_wall.keyword_value_pairs = {
             BDL_ExteriorWallKeywords.HEIGHT: "10",
             BDL_ExteriorWallKeywords.WIDTH: "30",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
         }
 
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Exterior Wall 1",
             "subsurfaces": [],
@@ -120,9 +120,9 @@ class TestExteriorWall(unittest.TestCase):
     def test_populate_data_with_exterior_wall_is_floor(self):
         """Tests that classification is FLOOR when TILT exceeds FLOOR_TILT_THRESHOLD (>= 120.0)"""
         self.exterior_wall.keyword_value_pairs = {
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_ExteriorWallKeywords.HEIGHT: "10",
             BDL_ExteriorWallKeywords.WIDTH: "30",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_ExteriorWallKeywords.TILT: "120",
         }
 
@@ -139,7 +139,6 @@ class TestExteriorWall(unittest.TestCase):
                 "id": "Exterior Wall 1 OpticalProps",
             },
         }
-
         self.assertEqual(
             expected_data_structure, self.exterior_wall.exterior_wall_data_structure
         )
@@ -147,8 +146,8 @@ class TestExteriorWall(unittest.TestCase):
     def test_populate_data_with_exterior_wall_does_cast_shade(self):
         """Tests that does_cast_shade is true if SHADING_SURFACE is 'YES'"""
         self.exterior_wall.keyword_value_pairs = {
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_ExteriorWallKeywords.AREA: "300",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_ExteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
         }
 
@@ -206,6 +205,7 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.exterior_wall.keyword_value_pairs = {
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_ExteriorWallKeywords.AREA: "300",
             BDL_ExteriorWallKeywords.TILT: "5",
             BDL_ExteriorWallKeywords.AZIMUTH: "132",
@@ -213,7 +213,6 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ExteriorWallKeywords.OUTSIDE_EMISS: "2.5",
             BDL_ExteriorWallKeywords.INSIDE_SOL_ABS: "3",
             BDL_ExteriorWallKeywords.INSIDE_VIS_REFL: "0.25",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -297,6 +296,7 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.exterior_wall.keyword_value_pairs = {
+            BDL_ExteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_ExteriorWallKeywords.AREA: "300",
             BDL_ExteriorWallKeywords.TILT: "5",
             BDL_ExteriorWallKeywords.AZIMUTH: "132",
@@ -304,7 +304,6 @@ class TestExteriorWall(unittest.TestCase):
             BDL_ExteriorWallKeywords.OUTSIDE_EMISS: "2.5",
             BDL_ExteriorWallKeywords.INSIDE_SOL_ABS: "3",
             BDL_ExteriorWallKeywords.INSIDE_VIS_REFL: "0.25",
-            BDL_ExteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)

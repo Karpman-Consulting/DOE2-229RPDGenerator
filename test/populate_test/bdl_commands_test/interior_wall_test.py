@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from rpd_generator.bdl_structure.bdl_commands.material_layers import (
     Layer,
@@ -6,12 +7,10 @@ from rpd_generator.bdl_structure.bdl_commands.material_layers import (
     BDL_MaterialKeywords,
     BDL_MaterialTypes,
 )
-from rpd_generator.bdl_structure.bdl_commands.zone import Zone
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import Space
-from rpd_generator.bdl_structure.bdl_commands.system import System
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.bdl_structure.bdl_commands.interior_wall import *
 
@@ -20,7 +19,8 @@ BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestInteriorWalls(unittest.TestCase):
-    def setUp(self):
+    @patch("rpd_generator.bdl_structure.bdl_commands.zone.Zone")
+    def setUp(self, MockZone):
         self.maxDiff = None
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
@@ -28,8 +28,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
-        self.system = System("System 1", self.rmd)
-        self.zone = Zone("Zone 1", self.system, self.rmd)
+        self.zone = MockZone.return_value
         self.rmd.space_map = {"Space 1": self.zone}
         self.interior_wall = InteriorWall("Interior Wall 1", self.space, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
@@ -49,9 +48,9 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.AREA: "200",
             BDL_InteriorWallKeywords.TILT: "10",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
             BDL_InteriorWallKeywords.AZIMUTH: "30",
             BDL_InteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.NO,
@@ -99,7 +98,7 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.AIR,
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
         }
 
@@ -131,7 +130,7 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.AIR,
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
         }
 
@@ -166,10 +165,10 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.ADIABATIC,
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.HEIGHT: "10",
             BDL_InteriorWallKeywords.WIDTH: "20",
             BDL_InteriorWallKeywords.TILT: "120",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
             BDL_InteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.NO,
             BDL_InteriorWallKeywords.INSIDE_SOL_ABS: [1.0, 2.0],
@@ -208,8 +207,8 @@ class TestInteriorWalls(unittest.TestCase):
     def test_populate_data_with_interior_wall_no_tilt_wall_type(self):
         """Tests that no provided TILT will lead to a WALL classification"""
         self.interior_wall.keyword_value_pairs = {
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.AREA: "200",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -232,9 +231,9 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.AREA: "200",
             BDL_InteriorWallKeywords.TILT: "10",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
             BDL_InteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.NO,
             BDL_InteriorWallKeywords.INSIDE_SOL_ABS: [1.0, 2.0],
@@ -309,6 +308,7 @@ class TestInteriorWalls(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
             BDL_InteriorWallKeywords.AREA: "300",
@@ -317,7 +317,6 @@ class TestInteriorWalls(unittest.TestCase):
             BDL_InteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.NO,
             BDL_InteriorWallKeywords.INSIDE_SOL_ABS: "3",
             BDL_InteriorWallKeywords.INSIDE_VIS_REFL: "0.25",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -396,6 +395,7 @@ class TestInteriorWalls(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
+            BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
             BDL_InteriorWallKeywords.AREA: "300",
@@ -404,7 +404,6 @@ class TestInteriorWalls(unittest.TestCase):
             BDL_InteriorWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.NO,
             BDL_InteriorWallKeywords.INSIDE_SOL_ABS: "3",
             BDL_InteriorWallKeywords.INSIDE_VIS_REFL: "0.25",
-            BDL_InteriorWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)

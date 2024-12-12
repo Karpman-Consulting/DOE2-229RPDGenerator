@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
 from rpd_generator.bdl_structure.bdl_commands.material_layers import (
@@ -18,14 +19,17 @@ BDL_ShadingSurfaceOptions = BDLEnums.bdl_enums["ShadingSurfaceOptions"]
 
 
 class TestUndergroundWalls(unittest.TestCase):
-    def setUp(self):
+    @patch("rpd_generator.bdl_structure.bdl_commands.zone.Zone")
+    def setUp(self, MockZone):
         self.maxDiff = None
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.rmd.building_azimuth = 100
         self.floor = Floor("Floor 1", self.rmd)
+        self.zone = MockZone.return_value
         self.space = Space("Space 1", self.floor, self.rmd)
+        self.rmd.space_map = {"Space 1": self.zone}
         self.underground_wall = BelowGradeWall(
             "Below Grade Wall 1", self.space, self.rmd
         )
@@ -45,8 +49,8 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "12.5",
         }
         self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_UndergroundWallKeywords.AREA: "400",
-            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_UndergroundWallKeywords.TILT: "10",
             BDL_UndergroundWallKeywords.AZIMUTH: "110",
             BDL_UndergroundWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
@@ -90,9 +94,9 @@ class TestUndergroundWalls(unittest.TestCase):
         and that when any floor, surface, or wall azimuth is provided, there is no output AZIMUTH
         """
         self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_UndergroundWallKeywords.HEIGHT: "10",
             BDL_UndergroundWallKeywords.WIDTH: "40",
-            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_UndergroundWallKeywords.TILT: "120",
         }
 
@@ -114,8 +118,8 @@ class TestUndergroundWalls(unittest.TestCase):
     def test_populate_data_with_underground_wall_is_wall_classification(self):
         """Tests that when no TILT is provided, the wall is classified as a WALL"""
         self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_UndergroundWallKeywords.AREA: "400",
-            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -169,8 +173,8 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_UndergroundWallKeywords.AREA: "400",
-            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_UndergroundWallKeywords.TILT: "10",
             BDL_UndergroundWallKeywords.AZIMUTH: "110",
             BDL_UndergroundWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
@@ -256,8 +260,8 @@ class TestUndergroundWalls(unittest.TestCase):
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.underground_wall.keyword_value_pairs = {
+            BDL_UndergroundWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_UndergroundWallKeywords.AREA: "400",
-            BDL_UndergroundWallKeywords.CONSTRUCTION: "Test Construction",
             BDL_UndergroundWallKeywords.TILT: "10",
             BDL_UndergroundWallKeywords.AZIMUTH: "110",
             BDL_UndergroundWallKeywords.SHADING_SURFACE: BDL_ShadingSurfaceOptions.YES,
