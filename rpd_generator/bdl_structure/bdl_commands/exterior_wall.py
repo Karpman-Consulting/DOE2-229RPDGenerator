@@ -204,6 +204,8 @@ class ExteriorWall(ChildNode, ParentNode):
         u_factor = self.construction.get("u_factor")
         ext_air_film_resistance = 0.17
         if u_factor:
+            self.construction["u_factor"] = 1 / (1 / u_factor + ext_air_film_resistance)
+
             if spec_method == BDL_ConstructionTypes.U_VALUE:
                 location = self.get_inp(BDL_ExteriorWallKeywords.LOCATION)
                 int_air_film_resistance = (
@@ -214,5 +216,3 @@ class ExteriorWall(ChildNode, ParentNode):
                 self.construction["primary_layers"][0]["r_value"] = (
                     1 / u_factor - int_air_film_resistance
                 )
-
-            self.construction["u_factor"] = 1 / (1 / u_factor + ext_air_film_resistance)
