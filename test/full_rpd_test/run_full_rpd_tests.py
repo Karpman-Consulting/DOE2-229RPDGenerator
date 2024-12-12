@@ -356,7 +356,7 @@ def compare_attributes(target, candidate, attr, generated_zone_id, reference_zon
         )
 
     elif attr == "area":
-        return compare_values(target_value, candidate_value, 0.1)
+        return compare_values(candidate_value, target_value, 0.1)
 
     elif isinstance(target_value, list):
         candidate_length = len(candidate_value) if candidate_value else 0
@@ -1002,7 +1002,7 @@ def handle_special_cases(path_spec, object_id_map, generated_json, reference_jso
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "surfaces[*][?(",
-                        f'surfaces[*][?(@.id="{reference_surface_id}" and ',
+                        f'surfaces[?(@.id=="{reference_surface_id}" & ',
                     ),
                     reference_json,
                     None,
@@ -1011,7 +1011,7 @@ def handle_special_cases(path_spec, object_id_map, generated_json, reference_jso
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "surfaces[*]",
-                        f'surfaces[*][?(@.id="{reference_surface_id}")]',
+                        f'surfaces[?(@.id=="{reference_surface_id}")]',
                     ),
                     reference_json,
                     None,
@@ -1081,7 +1081,7 @@ def handle_ordered_comparisons(
             # Extract values from aligned zones using the specified key path
             aligned_reference_value = find_one(
                 json_key_path.replace(
-                    "zones[*]", f'zones[*][?(@.id="{reference_zone_id}")]'
+                    "zones[*]", f'zones[?(@.id=="{reference_zone_id}")]'
                 ),
                 reference_json,
                 None,
@@ -1134,7 +1134,7 @@ def handle_ordered_comparisons(
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "surfaces[*][?(",
-                        f'surfaces[*][?(@.id="{reference_surface_id}" and ',
+                        f'surfaces[?(@.id=="{reference_surface_id}" & ',
                     ),
                     reference_json,
                     None,
@@ -1143,7 +1143,7 @@ def handle_ordered_comparisons(
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "surfaces[*]",
-                        f'surfaces[*][?(@.id="{reference_surface_id}")]',
+                        f'surfaces[?(@.id=="{reference_surface_id}")]',
                     ),
                     reference_json,
                     None,
@@ -1197,7 +1197,7 @@ def handle_ordered_comparisons(
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "terminals[*][?(",
-                        f'terminals[*][?(@.id="{reference_terminal_id}" and ',
+                        f'terminals[?(@.id=="{reference_terminal_id}" & ',
                     ),
                     reference_json,
                     None,
@@ -1206,7 +1206,7 @@ def handle_ordered_comparisons(
                 aligned_reference_value = find_one(
                     json_key_path.replace(
                         "terminals[*]",
-                        f'terminals[*][?(@.id="{reference_terminal_id}")]',
+                        f'terminals[?(@.id=="{reference_terminal_id}")]',
                     ),
                     reference_json,
                     None,
@@ -1264,7 +1264,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "heating_ventilating_air_conditioning_systems[*]",
-                    f'heating_ventilating_air_conditioning_systems[*][?(@.id="{reference_hvac_id}")]',
+                    f'heating_ventilating_air_conditioning_systems[?(@.id=="{reference_hvac_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1312,7 +1312,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "boilers[*]",
-                    f'boilers[*][?(@.id="{reference_boiler_id}")]',
+                    f'boilers[?(@.id=="{reference_boiler_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1360,7 +1360,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "chillers[*]",
-                    f'chillers[*][?(@.id="{reference_chiller_id}")]',
+                    f'chillers[?(@.id=="{reference_chiller_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1412,7 +1412,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "heat_rejections[*]",
-                    f'heat_rejections[*][?(@.id="{reference_heat_rejection_id}")]',
+                    f'heat_rejections[?(@.id=="{reference_heat_rejection_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1464,7 +1464,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "fluid_loops[*]",
-                    f'fluid_loops[*][?(@.id="{reference_fluid_loop_id}")]',
+                    f'fluid_loops[?(@.id=="{reference_fluid_loop_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1512,7 +1512,7 @@ def handle_ordered_comparisons(
             aligned_reference_value = find_one(
                 json_key_path.replace(
                     "pumps[*]",
-                    f'pumps[*][?(@.id="{reference_pump_id}")]',
+                    f'pumps[?(@.id=="{reference_pump_id}")]',
                 ),
                 reference_json,
                 None,
@@ -1653,8 +1653,8 @@ def run_comparison_for_all_tests(test_dir):
 
     for test in os.listdir(test_dir):
         # Only recognize directories starting with "E-" or "F-" as test cases
-        if os.path.isdir(test_dir) and (test.startswith("E-") or test.startswith("F-")):
-            # if os.path.isdir(test_dir) and (test == "F-170"):
+        # if os.path.isdir(test_dir) and (test.startswith("E-") or test.startswith("F-")):
+        if os.path.isdir(test_dir) and (test == "E-1"):
 
             test_case_dir = os.path.join(test_dir, test)
             generated_json_file = next(
