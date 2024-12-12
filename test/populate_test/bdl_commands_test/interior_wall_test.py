@@ -29,6 +29,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
         self.zone = MockZone.return_value
+        self.zone.u_name = "Zone 1"
         self.rmd.space_map = {"Space 1": self.zone}
         self.interior_wall = InteriorWall("Interior Wall 1", self.space, self.rmd)
         self.construction = Construction("Construction 1", self.rmd)
@@ -44,7 +45,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
-            BDL_ConstructionKeywords.U_VALUE: "0",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
@@ -63,13 +64,15 @@ class TestInteriorWalls(unittest.TestCase):
             "id": "Interior Wall 1",
             "subsurfaces": [],
             "construction": {
-                "framing_layers": [],
                 "id": "Construction 1",
-                "insulation_locations": [],
-                "primary_layers": [{"id": "Simplified Material"}],
-                "r_values": [],
                 "surface_construction_input_option": "SIMPLIFIED",
-                "u_factor": 0.0,
+                "primary_layers": [
+                    {"id": "Simplified Material", "r_value": 0.6399999999999999}
+                ],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+                "u_factor": 0.5,
             },
             "optical_properties": {
                 "absorptance_solar_interior": 1.0,
@@ -89,12 +92,12 @@ class TestInteriorWalls(unittest.TestCase):
             expected_data_structure, self.interior_wall.interior_wall_data_structure
         )
 
-    def test_populate_data_with_interior_wall_air_wall_adjacency(self):
+    def test_populate_data_with_interior_wall_air_wall(self):
         """Tests that AIR wall adjacency type outputs minimal results"""
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
-            BDL_ConstructionKeywords.U_VALUE: "0",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.AIR,
@@ -105,31 +108,34 @@ class TestInteriorWalls(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Interior Wall 1",
-            "subsurfaces": [],
+            "adjacent_to": "INTERIOR",
+            "adjacent_zone": "Zone 1",
+            "classification": "WALL",
             "construction": {
-                "framing_layers": [],
                 "id": "Construction 1",
-                "insulation_locations": [],
-                "primary_layers": [{"id": "Simplified Material"}],
-                "r_values": [],
                 "surface_construction_input_option": "SIMPLIFIED",
-                "u_factor": 0.0,
+                "framing_layers": [],
+                "insulation_locations": [],
+                "primary_layers": [{"id": "Simplified Material", "r_value": 2.0}],
+                "r_values": [],
+                "u_factor": 0.5,
             },
             "optical_properties": {},
+            "subsurfaces": [],
         }
         self.assertEqual(
             expected_data_structure, self.interior_wall.interior_wall_data_structure
         )
 
-    def test_populate_data_with_interior_wall_internal_wall_adjacency(self):
+    def test_populate_data_with_interior_wall_internal_wall(self):
         """Tests that INTERNAL wall adjacency type outputs minimal results"""
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
-            BDL_ConstructionKeywords.U_VALUE: "0",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
-            BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.AIR,
+            BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.INTERNAL,
             BDL_InteriorWallKeywords.CONSTRUCTION: "Construction 1",
             BDL_InteriorWallKeywords.NEXT_TO: "Space 1",
         }
@@ -137,15 +143,20 @@ class TestInteriorWalls(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Interior Wall 1",
+            "adjacent_to": "INTERIOR",
+            "adjacent_zone": "Zone 1",
+            "classification": "WALL",
             "subsurfaces": [],
             "construction": {
                 "framing_layers": [],
                 "id": "Construction 1",
                 "insulation_locations": [],
-                "primary_layers": [{"id": "Simplified Material"}],
+                "primary_layers": [
+                    {"id": "Simplified Material", "r_value": 0.6399999999999999}
+                ],
                 "r_values": [],
                 "surface_construction_input_option": "SIMPLIFIED",
-                "u_factor": 0.0,
+                "u_factor": 0.5,
             },
             "optical_properties": {},
         }
@@ -153,7 +164,7 @@ class TestInteriorWalls(unittest.TestCase):
             expected_data_structure, self.interior_wall.interior_wall_data_structure
         )
 
-    def test_populate_data_with_interior_wall_adiabatic_wall_adjacency(self):
+    def test_populate_data_with_interior_wall_adiabatic_wall(self):
         """Tests that ADIABATIC wall adjacency type outputs IDENTICAL for 'adjacent_to' value
         and that when a WIDTH and HEIGHT are provided instead of an AREA, that the AREA is accurately calculated
         and that a TILT over the FLOOR_TILT_THRESHOLD classifies the wall as a FLOOR"""
@@ -214,8 +225,17 @@ class TestInteriorWalls(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Interior Wall 1",
+            "area": 200.0,
+            "classification": "WALL",
             "subsurfaces": [],
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "optical_properties": {},
         }
         self.assertEqual(
@@ -227,7 +247,7 @@ class TestInteriorWalls(unittest.TestCase):
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.U_VALUE,
-            BDL_ConstructionKeywords.U_VALUE: "0",
+            BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
             BDL_InteriorWallKeywords.INT_WALL_TYPE: BDL_InteriorWallTypes.STANDARD,
@@ -248,10 +268,12 @@ class TestInteriorWalls(unittest.TestCase):
                 "framing_layers": [],
                 "id": "Construction 1",
                 "insulation_locations": [],
-                "primary_layers": [{"id": "Simplified Material"}],
+                "primary_layers": [
+                    {"id": "Simplified Material", "r_value": 0.6399999999999999}
+                ],
                 "r_values": [],
                 "surface_construction_input_option": "SIMPLIFIED",
-                "u_factor": 0.0,
+                "u_factor": 0.5,
             },
             "optical_properties": {
                 "absorptance_solar_interior": 1.0,
@@ -296,15 +318,15 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
@@ -361,7 +383,7 @@ class TestInteriorWalls(unittest.TestCase):
             expected_data_structure, self.interior_wall.interior_wall_data_structure
         )
 
-    def test_populate_data_with_interior_wall_construction_layers_homogeneous_material_types(
+    def test_populate_data_with_interior_wall_construction_layers_all_no_mass(
         self,
     ):
         """Tests that construction layers with all material types of RESISTANCE produce expected values
@@ -383,15 +405,15 @@ class TestInteriorWalls(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.interior_wall.keyword_value_pairs = {
@@ -415,9 +437,6 @@ class TestInteriorWalls(unittest.TestCase):
                 "id": "Construction 1",
                 "insulation_locations": [],
                 "primary_layers": [
-                    {
-                        "id": "Simplified Material",
-                    },
                     {
                         "id": "Material 1",
                         "r_value": 1.0,

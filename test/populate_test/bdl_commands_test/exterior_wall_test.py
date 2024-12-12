@@ -105,7 +105,14 @@ class TestExteriorWall(unittest.TestCase):
         expected_data_structure = {
             "id": "Exterior Wall 1",
             "subsurfaces": [],
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "area": 300.0,
             "classification": SurfaceClassificationOptions.WALL,
             "adjacent_to": SurfaceAdjacencyOptions.EXTERIOR,
@@ -130,7 +137,14 @@ class TestExteriorWall(unittest.TestCase):
         expected_data_structure = {
             "id": "Exterior Wall 1",
             "subsurfaces": [],
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "area": 300.0,
             "classification": SurfaceClassificationOptions.FLOOR,
             "tilt": 120.0,
@@ -155,7 +169,14 @@ class TestExteriorWall(unittest.TestCase):
         expected_data_structure = {
             "id": "Exterior Wall 1",
             "subsurfaces": [],
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "area": 300.0,
             "classification": SurfaceClassificationOptions.WALL,
             "does_cast_shade": True,
@@ -193,15 +214,15 @@ class TestExteriorWall(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.exterior_wall.keyword_value_pairs = {
@@ -284,15 +305,15 @@ class TestExteriorWall(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.exterior_wall.keyword_value_pairs = {
@@ -311,13 +332,10 @@ class TestExteriorWall(unittest.TestCase):
             "id": "Exterior Wall 1",
             "subsurfaces": [],
             "construction": {
-                "framing_layers": [],
                 "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
                 "insulation_locations": [],
                 "primary_layers": [
-                    {
-                        "id": "Simplified Material",
-                    },
                     {
                         "id": "Material 1",
                         "r_value": 1.0,
@@ -331,8 +349,8 @@ class TestExteriorWall(unittest.TestCase):
                         "r_value": 3.0,
                     },
                 ],
+                "framing_layers": [],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.4608294930875576,
             },
             "area": 300.0,

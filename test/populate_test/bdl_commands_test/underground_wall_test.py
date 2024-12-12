@@ -107,7 +107,14 @@ class TestUndergroundWalls(unittest.TestCase):
             "tilt": 120.0,
             "classification": "FLOOR",
             "optical_properties": {},
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "adjacent_to": "GROUND",
         }
         self.assertEqual(
@@ -128,7 +135,14 @@ class TestUndergroundWalls(unittest.TestCase):
             "area": 400.0,
             "classification": "WALL",
             "optical_properties": {},
-            "construction": {},
+            "construction": {
+                "id": "Construction 1",
+                "surface_construction_input_option": "SIMPLIFIED",
+                "primary_layers": [{"id": "Simplified Material"}],
+                "framing_layers": [],
+                "insulation_locations": [],
+                "r_values": [],
+            },
             "adjacent_to": "GROUND",
         }
         self.assertEqual(
@@ -161,15 +175,15 @@ class TestUndergroundWalls(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.underground_wall.keyword_value_pairs = {
@@ -226,7 +240,7 @@ class TestUndergroundWalls(unittest.TestCase):
             self.underground_wall.underground_wall_data_structure,
         )
 
-    def test_populate_data_with_interior_wall_construction_layers_homogeneous_material_types(
+    def test_populate_data_with_interior_wall_construction_layers_all_no_mass(
         self,
     ):
         """Tests that construction layers with all material types of RESISTANCE produce expected values
@@ -248,15 +262,15 @@ class TestUndergroundWalls(unittest.TestCase):
         }
         self.layer.keyword_value_pairs = {
             BDL_LayerKeywords.MATERIAL: [
-                "Test Material 1",
-                "Test Material 2",
-                "Test Material 3",
+                "Material 1",
+                "Material 2",
+                "Material 3",
             ]
         }
         self.construction.keyword_value_pairs = {
             BDL_ConstructionKeywords.ABSORPTANCE: "5.5",
             BDL_ConstructionKeywords.TYPE: BDL_ConstructionTypes.LAYERS,
-            BDL_ConstructionKeywords.LAYERS: "Test Layer",
+            BDL_ConstructionKeywords.LAYERS: "Layer 1",
             BDL_ConstructionKeywords.U_VALUE: "0.5",
         }
         self.underground_wall.keyword_value_pairs = {
@@ -284,9 +298,6 @@ class TestUndergroundWalls(unittest.TestCase):
                 "id": "Construction 1",
                 "insulation_locations": [],
                 "primary_layers": [
-                    {
-                        "id": "Simplified Material",
-                    },
                     {
                         "id": "Material 1",
                         "r_value": 1.0,
