@@ -192,10 +192,6 @@ $ ---------------------------------------------------------
    SPECIFIC-HEAT    = 0
    ..
 
-SET-DEFAULT FOR LAYERS          
-   MATERIAL         = ( "Roof Type 3lyr" )
-   ..
-
 "Roof Construction Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
    MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
@@ -1337,37 +1333,6 @@ $ **                                                     **
 $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
-
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PSZ
-   FAN-CONTROL      = CONSTANT-VOLUME
-   ERV-RECOVER-TYPE = ENTHALPY-HX
-   ERV-RUN-CTRL     = WHEN-MIN-OA
-   ERV-TEMP-CTRL    = FIXED-SETPT
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PMZS
-   HUMIDIFIER-TYPE  = STEAM
-   COOL-MIN-RESET-T = 60
-   FAN-CONTROL      = SPEED
-   RETURN-FAN-CONTR = SPEED
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVAVS
-   HUMIDIFIER-TYPE  = STEAM
-   HP-SUPP-SOURCE   = HOT-WATER
-   PHT-COIL-AIR-DT  = 20
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVVT
-   HUMIDIFIER-TYPE  = STEAM
-   HP-SUPP-SOURCE   = HOT-WATER
-   HT-RATED-EDB     = 70
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = DOAS
-   HUMIDIFIER-TYPE  = STEAM
-   ..
 
 "SZ CV 1" = SYSTEM          
    TYPE             = SZRH

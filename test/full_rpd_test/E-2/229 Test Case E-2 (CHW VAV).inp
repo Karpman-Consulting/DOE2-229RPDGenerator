@@ -192,10 +192,6 @@ $ ---------------------------------------------------------
    SPECIFIC-HEAT    = 0
    ..
 
-SET-DEFAULT FOR LAYERS          
-   MATERIAL         = ( "Roof Type 3lyr" )
-   ..
-
 "Roof Construction Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
    MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
@@ -1174,12 +1170,13 @@ $ ---------------------------------------------------------
    ..
 "CHW Pump (Primary)" = PUMP            
    NUMBER           = 2
-   HEAD             = 30
-   MOTOR-EFF        = {.814}
+   HEAD             = 38.8
+   MECH-EFF         = 0.9
+   MOTOR-EFF        = 0.9
    ..
 "Condenser Water Pump" = PUMP            
    MOTOR-EFF        = {.877}
-   MOTOR-CLASS      = PREMIUM
+   CAP-CTRL         = VAR-SPEED-PUMP
    ..
 "CHW Pump (Secondary)" = PUMP            
    MOTOR-EFF        = {.758}
@@ -1373,37 +1370,6 @@ $ **                                                     **
 $ **               HVAC Systems / Zones                  **
 $ **                                                     **
 $ *********************************************************
-
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PSZ
-   FAN-CONTROL      = CONSTANT-VOLUME
-   ERV-RECOVER-TYPE = ENTHALPY-HX
-   ERV-RUN-CTRL     = WHEN-MIN-OA
-   ERV-TEMP-CTRL    = FIXED-SETPT
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PMZS
-   HUMIDIFIER-TYPE  = STEAM
-   COOL-MIN-RESET-T = 60
-   FAN-CONTROL      = SPEED
-   RETURN-FAN-CONTR = SPEED
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVAVS
-   HUMIDIFIER-TYPE  = STEAM
-   HP-SUPP-SOURCE   = HOT-WATER
-   PHT-COIL-AIR-DT  = 20
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = PVVT
-   HUMIDIFIER-TYPE  = STEAM
-   HP-SUPP-SOURCE   = HOT-WATER
-   HT-RATED-EDB     = 70
-   ..
-SET-DEFAULT FOR SYSTEM          
-   TYPE = DOAS
-   HUMIDIFIER-TYPE  = STEAM
-   ..
 
 "Baseline System 7 (CHW VAV)" = SYSTEM          
    TYPE             = VAVS
@@ -1608,10 +1574,15 @@ $ ---------------------------------------------------------
 $              Hourly Reporting
 $ ---------------------------------------------------------
 
+"Hourly Report Block 3" = REPORT-BLOCK    
+   VARIABLE-TYPE    = "Hot Water Pumps"
+   VARIABLE-LIST    = ( 1, 2, 3 )
+   ..
 
 "Hourly Report" = HOURLY-REPORT   
    LIBRARY-ENTRY "Hourly Report"
-   REPORT-BLOCK     = ( "EM1 Hourly Report Block", "FM1 Hourly Report Block" )
+   REPORT-BLOCK     = ( "EM1 Hourly Report Block", "FM1 Hourly Report Block", 
+         "Hourly Report Block 3" )
    ..
 
 
