@@ -133,8 +133,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "INTERMITTENT",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
@@ -204,8 +204,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "CONTINUOUS",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
@@ -217,10 +217,10 @@ class TestCHWLoop(unittest.TestCase):
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_chw_loop_fluid_loop_condenser_2(
+    def test_populate_data_with_chw_loop_fluid_loop_condenser_wlhp(
         self, mock_get_output_data
     ):
-        """Tests circulation loop type is CONDENSER via circulation_loop_type WLHP, circulation_loop outputs  expected
+        """Tests circulation loop type is CONDENSER via circulation_loop_type WLHP, circulation_loop outputs expected
         values for valid inputs, and that when a continuous schedule is provided, operation status is CONTINUOUS
         """
         mock_get_output_data.return_value = {
@@ -275,8 +275,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "CONTINUOUS",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
@@ -334,8 +334,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "INTERMITTENT",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
@@ -398,8 +398,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "INTERMITTENT",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
@@ -413,8 +413,8 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "INTERMITTENT",
-                "loop_supply_temperature_at_outdoor_high": 95.0,
-                "loop_supply_temperature_at_outdoor_low": 45.0,
+                "loop_supply_temperature_at_outdoor_high": 45.0,
+                "loop_supply_temperature_at_outdoor_low": 95.0,
                 "outdoor_high_for_loop_supply_reset_temperature": 100.0,
                 "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
