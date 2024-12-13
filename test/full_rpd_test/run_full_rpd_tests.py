@@ -220,6 +220,7 @@ def match_by_attributes(
         )
         if best_match:
             mapping[generated_object.get("id")] = best_match.get("id")
+            reference_values.pop(reference_values.index(best_match))
     return mapping
 
 
@@ -305,7 +306,7 @@ def match_pumps_by_references(generated_values, reference_values, object_id_map)
                     if reference_value.get("loop_or_piping") == reference_loop_id
                 )
                 if best_match:
-                    mapping[generated_object.get("id")] = best_match
+                    mapping[generated_object.get("id")] = best_match.get("id")
                     reference_values.pop(reference_values.index(best_match))
 
     return mapping
