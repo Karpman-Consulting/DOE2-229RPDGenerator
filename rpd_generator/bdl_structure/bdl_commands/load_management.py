@@ -12,6 +12,7 @@ class LoadManagement(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
         return f"LoadManagement(u_name='{self.u_name}')"

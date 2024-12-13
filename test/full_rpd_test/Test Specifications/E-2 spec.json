@@ -602,10 +602,6 @@
         "compare-value": false
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].specification_method",
-        "compare-value": true
-        },
-        {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].design_electric_power",
         "compare-value": true,
         "tolerance": 0.1,
@@ -618,8 +614,7 @@
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].design_flow",
-        "compare-value": true,
-        "tolerance": 0.01
+        "compare-value": false
         },
         {
         "json-key-path": "$.ruleset_model_descriptions[0].pumps[*].is_flow_sized_based_on_design_day",

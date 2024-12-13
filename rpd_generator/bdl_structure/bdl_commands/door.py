@@ -32,6 +32,7 @@ class Door(ChildNode):
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.door_data_structure = {}
 

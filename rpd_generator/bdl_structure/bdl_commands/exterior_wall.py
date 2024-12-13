@@ -35,6 +35,7 @@ class ExteriorWall(ChildNode, ParentNode):
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.exterior_wall_data_structure = {}
 
@@ -81,15 +82,16 @@ class ExteriorWall(ChildNode, ParentNode):
         else:
             self.classification = SurfaceClassificationOptions.WALL
 
-        parent_floor_azimuth = self.parent.parent.try_float(
+        parent_floor_azimuth = self.try_float(
             self.parent.parent.get_inp(BDL_FloorKeywords.AZIMUTH)
         )
-        parent_space_azimuth = self.parent.try_float(
+        parent_space_azimuth = self.try_float(
             self.parent.get_inp(BDL_SpaceKeywords.AZIMUTH)
         )
         surface_azimuth = self.try_float(self.get_inp(BDL_ExteriorWallKeywords.AZIMUTH))
         if (
-            parent_floor_azimuth is not None
+            self.rmd.building_azimuth is not None
+            and parent_floor_azimuth is not None
             and parent_space_azimuth is not None
             and surface_azimuth is not None
         ):
@@ -202,6 +204,8 @@ class ExteriorWall(ChildNode, ParentNode):
         u_factor = self.construction.get("u_factor")
         ext_air_film_resistance = 0.17
         if u_factor:
+            self.construction["u_factor"] = 1 / (1 / u_factor + ext_air_film_resistance)
+
             if spec_method == BDL_ConstructionTypes.U_VALUE:
                 location = self.get_inp(BDL_ExteriorWallKeywords.LOCATION)
                 int_air_film_resistance = (
@@ -212,5 +216,3 @@ class ExteriorWall(ChildNode, ParentNode):
                 self.construction["primary_layers"][0]["r_value"] = (
                     1 / u_factor - int_air_film_resistance
                 )
-
-            self.construction["u_factor"] = 1 / (1 / u_factor + ext_air_film_resistance)

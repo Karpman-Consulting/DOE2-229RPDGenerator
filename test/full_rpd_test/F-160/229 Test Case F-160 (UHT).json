@@ -181,7 +181,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -190,7 +190,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -199,19 +199,23 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
                                                     "id": "South Door 1",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 },
                                                 {
                                                     "id": "South Door 2",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 }
                                             ],
                                             "construction": {
@@ -497,7 +501,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -506,14 +510,16 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.203291617364128,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
                                                     "id": "East Door 1",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 }
                                             ],
                                             "construction": {
@@ -763,7 +769,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -772,7 +778,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -781,19 +787,23 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 21.4564216032,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
                                                     "id": "North Door 1",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 },
                                                 {
                                                     "id": "North Door 2",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 }
                                             ],
                                             "construction": {
@@ -1030,7 +1040,7 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 41.8379550336,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.2032916173641275,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
@@ -1039,14 +1049,16 @@
                                                     "classification": "WINDOW",
                                                     "glazed_area": 1.653674112,
                                                     "opaque_area": 0.0,
-                                                    "u_factor": 2.203291617364128,
+                                                    "u_factor": 2.358949382776455,
                                                     "solar_heat_gain_coefficient": 0.3826086956521739,
                                                     "visible_transmittance": 0.417
                                                 },
                                                 {
                                                     "id": "West Door 1",
                                                     "classification": "DOOR",
-                                                    "opaque_area": 1.9509638399999998
+                                                    "glazed_area": 0.0,
+                                                    "opaque_area": 1.9509638399999998,
+                                                    "u_factor": 4.266903684738647
                                                 }
                                             ],
                                             "construction": {
@@ -132924,109 +132936,19 @@
                     "unmet_load_hours_cooling": 0.0,
                     "annual_source_results": [
                         {
-                            "id": "NATURAL-GAS",
-                            "energy_source": "NATURAL_GAS",
-                            "annual_consumption": 4484.4560546875,
-                            "annual_demand": 409568.0
-                        },
-                        {
                             "id": "ELECTRICITY",
                             "energy_source": "ELECTRICITY",
                             "annual_consumption": 107675.5390625,
                             "annual_demand": 31.9790096282959
+                        },
+                        {
+                            "id": "NATURAL-GAS",
+                            "energy_source": "NATURAL_GAS",
+                            "annual_consumption": 4484.4560546875,
+                            "annual_demand": 409568.0
                         }
                     ],
                     "annual_end_use_results": [
-                        {
-                            "id": "NATURAL-GAS - Interior Lighting",
-                            "type": "INTERIOR_LIGHTING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Misc Equipment",
-                            "type": "MISC_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": false
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Heating",
-                            "type": "SPACE_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 3953.54638671875,
-                            "annual_site_coincident_demand": 405000.0,
-                            "annual_site_non_coincident_demand": 8.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Space Cooling",
-                            "type": "SPACE_COOLING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Heat Rejection",
-                            "type": "HEAT_REJECTION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Pumps & Aux",
-                            "type": "PUMPS",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 313.3104553222656,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 1.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ventilation Fans",
-                            "type": "FANS_INTERIOR_VENTILATION",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Refrigeration Display",
-                            "type": "REFRIGERATION_EQUIPMENT",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
-                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 0.0,
-                            "annual_site_coincident_demand": 0.0,
-                            "annual_site_non_coincident_demand": 0.0,
-                            "is_regulated": true
-                        },
-                        {
-                            "id": "NATURAL-GAS - Domestic Hot Water",
-                            "type": "SERVICE_WATER_HEATING",
-                            "energy_source": "NATURAL-GAS",
-                            "annual_site_energy_use": 217.59848022460938,
-                            "annual_site_coincident_demand": 4567.99951171875,
-                            "annual_site_non_coincident_demand": 8.0,
-                            "is_regulated": true
-                        },
                         {
                             "id": "ELECTRICITY - Interior Lighting",
                             "type": "INTERIOR_LIGHTING",
@@ -133116,6 +133038,96 @@
                             "annual_site_coincident_demand": 0.0,
                             "annual_site_non_coincident_demand": 0.0,
                             "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Interior Lighting",
+                            "type": "INTERIOR_LIGHTING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Misc Equipment",
+                            "type": "MISC_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": false
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Heating",
+                            "type": "SPACE_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 3953.54638671875,
+                            "annual_site_coincident_demand": 405000.0,
+                            "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Space Cooling",
+                            "type": "SPACE_COOLING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Heat Rejection",
+                            "type": "HEAT_REJECTION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Pumps & Aux",
+                            "type": "PUMPS",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 313.3104553222656,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 1.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ventilation Fans",
+                            "type": "FANS_INTERIOR_VENTILATION",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Refrigeration Display",
+                            "type": "REFRIGERATION_EQUIPMENT",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Ht Pump Supplemental Heat",
+                            "type": "HEAT_PUMP_SUPPLEMENTAL_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 0.0,
+                            "annual_site_coincident_demand": 0.0,
+                            "annual_site_non_coincident_demand": 0.0,
+                            "is_regulated": true
+                        },
+                        {
+                            "id": "NATURAL-GAS - Domestic Hot Water",
+                            "type": "SERVICE_WATER_HEATING",
+                            "energy_source": "NATURAL-GAS",
+                            "annual_site_energy_use": 217.59848022460938,
+                            "annual_site_coincident_demand": 4567.99951171875,
+                            "annual_site_non_coincident_demand": 8.0,
+                            "is_regulated": true
                         }
                     ]
                 }
@@ -133131,6 +133143,6 @@
         "ground_temperature_schedule": "Ground Temperature Schedule",
         "file_name": "DENVER INTL AP    CO"
     },
-    "data_timestamp": "2024-12-11T12:52Z",
+    "data_timestamp": "2024-12-13T16:41Z",
     "data_version": "0.1.0"
 }

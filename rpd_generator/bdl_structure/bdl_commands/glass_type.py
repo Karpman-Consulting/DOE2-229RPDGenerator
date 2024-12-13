@@ -13,6 +13,7 @@ class GlassType(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
+        self.rmd.bdl_obj_instances[u_name] = self
 
         self.glass_conductance = None
         self.shading_coefficient = None

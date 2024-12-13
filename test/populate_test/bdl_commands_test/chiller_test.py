@@ -31,7 +31,6 @@ class TestElectricChillers(unittest.TestCase):
             "Normalized (ARI) Entering Condenser Water Temperature (°F)": 70.0,
             "Normalized (ARI) Leaving Chilled Water Temperature (°F)": 44.0,
         }
-
         self.chiller.keyword_value_pairs = {
             BDL_ChillerKeywords.TYPE: BDL_ChillerTypes.ELEC_OPEN_CENT,
             BDL_ChillerKeywords.CHW_LOOP: "Chilled Water Loop (Primary)",
@@ -42,9 +41,7 @@ class TestElectricChillers(unittest.TestCase):
             BDL_ChillerKeywords.DESIGN_COND_T: "70",
         }
 
-        self.chiller.populate_data_elements()
-        self.chiller.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Chiller 1",
             "compressor_type": "CENTRIFUGAL",
@@ -66,7 +63,6 @@ class TestElectricChillers(unittest.TestCase):
             "part_load_efficiency": [],
             "part_load_efficiency_metrics": [],
         }
-
         self.assertEqual(expected_data_structure, self.chiller.chiller_data_structure)
 
 
@@ -99,9 +95,7 @@ class TestEngineChillers(unittest.TestCase):
             BDL_ChillerKeywords.DESIGN_COND_T: "70",
         }
 
-        self.chiller.populate_data_elements()
-        self.chiller.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Chiller 1",
             "compressor_type": "SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION",
@@ -123,5 +117,4 @@ class TestEngineChillers(unittest.TestCase):
             "part_load_efficiency": [],
             "part_load_efficiency_metrics": [],
         }
-
         self.assertEqual(expected_data_structure, self.chiller.chiller_data_structure)
