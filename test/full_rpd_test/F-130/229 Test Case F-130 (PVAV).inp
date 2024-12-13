@@ -194,10 +194,6 @@ $ ---------------------------------------------------------
    SPECIFIC-HEAT    = 0
    ..
 
-SET-DEFAULT FOR LAYERS          
-   MATERIAL         = ( "Roof Type 3lyr" )
-   ..
-
 "Roof Construction Lyr" = LAYERS          
    INSIDE-FILM-RES  = 0.61
    MATERIAL         = ( "Metal Deck", "Continuous Insulation", 
@@ -1222,11 +1218,6 @@ $ ---------------------------------------------------------
 $ ---------------------------------------------------------
 $              Boilers
 $ ---------------------------------------------------------
-
-SET-DEFAULT FOR BOILER          
-   TYPE = HW-BOILER-W/DRAFT
-   HEAT-INPUT-RATIO = {1/0.84}
-   ..
 
 "Boiler 1" = BOILER          
    TYPE             = HW-BOILER
