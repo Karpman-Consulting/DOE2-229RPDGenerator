@@ -80,88 +80,11 @@ def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:
 
 
 def find_all_with_field_value(jpath, field, value, obj):
-    def recursive_find(keys, current_obj):
-        if not keys:
-            return [current_obj]  # Base case: no more keys to process
-
-        if current_obj is None:  # Safeguard against None
-            return []
-
-        key = keys[0]
-
-        if key == "*":  # Match all keys or array elements
-            if isinstance(current_obj, dict):
-                return [
-                    result
-                    for sub_key, sub_value in current_obj.items()
-                    for result in recursive_find(keys[1:], sub_value)
-                ]
-            elif isinstance(current_obj, list):
-                return [
-                    result
-                    for item in current_obj
-                    for result in recursive_find(keys[1:], item)
-                ]
-            else:
-                return []  # No match for non-dict/non-list objects
-
-        elif "[" in key and "]" in key:  # Handle filters and indexing
-            try:
-                base_key, condition = key.split("[", 1)
-                condition = condition.strip("]")
-                if "?" in condition:  # Handle filters like `[?(@.field="value")]`
-                    field_name, field_value = parse_filter(condition)
-                    if base_key in current_obj and isinstance(
-                        current_obj[base_key], list
-                    ):
-                        return [
-                            item
-                            for item in current_obj.get(base_key, [])
-                            if isinstance(item, dict)
-                            and item.get(field_name) == field_value
-                        ]
-                elif condition == "*":  # Handle wildcard in array indexing
-                    if base_key in current_obj and isinstance(
-                        current_obj[base_key], list
-                    ):
-                        return [
-                            result
-                            for item in current_obj.get(base_key, [])
-                            for result in recursive_find(keys[1:], item)
-                        ]
-                else:  # Regular array indexing
-                    idx = int(condition)
-                    if base_key in current_obj and isinstance(
-                        current_obj[base_key], list
-                    ):
-                        array = current_obj.get(base_key, [])
-                        if isinstance(array, list) and 0 <= idx < len(
-                            array
-                        ):  # Check index bounds
-                            return recursive_find(keys[1:], array[idx])
-                    return []
-            except (ValueError, IndexError, KeyError, TypeError):
-                return []  # Handle invalid array indexing gracefully
-
-        else:  # Handle normal key lookup
-            if isinstance(current_obj, dict):
-                next_obj = current_obj.get(key)
-                if next_obj is not None:  # Ensure the result is not None
-                    return recursive_find(keys[1:], next_obj)
-            return []
-
-    def parse_filter(condition):
-        # Parse filter conditions of the form `?(@.field == "value")`
-        if condition.startswith("?(@.") and condition.endswith(")"):
-            field, field_value = condition[4:-1].split(" == ")
-            return field.strip(), field_value.strip("'")
-        raise ValueError(f"Invalid condition: {condition}")
-
-    # Dynamically create the filter based on the field and value
+    # Construct the filter expression
+    filter_expr = f"@.{field} == '{value}'"
     cleaned_path = re.sub(r"\[\*\]$", "", jpath)
-    filter_path = f"{cleaned_path}[?(@.{field} == '{value}')]"
-    keys = split_jsonpath(filter_path)
-    return recursive_find(keys, obj)
+    jsonpath_expr = parse(ensure_root(f"{cleaned_path}[?({filter_expr})]"))
+    return [m.value for m in jsonpath_expr.find(obj)]
 
 
 def split_jsonpath(jpath):
