@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from collections import defaultdict
 from rpd_generator.schema.ruleset import Ruleset
 from rpd_generator.utilities.jsonpath_utils import create_enum_dict
 
@@ -51,11 +52,23 @@ class SchemaEnums:
         _output_schema_enum_jsonpath_value_dict = create_enum_dict(_output_schema_obj)
         _enum_schema_enum_jsonpath_value_dict = create_enum_dict(_enum_schema_obj)
         _schema_enum_jsonpath_value_dict = create_enum_dict(_schema_obj)
-        # Merge the dictionaries
+
+        combined_enum_jsonpath_value_dict = defaultdict(list)
+
+        # Merge dictionaries while combining values
+        for d in (
+            _schema_enum_jsonpath_value_dict,
+            _enum_schema_enum_jsonpath_value_dict,
+            _output_schema_enum_jsonpath_value_dict,
+        ):
+            for key, value in d.items():
+                # Extend the list for the key with new values
+                combined_enum_jsonpath_value_dict[key].extend(value)
+
+        # Create a dictionary of all the enumerations as dictionaries
         combined_enum_dict = {
-            **_output_schema_enum_jsonpath_value_dict,
-            **_enum_schema_enum_jsonpath_value_dict,
-            **_schema_enum_jsonpath_value_dict,
+            enum_name: enum_list
+            for enum_name, enum_list in combined_enum_jsonpath_value_dict.items()
         }
 
         # Assign to SchemaEnums with the combined lists
