@@ -32,18 +32,18 @@ def find_all(jpath, obj):
         if key == "*":  # Match all keys or array elements
             if isinstance(current_obj, dict):
                 return [
-                    value
-                    for sub_key, value in current_obj.items()
-                    for value in recursive_find(keys[1:], value)
+                    found
+                    for sub_key, sub_val in current_obj.items()
+                    for found in recursive_find(keys[1:], sub_val)
                 ]
             elif isinstance(current_obj, list):
                 return [
-                    value
+                    found
                     for item in current_obj
-                    for value in recursive_find(keys[1:], item)
+                    for found in recursive_find(keys[1:], item)
                 ]
             else:
-                return []  # No match for non-dict/non-list objects
+                return []
 
         elif "[" in key and "]" in key:  # Handle array indexing
             try:
@@ -52,9 +52,9 @@ def find_all(jpath, obj):
                 if idx == "*":  # Handle wildcard in array indexing
                     if k in current_obj and isinstance(current_obj[k], list):
                         return [
-                            value
+                            found
                             for item in current_obj[k]
-                            for value in recursive_find(keys[1:], item)
+                            for found in recursive_find(keys[1:], item)
                         ]
                     return []
                 else:  # Regular array indexing
