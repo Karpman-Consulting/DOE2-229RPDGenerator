@@ -22,57 +22,198 @@ def ensure_root(jpath):
     return jpath if jpath.startswith("$") else "$." + jpath
 
 
+def split_path(jpath):
+    # If the path starts with "$.", remove it
+    if jpath.startswith("$."):
+        jpath = jpath[2:]
+
+    result = []
+    current_segment = []
+    bracket_depth = 0
+
+    for char in jpath:
+        if char == "[":
+            bracket_depth += 1
+            current_segment.append(char)
+        elif char == "]":
+            bracket_depth -= 1
+            current_segment.append(char)
+        elif char == "." and bracket_depth == 0:
+            # We are at a top-level dot, split here
+            segment_str = "".join(current_segment).strip()
+            if segment_str:
+                result.append(segment_str)
+            current_segment = []
+        else:
+            current_segment.append(char)
+
+    # Add the last segment if it exists
+    segment_str = "".join(current_segment).strip()
+    if segment_str:
+        result.append(segment_str)
+    return result
+
+
 def find_all(jpath, obj):
-    def recursive_find(keys, current_obj):
-        if not keys:
-            return [current_obj]  # Base case: no more keys to process
+    # Regex to identify filter patterns like [?(...)]
+    filter_pattern = re.compile(r"\[\?\((.*?)\)\]")
 
-        key = keys[0]
+    # Regex to identify array index patterns like [*], [0], [1], etc.
+    bracket_pattern = re.compile(r"\[([^\]]*)\]")
 
-        if key == "*":  # Match all keys or array elements
-            if isinstance(current_obj, dict):
-                return [
-                    found
-                    for sub_key, sub_val in current_obj.items()
-                    for found in recursive_find(keys[1:], sub_val)
-                ]
-            elif isinstance(current_obj, list):
-                return [
-                    found
-                    for item in current_obj
-                    for found in recursive_find(keys[1:], item)
-                ]
+    def parse_path_segment(segment):
+        """
+        Given a path segment (like "surfaces[*][?(@.adjacent_to == 'EXTERIOR')]"),
+        split it into a list of operations:
+
+        For example:
+        "surfaces[*][?(@.adjacent_to == 'EXTERIOR')]" ->
+        [("key", "surfaces"), ("index", "*"), ("filter", "@.adjacent_to == 'EXTERIOR'")]
+        """
+        parts = []
+        # First, split off the initial key if it exists before any bracket
+        m = bracket_pattern.split(segment)  # This will split by any [...]
+        # m will be like ["surfaces", "*", "?(@.adjacent_to == 'EXTERIOR')", ""]
+        # The first element of m is always before the first bracket
+        base_key = m[0]
+        if base_key:
+            parts.append(("key", base_key))
+
+        # Now, pairs of extracted values correspond to bracket contents
+        # The bracket_pattern split returns something like:
+        # segment: surfaces[*][?(@.adjacent_to == 'EXTERIOR')]
+        # m: ['surfaces', '*', '?(@.adjacent_to == \'EXTERIOR\')', '']
+        # The bracketed parts are m[1], m[2], ...
+        # Even indexes (other than 0) correspond to bracket contents,
+        # last element might be empty if the string ended with a bracket.
+        for i in range(1, len(m)):
+            content = m[i].strip()
+            if content == "":
+                continue
+            if content.startswith("?(") and content.endswith(")"):
+                # Filter condition
+                condition = content[2:-1].strip()
+                parts.append(("filter", condition))
             else:
-                return []
+                # It's either *, a numeric index, or something else
+                parts.append(("index", content))
 
-        elif "[" in key and "]" in key:  # Handle array indexing
-            try:
-                k, idx = key.split("[")
-                idx = idx.strip("]")
-                if idx == "*":  # Handle wildcard in array indexing
-                    if k in current_obj and isinstance(current_obj[k], list):
-                        return [
-                            found
-                            for item in current_obj[k]
-                            for found in recursive_find(keys[1:], item)
-                        ]
-                    return []
-                else:  # Regular array indexing
-                    idx = int(idx)
-                    if k in current_obj and isinstance(current_obj[k], list):
-                        return recursive_find(keys[1:], current_obj[k][idx])
-                    return []
-            except (ValueError, IndexError, KeyError):
-                return []  # Handle invalid array indexing gracefully
+        return parts
 
-        else:  # Handle normal key lookup
-            if isinstance(current_obj, dict) and key in current_obj:
-                return recursive_find(keys[1:], current_obj[key])
-            return []
+    def evaluate_filter_condition(obj, condition_str):
+        """
+        Evaluate a filter condition string against obj.
+        Conditions can have `@.field == "value"` format
+        and multiple conditions joined by "and".
 
-    # Remove leading "$." and split the path into keys
-    keys = jpath.strip("$.").split(".")
-    return recursive_find(keys, obj)
+        Handle @.field references, equality checks, and string values.
+        """
+
+        # Filter conditions look like: @.field == 'value'
+        condition_str = condition_str.replace("==", "=")
+
+        # Split by ' and ' to handle multiple conditions
+        conditions = [c.strip() for c in condition_str.split(" and ")]
+
+        def evaluate_single_condition(cond):
+            # cond like: "@.adjacent_to = 'EXTERIOR'"
+            # Extract field name and value using a regex
+            # Pattern: @.field = 'value'
+            match = re.match(r'@\.(\w+)\s*=\s*(["\'])(.*?)\2', cond)
+            if not match:
+                # If parsing fails, skip this condition (return False)
+                return False
+            field, _, value = match.groups()
+            # Check if field is in obj and equals value
+            return (field in obj) and (obj[field] == value)
+
+        # All conditions must be True
+        return all(evaluate_single_condition(c) for c in conditions)
+
+    def recursive_find(path_parts, current_obj):
+        """
+        path_parts is a list of segments, each segment is a list of operations like:
+        [("key","ruleset_model_descriptions"),("index","*")]
+        Process them step-by-step.
+        """
+        if not path_parts:
+            return [current_obj]
+
+        segment = path_parts[0]
+        results = [current_obj]
+
+        for op_type, value in segment:
+            key = value.split("[")[0].split("==")[0]
+            new_results = []
+            if op_type == "key":
+                # For each object in results, fetch the value for the given key if it's a dict
+                for r in results:
+                    if isinstance(r, dict) and key in r:
+                        new_results.append(r[key])
+                    else:
+                        # Key not found or r is not a dict, no results
+                        pass
+
+            elif op_type == "index":
+
+                for r in results:
+
+                    if isinstance(r, list):
+                        if value == "*":
+                            new_results.extend(r)
+
+                        else:
+                            try:
+                                # Numeric index
+                                idx = int(value)
+                                if 0 <= idx < len(r):
+                                    new_results.append(r[idx])
+                            except ValueError:
+                                # Invalid index
+                                pass
+
+                    elif isinstance(r, dict):
+                        pass
+
+            elif op_type == "filter":
+                # Filter the results; only objects that satisfy the condition remain
+                for r in results:
+                    if isinstance(r, dict) and evaluate_filter_condition(r, value):
+                        new_results.append(r)
+                    elif isinstance(r, list):
+                        # If it's a list, apply the filter to each element
+                        for item in r:
+                            if isinstance(item, dict) and evaluate_filter_condition(
+                                item, value
+                            ):
+                                new_results.append(item)
+
+            results = new_results
+
+            # If no results remain, break early
+            if not results:
+                break
+
+        # Recurse with the remaining path parts on the filtered results
+        final_results = []
+        for res in results:
+            final_results.extend(recursive_find(path_parts[1:], res))
+
+        return final_results
+
+    # Preprocessing the jpath: remove leading "$."
+    jpath = jpath.strip()
+    if jpath.startswith("$."):
+        jpath = jpath[2:]
+
+    # Split by '.' first
+    raw_segments = split_path(jpath)
+
+    # Parse each segment into structured operations
+    path_parts = [parse_path_segment(s) for s in raw_segments if s]
+
+    # Now recursively find
+    return recursive_find(path_parts, obj)
 
 
 def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:

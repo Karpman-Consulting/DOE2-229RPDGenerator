@@ -1950,7 +1950,7 @@ class TestRunFullRPDTests(unittest.TestCase):
         with open(correct_answer_e1_path, "r") as f:
             reference_json = json.load(f)
 
-        json_path = '$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = "EXTERIOR")]'
+        json_path = "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[?(@.adjacent_to == 'EXTERIOR')]"
         result = rpd_tests.find_all(json_path, reference_json)
         self.assertEqual(9, len(result))
 

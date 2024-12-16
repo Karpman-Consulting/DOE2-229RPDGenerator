@@ -1654,8 +1654,8 @@ def run_comparison_for_all_tests(test_dir):
 
     for test in os.listdir(test_dir):
         # Only recognize directories starting with "E-" or "F-" as test cases
-        # if os.path.isdir(test_dir) and (test.startswith("E-") or test.startswith("F-")):
-        if os.path.isdir(test_dir) and (test == "E-1"):
+        if os.path.isdir(test_dir) and (test.startswith("E-") or test.startswith("F-")):
+            # if os.path.isdir(test_dir) and (test == "E-1"):
 
             test_case_dir = os.path.join(test_dir, test)
             generated_json_file = next(
