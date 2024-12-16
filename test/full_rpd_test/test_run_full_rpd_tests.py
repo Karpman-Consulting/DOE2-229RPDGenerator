@@ -1925,3 +1925,70 @@ class TestRunFullRPDTests(unittest.TestCase):
         )
         self.assertEqual(warnings, [])
         self.assertEqual(errors, [])
+
+    def test_find_all_simple(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        correct_answer_e1_path = os.path.join(
+            current_dir, "Correct Answer RPDs", "E-2.json"
+        )
+        with open(correct_answer_e1_path, "r") as f:
+            reference_json = json.load(f)
+
+        json_path = (
+            "$.ruleset_model_descriptions[*].buildings[*].building_segments[*].zones[*]"
+        )
+        result = rpd_tests.find_all(json_path, reference_json)
+        self.assertEqual(len(result), 5)
+
+    def test_find_all_end_filter(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        correct_answer_e1_path = os.path.join(
+            current_dir, "Correct Answer RPDs", "E-2.json"
+        )
+        with open(correct_answer_e1_path, "r") as f:
+            reference_json = json.load(f)
+
+        json_path = '$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = "EXTERIOR")]'
+        result = rpd_tests.find_all(json_path, reference_json)
+        self.assertEqual(9, len(result))
+
+    def test_find_all_mid_filter(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        correct_answer_e1_path = os.path.join(
+            current_dir, "Correct Answer RPDs", "E-2.json"
+        )
+        with open(correct_answer_e1_path, "r") as f:
+            reference_json = json.load(f)
+
+        json_path = '$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = "EXTERIOR")].optical_properties.absorptance_thermal_exterior'
+        result = rpd_tests.find_all(json_path, reference_json)
+        self.assertEqual(9, len(result))
+
+    def test_find_all_combo_filter(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        correct_answer_e1_path = os.path.join(
+            current_dir, "Correct Answer RPDs", "E-2.json"
+        )
+        with open(correct_answer_e1_path, "r") as f:
+            reference_json = json.load(f)
+
+        json_path = '$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = "EXTERIOR" and @.id = "Prm Zone 1 South Wall")].optical_properties.absorptance_thermal_exterior'
+        result = rpd_tests.find_all(json_path, reference_json)
+        self.assertEqual(1, len(result))
+
+    def test_find_all_multi_filter(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        correct_answer_e1_path = os.path.join(
+            current_dir, "Correct Answer RPDs", "E-2.json"
+        )
+        with open(correct_answer_e1_path, "r") as f:
+            reference_json = json.load(f)
+
+        json_path = '$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*][?(@.id = "Prm Zone 1 (South)")].surfaces[*][?(@.adjacent_to = "EXTERIOR")].optical_properties.absorptance_thermal_exterior'
+        result = rpd_tests.find_all(json_path, reference_json)
+        self.assertEqual(2, len(result))
