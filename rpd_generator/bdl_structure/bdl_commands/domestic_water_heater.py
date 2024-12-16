@@ -130,7 +130,7 @@ class DomesticWaterHeater(BaseNode):
         loop_stpt = None
         if loop is not None:
             loop_stpt = loop.design_supply_temperature[1]
-        tank_stpt = self.get_inp(BDL_DWHeaterKeywords.AQUASTAT_SETPT_T)
+        tank_stpt = self.try_float(self.get_inp(BDL_DWHeaterKeywords.AQUASTAT_SETPT_T))
         if tank_stpt is not None and loop_stpt is not None:
             self.setpoint_temperature = max(loop_stpt, tank_stpt)
         elif tank_stpt is None:
