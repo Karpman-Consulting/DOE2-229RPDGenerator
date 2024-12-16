@@ -28,7 +28,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         self.loop = CirculationLoop("Loop 1", self.rmd)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller(self, mock_get_output_data):
+    def test_populate_data_with_domestic_water_heater(self, mock_get_output_data):
         """Tests that domestic water heater outputs expected values, given valid inputs"""
         mock_get_output_data.return_value = {
             "DW Heaters - Design Parameters - Capacity": -123456789
@@ -77,7 +77,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_non_natural_gas_fuel_meter(
+    def test_populate_data_with_domestic_water_heater_non_natural_gas_fuel_meter(
         self, mock_get_output_data
     ):
         """Tests that fuel meter exists and is not fueled by natural gas, while water heater is fueled by natural gas"""
@@ -128,7 +128,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_no_fuel_meter(
+    def test_populate_data_with_domestic_water_heater_no_fuel_meter(
         self, mock_get_output_data
     ):
         """Tests that master meter is used when no fuel meter is provided"""
@@ -181,7 +181,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_no_heat_elec_input_ratios(
+    def test_populate_data_with_domestic_water_heater_no_heat_elec_input_ratios(
         self, mock_get_output_data
     ):
         """Tests that thermal_efficiency is 1.0 when no HEAT_INPUT_RATIO and ELEC_INPUT_RATIO are provided"""
@@ -230,7 +230,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_no_elec_input_ratio(
+    def test_populate_data_with_domestic_water_heater_no_elec_input_ratio(
         self, mock_get_output_data
     ):
         """Tests that thermal_efficiency is correctly calculated when no ELEC_INPUT_RATIO is provided"""
@@ -280,7 +280,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_no_heat_input_ratio(
+    def test_populate_data_with_domestic_water_heater_no_heat_input_ratio(
         self, mock_get_output_data
     ):
         """Tests that thermal_efficiency is correctly calculated when no HEAT_INPUT_RATIO is provided"""
@@ -330,7 +330,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_no_tank_stpt(
+    def test_populate_data_with_domestic_water_heater_no_tank_stpt(
         self, mock_get_output_data
     ):
         """Tests that setpoint_temperature == loop design temperature when no AQUASTAT_SETPT_T is provided"""
@@ -380,7 +380,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_electric_water_heater(
+    def test_populate_data_with_domestic_water_heater_electric_water_heater(
         self, mock_get_output_data
     ):
         """Tests that domestic water heater outputs expected values, given valid inputs and ELEC water heater"""
@@ -431,7 +431,9 @@ class TestDomesticWaterHeater(unittest.TestCase):
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_centrif_chiller_heat_pump(self, mock_get_output_data):
+    def test_populate_data_with_domestic_water_heater_heat_pump(
+        self, mock_get_output_data
+    ):
         """Tests that domestic water heater outputs expected values, given valid inputs and HEAT_PUMP water heater"""
         mock_get_output_data.return_value = {
             "DW Heaters - Design Parameters - Capacity": -123456789
