@@ -55,11 +55,8 @@ def split_path(jpath):
 
 
 def find_all(jpath, obj):
-    # Regex to identify filter patterns like [?(...)]
-    filter_pattern = re.compile(r"\[\?\((.*?)\)\]")
-
     # Regex to identify array index patterns like [*], [0], [1], etc.
-    bracket_pattern = re.compile(r"\[([^\]]*)\]")
+    bracket_pattern = re.compile(r"\[([^]]*)]")
 
     def parse_path_segment(segment):
         """
@@ -71,21 +68,11 @@ def find_all(jpath, obj):
         [("key", "surfaces"), ("index", "*"), ("filter", "@.adjacent_to == 'EXTERIOR'")]
         """
         parts = []
-        # First, split off the initial key if it exists before any bracket
-        m = bracket_pattern.split(segment)  # This will split by any [...]
-        # m will be like ["surfaces", "*", "?(@.adjacent_to == 'EXTERIOR')", ""]
-        # The first element of m is always before the first bracket
+        m = bracket_pattern.split(segment)
         base_key = m[0]
         if base_key:
             parts.append(("key", base_key))
 
-        # Now, pairs of extracted values correspond to bracket contents
-        # The bracket_pattern split returns something like:
-        # segment: surfaces[*][?(@.adjacent_to == 'EXTERIOR')]
-        # m: ['surfaces', '*', '?(@.adjacent_to == \'EXTERIOR\')', '']
-        # The bracketed parts are m[1], m[2], ...
-        # Even indexes (other than 0) correspond to bracket contents,
-        # last element might be empty if the string ended with a bracket.
         for i in range(1, len(m)):
             content = m[i].strip()
             if content == "":
@@ -95,12 +82,11 @@ def find_all(jpath, obj):
                 condition = content[2:-1].strip()
                 parts.append(("filter", condition))
             else:
-                # It's either *, a numeric index, or something else
                 parts.append(("index", content))
 
         return parts
 
-    def evaluate_filter_condition(obj, condition_str):
+    def evaluate_filter_condition(obj_inst, condition_str):
         """
         Evaluate a filter condition string against obj.
         Conditions can have `@.field == "value"` format
@@ -116,30 +102,28 @@ def find_all(jpath, obj):
         conditions = [c.strip() for c in condition_str.split(" and ")]
 
         def evaluate_single_condition(cond):
-            # cond like: "@.adjacent_to = 'EXTERIOR'"
-            # Extract field name and value using a regex
             # Pattern: @.field = 'value'
             match = re.match(r'@\.(\w+)\s*=\s*(["\'])(.*?)\2', cond)
             if not match:
                 # If parsing fails, skip this condition (return False)
                 return False
             field, _, value = match.groups()
-            # Check if field is in obj and equals value
-            return (field in obj) and (obj[field] == value)
+            # Check if field is in (obj_inst and equals value
+            return (field in obj_inst) and (obj_inst[field] == value)
 
         # All conditions must be True
         return all(evaluate_single_condition(c) for c in conditions)
 
-    def recursive_find(path_parts, current_obj):
+    def recursive_find(parts, current_obj):
         """
-        path_parts is a list of segments, each segment is a list of operations like:
+        parts is a list of segments, each segment is a list of operations like:
         [("key","ruleset_model_descriptions"),("index","*")]
         Process them step-by-step.
         """
-        if not path_parts:
+        if not parts:
             return [current_obj]
 
-        segment = path_parts[0]
+        segment = parts[0]
         results = [current_obj]
 
         for op_type, value in segment:
@@ -197,7 +181,7 @@ def find_all(jpath, obj):
         # Recurse with the remaining path parts on the filtered results
         final_results = []
         for res in results:
-            final_results.extend(recursive_find(path_parts[1:], res))
+            final_results.extend(recursive_find(parts[1:], res))
 
         return final_results
 
@@ -223,7 +207,7 @@ def find_all_by_jsonpaths(jpaths: list, obj: dict) -> list:
 def find_all_with_field_value(jpath, field, value, obj):
     # Construct the filter expression
     filter_expr = f"@.{field} == '{value}'"
-    cleaned_path = re.sub(r"\[\*\]$", "", jpath)
+    cleaned_path = re.sub(r"\[\*]$", "", jpath)
     jsonpath_expr = parse(ensure_root(f"{cleaned_path}[?({filter_expr})]"))
     return [m.value for m in jsonpath_expr.find(obj)]
 
@@ -259,7 +243,7 @@ def find_all_with_filters(jpath, filters, obj):
     filter_expr = " & ".join(
         [f"@.{field} == '{value}'" for field, value in filters.items()]
     )
-    cleaned_path = re.sub(r"\[\*\]$", "", jpath)
+    cleaned_path = re.sub(r"\[\*]$", "", jpath)
     jsonpath_expr = parse(ensure_root(f"{cleaned_path}[?({filter_expr})]"))
     return [m.value for m in jsonpath_expr.find(obj)]
 
