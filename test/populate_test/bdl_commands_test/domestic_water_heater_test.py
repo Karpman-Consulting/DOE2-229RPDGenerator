@@ -46,7 +46,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.DHW_LOOP: "Loop 1",
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
-            BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
+            BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.ZONE,
             BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
             BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
             BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
@@ -59,7 +59,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "tank": {
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
-                "location": "OUTSIDE",
+                "location": "IN_ZONE",
                 "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
@@ -98,7 +98,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
             BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
             BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
         }
@@ -111,7 +110,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -151,7 +149,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
             BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
             BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
         }
@@ -164,7 +161,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -202,7 +198,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -213,7 +208,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -251,8 +245,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
-            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.5",
+            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "1.25",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -263,7 +256,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -273,7 +265,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 2.0,
+            "thermal_efficiency": 0.8,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -301,8 +293,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
-            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.2",
+            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "1.0",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -313,7 +304,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -323,7 +313,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 5.0,
+            "thermal_efficiency": 1.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -350,9 +340,8 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.DHW_LOOP: "Loop 1",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
-            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
-            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
+            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "1.25",
+            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "1.0",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -363,7 +352,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -373,7 +361,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 65.0,
-            "thermal_efficiency": 10.0,
+            "thermal_efficiency": 0.8,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -401,9 +389,8 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
             BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
-            BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
-            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
-            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
+            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "1.2",
+            BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "1.0",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -414,7 +401,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
                 "location": "OUTSIDE",
-                "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
@@ -424,14 +410,14 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 10.0,
+            "thermal_efficiency": 0.8333333333333334,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
         )
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_data_with_domestic_water_heater_heat_pump(
+    def test_populate_data_with_domestic_water_heater_heat_pump_in_zone(
         self, mock_get_output_data
     ):
         """Tests that domestic water heater outputs expected values, given valid inputs and HEAT_PUMP water heater"""
@@ -451,9 +437,8 @@ class TestDomesticWaterHeater(unittest.TestCase):
             BDL_DWHeaterKeywords.DHW_LOOP: "Loop 1",
             BDL_DWHeaterKeywords.AQUASTAT_SETPT_T: "70.2",
             BDL_DWHeaterKeywords.TANK_VOLUME: "250",
-            BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.OUTDOOR,
+            BDL_DWHeaterKeywords.LOCATION: BDL_DWHeaterLocationOptions.ZONE,
             BDL_DWHeaterKeywords.ZONE_NAME: "ZONE 1",
-            BDL_DWHeaterKeywords.HEAT_INPUT_RATIO: "0.2",
             BDL_DWHeaterKeywords.ELEC_INPUT_RATIO: "0.5",
         }
 
@@ -464,14 +449,14 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "tank": {
                 "id": "DWH 1 Tank",
                 "storage_capacity": 250.0,
-                "location": "OUTSIDE",
+                "location": "IN_ZONE",
                 "location_zone": "ZONE 1",
             },
             "solar_thermal_systems": [],
             "compressor_capacity_validation_points": [],
             "compressor_power_validation_points": [],
             "heater_type": "HEAT_PUMP_PACKAGED",
-            "compressor_location": "OUTSIDE",
+            "compressor_location": "IN_ZONE",
             "compressor_zone": "ZONE 1",
             "compressor_heat_rejection_source": "OTHER",
             "notes": 'At the time of development, heat pump water heaters within a zone are not fully supported by eQUEST. The compressor heat rejection source is therefore populated as OTHER. According to help text Volume 2: Dictionary > HVAC Components > DW-HEATER > Energy Consumption: "Partially implemented; the program will use the zone temperature when calculating the tank losses or the performance of a HEAT-PUMP water heater, however these interactions do not have any effect on the zone temperature."',
@@ -479,7 +464,7 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 10.0,
+            "thermal_efficiency": 2.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
