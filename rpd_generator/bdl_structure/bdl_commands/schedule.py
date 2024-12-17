@@ -177,7 +177,7 @@ class Schedule(BaseNode):
             )
             ann_days = [int(float(val)) for val in ann_days]
 
-            week_schedules = [self.get_inp(BDL_ScheduleKeywords.WEEK_SCHEDULES)]
+            week_schedules = self.get_inp(BDL_ScheduleKeywords.WEEK_SCHEDULES)
 
             # Create a list to hold the index where there is a change in week schedule based on mo/day in ann sch
             schedule_change_indices = [

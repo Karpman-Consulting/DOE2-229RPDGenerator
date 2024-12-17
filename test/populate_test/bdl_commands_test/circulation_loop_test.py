@@ -5,15 +5,20 @@ from rpd_generator.bdl_structure.bdl_commands.pump import (
     Pump,
     BDL_PumpKeywords,
 )
-from rpd_generator.bdl_structure.bdl_commands.system import System
+from rpd_generator.bdl_structure.bdl_commands.system import System, BDL_SystemTypes
 from rpd_generator.bdl_structure.bdl_commands.schedule import (
     BDL_DayScheduleKeywords,
     BDL_ScheduleTypes,
     DaySchedulePD,
+    WeekSchedulePD,
+    BDL_WeekScheduleKeywords,
+    Schedule,
+    BDL_ScheduleKeywords,
 )
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.circulation_loop import *
+from rpd_generator.utilities import schedule_funcs
 
 
 class TestCHWLoop(unittest.TestCase):
@@ -24,9 +29,44 @@ class TestCHWLoop(unittest.TestCase):
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.circulation_loop = CirculationLoop("CHW Loop 1", self.rmd)
         self.pump = Pump("Pump 1", self.rmd)
-        self.schedule = DaySchedulePD("Schedule 1", self.rmd)
-        self.schedule2 = DaySchedulePD("Schedule 2", self.rmd)
         self.system = System("System 1", self.rmd)
+        self.daySchedule = DaySchedulePD("Day Schedule Non-continuous", self.rmd)
+        self.daySchedule2 = DaySchedulePD("Day Schedule Continuous", self.rmd)
+        self.weekSchedule = WeekSchedulePD("Week Schedule Non-continuous", self.rmd)
+        self.weekSchedule2 = WeekSchedulePD("Week Schedule Continuous", self.rmd)
+        self.annualSchedule = Schedule("Annual Schedule 1", self.rmd)
+        self.annualSchedule.annual_calendar = schedule_funcs.generate_year_calendar(
+            2020, "WEDNESDAY"
+        )
+
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
+        self.system.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Annual Schedule 1"
+        }
+        self.daySchedule.keyword_value_pairs = {
+            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_DayScheduleKeywords.VALUES: [
+                str(i) for i in range(0, 24)
+            ],  # Non-continuous schedule
+            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
+            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
+            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
+            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
+        }
+        self.weekSchedule.keyword_value_pairs = {
+            BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
+                "Day Schedule Non-continuous" for i in range(12)
+            ],
+        }
+        self.annualSchedule.keyword_value_pairs = {
+            BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_ScheduleKeywords.WEEK_SCHEDULES: [
+                "Week Schedule Non-continuous" for i in range(52)
+            ],
+            BDL_ScheduleKeywords.MONTH: "1",
+            BDL_ScheduleKeywords.DAY: "1",
+        }
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_chw_loop(self, mock_get_output_data):
@@ -35,16 +75,6 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
-        }
-        self.schedule.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
-        }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -52,13 +82,13 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.FIXED,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 2",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -87,22 +117,37 @@ class TestCHWLoop(unittest.TestCase):
         self, mock_get_output_data
     ):
         """Tests that outdoor hi and lo temps and supply hi and lo temps are set, given OUTDOOR_AIR temp reset type
-        and that operation mode is intermittent when loop  operation mode is STANDBY and non-continuous
+        and that operation mode is intermittent when loop operation mode is STANDBY and non-continuous
         """
         mock_get_output_data.return_value = {
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
+            BDL_SystemKeywords.FAN_SCHEDULE: "Annual Schedule 1",
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.RESVVT,
         }
-        self.schedule.keyword_value_pairs = {
+        self.daySchedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_DayScheduleKeywords.VALUES: [str(i) for i in range(0, 24)],
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
             BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
+        }
+        self.weekSchedule.keyword_value_pairs = {
+            BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
+                "Day Schedule Non-continuous" for i in range(12)
+            ],
+        }
+        self.annualSchedule.keyword_value_pairs = {
+            BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_ScheduleKeywords.WEEK_SCHEDULES: [
+                "Week Schedule Non-continuous" for i in range(52)
+            ],
+            BDL_ScheduleKeywords.MONTH: "1",
+            BDL_ScheduleKeywords.DAY: "1",
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
@@ -111,13 +156,13 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -156,24 +201,29 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
-        }
-        self.schedule.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
-        }
-        self.schedule2.keyword_value_pairs = {
+        self.daySchedule2.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_DayScheduleKeywords.VALUES: "[1, 2]",
+            BDL_DayScheduleKeywords.VALUES: [
+                str(i) for i in range(1, 25)
+            ],  # Continuous schedule
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
             BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
+        }
+        self.weekSchedule2.keyword_value_pairs = {
+            BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
+                "Day Schedule Continuous" for i in range(12)
+            ],
+        }
+        self.annualSchedule.keyword_value_pairs = {
+            BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_ScheduleKeywords.WEEK_SCHEDULES: [
+                "Week Schedule Continuous" for i in range(52)
+            ],
+            BDL_ScheduleKeywords.MONTH: "1",
+            BDL_ScheduleKeywords.DAY: "1",
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
@@ -182,13 +232,13 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -204,10 +254,6 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "CONTINUOUS",
-                "loop_supply_temperature_at_outdoor_high": 45.0,
-                "loop_supply_temperature_at_outdoor_low": 95.0,
-                "outdoor_high_for_loop_supply_reset_temperature": 100.0,
-                "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
             "type": "CONDENSER",
             "heating_design_and_control": {},
@@ -220,31 +266,11 @@ class TestCHWLoop(unittest.TestCase):
     def test_populate_data_with_chw_loop_fluid_loop_condenser_wlhp(
         self, mock_get_output_data
     ):
-        """Tests circulation loop type is CONDENSER via circulation_loop_type WLHP, circulation_loop outputs expected
-        values for valid inputs, and that when a continuous schedule is provided, operation status is CONTINUOUS
-        """
+        """Tests that when circulation loop type is CONDENSER via circulation_loop_type WLHP, circulation_loop outputs
+        expected values for valid inputs"""
         mock_get_output_data.return_value = {
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
-        }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
-        }
-        self.schedule.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
-        }
-        self.schedule2.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_DayScheduleKeywords.VALUES: "[1, 2]",
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
@@ -253,13 +279,13 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_COOL_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOL_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MAX_RESET_T: "98.5",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -274,11 +300,7 @@ class TestCHWLoop(unittest.TestCase):
                 "minimum_flow_fraction": 0.8,
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
-                "operation": "CONTINUOUS",
-                "loop_supply_temperature_at_outdoor_high": 45.0,
-                "loop_supply_temperature_at_outdoor_low": 95.0,
-                "outdoor_high_for_loop_supply_reset_temperature": 100.0,
-                "outdoor_low_for_loop_supply_reset_temperature": 50.0,
+                "operation": "INTERMITTENT",
             },
             "type": "CONDENSER",
             "heating_design_and_control": {},
@@ -294,17 +316,6 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
-        }
-        self.schedule.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
-        }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -312,13 +323,13 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MIN_RESET_T: "24.0",
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -334,10 +345,6 @@ class TestCHWLoop(unittest.TestCase):
                 "temperature_reset_type": "OUTSIDE_AIR_RESET",
                 "flow_control": "VARIABLE_FLOW",
                 "operation": "INTERMITTENT",
-                "loop_supply_temperature_at_outdoor_high": 45.0,
-                "loop_supply_temperature_at_outdoor_low": 95.0,
-                "outdoor_high_for_loop_supply_reset_temperature": 100.0,
-                "outdoor_low_for_loop_supply_reset_temperature": 50.0,
             },
             "type": "HEATING",
             "cooling_or_condensing_design_and_control": {},
@@ -355,16 +362,31 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
         self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 2"
+            BDL_SystemKeywords.FAN_SCHEDULE: "Annual Schedule 1",
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.RESVVT,
         }
-        self.schedule.keyword_value_pairs = {
+        self.daySchedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_DayScheduleKeywords.VALUES: [str(i) for i in range(0, 24)],
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
             BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
             BDL_DayScheduleKeywords.SUPPLY_HI: "95",
             BDL_DayScheduleKeywords.SUPPLY_LO: "45",
+        }
+        self.weekSchedule.keyword_value_pairs = {
+            BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
+                "Day Schedule Non-continuous" for i in range(12)
+            ],
+        }
+        self.annualSchedule.keyword_value_pairs = {
+            BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
+            BDL_ScheduleKeywords.WEEK_SCHEDULES: [
+                "Week Schedule Non-continuous" for i in range(52)
+            ],
+            BDL_ScheduleKeywords.MONTH: "1",
+            BDL_ScheduleKeywords.DAY: "1",
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
@@ -374,7 +396,7 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
             BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Schedule 1",
+            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Annual Schedule 1",
             BDL_CirculationLoopKeywords.COOL_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
             BDL_CirculationLoopKeywords.MIN_RESET_T: "24.0",
@@ -382,7 +404,7 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.PRIMARY_LOOP: "CHW Loop 1",
             BDL_CirculationLoopKeywords.VALVE_TYPE_2ND: BDL_SecondaryLoopValveTypes.TWO_WAY,
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.STANDBY,
-            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Schedule 1",
+            BDL_CirculationLoopKeywords.COOLING_SCHEDULE: "Annual Schedule 1",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -434,10 +456,6 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
         }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
-        }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "78.5",
@@ -465,10 +483,6 @@ class TestCHWLoop(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Flow (gal/min)": 30,
             "Pump - Power (kW)": 150,
-        }
-        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "2"}
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Schedule 1"
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
