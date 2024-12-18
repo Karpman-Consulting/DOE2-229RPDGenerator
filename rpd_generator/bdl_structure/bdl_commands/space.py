@@ -91,7 +91,7 @@ class Space(ChildNode, ParentNode):
     def populate_data_elements(self):
         """Populate data elements that originate from eQUEST's SPACE command"""
         # Establish zone and populate the zone volume and space floor area first to use in other data elements
-        self.zone = self.rmd.space_map.get(self.u_name)
+        self.zone = self.get_obj(self.rmd.space_map.get(self.u_name))
         volume = self.get_inp(BDL_SpaceKeywords.VOLUME)
         if volume is not None:
             volume = self.try_float(volume)
@@ -128,11 +128,11 @@ class Space(ChildNode, ParentNode):
         self.standardize_dict_values(
             self.keyword_value_pairs,
             [
-                "SOURCE-TYPE",
-                "SOURCE-POWER",
-                "SOURCE-KW",
-                "SOURCE-SENSIBLE",
-                "SOURCE-LATENT",
+                BDL_SpaceKeywords.SOURCE_TYPE,
+                BDL_SpaceKeywords.SOURCE_POWER,
+                BDL_SpaceKeywords.SOURCE_KW,
+                BDL_SpaceKeywords.SOURCE_SENSIBLE,
+                BDL_SpaceKeywords.SOURCE_LATENT,
             ],
             self.try_length(space_int_energy_source_scheds),
         )
@@ -145,14 +145,17 @@ class Space(ChildNode, ParentNode):
 
         # Populate one instance of miscellaneous equipment for each schedule associated with equipment or internal energy sources
         misc_eq_counter = 0
+        misc_eng_src_counter = 0
         for sched in space_misc_eq_scheds:
             misc_eq_counter += 1
-            self.populate_miscellaneous_equipment(misc_eq_counter, sched, "EQUIPMENT")
+            self.populate_miscellaneous_equipment(
+                misc_eq_counter, misc_eng_src_counter, sched, "EQUIPMENT"
+            )
 
         for sched in space_int_energy_source_scheds:
-            misc_eq_counter += 1
+            misc_eng_src_counter += 1
             self.populate_miscellaneous_equipment(
-                misc_eq_counter, sched, "INTERNAL_ENERGY_SOURCE"
+                misc_eq_counter, misc_eng_src_counter, sched, "INTERNAL_ENERGY_SOURCE"
             )
 
         # Populate the corresponding zone volume and infiltration from the DOE-2 SPACE command
@@ -167,17 +170,13 @@ class Space(ChildNode, ParentNode):
             BDL_SpaceKeywords.PEOPLE_SCHEDULE
         )
 
-        self.occupant_sensible_heat_gain = self.get_inp(
-            BDL_SpaceKeywords.PEOPLE_HG_SENS
-        )
-
         self.occupant_sensible_heat_gain = self.try_float(
-            self.occupant_sensible_heat_gain
+            self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_SENS)
         )
 
-        self.occupant_latent_heat_gain = self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_LAT)
-
-        self.occupant_latent_heat_gain = self.try_float(self.occupant_latent_heat_gain)
+        self.occupant_latent_heat_gain = self.try_float(
+            self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_LAT)
+        )
 
     def populate_data_group(self):
         """Populate schema structure for space object."""
@@ -260,7 +259,7 @@ class Space(ChildNode, ParentNode):
                 None
             )
 
-    def populate_miscellaneous_equipment(self, n, schedule, equip_type):
+    def populate_miscellaneous_equipment(self, n, m, schedule, equip_type):
         """Populate miscellaneous equipment data elements for an instance of MiscellaneousEquipment"""
         misc_eq_id = f"{self.u_name} MiscEqp{n}"
 
@@ -296,7 +295,7 @@ class Space(ChildNode, ParentNode):
                 )
             )
 
-            if n == 1:
+            if (n + m) == 1:
                 self.misc_eq_id = [misc_eq_id]
                 self.misc_eq_energy_type = [EnergySourceOptions.ELECTRICITY]
                 self.misc_eq_power = [total_eq_power]
@@ -321,11 +320,11 @@ class Space(ChildNode, ParentNode):
 
         elif equip_type == "INTERNAL_ENERGY_SOURCE":
             source = self.try_access_index(
-                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), n - 1
+                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), m - 1
             )
             energy_type = self.energy_source_map.get(source)
 
-            if n == 0:
+            if (n + m) == 1:
                 self.misc_eq_energy_type = [energy_type]
             else:
                 self.misc_eq_energy_type.append(energy_type)
