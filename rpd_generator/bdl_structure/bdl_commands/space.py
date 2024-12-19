@@ -148,14 +148,16 @@ class Space(ChildNode, ParentNode):
 
         # Populate one instance of miscellaneous equipment for each schedule associated with equipment or internal energy sources
         misc_eq_counter = 0
-        for sched in space_misc_eq_scheds:
-            misc_eq_counter += 1
-            self.populate_miscellaneous_equipment(misc_eq_counter, sched, "EQUIPMENT")
-
-        for sched in space_int_energy_source_scheds:
+        for i, sched in enumerate(space_misc_eq_scheds):
             misc_eq_counter += 1
             self.populate_miscellaneous_equipment(
-                misc_eq_counter, sched, "INTERNAL_ENERGY_SOURCE"
+                i, misc_eq_counter, sched, "EQUIPMENT"
+            )
+
+        for i, sched in enumerate(space_int_energy_source_scheds):
+            misc_eq_counter += 1
+            self.populate_miscellaneous_equipment(
+                i, misc_eq_counter, sched, "INTERNAL_ENERGY_SOURCE"
             )
 
         # Populate the corresponding zone volume and infiltration from the DOE-2 SPACE command
@@ -221,14 +223,14 @@ class Space(ChildNode, ParentNode):
         # find the zone that has the "SPACE" attribute value equal to the space object's u_name
         self.zone.spaces.append(self.space_data_structure)
 
-    def populate_interior_lighting(self, n, schedule):
+    def populate_interior_lighting(self, i, schedule):
         """Populate interior lighting data elements for an instance of InteriorLighting"""
-        int_ltg_id = f"{self.u_name} IntLtg{n}"
+        int_ltg_id = f"{self.u_name} IntLtg{i + 1}"
         int_ltg_lpd = self.try_float(
-            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_W_AREA), n)
+            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_W_AREA), i)
         )
         int_ltg_power = self.try_float(
-            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_KW), n)
+            self.try_access_index(self.get_inp(BDL_SpaceKeywords.LIGHTING_KW), i)
         )
         total_lpd = (
             int_ltg_lpd + int_ltg_power * 1000 / self.floor_area
@@ -239,7 +241,7 @@ class Space(ChildNode, ParentNode):
         )
         int_ltg_lighting_multiplier_schedule = schedule
 
-        if n == 0:
+        if i == 0:
             self.int_ltg_id = [int_ltg_id]
             self.int_ltg_power_per_area = [total_lpd]
             self.int_ltg_lighting_multiplier_schedule = [
@@ -263,7 +265,7 @@ class Space(ChildNode, ParentNode):
                 None
             )
 
-    def populate_miscellaneous_equipment(self, n, schedule, equip_type):
+    def populate_miscellaneous_equipment(self, i, n, schedule, equip_type):
         """Populate miscellaneous equipment data elements for an instance of MiscellaneousEquipment"""
         misc_eq_id = f"{self.u_name} MiscEqp{n}"
 
@@ -271,13 +273,11 @@ class Space(ChildNode, ParentNode):
             misc_epd = self.try_float(
                 self.try_access_index(
                     self.get_inp(BDL_SpaceKeywords.EQUIPMENT_W_AREA),
-                    n - 1,
+                    i,
                 )
             )
             misc_eq_power = self.try_float(
-                self.try_access_index(
-                    self.get_inp(BDL_SpaceKeywords.EQUIPMENT_KW), n - 1
-                )
+                self.try_access_index(self.get_inp(BDL_SpaceKeywords.EQUIPMENT_KW), i)
             )
             total_eq_power = (
                 misc_eq_power + misc_epd * self.floor_area / 1000
@@ -290,13 +290,11 @@ class Space(ChildNode, ParentNode):
             misc_eq_sensible_fraction = self.try_float(
                 self.try_access_index(
                     self.get_inp(BDL_SpaceKeywords.EQUIP_SENSIBLE),
-                    n - 1,
+                    i,
                 )
             )
             misc_eq_latent_fraction = self.try_float(
-                self.try_access_index(
-                    self.get_inp(BDL_SpaceKeywords.EQUIP_LATENT), n - 1
-                )
+                self.try_access_index(self.get_inp(BDL_SpaceKeywords.EQUIP_LATENT), i)
             )
 
             if n == 1:
@@ -324,13 +322,15 @@ class Space(ChildNode, ParentNode):
 
         elif equip_type == "INTERNAL_ENERGY_SOURCE":
             source = self.try_access_index(
-                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), n - 1
+                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), i
             )
             energy_type = self.energy_source_map.get(source)
 
-            if n == 0:
+            if n == 1:
+                self.misc_eq_id = [misc_eq_id]
                 self.misc_eq_energy_type = [energy_type]
             else:
+                self.misc_eq_id.append(misc_eq_id)
                 self.misc_eq_energy_type.append(energy_type)
 
                 # Lists must be the same length, even when elements are not populated
