@@ -76,6 +76,10 @@ class WeekSchedulePD(BaseDefinition):
         wk_sch_type = self.get_inp(BDL_WeekScheduleKeywords.TYPE)
         if wk_sch_type in Schedule.supported_hourly_schedules:
             day_schedule_names = self.get_inp(BDL_WeekScheduleKeywords.DAY_SCHEDULES)
+            # for day_name in day_schedule_names:
+            #     d = self.get_obj(day_name)
+            #     hv = d.hourly_values
+            #     self.day_type_hourly_values.append(hv)
             self.day_type_hourly_values = [
                 self.get_obj(day_sch_name).hourly_values
                 for day_sch_name in day_schedule_names
@@ -177,7 +181,7 @@ class Schedule(BaseNode):
             )
             ann_days = [int(float(val)) for val in ann_days]
 
-            week_schedules = self.get_inp(BDL_ScheduleKeywords.WEEK_SCHEDULES)
+            week_schedules = [self.get_inp(BDL_ScheduleKeywords.WEEK_SCHEDULES)]
 
             # Create a list to hold the index where there is a change in week schedule based on mo/day in ann sch
             schedule_change_indices = [
