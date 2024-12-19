@@ -20,8 +20,7 @@ from rpd_generator.utilities import schedule_funcs
 
 
 class TestSpaces(unittest.TestCase):
-    @patch("rpd_generator.bdl_structure.bdl_commands.zone.Zone")
-    def setUp(self, MockZone):
+    def setUp(self):
         self.maxDiff = None
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
@@ -69,7 +68,6 @@ class TestSpaces(unittest.TestCase):
     def test_populate_data_with_space(self, mock_get_output_data):
         """Tests that the space data structure is populated correctly, given valid inputs."""
         mock_get_output_data.return_value = {}
-
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
             BDL_SpaceKeywords.AREA: "400",
@@ -95,7 +93,6 @@ class TestSpaces(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "Space 1",
             "interior_lighting": [
@@ -122,7 +119,6 @@ class TestSpaces(unittest.TestCase):
             "occupant_sensible_heat_gain": 2.0,
             "occupant_latent_heat_gain": 3.0,
         }
-
         self.assertEqual(expected_data_structure, self.space.space_data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -132,7 +128,6 @@ class TestSpaces(unittest.TestCase):
         """Tests that the interior_lighting sub data structure is populated correctly, given multiple lighting
         schedules as input."""
         mock_get_output_data.return_value = {}
-
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
             BDL_SpaceKeywords.AREA: "400",
@@ -161,7 +156,6 @@ class TestSpaces(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "Space 1",
             "interior_lighting": [
@@ -193,7 +187,6 @@ class TestSpaces(unittest.TestCase):
             "occupant_sensible_heat_gain": 2.0,
             "occupant_latent_heat_gain": 3.0,
         }
-
         self.assertEqual(expected_data_structure, self.space.space_data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -203,7 +196,6 @@ class TestSpaces(unittest.TestCase):
         """Tests that the miscellaneous_equipment sub data structure is populated correctly, given multiple
         equipment schedules as input."""
         mock_get_output_data.return_value = {}
-
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
             BDL_SpaceKeywords.AREA: "400",
@@ -232,7 +224,6 @@ class TestSpaces(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-
         expected_data_structure = {
             "id": "Space 1",
             "interior_lighting": [
@@ -267,5 +258,4 @@ class TestSpaces(unittest.TestCase):
             "occupant_sensible_heat_gain": 2.0,
             "occupant_latent_heat_gain": 3.0,
         }
-
         self.assertEqual(expected_data_structure, self.space.space_data_structure)
