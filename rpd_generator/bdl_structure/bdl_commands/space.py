@@ -125,17 +125,20 @@ class Space(ChildNode, ParentNode):
         )
 
         space_int_energy_source_scheds = self.get_inp(BDL_SpaceKeywords.SOURCE_SCHEDULE)
-        self.standardize_dict_values(
-            self.keyword_value_pairs,
-            [
-                "SOURCE-TYPE",
-                "SOURCE-POWER",
-                "SOURCE-KW",
-                "SOURCE-SENSIBLE",
-                "SOURCE-LATENT",
-            ],
-            self.try_length(space_int_energy_source_scheds),
-        )
+        if space_int_energy_source_scheds is not None:
+            self.standardize_dict_values(
+                self.keyword_value_pairs,
+                [
+                    BDL_SpaceKeywords.SOURCE_TYPE,
+                    BDL_SpaceKeywords.SOURCE_POWER,
+                    BDL_SpaceKeywords.SOURCE_KW,
+                    BDL_SpaceKeywords.SOURCE_SENSIBLE,
+                    BDL_SpaceKeywords.SOURCE_LATENT,
+                ],
+                self.try_length(space_int_energy_source_scheds),
+            )
+        else:
+            space_int_energy_source_scheds = []
 
         if not isinstance(space_misc_eq_scheds, list):
             space_misc_eq_scheds = [space_misc_eq_scheds]
