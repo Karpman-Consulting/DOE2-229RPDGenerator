@@ -270,13 +270,11 @@ class Space(ChildNode, ParentNode):
             misc_epd = self.try_float(
                 self.try_access_index(
                     self.get_inp(BDL_SpaceKeywords.EQUIPMENT_W_AREA),
-                    i - 1,
+                    i,
                 )
             )
             misc_eq_power = self.try_float(
-                self.try_access_index(
-                    self.get_inp(BDL_SpaceKeywords.EQUIPMENT_KW), i - 1
-                )
+                self.try_access_index(self.get_inp(BDL_SpaceKeywords.EQUIPMENT_KW), i)
             )
             total_eq_power = (
                 misc_eq_power + misc_epd * self.floor_area / 1000
@@ -289,13 +287,11 @@ class Space(ChildNode, ParentNode):
             misc_eq_sensible_fraction = self.try_float(
                 self.try_access_index(
                     self.get_inp(BDL_SpaceKeywords.EQUIP_SENSIBLE),
-                    i - 1,
+                    i,
                 )
             )
             misc_eq_latent_fraction = self.try_float(
-                self.try_access_index(
-                    self.get_inp(BDL_SpaceKeywords.EQUIP_LATENT), i - 1
-                )
+                self.try_access_index(self.get_inp(BDL_SpaceKeywords.EQUIP_LATENT), i)
             )
 
             if n == 1:
@@ -323,7 +319,7 @@ class Space(ChildNode, ParentNode):
 
         elif equip_type == "INTERNAL_ENERGY_SOURCE":
             source = self.try_access_index(
-                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), i - 1
+                self.get_inp(BDL_SpaceKeywords.SOURCE_TYPE), i
             )
             energy_type = self.energy_source_map.get(source)
 
