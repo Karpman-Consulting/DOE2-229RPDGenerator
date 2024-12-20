@@ -132,6 +132,14 @@ class TestZones(unittest.TestCase):
         pass
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_zone_with_induction_data(self, mock_get_output_data):
+        """
+        Test populating data elements for a zone with induction units and secondary airflow
+
+        """
+        pass
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_zone_with_doas_data(self, mock_get_output_data):
         """
         Test populating data elements for a zone served by a system which is served by a dedicated outside air system
