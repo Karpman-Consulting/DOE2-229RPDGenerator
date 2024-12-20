@@ -7,3 +7,4 @@ class MainAppData:
         self.user_lib_path = None
         self.files_verified = False
         self.test_inp_path = ctk.StringVar()
+        self.project_input_file_paths = {}
