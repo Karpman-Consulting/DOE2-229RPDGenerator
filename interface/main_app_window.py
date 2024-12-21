@@ -1,14 +1,15 @@
 import customtkinter as ctk
 from PIL import Image
 from tkinter import Menu, filedialog
+from itertools import islice
 
 from rpd_generator import main as rpd_generator
+from rpd_generator.utilities import validate_configuration
+from rpd_generator.config import Config
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
 from interface.ctk_xyframe import CTkXYFrame
 from interface.main_app_data import MainAppData
-from rpd_generator.utilities import validate_configuration
-from rpd_generator.config import Config
 
 
 ctk.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
@@ -147,6 +148,7 @@ class MainApplicationWindow(ctk.CTk):
         for widget in self.winfo_children():
             if "row" in widget.grid_info() and int(widget.grid_info()["row"]) > 0:
                 widget.grid_forget()
+                widget.destroy()
 
     def open_disclaimer(self):
         if self.disclaimer_window is None or not self.disclaimer_window.winfo_exists():
@@ -201,13 +203,29 @@ class MainApplicationWindow(ctk.CTk):
             self.app_data.test_inp_path.set(filepath)
 
     def continue_past_configuration(self):
-        self.clear_window()
-
         self.navbar_buttons["Project Info"].configure(state="normal")
         self.open_project_info_page()
 
     def validate_project_info(self):
-        pass
+        valid = True  # TODO: Add validation logic to check for erp, lrp, srp, nhk files for each input file
+        if valid:
+            self.read_project_files__continue()
+        else:
+            self.raise_error_window(
+                "Error: Invalid project information."
+            )  # TODO: Expand error message
+
+    def toggle_project_tabs(self):
+        for name, button in islice(self.navbar_buttons.items(), 1, None):
+            if self.navbar_buttons[name].cget("state") == "disabled":
+                self.navbar_buttons[name].configure(state="normal")
+            else:
+                self.navbar_buttons[name].configure(state="disabled")
+
+    def read_project_files__continue(self):
+        self.app_data.generate_rmds()
+        self.toggle_project_tabs()
+        self.open_buildings_page()
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
@@ -391,6 +409,7 @@ class MainApplicationWindow(ctk.CTk):
         self.continue_button.grid(row=0, column=2, padx=(5, 350), pady=5)
 
     def open_project_info_page(self):
+        self.clear_window()
         self.toggle_active_button("Project Info")
 
         directions_label = ctk.CTkLabel(
@@ -481,25 +500,45 @@ class MainApplicationWindow(ctk.CTk):
         self.continue_button.grid(row=5, column=0, columnspan=9, pady=5)
 
     def open_buildings_page(self):
+        self.clear_window()
         self.toggle_active_button("Buildings")
 
+        # Create the button to test accessing rmd data
+        test_button = ctk.CTkButton(
+            self,
+            text="Test Access RMD Zones",
+            width=300,
+            corner_radius=12,
+            command=lambda: self.raise_error_window(
+                f"RMD Zones: {self.app_data.rmds[0].zone_names}"
+            ),
+        )
+        test_button.grid(row=5, column=0, columnspan=9, pady=5)
+
     def open_building_segments_page(self):
+        self.clear_window()
         self.toggle_active_button("Building Segments")
 
     def open_spaces_page(self):
+        self.clear_window()
         self.toggle_active_button("Spaces")
 
     def open_surfaces_page(self):
+        self.clear_window()
         self.toggle_active_button("Surfaces")
 
     def open_systems_page(self):
+        self.clear_window()
         self.toggle_active_button("Systems")
 
     def open_ext_lighting_page(self):
+        self.clear_window()
         self.toggle_active_button("Ext. Lighting")
 
     def open_misc_page(self):
+        self.clear_window()
         self.toggle_active_button("Misc.")
 
     def open_results_page(self):
+        self.clear_window()
         self.toggle_active_button("Results")
