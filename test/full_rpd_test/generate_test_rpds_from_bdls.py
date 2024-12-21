@@ -12,7 +12,7 @@ def generate_test_rpds_from_bdls():
         print(f"Processing BDL File for Test Case {test_bdl_file.parent.name}...")
 
         output_path = test_bdl_file.with_suffix(".json")
-        rpd_generator.write_rpd_json_from_bdl([str(test_bdl_file)], str(output_path))
+        rpd_generator.write_rpd_json_from_bdl(str(test_bdl_file), str(output_path))
 
 
 if __name__ == "__main__":
