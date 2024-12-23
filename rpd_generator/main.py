@@ -46,24 +46,23 @@ def write_rpd_json_from_inp(inp_path_str):
         )
 
         # Generate the RPD json file in the temporary directory
-        write_rpd_json_from_bdl([str(bdl_path)], str(json_path))
+        write_rpd_json_from_bdl(str(bdl_path), str(json_path))
 
         # Copy the json file from the temporary directory back to the project directory
         shutil.copy(str(json_path), inp_path.parent)
 
 
-def write_rpd_json_from_bdl(selected_models: list, json_file_path: str):
+def write_rpd_json_from_bdl(bdl_path: str, json_file_path: str):
     bdl_input_reader = ModelInputReader()
     RulesetProjectDescription.bdl_command_dict = bdl_input_reader.bdl_command_dict
     rpd = RulesetProjectDescription()
-    rmds = generate_rmds(bdl_input_reader, selected_models)
-    for rmd in rmds:
-        # Add the RPD object to the bdl_obj_instances dictionary
-        rmd.bdl_obj_instances["ASHRAE 229"] = rpd
-        # Populate 229 data structures associated with the BDL objects
-        rmd.populate_rmd_data()
-        # Insert the RMD data into the RPD data structure
-        rmd.insert_to_rpd(rpd)
+    rmd = generate_rmds_from_bdls(bdl_input_reader, [bdl_path])[0]
+    # Add the RPD object to the bdl_obj_instances dictionary
+    rmd.bdl_obj_instances["ASHRAE 229"] = rpd
+    # Populate 229 data structures associated with the BDL objects
+    rmd.populate_rmd_data()
+    # Insert the RMD data into the RPD data structure
+    rmd.insert_to_rpd(rpd)
 
     rpd.populate_data_group()
     ensure_valid_rpd.make_ids_unique(rpd.rpd_data_structure)
@@ -74,7 +73,7 @@ def write_rpd_json_from_bdl(selected_models: list, json_file_path: str):
     print(f"RPD JSON file created.")
 
 
-def generate_rmds(bdl_input_reader: ModelInputReader, selected_models: list):
+def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models: list):
     rmds = []
     for model_path_str in selected_models:
         model_path = Path(model_path_str)
@@ -113,6 +112,39 @@ def generate_rmds(bdl_input_reader: ModelInputReader, selected_models: list):
             )
         rmds.append(rmd)
     return rmds
+
+
+def generate_rmd_from_inp(inp_path_str: str):
+    inp_path = Path(inp_path_str)
+    # Create a temporary directory to store the files for processing
+    with tempfile.TemporaryDirectory() as temp_dir:
+
+        # Prepare the inp file for processing and save the revised copy to the temporary directory
+        temp_file_path = prepare_inp(inp_path, Path(temp_dir))
+
+        # Copy the model output files to the temporary directory (.erp, .lrp, .srp, .nhk)
+        copy_files_to_temp_dir(inp_path, Path(temp_dir))
+
+        # Set the paths for the inp file, json file, and the directories
+        temp_inp_path = Path(temp_file_path)
+        bdl_path = temp_inp_path.with_suffix(".BDL")
+        doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
+        # TODO Correct this path to the eQUEST installation path when BDLCIO32 issue is resolved
+        test_bdlcio32_path = Path(__file__).parents[1] / "test" / "BDLCIO32.dll"
+
+        # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory
+        process_input_file(
+            str(test_bdlcio32_path),
+            str(doe23_path) + "\\",
+            str(temp_inp_path.parent) + "\\",
+            temp_inp_path.name,
+        )
+
+        # Generate the RMD object from the BDL file in the temporary directory
+        bdl_input_reader = ModelInputReader()
+        rmd = generate_rmds_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
+
+        return rmd
 
 
 def prepare_inp(model_path: Path, output_dir: Path = None) -> str:
@@ -211,15 +243,16 @@ def _process_command_group(
 
 
 if __name__ == "__main__":
+    # Test generating an RPD JSON file from one of the test BDL files
     validate_configuration.find_equest_installation()
     write_rpd_json_from_bdl(
-        [
+        str(
             Path(__file__).parents[1]
             / "test"
             / "full_rpd_test"
             / "E-1"
             / "229 Test Case E-1 (PSZHP).BDL"
-        ],
+        ),
         str(
             Path(__file__).parents[1]
             / "test"
