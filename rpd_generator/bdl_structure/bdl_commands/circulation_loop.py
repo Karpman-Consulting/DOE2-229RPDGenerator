@@ -524,6 +524,8 @@ class CirculationLoop(BaseNode):
             self.get_inp(BDL_CirculationLoopKeywords.COOL_SETPT_CTRL)
         )
         if self.temperature_reset_type[0] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
+            """Jackson Q: Should this be the COOL_RESET_SCH? or do we use the same
+            schedule for heating and cooling because it's one unit?"""
             oa_reset_schedule = self.get_obj(
                 self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
             )
@@ -654,6 +656,9 @@ class CirculationLoop(BaseNode):
             valve_type = circulation_loop.get_inp(
                 BDL_CirculationLoopKeywords.VALVE_TYPE_2ND
             )
+            """Jackson Q: When the current loop is a secondary loop with a two-way valve, shouldn't we
+            return VARIABLE_FLOW? My thought is that we shouldn't wait until the end to return FIXED_FLOW, 
+            otherwise other conditionals between here and there might override with their values"""
             if (
                 primary_loop == self.u_name
                 and valve_type == BDL_SecondaryLoopValveTypes.TWO_WAY
