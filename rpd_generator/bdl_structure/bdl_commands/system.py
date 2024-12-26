@@ -516,7 +516,7 @@ class System(ParentNode):
             and heat_type
             in [
                 HeatingSystemOptions.FLUID_LOOP,
-                HeatingSystemOptions.NONE,
+                HeatingSystemOptions.NONE,  # TODO: No electric type prevents assigning temp_control
             ]
             and cool_type
             in [
