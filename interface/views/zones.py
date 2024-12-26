@@ -4,9 +4,23 @@ from interface.base_view import BaseView
 
 
 class ZonesView(BaseView):
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, main):
+        super().__init__(main)
+
+    def __repr__(self):
+        return "ZonesView"
 
     def open_view(self):
-        self.clear_window()
-        self.toggle_active_button("Spaces")
+        self.toggle_active_button("Zones")
+
+        # Create a button to test accessing rmd data
+        test_button = ctk.CTkButton(
+            self,
+            text="Test Access RMD Zones",
+            width=300,
+            corner_radius=12,
+            command=lambda: self.main.raise_error_window(
+                f"RMD Zones: {self.main.app_data.rmds[0].zone_names}"
+            ),
+        )
+        test_button.grid(row=0, column=0, columnspan=9, pady=5)

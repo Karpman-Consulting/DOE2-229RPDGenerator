@@ -29,6 +29,7 @@ class MainApplicationWindow(ctk.CTk):
         self.title("eQUEST 229 RPD Generator")
         self.geometry(f"{1300}x{700}")
         self.minsize(1300, 350)
+        self.grid_propagate(False)
         self.bg_color = self.cget("fg_color")[0]
 
         self.app_data = MainAppData()
@@ -50,12 +51,32 @@ class MainApplicationWindow(ctk.CTk):
 
         # Initialize attributes to hold references to Widgets & Windows
         self.current_view = None
+
+        self.warnings_button = ctk.CTkButton(
+            self,
+            text="Warnings",
+            width=90,
+            fg_color="orange",
+            hover_color="#FF8C00",
+            corner_radius=12,
+            command=lambda: self.raise_error_window("\n".join(self.app_data.warnings)),
+        )
+        self.errors_button = ctk.CTkButton(
+            self,
+            text="Errors",
+            width=90,
+            fg_color="red",
+            hover_color="#E60000",
+            corner_radius=12,
+            command=lambda: self.raise_error_window("\n".join(self.app_data.errors)),
+        )
+        self.continue_button = ctk.CTkButton(
+            self, text="Continue", width=100, corner_radius=12
+        )
+
         self.license_window = None
         self.disclaimer_window = None
         self.error_window = None
-        self.warnings_button = None
-        self.errors_button = None
-        self.continue_button = None
 
         # Create main application widgets
         self.menubar = self.create_menu_bar()
@@ -122,15 +143,15 @@ class MainApplicationWindow(ctk.CTk):
             "results.png",
         ]
         callback_methods = {
-            "Project Info": self.views["Project Info"].open_view,
-            "Buildings": self.views["Buildings"].open_view,
-            "Building Segments": self.views["Building Segments"].open_view,
-            "Zones": self.views["Zones"].open_view,
-            "Surfaces": self.views["Surfaces"].open_view,
-            "Systems": self.views["Systems"].open_view,
-            "Ext. Lighting": self.views["Ext. Lighting"].open_view,
-            "Misc.": self.views["Misc."].open_view,
-            "Results": self.views["Results"].open_view,
+            "Project Info": lambda: self.show_view("Project Info"),
+            "Buildings": lambda: self.show_view("Buildings"),
+            "Building Segments": lambda: self.show_view("Building Segments"),
+            "Zones": lambda: self.show_view("Zones"),
+            "Surfaces": lambda: self.show_view("Surfaces"),
+            "Systems": lambda: self.show_view("Systems"),
+            "Ext. Lighting": lambda: self.show_view("Ext. Lighting"),
+            "Misc.": lambda: self.show_view("Misc."),
+            "Results": lambda: self.show_view("Results"),
         }
 
         for index, (name, icon_path) in enumerate(zip(button_names, icon_paths)):
@@ -168,21 +189,10 @@ class MainApplicationWindow(ctk.CTk):
 
     def create_nav_bar(self):
         # Create the button to continue to the Buildings page
-        self.continue_button = ctk.CTkButton(
-            self, text="Continue", width=100, corner_radius=12
-        )
         self.continue_button.grid(row=2, column=3, columnspan=3, pady=5)
-
         # Create the errors and warnings buttons
-        self.warnings_button = ctk.CTkButton(
-            self, text="Warnings", width=90, fg_color="orange", corner_radius=12
-        )
-        self.warnings_button.grid(row=2, column=7, pady=5)
-
-        self.errors_button = ctk.CTkButton(
-            self, text="Errors", width=90, fg_color="red", corner_radius=12
-        )
-        self.errors_button.grid(row=2, column=8, pady=5)
+        self.warnings_button.grid(row=2, column=0, pady=5)
+        self.errors_button.grid(row=2, column=1, pady=5)
 
     def show_view(self, view_name):
         # Clear previous view

@@ -5,10 +5,13 @@ from interface.base_view import BaseView
 
 
 class InstallConfigView(BaseView):
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, main):
+        super().__init__(main)
 
-    def open_configuration_window(self):
+    def __repr__(self):
+        return "InstallConfigView"
+
+    def show_view(self):
         directions_label = ctk.CTkLabel(
             self,
             text="Directions: ",
@@ -47,7 +50,7 @@ class InstallConfigView(BaseView):
             self,
             width=50,
             corner_radius=5,
-            textvariable=self.app.app_data.installation_path,
+            textvariable=self.main.app_data.installation_path,
         )
         install_path_entry.grid(
             row=2, column=1, columnspan=7, sticky="ew", padx=5, pady=5
@@ -74,7 +77,7 @@ class InstallConfigView(BaseView):
             self,
             width=50,
             corner_radius=5,
-            textvariable=self.app.app_data.user_lib_path,
+            textvariable=self.main.app_data.user_lib_path,
         )
         user_lib_path_entry.grid(
             row=3, column=1, columnspan=7, sticky="ew", padx=5, pady=(20, 5)
@@ -87,7 +90,7 @@ class InstallConfigView(BaseView):
         user_lib_browse_button.grid(row=3, column=8, padx=5, pady=(20, 5))
 
         # Create a frame to hold the Test button
-        lower_button_frame = ctk.CTkFrame(self, fg_color=self.app.bg_color)
+        lower_button_frame = ctk.CTkFrame(self, fg_color=self.main.bg_color)
         lower_button_frame.grid(
             row=4, column=1, columnspan=7, sticky="ew", padx=5, pady=(30, 5)
         )
@@ -117,17 +120,17 @@ class InstallConfigView(BaseView):
     def verify_installation_files(self):
         error = validate_configuration.verify_equest_installation()
         if error == "":
-            self.app.app_data.files_verified = True
-            self.app.toggle_continue_button()
+            self.main.app_data.files_verified = True
+            self.main.toggle_continue_button()
         else:
-            self.app.raise_error_window(error)
+            self.main.raise_error_window(error)
 
     def continue_past_configuration(self):
-        self.app.navbar_buttons["Project Info"].configure(state="normal")
-        self.app.show_view("Project Info")
+        self.main.navbar_buttons["Project Info"].configure(state="normal")
+        self.main.show_view("Project Info")
 
     def toggle_continue_button(self):
-        if self.app.app_data.files_verified:
+        if self.main.app_data.files_verified:
             self.continue_button.configure(state="normal")
         else:
             self.continue_button.configure(state="disabled")

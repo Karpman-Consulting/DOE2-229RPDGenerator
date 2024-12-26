@@ -12,10 +12,17 @@ from rpd_generator.config import Config
 
 class MainAppData:
     def __init__(self):
+        # Config data
         self.installation_path = ctk.StringVar()
         self.user_lib_path = None
         self.files_verified = False
+
+        # Test data
         self.test_inp_path = ctk.StringVar()
+
+        # Project data
+        self.selected_ruleset = ctk.StringVar()
+        self.selected_ruleset.set("ASHRAE 90.1-2019")
         self.ruleset_model_file_paths = {}
         self.bdl_reader = ModelInputReader()
         RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
@@ -52,9 +59,8 @@ class MainAppData:
             # Construct file names to check
             normal_file = directory / f"{base_name}{ext}"
             baseline_file = directory / f"{base_name} - Baseline Design{ext}"
-
             # Check existence
-            if not normal_file.is_file() or baseline_file.is_file():
+            if not normal_file.is_file() and not baseline_file.is_file():
                 return False
 
         return True
