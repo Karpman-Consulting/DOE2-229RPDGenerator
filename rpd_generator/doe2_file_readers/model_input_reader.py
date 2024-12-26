@@ -130,7 +130,7 @@ class ModelInputReader:
 
                 # Flag the start of the data record and set the active command dictionary
                 elif "DATA FOR" in line:
-                    obj_u_name = line.split("DATA FOR ")[1].strip()
+                    obj_u_name = line[32:].rstrip()
                     active_command_dict = file_commands.get(obj_u_name)
                     if active_command_dict:
                         record_data_for = True
@@ -207,12 +207,12 @@ class ModelInputReader:
         if potential_units in self.known_units and has_expected_whitespace:
             parts, units = line[:104].split(" = "), line[104:].strip()
             keyword = re.split(r" {2,}", parts[0])[1].strip()
-            value = parts[1].strip()
+            value = parts[1].rstrip()
             return keyword, value, units
         else:
             parts = line.split(" = ")
             keyword = re.split(r" {2,}", parts[0])[1].strip()
-            value = parts[1].strip()
+            value = parts[1].rstrip()
             return keyword, value, None
 
     def _track_current_parents(self, u_name, command):
