@@ -132,21 +132,21 @@ class TestSystems(unittest.TestCase):
         pass
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_sum_system(self):
+    def test_populate_sum_system(self, mock_get_output_data):
         """Verify that no system data groups are populated when the system is a SUM system."""
         pass
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_terminal_system1(self):
+    def test_populate_terminal_system1(self, mock_get_output_data):
         """Verify that no system data groups are populated when the system meets is_terminal criteria."""
         pass
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_terminal_system2(self):
+    def test_populate_terminal_system2(self, mock_get_output_data):
         """Verify that no system data groups are populated when the system meets alternate is_terminal criteria."""
         pass
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_fan_schedule_neg_999_error(self):
+    def test_fan_schedule_neg_999_error(self, mock_get_output_data):
         """Verify that a VAVS system with a fan schedule with any value of -999 raises an error."""
         pass
