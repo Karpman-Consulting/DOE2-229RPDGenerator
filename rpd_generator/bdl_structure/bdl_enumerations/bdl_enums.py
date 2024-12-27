@@ -565,7 +565,6 @@ class BDLEnums:
                 "EQUIP-LATENT",
                 "SOURCE-TYPE",
                 "SOURCE-POWER",
-                "SOURCE-KW",
                 "SOURCE-SENSIBLE",
                 "SOURCE-LATENT",
                 "NUMBER-OF-PEOPLE",

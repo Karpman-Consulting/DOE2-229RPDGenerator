@@ -49,7 +49,7 @@ class InteriorWall(
         # data elements with children
         self.subsurfaces = []
         self.construction = {}
-        self.optical_properties = {"id": self.u_name + " OpticalProps"}
+        self.optical_properties = {}
 
         # data elements with no children
         self.classification = None
@@ -62,6 +62,7 @@ class InteriorWall(
         self.status_type = None
 
         # data elements for surface optical properties
+        self.optical_property_id = self.u_name + " OpticalProps"
         self.absorptance_thermal_exterior = None
         self.absorptance_solar_exterior = None
         self.absorptance_visible_exterior = None
@@ -173,6 +174,7 @@ class InteriorWall(
         self.account_for_air_film_resistance()
 
         optical_property_attributes = [
+            "optical_property_id",
             "absorptance_thermal_exterior",
             "absorptance_solar_exterior",
             "absorptance_visible_exterior",
@@ -184,6 +186,7 @@ class InteriorWall(
         for attr in optical_property_attributes:
             value = getattr(self, attr, None)
             if value is not None:
+                attr = attr.replace("optical_property_", "")
                 self.optical_properties[attr] = value
 
         self.interior_wall_data_structure = {
