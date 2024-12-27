@@ -193,7 +193,7 @@ class ProjectInfoView(BaseView):
                 path_entry.insert(0, trimmed_path)
 
                 self.main.app_data.ruleset_model_file_paths[
-                    label_text.split(":")[0]
+                    label_text.split(":")[0].replace("Design", "User")
                 ] = file_path
 
         select_button = ctk.CTkButton(
@@ -222,6 +222,7 @@ class ProjectInfoView(BaseView):
         ) in self.main.app_data.ruleset_model_file_paths.items():
             if file_path:
                 if not self.main.app_data.verify_associated_files(file_path):
+                    model_type = model_type.replace("User", "Design")
                     self.main.app_data.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
@@ -234,7 +235,7 @@ class ProjectInfoView(BaseView):
         self.main.app_data.errors.clear()
 
         # Required model types
-        required_models = ["Design", "Proposed", "Baseline"]
+        required_models = ["User", "Proposed", "Baseline"]
         if not self.rotation_exception_checkbox.get():
             required_models.extend(["Baseline 90", "Baseline 180", "Baseline 270"])
 
