@@ -85,12 +85,13 @@ class RunPeriod(BaseDefinition):
         """Populate schema structure for site parameters object."""
         rpd = self.get_obj("ASHRAE 229")
         year = int(float(self.get_inp(BDL_RunPeriodKeywords.END_YEAR)))
+        jan_1_day = schedule_funcs.get_day_of_week_jan_1(year)
         rpd.calendar.setdefault(
             "day_of_week_for_january_1",
-            schedule_funcs.get_day_of_week_jan_1(year),
+            jan_1_day,
         )
         Schedule.year = year
-        Schedule.day_of_week_for_january_1 = schedule_funcs.get_day_of_week_jan_1(year)
+        Schedule.day_of_week_for_january_1 = jan_1_day
 
 
 class FixedShade(BaseDefinition):

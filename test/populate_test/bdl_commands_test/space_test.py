@@ -10,19 +10,31 @@ from rpd_generator.bdl_structure.bdl_commands.schedule import (
     BDL_ScheduleKeywords,
     BDL_ScheduleTypes,
 )
+from rpd_generator.bdl_structure.bdl_commands.system import System
 from rpd_generator.bdl_structure.bdl_commands.zone import Zone
-from rpd_generator.bdl_structure.bdl_commands.system import System, BDL_SystemKeywords
+from rpd_generator.bdl_structure.bdl_commands.project import (
+    RunPeriod,
+    Holidays,
+    BDL_RunPeriodKeywords,
+    BDL_HolidayKeywords,
+    BDL_HolidayTypes,
+)
 from rpd_generator.config import Config
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.space import *
-from rpd_generator.utilities import schedule_funcs
 
 
 class TestSpaces(unittest.TestCase):
-    def setUp(self):
+    @patch("rpd_generator.bdl_structure.bdl_commands.system.System")
+    def setUp(self, MockSystem):
         self.maxDiff = None
+        self.rpd = RulesetProjectDescription()
         self.rmd = RulesetModelDescription("Test RMD")
+        self.rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.system = System("System 1", self.rmd)
@@ -30,38 +42,32 @@ class TestSpaces(unittest.TestCase):
         self.rmd.space_map = {"Space 1": self.zone}
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
-        self.rmd.space_map = {"Space 1": "Zone 1"}
         self.daySchedule = DaySchedulePD("Day Schedule Non-continuous", self.rmd)
         self.weekSchedule = WeekSchedulePD("Week Schedule Non-continuous", self.rmd)
+        self.run_period = RunPeriod("Run Period 1", self.rmd)
+        self.holidays = Holidays("Holidays 1", self.rmd)
         self.annualSchedule = Schedule("Annual Schedule 1", self.rmd)
-        self.annualSchedule.annual_calendar = schedule_funcs.generate_year_calendar(
-            2020, "WEDNESDAY"
-        )
 
-        self.system.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Annual Schedule 1"
+        self.run_period.keyword_value_pairs = {
+            BDL_RunPeriodKeywords.END_YEAR: "2021",
+        }
+        self.holidays.keyword_value_pairs = {
+            BDL_HolidayKeywords.TYPE: BDL_HolidayTypes.OFFICIAL_US,
         }
         self.daySchedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_DayScheduleKeywords.VALUES: [str(i) for i in range(0, 24)],
-            BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
-            BDL_DayScheduleKeywords.OUTSIDE_LO: "50",
-            BDL_DayScheduleKeywords.SUPPLY_HI: "95",
-            BDL_DayScheduleKeywords.SUPPLY_LO: "45",
+            BDL_DayScheduleKeywords.VALUES: [str(i % 2) for i in range(0, 24)],
         }
         self.weekSchedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Day Schedule Non-continuous" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Day Schedule Non-continuous"]
+            * 12,
         }
         self.annualSchedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_ScheduleKeywords.WEEK_SCHEDULES: [
-                "Week Schedule Non-continuous" for i in range(52)
-            ],
-            BDL_ScheduleKeywords.MONTH: "1",
-            BDL_ScheduleKeywords.DAY: "1",
+            BDL_ScheduleKeywords.WEEK_SCHEDULES: "Week Schedule Non-continuous",
+            BDL_ScheduleKeywords.MONTH: "12",
+            BDL_ScheduleKeywords.DAY: "31",
         }
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -79,7 +85,7 @@ class TestSpaces(unittest.TestCase):
             BDL_SpaceKeywords.EQUIPMENT_KW: "50.1",
             BDL_SpaceKeywords.EQUIP_SENSIBLE: "0.4",
             BDL_SpaceKeywords.EQUIP_LATENT: "0.5",
-            BDL_SpaceKeywords.SOURCE_SCHEDULE: ["Annual Schedule 1"],
+            BDL_SpaceKeywords.SOURCE_SCHEDULE: "Annual Schedule 1",
             BDL_SpaceKeywords.SOURCE_TYPE: BDL_InternalEnergySourceOptions.GAS,
             BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
             BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
@@ -97,7 +103,7 @@ class TestSpaces(unittest.TestCase):
             "id": "Space 1",
             "interior_lighting": [
                 {
-                    "id": "Space 1 IntLtg0",
+                    "id": "Space 1 IntLtg1",
                     "lighting_multiplier_schedule": "Annual Schedule 1",
                     "power_per_area": 95.35,
                 }
@@ -110,7 +116,11 @@ class TestSpaces(unittest.TestCase):
                     "multiplier_schedule": "Annual Schedule 1",
                     "sensible_fraction": 0.4,
                     "latent_fraction": 0.5,
-                }
+                },
+                {
+                    "id": "Space 1 MiscEqp2",
+                    "energy_type": "NATURAL_GAS",
+                },
             ],
             "service_water_heating_uses": [],
             "floor_area": 400.0,
@@ -160,12 +170,12 @@ class TestSpaces(unittest.TestCase):
             "id": "Space 1",
             "interior_lighting": [
                 {
-                    "id": "Space 1 IntLtg0",
+                    "id": "Space 1 IntLtg1",
                     "lighting_multiplier_schedule": "Annual Schedule 1",
                     "power_per_area": 95.35,
                 },
                 {
-                    "id": "Space 1 IntLtg1",
+                    "id": "Space 1 IntLtg2",
                     "lighting_multiplier_schedule": "Annual Schedule 1",
                     "power_per_area": 95.7,
                 },
@@ -178,7 +188,11 @@ class TestSpaces(unittest.TestCase):
                     "multiplier_schedule": "Annual Schedule 1",
                     "sensible_fraction": 0.4,
                     "latent_fraction": 0.5,
-                }
+                },
+                {
+                    "id": "Space 1 MiscEqp2",
+                    "energy_type": "NATURAL_GAS",
+                },
             ],
             "service_water_heating_uses": [],
             "floor_area": 400.0,
@@ -228,7 +242,7 @@ class TestSpaces(unittest.TestCase):
             "id": "Space 1",
             "interior_lighting": [
                 {
-                    "id": "Space 1 IntLtg0",
+                    "id": "Space 1 IntLtg1",
                     "lighting_multiplier_schedule": "Annual Schedule 1",
                     "power_per_area": 95.35,
                 }
@@ -250,6 +264,7 @@ class TestSpaces(unittest.TestCase):
                     "sensible_fraction": 0.41,
                     "latent_fraction": 0.51,
                 },
+                {"id": "Space 1 MiscEqp3", "energy_type": "NATURAL_GAS"},
             ],
             "service_water_heating_uses": [],
             "floor_area": 400.0,
