@@ -37,7 +37,7 @@ class BelowGradeWall(ChildNode):
 
         # data elements with children
         self.construction = {}
-        self.optical_properties = {}
+        self.optical_properties = {"id": self.u_name + " OpticalProps"}
 
         # data elements with no children
         self.classification = None

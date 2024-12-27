@@ -75,6 +75,7 @@ class TestInteriorWalls(unittest.TestCase):
                 "u_factor": 0.5,
             },
             "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
                 "absorptance_solar_interior": 1.0,
                 "absorptance_solar_exterior": 2.0,
                 "absorptance_visible_interior": 0.5,
@@ -120,7 +121,9 @@ class TestInteriorWalls(unittest.TestCase):
                 "r_values": [],
                 "u_factor": 0.5,
             },
-            "optical_properties": {},
+            "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
+            },
             "subsurfaces": [],
         }
         self.assertEqual(
@@ -158,7 +161,9 @@ class TestInteriorWalls(unittest.TestCase):
                 "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.5,
             },
-            "optical_properties": {},
+            "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
+            },
         }
         self.assertEqual(
             expected_data_structure, self.interior_wall.interior_wall_data_structure
@@ -200,6 +205,7 @@ class TestInteriorWalls(unittest.TestCase):
                 "u_factor": 0.0,
             },
             "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
                 "absorptance_solar_interior": 1.0,
                 "absorptance_solar_exterior": 2.0,
                 "absorptance_visible_interior": 0.5,
@@ -236,7 +242,9 @@ class TestInteriorWalls(unittest.TestCase):
                 "insulation_locations": [],
                 "r_values": [],
             },
-            "optical_properties": {},
+            "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
+            },
         }
         self.assertEqual(
             expected_data_structure, self.interior_wall.interior_wall_data_structure
@@ -276,6 +284,7 @@ class TestInteriorWalls(unittest.TestCase):
                 "u_factor": 0.5,
             },
             "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
                 "absorptance_solar_interior": 1.0,
                 "absorptance_solar_exterior": 2.0,
                 "absorptance_visible_interior": 0.5,
@@ -377,7 +386,9 @@ class TestInteriorWalls(unittest.TestCase):
             "adjacent_to": SurfaceAdjacencyOptions.INTERIOR,
             "adjacent_zone": "Zone 1",
             "does_cast_shade": False,
-            "optical_properties": {},
+            "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
+            },
         }
         self.assertEqual(
             expected_data_structure, self.interior_wall.interior_wall_data_structure
@@ -461,7 +472,9 @@ class TestInteriorWalls(unittest.TestCase):
             "adjacent_to": SurfaceAdjacencyOptions.INTERIOR,
             "adjacent_zone": "Zone 1",
             "does_cast_shade": False,
-            "optical_properties": {},
+            "optical_properties": {
+                "id": "Interior Wall 1 OpticalProps",
+            },
         }
         self.assertEqual(
             expected_data_structure, self.interior_wall.interior_wall_data_structure

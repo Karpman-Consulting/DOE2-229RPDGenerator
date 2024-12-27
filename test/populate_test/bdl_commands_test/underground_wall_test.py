@@ -65,6 +65,7 @@ class TestUndergroundWalls(unittest.TestCase):
             "tilt": 10.0,
             "classification": "CEILING",
             "optical_properties": {
+                "id": "Below Grade Wall 1 OpticalProps",
                 "absorptance_solar_interior": 2.0,
                 "absorptance_visible_interior": 0.5,
             },
@@ -106,7 +107,7 @@ class TestUndergroundWalls(unittest.TestCase):
             "area": 400.0,
             "tilt": 120.0,
             "classification": "FLOOR",
-            "optical_properties": {},
+            "optical_properties": {"id": "Below Grade Wall 1 OpticalProps"},
             "construction": {
                 "id": "Construction 1",
                 "surface_construction_input_option": "SIMPLIFIED",
@@ -134,7 +135,7 @@ class TestUndergroundWalls(unittest.TestCase):
             "id": "Below Grade Wall 1",
             "area": 400.0,
             "classification": "WALL",
-            "optical_properties": {},
+            "optical_properties": {"id": "Below Grade Wall 1 OpticalProps"},
             "construction": {
                 "id": "Construction 1",
                 "surface_construction_input_option": "SIMPLIFIED",
@@ -203,6 +204,7 @@ class TestUndergroundWalls(unittest.TestCase):
             "tilt": 10.0,
             "classification": "CEILING",
             "optical_properties": {
+                "id": "Below Grade Wall 1 OpticalProps",
                 "absorptance_solar_interior": 2.0,
                 "absorptance_visible_interior": 0.5,
             },
@@ -290,6 +292,7 @@ class TestUndergroundWalls(unittest.TestCase):
             "tilt": 10.0,
             "classification": "CEILING",
             "optical_properties": {
+                "id": "Below Grade Wall 1 OpticalProps",
                 "absorptance_solar_interior": 2.0,
                 "absorptance_visible_interior": 0.5,
             },
