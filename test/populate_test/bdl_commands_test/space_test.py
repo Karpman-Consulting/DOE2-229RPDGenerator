@@ -302,3 +302,54 @@ class TestSpaces(unittest.TestCase):
             "occupant_latent_heat_gain": 3.0,
         }
         self.assertEqual(expected_data_structure, self.space.space_data_structure)
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_space_process_hot_water_internal_energies(
+        self, mock_get_output_data
+    ):
+        """Tests that the energy sources populate as NONE when the internal energy source is set to PROCESS and HOT_WATER."""
+        mock_get_output_data.return_value = {}
+        self.space.keyword_value_pairs = {
+            BDL_SpaceKeywords.VOLUME: "4000",
+            BDL_SpaceKeywords.AREA: "400",
+            BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
+            BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
+            BDL_SpaceKeywords.PEOPLE_HG_SENS: "2",
+            BDL_SpaceKeywords.PEOPLE_HG_LAT: "3",
+            BDL_SpaceKeywords.SOURCE_SCHEDULE: [
+                "Annual Schedule 1",
+                "Annual Schedule 1",
+            ],
+            BDL_SpaceKeywords.SOURCE_TYPE: [
+                BDL_InternalEnergySourceOptions.PROCESS,
+                BDL_InternalEnergySourceOptions.HOT_WATER,
+            ],
+            BDL_SpaceKeywords.SOURCE_POWER: ["150", "200"],
+            BDL_SpaceKeywords.SOURCE_SENSIBLE: "0.6",
+            BDL_SpaceKeywords.SOURCE_LATENT: ["0.4", "1"],
+        }
+
+        self.rmd.populate_rmd_data(testing=True)
+        expected_data_structure = {
+            "id": "Space 1",
+            "interior_lighting": [],
+            "miscellaneous_equipment": [
+                {
+                    "id": "Space 1 MiscEqp1",
+                    "energy_type": "NONE",
+                    "power": 0.04396066666666667,
+                },
+                {
+                    "id": "Space 1 MiscEqp2",
+                    "energy_type": "NONE",
+                    "power": 0.05861422222222223,
+                },
+            ],
+            "service_water_heating_uses": [],
+            "floor_area": 400.0,
+            "number_of_occupants": 10.0,
+            "occupant_multiplier_schedule": "Annual Schedule 1",
+            "occupant_sensible_heat_gain": 2.0,
+            "occupant_latent_heat_gain": 3.0,
+        }
+        self.assertEqual(expected_data_structure, self.space.space_data_structure)
