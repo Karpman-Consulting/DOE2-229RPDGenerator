@@ -26,7 +26,7 @@ class ProjectInfoView(BaseView):
             font=("Arial", 16, "bold"),
         )
 
-        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the applicable models expected by the \nruleset."
+        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the \napplicable models expected by the ruleset."
         self.directions = ctk.CTkLabel(
             self,
             text=directions_text,
