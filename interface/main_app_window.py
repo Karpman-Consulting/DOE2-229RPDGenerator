@@ -7,7 +7,7 @@ from interface.views.test import TestView
 from interface.views.install_config import InstallConfigView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
-from interface.views.building_segments import BuildingSegmentsView
+from interface.views.building_areas import BuildingAreasView
 from interface.views.zones import ZonesView
 from interface.views.surfaces import SurfacesView
 from interface.views.systems import SystemsView
@@ -38,7 +38,7 @@ class MainApplicationWindow(ctk.CTk):
             "Configuration": InstallConfigView(self),
             "Project Info": ProjectInfoView(self),
             "Buildings": BuildingsView(self),
-            "Building Segments": BuildingSegmentsView(self),
+            "Building Areas": BuildingAreasView(self),
             "Zones": ZonesView(self),
             "Surfaces": SurfacesView(self),
             "Systems": SystemsView(self),
@@ -121,7 +121,7 @@ class MainApplicationWindow(ctk.CTk):
         button_names = [
             "Project Info",
             "Buildings",
-            "Building Segments",
+            "Building Areas",
             "Zones",
             "Surfaces",
             "Systems",
@@ -134,7 +134,7 @@ class MainApplicationWindow(ctk.CTk):
         icon_paths = [
             "menu.png",
             "buildings.png",
-            "building_segments.png",
+            "building_areas.png",
             "spaces.png",
             "surfaces.png",
             "systems.png",
@@ -145,7 +145,7 @@ class MainApplicationWindow(ctk.CTk):
         callback_methods = {
             "Project Info": lambda: self.show_view("Project Info"),
             "Buildings": lambda: self.show_view("Buildings"),
-            "Building Segments": lambda: self.show_view("Building Segments"),
+            "Building Areas": lambda: self.show_view("Building Areas"),
             "Zones": lambda: self.show_view("Zones"),
             "Surfaces": lambda: self.show_view("Surfaces"),
             "Systems": lambda: self.show_view("Systems"),

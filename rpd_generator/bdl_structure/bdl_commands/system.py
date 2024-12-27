@@ -382,8 +382,8 @@ class System(ParentNode):
         self.cool_sys_is_sized_based_on_design_day = None
         self.cool_sys_chilled_water_loop = None
         self.cool_sys_condenser_water_loop = None
-        self.cool_sys_efficiency_metric_values = []
-        self.cool_sys_efficiency_metric_types = []
+        self.cool_sys_efficiency_metric_values = None
+        self.cool_sys_efficiency_metric_types = None
         self.cool_sys_dehumidification_type = None
         self.cool_sys_turndown_ratio = None
 

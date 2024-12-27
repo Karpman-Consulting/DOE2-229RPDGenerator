@@ -81,12 +81,41 @@ class ModelInputReader:
         self.current_parent_space = None
         self.current_parent = None
 
-    def read_input_bdl_file(self, bdl_file_path: str):
+    def read_input_bdl_file(self, bdl_file_path: str) -> dict:
         """
         Read BDL input file and return a dictionary of object instances.
 
         :param bdl_file_path: Path to the BDL file.
-        :return: A dictionary with BDL commands as keys and lists of .
+        :return: A dictionary with BDL commands as keys and dictionaries filled with keyword-value pairs as values.
+
+        Example:
+        {
+            "doe2_version": "DOE-2.3",
+            "file_commands": {
+                "SYSTEM": {
+                    "System 1": {
+                        "TYPE": "FC",
+                        "MIN-SUPPLY-T": 50.0,
+                        "MAX-SUPPLY-T": 100.0,
+                    },
+                    "System 2": {
+                        "TYPE": "FC",
+                        "MIN-SUPPLY-T": 50.0,
+                        "MAX-SUPPLY-T": 100.0,
+                    },
+                },
+                "ZONE": {
+                    "ZONE-1": {
+                        "DESIGN-COOL-T": 75.0,
+                        "DESIGN-HEAT-T": 70.0,
+                    },
+                    "ZONE-2": {
+                        "DESIGN-COOL-T": 75.0,
+                        "DESIGN-HEAT-T": 70.0,
+                    },
+                },
+            }
+        }
         """
 
         with open(bdl_file_path, "r") as bdl_file:
