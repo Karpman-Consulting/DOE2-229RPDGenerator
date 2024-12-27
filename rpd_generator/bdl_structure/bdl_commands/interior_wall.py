@@ -186,6 +186,7 @@ class InteriorWall(
         for attr in optical_property_attributes:
             value = getattr(self, attr, None)
             if value is not None:
+                attr = attr.replace("optical_property_", "")
                 self.optical_properties[attr] = value
 
         self.interior_wall_data_structure = {
