@@ -72,7 +72,7 @@ class TestSpaces(unittest.TestCase):
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_space(self, mock_get_output_data):
-        """Tests that the space data structure is populated correctly, given valid inputs."""
+        """Tests that the space data structure is populated correctly, given valid inputs with 1 interior lighting and 1 misc equipment."""
         mock_get_output_data.return_value = {}
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
@@ -85,17 +85,10 @@ class TestSpaces(unittest.TestCase):
             BDL_SpaceKeywords.EQUIPMENT_KW: "50.1",
             BDL_SpaceKeywords.EQUIP_SENSIBLE: "0.4",
             BDL_SpaceKeywords.EQUIP_LATENT: "0.5",
-            BDL_SpaceKeywords.SOURCE_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.SOURCE_TYPE: BDL_InternalEnergySourceOptions.GAS,
             BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
             BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
             BDL_SpaceKeywords.PEOPLE_HG_SENS: "2",
             BDL_SpaceKeywords.PEOPLE_HG_LAT: "3",
-            # ZONE
-            BDL_SpaceKeywords.INF_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.INF_METHOD: BDL_InfiltrationAlgorithmOptions.AIR_CHANGE,
-            BDL_SpaceKeywords.INF_FLOW_AREA: "2000",
-            BDL_SpaceKeywords.AIR_CHANGES_HR: "60",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -117,10 +110,6 @@ class TestSpaces(unittest.TestCase):
                     "sensible_fraction": 0.4,
                     "latent_fraction": 0.5,
                 },
-                {
-                    "id": "Space 1 MiscEqp2",
-                    "energy_type": "NATURAL_GAS",
-                },
             ],
             "service_water_heating_uses": [],
             "floor_area": 400.0,
@@ -135,8 +124,8 @@ class TestSpaces(unittest.TestCase):
     def test_populate_data_with_space_multiple_lighting_schedules(
         self, mock_get_output_data
     ):
-        """Tests that the interior_lighting sub data structure is populated correctly, given multiple lighting
-        schedules as input."""
+        """Tests that the interior_lighting and miscellaneous equipment sub data structures are populated correctly,
+        given multiple lighting schedules and multiple misc equipment."""
         mock_get_output_data.return_value = {}
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
@@ -147,22 +136,18 @@ class TestSpaces(unittest.TestCase):
             ],
             BDL_SpaceKeywords.LIGHTING_W_AREA: ["20.1", "20.2"],
             BDL_SpaceKeywords.LIGHTING_KW: ["30.1", "30.2"],
-            BDL_SpaceKeywords.EQUIP_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.EQUIPMENT_W_AREA: "40.1",
-            BDL_SpaceKeywords.EQUIPMENT_KW: "50.1",
-            BDL_SpaceKeywords.EQUIP_SENSIBLE: "0.4",
-            BDL_SpaceKeywords.EQUIP_LATENT: "0.5",
-            BDL_SpaceKeywords.SOURCE_SCHEDULE: ["Annual Schedule 1"],
-            BDL_SpaceKeywords.SOURCE_TYPE: BDL_InternalEnergySourceOptions.GAS,
+            BDL_SpaceKeywords.EQUIP_SCHEDULE: [
+                "Annual Schedule 1",
+                "Annual Schedule 1",
+            ],
+            BDL_SpaceKeywords.EQUIPMENT_W_AREA: ["40.1", "40.1"],
+            BDL_SpaceKeywords.EQUIPMENT_KW: ["50.1", "50.1"],
+            BDL_SpaceKeywords.EQUIP_SENSIBLE: ["0.4", "0.4"],
+            BDL_SpaceKeywords.EQUIP_LATENT: ["0.5", "0.5"],
             BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
             BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
             BDL_SpaceKeywords.PEOPLE_HG_SENS: "2",
             BDL_SpaceKeywords.PEOPLE_HG_LAT: "3",
-            # ZONE
-            BDL_SpaceKeywords.INF_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.INF_METHOD: BDL_InfiltrationAlgorithmOptions.AIR_CHANGE,
-            BDL_SpaceKeywords.INF_FLOW_AREA: "2000",
-            BDL_SpaceKeywords.AIR_CHANGES_HR: "60",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -191,7 +176,11 @@ class TestSpaces(unittest.TestCase):
                 },
                 {
                     "id": "Space 1 MiscEqp2",
-                    "energy_type": "NATURAL_GAS",
+                    "energy_type": "ELECTRICITY",
+                    "power": 66.14,
+                    "multiplier_schedule": "Annual Schedule 1",
+                    "sensible_fraction": 0.4,
+                    "latent_fraction": 0.5,
                 },
             ],
             "service_water_heating_uses": [],
@@ -208,14 +197,13 @@ class TestSpaces(unittest.TestCase):
         self, mock_get_output_data
     ):
         """Tests that the miscellaneous_equipment sub data structure is populated correctly, given multiple
-        equipment schedules as input."""
+        equipment schedules and internal energy sources."""
         mock_get_output_data.return_value = {}
         self.space.keyword_value_pairs = {
             BDL_SpaceKeywords.VOLUME: "4000",
             BDL_SpaceKeywords.AREA: "400",
             BDL_SpaceKeywords.LIGHTING_SCHEDUL: "Annual Schedule 1",
-            BDL_SpaceKeywords.LIGHTING_W_AREA: "20.1",
-            BDL_SpaceKeywords.LIGHTING_KW: "30.1",
+            BDL_SpaceKeywords.LIGHTING_W_AREA: "2",
             BDL_SpaceKeywords.EQUIP_SCHEDULE: [
                 "Annual Schedule 1",
                 "Annual Schedule 1",
@@ -223,18 +211,22 @@ class TestSpaces(unittest.TestCase):
             BDL_SpaceKeywords.EQUIPMENT_W_AREA: ["40.1", "40.2"],
             BDL_SpaceKeywords.EQUIPMENT_KW: ["50.1", "50.2"],
             BDL_SpaceKeywords.EQUIP_SENSIBLE: ["0.4", "0.41"],
-            BDL_SpaceKeywords.EQUIP_LATENT: ["0.5", "0.51"],
-            BDL_SpaceKeywords.SOURCE_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.SOURCE_TYPE: BDL_InternalEnergySourceOptions.GAS,
+            BDL_SpaceKeywords.EQUIP_LATENT: ["0.6", "0.59"],
+            BDL_SpaceKeywords.SOURCE_SCHEDULE: [
+                "Annual Schedule 1",
+                "Annual Schedule 1",
+            ],
+            BDL_SpaceKeywords.SOURCE_TYPE: [
+                BDL_InternalEnergySourceOptions.GAS,
+                BDL_InternalEnergySourceOptions.ELECTRIC,
+            ],
+            BDL_SpaceKeywords.SOURCE_POWER: ["150", "200"],
+            BDL_SpaceKeywords.SOURCE_SENSIBLE: ["0.6", "1"],
+            BDL_SpaceKeywords.SOURCE_LATENT: "0.4",
             BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
             BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
             BDL_SpaceKeywords.PEOPLE_HG_SENS: "2",
             BDL_SpaceKeywords.PEOPLE_HG_LAT: "3",
-            # ZONE
-            BDL_SpaceKeywords.INF_SCHEDULE: "Annual Schedule 1",
-            BDL_SpaceKeywords.INF_METHOD: BDL_InfiltrationAlgorithmOptions.AIR_CHANGE,
-            BDL_SpaceKeywords.INF_FLOW_AREA: "2000",
-            BDL_SpaceKeywords.AIR_CHANGES_HR: "60",
         }
 
         self.rmd.populate_rmd_data(testing=True)
@@ -244,7 +236,7 @@ class TestSpaces(unittest.TestCase):
                 {
                     "id": "Space 1 IntLtg1",
                     "lighting_multiplier_schedule": "Annual Schedule 1",
-                    "power_per_area": 95.35,
+                    "power_per_area": 2.0,
                 }
             ],
             "miscellaneous_equipment": [
@@ -254,7 +246,7 @@ class TestSpaces(unittest.TestCase):
                     "power": 66.14,
                     "multiplier_schedule": "Annual Schedule 1",
                     "sensible_fraction": 0.4,
-                    "latent_fraction": 0.5,
+                    "latent_fraction": 0.6,
                 },
                 {
                     "id": "Space 1 MiscEqp2",
@@ -262,10 +254,46 @@ class TestSpaces(unittest.TestCase):
                     "power": 66.28,
                     "multiplier_schedule": "Annual Schedule 1",
                     "sensible_fraction": 0.41,
-                    "latent_fraction": 0.51,
+                    "latent_fraction": 0.59,
                 },
-                {"id": "Space 1 MiscEqp3", "energy_type": "NATURAL_GAS"},
+                {
+                    "id": "Space 1 MiscEqp3",
+                    "energy_type": "NATURAL_GAS",
+                    "power": 0.04396066666666667,
+                },
+                {
+                    "id": "Space 1 MiscEqp4",
+                    "energy_type": "ELECTRICITY",
+                    "power": 0.05861422222222223,
+                },
             ],
+            "service_water_heating_uses": [],
+            "floor_area": 400.0,
+            "number_of_occupants": 10.0,
+            "occupant_multiplier_schedule": "Annual Schedule 1",
+            "occupant_sensible_heat_gain": 2.0,
+            "occupant_latent_heat_gain": 3.0,
+        }
+        self.assertEqual(expected_data_structure, self.space.space_data_structure)
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_space_no_equip_nor_lighting(self, mock_get_output_data):
+        """Tests that the space data structure is populated correctly, given no lighting nor equipment in the space."""
+        mock_get_output_data.return_value = {}
+        self.space.keyword_value_pairs = {
+            BDL_SpaceKeywords.VOLUME: "4000",
+            BDL_SpaceKeywords.AREA: "400",
+            BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
+            BDL_SpaceKeywords.PEOPLE_SCHEDULE: "Annual Schedule 1",
+            BDL_SpaceKeywords.PEOPLE_HG_SENS: "2",
+            BDL_SpaceKeywords.PEOPLE_HG_LAT: "3",
+        }
+
+        self.rmd.populate_rmd_data(testing=True)
+        expected_data_structure = {
+            "id": "Space 1",
+            "interior_lighting": [],
+            "miscellaneous_equipment": [],
             "service_water_heating_uses": [],
             "floor_area": 400.0,
             "number_of_occupants": 10.0,

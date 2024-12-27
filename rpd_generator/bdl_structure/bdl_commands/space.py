@@ -326,14 +326,35 @@ class Space(ChildNode, ParentNode):
             if n == 1:
                 self.misc_eq_id = [misc_eq_id]
                 self.misc_eq_energy_type = [energy_type]
+                self.misc_eq_power = [
+                    self.try_convert_units(
+                        self.try_float(
+                            self.try_access_index(
+                                self.get_inp(BDL_SpaceKeywords.SOURCE_POWER), i
+                            )
+                        ),
+                        "Btu/hr",
+                        "kW",
+                    )
+                ]
             else:
                 self.misc_eq_id.append(misc_eq_id)
                 self.misc_eq_energy_type.append(energy_type)
+                self.misc_eq_power.append(
+                    self.try_convert_units(
+                        self.try_float(
+                            self.try_access_index(
+                                self.get_inp(BDL_SpaceKeywords.SOURCE_POWER), i
+                            )
+                        ),
+                        "Btu/hr",
+                        "kW",
+                    )
+                )
 
                 # Lists must be the same length, even when elements are not populated
                 self.misc_eq_reporting_name.append(None)
                 self.misc_eq_notes.append(None)
-                self.misc_eq_power.append(None)
                 self.misc_eq_multiplier_schedule.append(None)
                 self.misc_eq_sensible_fraction.append(None)
                 self.misc_eq_latent_fraction.append(None)
