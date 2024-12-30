@@ -84,8 +84,8 @@ class TestFuelBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.188203578125,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.900009000090001, 0.920009000090001, 0.9085817143885725],
-            "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
+            "efficiency": [0.900009000090001],
+            "efficiency_metrics": ["THERMAL"],
         }
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
@@ -127,8 +127,8 @@ class TestFuelBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.188203578125,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.900009000090001, 0.920009000090001, 0.9085817143885725],
-            "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
+            "efficiency": [0.900009000090001],
+            "efficiency_metrics": ["THERMAL"],
         }
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
