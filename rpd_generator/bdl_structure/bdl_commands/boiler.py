@@ -244,7 +244,7 @@ class Boiler(BaseNode):
         boiler_capacities = {}
         for boiler_name in self.rmd.boiler_names:
             boiler = self.get_obj(boiler_name)
-            if boiler.rated_capacity:  # boiler is gauranteed to exist
+            if boiler.rated_capacity:  # boiler is guaranteed to exist
                 boiler_capacities[boiler_name] = boiler.rated_capacity
             else:
                 requests[boiler_name] = (
