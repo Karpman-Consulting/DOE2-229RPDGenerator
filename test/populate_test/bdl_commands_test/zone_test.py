@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 
+from rpd_generator.config import Config
 from rpd_generator.bdl_structure.bdl_commands.circulation_loop import (
     CirculationLoop,
     BDL_CirculationLoopKeywords,
@@ -23,30 +24,41 @@ from rpd_generator.bdl_structure.bdl_commands.schedule import (
     BDL_ScheduleKeywords,
     BDL_ScheduleTypes,
 )
-from rpd_generator.bdl_structure.bdl_commands.space import Space
-from rpd_generator.config import Config
-from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
+from rpd_generator.bdl_structure.bdl_commands.project import (
+    RunPeriod,
+    Holidays,
+    BDL_RunPeriodKeywords,
+    BDL_HolidayKeywords,
+    BDL_HolidayTypes,
+)
 from rpd_generator.bdl_structure.bdl_commands.system import (
     System,
     BDL_SystemHeatingTypes,
     BDL_SystemCoolingTypes,
 )
 from rpd_generator.bdl_structure.bdl_commands.zone import *
-from rpd_generator.utilities import schedule_funcs
+from rpd_generator.bdl_structure.bdl_commands.space import Space
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
+from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 
 
 class TestZones(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+        self.rpd = RulesetProjectDescription()
         self.rmd = RulesetModelDescription("Test RMD")
+        self.rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
+        self.run_period = RunPeriod("Run Period 1", self.rmd)
+        self.holidays = Holidays("Holidays 1", self.rmd)
+
         self.system = System("System 1", self.rmd)
         self.zone = Zone("Zone 1", self.system, self.rmd)
         self.pump = Pump("Pump 1", self.rmd)
         self.hw_circulation_loop = CirculationLoop("HW Circulation Loop", self.rmd)
-        self.hw_bbrd_loop = CirculationLoop("HW Baseboard Loop", self.rmd)
-        self.doas = System("DOAS 1", self.rmd)
 
         # Create People Schedules
         self.people_day_schedule = DaySchedulePD("People Day Schedule", self.rmd)
@@ -96,26 +108,21 @@ class TestZones(unittest.TestCase):
             "Loop Operation Annual Schedule", self.rmd
         )
 
-        # Generate annual calendar for schedules
-        generated_calendar = schedule_funcs.generate_year_calendar(2020, "WEDNESDAY")
-        self.people_annual_schedule.annual_calendar = generated_calendar
-        self.temp_reset_annual_schedule.annual_calendar = generated_calendar
-        self.flow_annual_schedule.annual_calendar = generated_calendar
-        self.thermostat_annual_schedule.annual_calendar = generated_calendar
-        self.fan_schedule_annual_schedule.annual_calendar = generated_calendar
-        self.loop_operation_annual_schedule.annual_calendar = generated_calendar
-
         # Create populate default keyword value pairs for all tests
+        self.run_period.keyword_value_pairs = {
+            BDL_RunPeriodKeywords.END_YEAR: "2021",
+        }
+        self.holidays.keyword_value_pairs = {
+            BDL_HolidayKeywords.TYPE: BDL_HolidayTypes.OFFICIAL_US,
+        }
         self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "1"}
         self.people_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
-            BDL_DayScheduleKeywords.VALUES: ["0.1" for i in range(24)],
+            BDL_DayScheduleKeywords.VALUES: ["0.1"] * 24,
         }
         self.people_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "People Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["People Day Schedule"] * 12,
         }
         self.people_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
@@ -132,9 +139,7 @@ class TestZones(unittest.TestCase):
         }
         self.temp_reset_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Temp Reset Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Temp Reset Day Schedule"] * 12,
         }
         self.temp_reset_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
@@ -144,13 +149,11 @@ class TestZones(unittest.TestCase):
         }
         self.flow_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
-            BDL_DayScheduleKeywords.VALUES: ["0.5" for i in range(24)],
+            BDL_DayScheduleKeywords.VALUES: ["0.5"] * 24,
         }
         self.flow_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Flow Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Flow Day Schedule"] * 12,
         }
         self.flow_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
@@ -167,9 +170,7 @@ class TestZones(unittest.TestCase):
         }
         self.thermostat_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Thermostat Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Thermostat Day Schedule"] * 12,
         }
         self.thermostat_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
@@ -179,13 +180,11 @@ class TestZones(unittest.TestCase):
         }
         self.fan_schedule_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_DayScheduleKeywords.VALUES: ["0" for i in range(24)],
+            BDL_DayScheduleKeywords.VALUES: ["0"] * 24,
         }
         self.fan_schedule_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Fan Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Fan Day Schedule"] * 12,
         }
         self.fan_schedule_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
@@ -195,13 +194,12 @@ class TestZones(unittest.TestCase):
         }
         self.loop_operation_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_DayScheduleKeywords.VALUES: ["1" for i in range(24)],
+            BDL_DayScheduleKeywords.VALUES: ["1"] * 24,
         }
         self.loop_operation_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
-            BDL_WeekScheduleKeywords.DAY_SCHEDULES: [
-                "Loop Operation Day Schedule" for i in range(12)
-            ],
+            BDL_WeekScheduleKeywords.DAY_SCHEDULES: ["Loop Operation Day Schedule"]
+            * 12,
         }
         self.loop_operation_annual_schedule.keyword_value_pairs = {
             BDL_ScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
@@ -224,22 +222,6 @@ class TestZones(unittest.TestCase):
             BDL_CirculationLoopKeywords.MIN_RESET_T: "48.5",
             BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
             BDL_CirculationLoopKeywords.HEATING_SCHEDULE: "Loop Operation Annual Schedule",
-        }
-        self.hw_bbrd_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
-            BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
-            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.HW,
-            BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "160.0",
-            BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
-            BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
-            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Temp Reset Annual Schedule",
-            BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
-            BDL_CirculationLoopKeywords.MIN_RESET_T: "48.5",
-            BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
-            BDL_CirculationLoopKeywords.HEATING_SCHEDULE: "Loop Operation Annual Schedule",
-        }
-        self.doas.keyword_value_pairs = {
-            BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule"
         }
 
         # KEYWORDS / OUTPUT DATA KEYS FOR REFERENCE
@@ -295,8 +277,6 @@ class TestZones(unittest.TestCase):
         """
         Test populating data elements for a zone served by a constant volume, single-zone system with DX cooling,
         electric heating, and constant temperature control
-        TODO: Currently zone.py doesn't have a path to handle constant temp for electric type heating.
-        See roughly line 516 in system.py
         """
         mock_get_output_data.return_value = {
             "Supply Fan - Airflow": 0,
@@ -310,7 +290,7 @@ class TestZones(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
-            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PTAC,
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PSZ,
             BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
             BDL_SystemKeywords.MAX_SUPPLY_T: "70",
             BDL_SystemKeywords.MIN_SUPPLY_T: "50",
@@ -325,7 +305,6 @@ class TestZones(unittest.TestCase):
             BDL_SystemKeywords.SUPPLY_FLOW: "2500",
             BDL_SystemKeywords.HEATING_CAPACITY: "15",
             BDL_SystemKeywords.COOLING_CAPACITY: "14",
-            BDL_SystemKeywords.HW_LOOP: "HW Circulation Loop",
         }
         self.zone.keyword_value_pairs = {
             BDL_ZoneKeywords.BASEBOARD_CTRL: BDL_BaseboardControlOptions.NONE,
@@ -334,27 +313,25 @@ class TestZones(unittest.TestCase):
             BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
             BDL_ZoneKeywords.HEAT_TEMP_SCH: "Thermostat Annual Schedule",
             BDL_ZoneKeywords.OUTSIDE_AIR_FLOW: "200",
-            BDL_ZoneKeywords.HW_LOOP: "HW Circulation Loop",
-            BDL_ZoneKeywords.TERMINAL_TYPE: BDL_TerminalTypes.SVAV,
             BDL_ZoneKeywords.MIN_AIR_SCH: "Flow Annual Schedule",
         }
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "CONSTANT_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
-                    "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -363,7 +340,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "CONSTANT_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -376,10 +352,7 @@ class TestZones(unittest.TestCase):
     def test_populate_zone_terminal_system_data(self, mock_get_output_data):
         """
         Test populating data elements for a zone served by a constant volume, single-zone system with CHW cooling, HW
-        heating, and constant temperature control
-        TODO: Currently zone.py doesn't have a path to handle constant volume and constant temp
-        control. See get_terminal_system_temperature_control and populate_main_terminal_type. Not sure what
-        the correct fix is here
+        heating
         """
         mock_get_output_data.return_value = {
             "Supply Fan - Airflow": 0,
@@ -417,29 +390,28 @@ class TestZones(unittest.TestCase):
             BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
             BDL_ZoneKeywords.HEAT_TEMP_SCH: "Thermostat Annual Schedule",
             BDL_ZoneKeywords.OUTSIDE_AIR_FLOW: "200",
-            BDL_ZoneKeywords.HW_LOOP: "HW Circulation Loop",
-            BDL_ZoneKeywords.TERMINAL_TYPE: BDL_TerminalTypes.SVAV,
             BDL_ZoneKeywords.MIN_AIR_SCH: "Flow Annual Schedule",
             BDL_ZoneKeywords.MIN_FLOW_RATIO: "0.6",
         }
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 14.0,
                     "cooling_source": "CHILLED_WATER",
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 15.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -448,7 +420,6 @@ class TestZones(unittest.TestCase):
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
                     "temperature_control": "CONSTANT",
-                    "type": "VARIABLE_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -506,20 +477,21 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -528,7 +500,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "VARIABLE_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -582,10 +553,10 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
             "exhaust_airflow_rate_multiplier_schedule": "Fan Annual Schedule",
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
@@ -649,21 +620,22 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
             "exhaust_airflow_rate_multiplier_schedule": "Fan Annual Schedule",
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "CONSTANT_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -672,16 +644,15 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "CONSTANT_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
             "thermostat_heating_setpoint_schedule": "Thermostat Annual Schedule",
             "zonal_exhaust_fan": {
+                "id": "Zone 1 EF",
                 "design_airflow": 150.0,
                 "design_electric_power": 0.04408382900635919,
                 "design_pressure_rise": 2.0,
-                "id": "Zone 1 EF",
                 "is_airflow_sized_based_on_design_day": False,
                 "specification_method": "DETAILED",
                 "total_efficiency": 0.8,
@@ -711,7 +682,7 @@ class TestZones(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
-            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PTAC,
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PIU,
             BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
             BDL_SystemKeywords.MAX_SUPPLY_T: "70",
             BDL_SystemKeywords.MIN_SUPPLY_T: "50",
@@ -742,20 +713,21 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "CONSTANT_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -764,7 +736,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "CONSTANT_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -779,6 +750,10 @@ class TestZones(unittest.TestCase):
         Test populating data elements for a zone served by a system which is served by a dedicated outside air system
 
         """
+        self.doas = System("DOAS 1", self.rmd)
+        self.doas.keyword_value_pairs = {
+            BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule"
+        }
         mock_get_output_data.return_value = {
             "Supply Fan - Airflow": 0,
             "Supply Fan - Power": 0,
@@ -823,39 +798,39 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "CONSTANT_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "primary_airflow": 10000,
                     "secondary_airflow": 0,
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "CONSTANT_AIR_VOLUME",
                 },
                 {
+                    "id": "Zone 1 DOASTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 0.0,
-                    "id": "Zone 1 DOASTerminal",
                     "minimum_airflow": 0.3,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 0.3,
                     "served_by_heating_ventilating_air_conditioning_system": "DOAS 1",
-                    "type": "VARIABLE_AIR_VOLUME",
                 },
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -870,6 +845,20 @@ class TestZones(unittest.TestCase):
         Test populating data elements for a zone with baseboard supplemental heating
 
         """
+        self.hw_bbrd_loop = CirculationLoop("HW Baseboard Loop", self.rmd)
+        self.hw_bbrd_loop.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
+            BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.HW,
+            BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "160.0",
+            BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "82",
+            BDL_CirculationLoopKeywords.LOOP_MIN_FLOW: "0.8",
+            BDL_CirculationLoopKeywords.HEAT_RESET_SCH: "Temp Reset Annual Schedule",
+            BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL: BDL_CirculationLoopTemperatureResetOptions.OA_RESET,
+            BDL_CirculationLoopKeywords.MIN_RESET_T: "48.5",
+            BDL_CirculationLoopKeywords.LOOP_OPERATION: BDL_CirculationLoopOperationOptions.SCHEDULED,
+            BDL_CirculationLoopKeywords.HEATING_SCHEDULE: "Loop Operation Annual Schedule",
+        }
         mock_get_output_data.return_value = {
             "Supply Fan - Airflow": 0,
             "Supply Fan - Power": 0,
@@ -916,20 +905,21 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "CONSTANT_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -938,17 +928,16 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "CONSTANT_AIR_VOLUME",
                 },
                 {
+                    "id": "Zone 1 BaseboardTerminal",
+                    "type": "BASEBOARD",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 6.0,
                     "heating_from_loop": "HW Baseboard Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 BaseboardTerminal",
                     "is_supply_ducted": False,
-                    "type": "BASEBOARD",
                 },
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -1008,20 +997,21 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": True,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -1030,7 +1020,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "VARIABLE_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -1105,9 +1094,9 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
@@ -1116,12 +1105,13 @@ class TestZones(unittest.TestCase):
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
@@ -1130,7 +1120,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "VARIABLE_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
@@ -1189,7 +1178,7 @@ class TestZones(unittest.TestCase):
         }
         self.flow_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
-            BDL_DayScheduleKeywords.VALUES: ["-999" for i in range(24)],
+            BDL_DayScheduleKeywords.VALUES: ["-999"] * 24,
         }
         self.zone.keyword_value_pairs = {
             BDL_ZoneKeywords.BASEBOARD_CTRL: BDL_BaseboardControlOptions.NONE,
@@ -1210,9 +1199,9 @@ class TestZones(unittest.TestCase):
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
+            "id": "Zone 1",
             "design_thermostat_cooling_setpoint": 85.0,
             "design_thermostat_heating_setpoint": 45.0,
-            "id": "Zone 1",
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
@@ -1221,12 +1210,13 @@ class TestZones(unittest.TestCase):
             "surfaces": [],
             "terminals": [
                 {
+                    "id": "Zone 1 MainTerminal",
+                    "type": "VARIABLE_AIR_VOLUME",
                     "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "id": "Zone 1 MainTerminal",
                     "minimum_airflow": 30000000,
                     "minimum_outdoor_airflow": 0.3,
                     "primary_airflow": 10000,
@@ -1234,7 +1224,6 @@ class TestZones(unittest.TestCase):
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
                     "supply_design_cooling_setpoint_temperature": 50.0,
                     "supply_design_heating_setpoint_temperature": 70.0,
-                    "type": "VARIABLE_AIR_VOLUME",
                 }
             ],
             "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
