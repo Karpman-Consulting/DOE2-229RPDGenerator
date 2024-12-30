@@ -133,13 +133,8 @@ class Boiler(BaseNode):
                 self.efficiency.append(1 / boiler_e_i_r)
                 self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.THERMAL)
             if boiler_e_i_r and boiler_e_i_r == 1:
-                self.efficiency.extend([1, 1])
-                self.efficiency_metrics.extend(
-                    [
-                        BoilerEfficiencyMetricOptions.COMBUSTION,
-                        BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION,
-                    ]
-                )
+                self.efficiency.append(1)
+                self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.COMBUSTION)
 
         else:
             boiler_f_i_r = output_data.get(

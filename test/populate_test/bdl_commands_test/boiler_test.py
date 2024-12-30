@@ -212,7 +212,7 @@ class TestElectricBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.8822398124999999,
             "minimum_load_ratio": 0.33,
-            "efficiency": [1, 1, 1],
-            "efficiency_metrics": ["THERMAL", "COMBUSTION", "ANNUAL_FUEL_UTILIZATION"],
+            "efficiency": [1, 1],
+            "efficiency_metrics": ["THERMAL", "COMBUSTION"],
         }
         self.assertDictEqual(self.boiler.boiler_data_structure, expected_data_structure)
