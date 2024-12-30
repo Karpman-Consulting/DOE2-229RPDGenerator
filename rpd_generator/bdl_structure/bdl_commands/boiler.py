@@ -133,13 +133,8 @@ class Boiler(BaseNode):
                 self.efficiency.append(1 / boiler_e_i_r)
                 self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.THERMAL)
             if boiler_e_i_r and boiler_e_i_r == 1:
-                self.efficiency.extend([1, 1])
-                self.efficiency_metrics.extend(
-                    [
-                        BoilerEfficiencyMetricOptions.COMBUSTION,
-                        BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION,
-                    ]
-                )
+                self.efficiency.append(1)
+                self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.COMBUSTION)
 
         else:
             boiler_f_i_r = output_data.get(
@@ -148,19 +143,19 @@ class Boiler(BaseNode):
             if boiler_f_i_r:
                 self.efficiency.append(1 / boiler_f_i_r)
                 self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.THERMAL)
-                self.efficiency.append(1 / boiler_f_i_r + 0.02)
-                self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.COMBUSTION)
-                # EQUATIONS DERIVED FROM PRM REFERENCE MANUAL
-                if 0.825 > self.efficiency[0] > 0.8:
-                    self.efficiency.append((self.efficiency[0] - 0.725) / 0.1)
-                    self.efficiency_metrics.append(
-                        BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION
-                    )
-                elif 0.825 <= self.efficiency[0] <= 0.98:
-                    self.efficiency.append((self.efficiency[0] - 0.105) / 0.875)
-                    self.efficiency_metrics.append(
-                        BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION
-                    )
+                # self.efficiency.append(1 / boiler_f_i_r + 0.02)
+                # self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.COMBUSTION)
+                # # EQUATIONS DERIVED FROM PRM REFERENCE MANUAL
+                # if 0.825 > self.efficiency[0] > 0.8:
+                #     self.efficiency.append((self.efficiency[0] - 0.725) / 0.1)
+                #     self.efficiency_metrics.append(
+                #         BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION
+                #     )
+                # elif 0.825 <= self.efficiency[0] <= 0.98:
+                #     self.efficiency.append((self.efficiency[0] - 0.105) / 0.875)
+                #     self.efficiency_metrics.append(
+                #         BoilerEfficiencyMetricOptions.ANNUAL_FUEL_UTILIZATION
+                #     )
 
         # Assign pump data elements populated from the boiler keyword value pairs
         pump = self.get_obj(self.get_inp(BDL_BoilerKeywords.HW_PUMP))
