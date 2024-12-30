@@ -511,58 +511,21 @@ class TestZones(unittest.TestCase):
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_zone_on_sum_system_data(self, mock_get_output_data):
         """
-        Test populating data elements for a zone that is assigned to a SUM type system
+        Verify that no Main Terminal data is populated for a zone that is assigned to a SUM type system
 
         """
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
             BDL_SystemKeywords.TYPE: BDL_SystemTypes.SUM,
-            BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
-            BDL_SystemKeywords.MAX_SUPPLY_T: "70",
-            BDL_SystemKeywords.MIN_SUPPLY_T: "50",
-            BDL_SystemKeywords.HEAT_SOURCE: BDL_SystemHeatingTypes.HOT_WATER,
-            BDL_SystemKeywords.COOL_SOURCE: BDL_SystemCoolingTypes.CHILLED_WATER,
-            BDL_SystemKeywords.ZONE_HEAT_SOURCE: BDL_ZoneHeatSourceOptions.HOT_WATER,
-            BDL_SystemKeywords.SUPPLY_STATIC: "30",
-            BDL_SystemKeywords.SUPPLY_MTR_EFF: "0.9",
-            BDL_SystemKeywords.SUPPLY_MECH_EFF: "1",
-            BDL_SystemKeywords.MIN_FLOW_RATIO: "0.4",
-            BDL_SystemKeywords.COOL_SET_T: "75",
-            BDL_SystemKeywords.HEAT_SET_T: "75",
-            BDL_SystemKeywords.SUPPLY_FLOW: "2500",
-            BDL_SystemKeywords.HEATING_CAPACITY: "15",
-            BDL_SystemKeywords.COOLING_CAPACITY: "14",
-            BDL_SystemKeywords.HW_LOOP: "HW Circulation Loop",
-        }
-        self.zone.keyword_value_pairs = {
-            BDL_ZoneKeywords.BASEBOARD_CTRL: BDL_BaseboardControlOptions.NONE,
-            BDL_ZoneKeywords.DESIGN_COOL_T: "85",
-            BDL_ZoneKeywords.COOL_TEMP_SCH: "Thermostat Annual Schedule",
-            BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
-            BDL_ZoneKeywords.HEAT_TEMP_SCH: "Thermostat Annual Schedule",
-            BDL_ZoneKeywords.EXHAUST_FLOW: "150",
-            BDL_ZoneKeywords.EXHAUST_FAN_SCH: "Fan Annual Schedule",
-            BDL_ZoneKeywords.EXHAUST_STATIC: "2",
-            BDL_ZoneKeywords.EXHAUST_EFF: "0.8",
-            BDL_ZoneKeywords.OUTSIDE_AIR_FLOW: "200",
-            BDL_ZoneKeywords.HW_LOOP: "HW Circulation Loop",
-            BDL_ZoneKeywords.TERMINAL_TYPE: BDL_TerminalTypes.SVAV,
-            BDL_ZoneKeywords.MIN_AIR_SCH: "Flow Annual Schedule",
-            BDL_ZoneKeywords.MIN_FLOW_RATIO: "0.6",
         }
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Zone 1",
-            "design_thermostat_cooling_setpoint": 85.0,
-            "design_thermostat_heating_setpoint": 45.0,
-            "exhaust_airflow_rate_multiplier_schedule": "Fan Annual Schedule",
             "infiltration": {},
             "spaces": [],
             "surfaces": [],
             "terminals": [],
-            "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
-            "thermostat_heating_setpoint_schedule": "Thermostat Annual Schedule",
             "zonal_exhaust_fan": {},
         }
         self.assertEqual(expected_data_structure, self.zone.zone_data_structure)
@@ -585,7 +548,7 @@ class TestZones(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
-            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PTAC,
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PSZ,
             BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
             BDL_SystemKeywords.MAX_SUPPLY_T: "70",
             BDL_SystemKeywords.MIN_SUPPLY_T: "50",
@@ -766,7 +729,7 @@ class TestZones(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
-            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PTAC,
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PSZ,
             BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
             BDL_SystemKeywords.MAX_SUPPLY_T: "70",
             BDL_SystemKeywords.MIN_SUPPLY_T: "50",
@@ -871,7 +834,7 @@ class TestZones(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
-            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PTAC,
+            BDL_SystemKeywords.TYPE: BDL_SystemTypes.PSZ,
             BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
             BDL_SystemKeywords.MAX_SUPPLY_T: "70",
             BDL_SystemKeywords.MIN_SUPPLY_T: "50",
