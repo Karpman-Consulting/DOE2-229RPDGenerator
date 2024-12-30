@@ -242,7 +242,14 @@ class BDLEnums:
                 "U-VALUE",
             ]
         ),
-        "ConstructionKeywords": _ListEnum(["TYPE", "LAYERS", "ABSORPTANCE", "U-VALUE"]),
+        "ConstructionKeywords": _ListEnum(
+            [
+                "TYPE",
+                "LAYERS",
+                "ABSORPTANCE",
+                "U-VALUE",
+            ]
+        ),
         "DayScheduleKeywords": _ListEnum(
             [
                 "TYPE",
@@ -308,12 +315,23 @@ class BDLEnums:
                 "INSIDE-VIS-REFL",
             ]
         ),
+        "ShadingSurfaceOptions": _ListEnum(
+            [
+                "YES",
+                "NO",
+            ]
+        ),
         "FloorKeywords": _ListEnum(
             [
                 "AZIMUTH",
             ]
         ),
-        "GlassTypeOptions": _ListEnum(["GLASS-TYPE-CODE", "SHADING-COEF"]),
+        "GlassTypeOptions": _ListEnum(
+            [
+                "GLASS-TYPE-CODE",
+                "SHADING-COEF",
+            ]
+        ),
         "GlassTypeKeywords": _ListEnum(
             [
                 "TYPE",
@@ -547,7 +565,6 @@ class BDLEnums:
                 "EQUIP-LATENT",
                 "SOURCE-TYPE",
                 "SOURCE-POWER",
-                "SOURCE-KW",
                 "SOURCE-SENSIBLE",
                 "SOURCE-LATENT",
                 "NUMBER-OF-PEOPLE",
@@ -663,7 +680,12 @@ class BDLEnums:
             ]
         ),
         "SystemNightCycleControlOptions": _ListEnum(
-            ["CYCLE-ON-ANY", "CYCLE-ON-FIRST", "STAY-OFF", "ZONE-FANS-ONLY"]
+            [
+                "CYCLE-ON-ANY",
+                "CYCLE-ON-FIRST",
+                "STAY-OFF",
+                "ZONE-FANS-ONLY",
+            ]
         ),
         "SystemEconomizerOptions": _ListEnum(
             [
@@ -752,7 +774,13 @@ class BDLEnums:
                 "INTERMITTENT",
             ]
         ),
-        "SystemReturnAirPathOptions": _ListEnum(["DIRECT", "DUCT", "PLENUM-ZONES"]),
+        "SystemReturnAirPathOptions": _ListEnum(
+            [
+                "DIRECT",
+                "DUCT",
+                "PLENUM-ZONES",
+            ]
+        ),
         "SystemKeywords": _ListEnum(
             [
                 "TYPE",

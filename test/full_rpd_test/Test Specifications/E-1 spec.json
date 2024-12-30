@@ -217,7 +217,7 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.classification = \"WALL\")].azimuth",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[?(@.classification = \"WALL\")].azimuth",
         "compare-value": true,
         "special-case": "azimuth"
         },
@@ -226,15 +226,15 @@
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_thermal_exterior",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[?(@.adjacent_to == \"EXTERIOR\")].optical_properties.absorptance_thermal_exterior",
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_solar_exterior",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[?(@.adjacent_to == \"EXTERIOR\")].optical_properties.absorptance_solar_exterior",
         "compare-value": true
         },
         {
-        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[*][?(@.adjacent_to = \"EXTERIOR\")].optical_properties.absorptance_visible_exterior",
+        "json-key-path": "$.ruleset_model_descriptions[0].buildings[0].building_segments[0].zones[*].surfaces[?(@.adjacent_to == \"EXTERIOR\")].optical_properties.absorptance_visible_exterior",
         "compare-value": true
         },
         {

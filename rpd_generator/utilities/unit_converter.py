@@ -1,7 +1,7 @@
 import os
 import json
 import pint
-from jsonpath2 import match
+from jsonpath_ng.ext import parse
 
 
 path_to_ureg = os.path.join(os.path.dirname(__file__), "resources", "unit_registry.txt")
@@ -56,6 +56,7 @@ def convert_to_schema_units(rpd_json):
         json_paths = item_paths.get(data_group)
 
         for json_path in json_paths:
-            matches = [m.current_value for m in match(json_path, rpd_json)]
+            jsonpath_expr = parse(json_path)
+            matches = [m.value for m in jsonpath_expr.find(rpd_json)]
             unique_matches = [obj for obj in matches if id(obj) not in processed_ids]
             convert_units(data_group, unique_matches, elements_w_units)

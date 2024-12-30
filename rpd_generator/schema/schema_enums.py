@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from collections import defaultdict
 from rpd_generator.schema.ruleset import Ruleset
-from rpd_generator.utilities.jsonpath_utils import create_jsonpath_value_dict
+from rpd_generator.utilities.jsonpath_utils import create_enum_dict
 
 """This module exports the dictionary schema_enums that provides access to the
 enumerations in the schema files.
@@ -49,17 +49,10 @@ class SchemaEnums:
             _schema_obj = json.load(json_file)
 
         # Query for all objects having an enum field
-        # See jsonpath2 docs for parse syntax: https://jsonpath2.readthedocs.io/en/latest/exampleusage.html
-        _output_schema_enum_jsonpath_value_dict = create_jsonpath_value_dict(
-            "$..*[?(@.enum)]", _output_schema_obj
-        )
-        _enum_schema_enum_jsonpath_value_dict = create_jsonpath_value_dict(
-            "$..*[?(@.enum)]", _enum_schema_obj
-        )
-        _schema_enum_jsonpath_value_dict = create_jsonpath_value_dict(
-            "$..*[?(@.enum)]", _schema_obj
-        )
-        # Merge the dictionaries
+        _output_schema_enum_jsonpath_value_dict = create_enum_dict(_output_schema_obj)
+        _enum_schema_enum_jsonpath_value_dict = create_enum_dict(_enum_schema_obj)
+        _schema_enum_jsonpath_value_dict = create_enum_dict(_schema_obj)
+
         combined_enum_jsonpath_value_dict = defaultdict(list)
 
         # Merge dictionaries while combining values
@@ -70,18 +63,17 @@ class SchemaEnums:
         ):
             for key, value in d.items():
                 # Extend the list for the key with new values
-                combined_enum_jsonpath_value_dict[key].extend(value["enum"])
+                combined_enum_jsonpath_value_dict[key].extend(value)
 
         # Create a dictionary of all the enumerations as dictionaries
-        _enums_dict = {
-            # Extract the last segment of the path in the jsonpath
-            enum_jsonpath.split('"')[-2]: enum_list
-            for enum_jsonpath, enum_list in combined_enum_jsonpath_value_dict.items()
+        combined_enum_dict = {
+            enum_name: enum_list
+            for enum_name, enum_list in combined_enum_jsonpath_value_dict.items()
         }
 
         # Assign to SchemaEnums with the combined lists
         SchemaEnums.schema_enums = {
-            key: _ListEnum(enum_list) for key, enum_list in _enums_dict.items()
+            key: _ListEnum(enum_list) for key, enum_list in combined_enum_dict.items()
         }
 
 

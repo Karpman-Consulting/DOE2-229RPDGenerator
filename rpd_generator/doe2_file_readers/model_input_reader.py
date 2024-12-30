@@ -81,12 +81,41 @@ class ModelInputReader:
         self.current_parent_space = None
         self.current_parent = None
 
-    def read_input_bdl_file(self, bdl_file_path: str):
+    def read_input_bdl_file(self, bdl_file_path: str) -> dict:
         """
         Read BDL input file and return a dictionary of object instances.
 
         :param bdl_file_path: Path to the BDL file.
-        :return: A dictionary with BDL commands as keys and lists of .
+        :return: A dictionary with BDL commands as keys and dictionaries filled with keyword-value pairs as values.
+
+        Example:
+        {
+            "doe2_version": "DOE-2.3",
+            "file_commands": {
+                "SYSTEM": {
+                    "System 1": {
+                        "TYPE": "FC",
+                        "MIN-SUPPLY-T": 50.0,
+                        "MAX-SUPPLY-T": 100.0,
+                    },
+                    "System 2": {
+                        "TYPE": "FC",
+                        "MIN-SUPPLY-T": 50.0,
+                        "MAX-SUPPLY-T": 100.0,
+                    },
+                },
+                "ZONE": {
+                    "ZONE-1": {
+                        "DESIGN-COOL-T": 75.0,
+                        "DESIGN-HEAT-T": 70.0,
+                    },
+                    "ZONE-2": {
+                        "DESIGN-COOL-T": 75.0,
+                        "DESIGN-HEAT-T": 70.0,
+                    },
+                },
+            }
+        }
         """
 
         with open(bdl_file_path, "r") as bdl_file:
@@ -130,7 +159,7 @@ class ModelInputReader:
 
                 # Flag the start of the data record and set the active command dictionary
                 elif "DATA FOR" in line:
-                    obj_u_name = line.split("DATA FOR ")[1].strip()
+                    obj_u_name = line[32:].rstrip()
                     active_command_dict = file_commands.get(obj_u_name)
                     if active_command_dict:
                         record_data_for = True
@@ -207,12 +236,12 @@ class ModelInputReader:
         if potential_units in self.known_units and has_expected_whitespace:
             parts, units = line[:104].split(" = "), line[104:].strip()
             keyword = re.split(r" {2,}", parts[0])[1].strip()
-            value = parts[1].strip()
+            value = parts[1].rstrip()
             return keyword, value, units
         else:
             parts = line.split(" = ")
             keyword = re.split(r" {2,}", parts[0])[1].strip()
-            value = parts[1].strip()
+            value = parts[1].rstrip()
             return keyword, value, None
 
     def _track_current_parents(self, u_name, command):

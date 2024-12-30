@@ -35,9 +35,9 @@ class InteriorWall(
 
     adjacency_map = {
         BDL_InteriorWallTypes.STANDARD: SurfaceAdjacencyOptions.INTERIOR,
-        BDL_InteriorWallTypes.AIR: None,  # Omit the associated 229 Surface if INT-WALL-TYPE = AIR
+        BDL_InteriorWallTypes.AIR: SurfaceAdjacencyOptions.INTERIOR,
         BDL_InteriorWallTypes.ADIABATIC: SurfaceAdjacencyOptions.IDENTICAL,
-        BDL_InteriorWallTypes.INTERNAL: None,  # Omit the associated 229 Surface if INT-WALL-TYPE = INTERNAL
+        BDL_InteriorWallTypes.INTERNAL: SurfaceAdjacencyOptions.INTERIOR,
     }
 
     def __init__(self, u_name, parent, rmd):
@@ -45,7 +45,6 @@ class InteriorWall(
         self.rmd.bdl_obj_instances[u_name] = self
 
         self.interior_wall_data_structure = {}
-        self.omit = False
 
         # data elements with children
         self.subsurfaces = []
@@ -63,6 +62,7 @@ class InteriorWall(
         self.status_type = None
 
         # data elements for surface optical properties
+        self.optical_property_id = self.u_name + " OpticalProps"
         self.absorptance_thermal_exterior = None
         self.absorptance_solar_exterior = None
         self.absorptance_visible_exterior = None
@@ -78,9 +78,6 @@ class InteriorWall(
         self.adjacent_to = self.adjacency_map.get(
             self.get_inp(BDL_InteriorWallKeywords.INT_WALL_TYPE)
         )
-        if self.adjacent_to is None:
-            self.omit = True
-            return
 
         self.area = self.try_float(self.get_inp(BDL_InteriorWallKeywords.AREA))
         if self.area is None:
@@ -120,9 +117,11 @@ class InteriorWall(
                 self.azimuth += 360
 
         if self.adjacent_to == SurfaceAdjacencyOptions.INTERIOR:
-            self.adjacent_zone = self.rmd.space_map[
+            adjacent_zone = self.rmd.space_map.get(
                 self.get_inp(BDL_InteriorWallKeywords.NEXT_TO)
-            ].u_name
+            )
+            if adjacent_zone is not None:
+                self.adjacent_zone = adjacent_zone.u_name
 
         self.does_cast_shade = self.boolean_map.get(
             self.get_inp(BDL_InteriorWallKeywords.SHADING_SURFACE)
@@ -133,7 +132,6 @@ class InteriorWall(
                 self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 0
             )
         )
-
         self.absorptance_solar_exterior = self.try_float(
             self.try_access_index(
                 self.get_inp(BDL_InteriorWallKeywords.INSIDE_SOL_ABS), 1
@@ -147,7 +145,6 @@ class InteriorWall(
         )
         if reflectance_visible_interior is not None:
             self.absorptance_visible_interior = 1 - reflectance_visible_interior
-
         reflectance_visible_exterior = self.try_float(
             self.try_access_index(
                 self.get_inp(BDL_InteriorWallKeywords.INSIDE_VIS_REFL), 1
@@ -173,9 +170,11 @@ class InteriorWall(
                 self.get_inp(BDL_InteriorWallKeywords.CONSTRUCTION)
             ).construction_data_structure
         )
+
         self.account_for_air_film_resistance()
 
         optical_property_attributes = [
+            "optical_property_id",
             "absorptance_thermal_exterior",
             "absorptance_solar_exterior",
             "absorptance_visible_exterior",
@@ -187,6 +186,7 @@ class InteriorWall(
         for attr in optical_property_attributes:
             value = getattr(self, attr, None)
             if value is not None:
+                attr = attr.replace("optical_property_", "")
                 self.optical_properties[attr] = value
 
         self.interior_wall_data_structure = {
@@ -217,8 +217,6 @@ class InteriorWall(
 
     def insert_to_rpd(self, rmd):
         """Insert interior wall object into the rpd data structure."""
-        if self.omit:
-            return
         zone = rmd.space_map.get(self.parent.u_name)
         zone.surfaces.append(self.interior_wall_data_structure)
 
@@ -230,15 +228,20 @@ class InteriorWall(
             self.get_inp(BDL_InteriorWallKeywords.CONSTRUCTION)
         )
         spec_method = construction_obj.get_inp(BDL_ConstructionKeywords.TYPE)
+        wall_type = self.get_inp(BDL_InteriorWallKeywords.INT_WALL_TYPE)
         u_factor = self.construction.get("u_factor")
-        if u_factor:
-            if spec_method == BDL_ConstructionTypes.U_VALUE:
-                location = self.get_inp(BDL_InteriorWallKeywords.LOCATION)
-                int_air_film_resistance = (
-                    0.61
-                    if location == BDL_WallLocationOptions.TOP
-                    else 0.92 if location == BDL_WallLocationOptions.BOTTOM else 0.68
-                )
-                self.construction["primary_layers"][0]["r_value"] = (
-                    1 / u_factor - 2 * int_air_film_resistance
-                )
+        int_air_film_resistance = 0
+        if wall_type in [
+            BDL_InteriorWallTypes.STANDARD,
+            BDL_InteriorWallTypes.INTERNAL,
+        ]:
+            location = self.get_inp(BDL_InteriorWallKeywords.LOCATION)
+            int_air_film_resistance = (
+                0.61
+                if location == BDL_WallLocationOptions.TOP
+                else 0.92 if location == BDL_WallLocationOptions.BOTTOM else 0.68
+            )
+        if u_factor and spec_method == BDL_ConstructionTypes.U_VALUE:
+            self.construction["primary_layers"][0]["r_value"] = (
+                1 / u_factor - 2 * int_air_film_resistance
+            )

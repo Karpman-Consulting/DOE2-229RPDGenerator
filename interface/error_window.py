@@ -5,13 +5,13 @@ class ErrorWindow(ctk.CTkToplevel):
     def __init__(self, master=None, error_message="An error occurred."):
         super().__init__(master)  # Pass only the arguments expected by the superclass
 
-        self.title("ERROR")
+        self.title("ALERT")
         self.geometry("400x400")
         self.resizable(False, False)
 
         # Create a label for the error message heading
         error_label = ctk.CTkLabel(
-            self, text="An Error Occurred:", anchor="w", font=("Helvetica", 20, "bold")
+            self, text="Message(s):", anchor="w", font=("Helvetica", 20, "bold")
         )
         error_label.pack(fill="x", padx=10, pady=(10, 0))
 

@@ -48,7 +48,7 @@ class Construction(BaseNode):
         self.material_references = layer.material_references if layer else []
 
         any_detailed_materials = False
-        for material_reference in self.material_references:
+        for material_reference in self.material_references or []:
             material = self.get_obj(material_reference)
             if material and material.material_type == BDL_MaterialTypes.PROPERTIES:
                 any_detailed_materials = True
@@ -59,10 +59,7 @@ class Construction(BaseNode):
             else SurfaceConstructionInputOptions.SIMPLIFIED
         )
 
-        if (
-            self.surface_construction_input_option
-            == SurfaceConstructionInputOptions.SIMPLIFIED
-        ):
+        if len(self.material_references) == 0:
             simplified_material = {"id": "Simplified Material"}
             # This simplified material will have its r_value added when used for a surface based on Ext/Int/Underground Wall air film resistances
             self.primary_layers.append(simplified_material)
@@ -73,7 +70,7 @@ class Construction(BaseNode):
     def populate_data_group(self):
         """Populate schema structure for construction object."""
 
-        for material_reference in self.material_references:
+        for material_reference in self.material_references or []:
             material = self.get_obj(material_reference)
             if material:
                 self.primary_layers.append(material.material_data_structure)
