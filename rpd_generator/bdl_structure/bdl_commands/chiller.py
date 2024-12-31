@@ -5,9 +5,16 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 ChillerCompressorOptions = SchemaEnums.schema_enums["ChillerCompressorOptions"]
+ChillerEfficiencyMetricOptions = SchemaEnums.schema_enums[
+    "ChillerPartLoadEfficiencyMetricOptions"
+]
+
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ChillerKeywords = BDLEnums.bdl_enums["ChillerKeywords"]
 BDL_ChillerTypes = BDLEnums.bdl_enums["ChillerTypes"]
+BDL_CondenserTypes = BDLEnums.bdl_enums["CondenserTypes"]
+BDL_CurveFitKeywords = BDLEnums.bdl_enums["CurveFitKeywords"]
+BDL_CurveFitInputTypes = BDLEnums.bdl_enums["CurveFitInputTypes"]
 OMIT = "OMIT"
 
 
@@ -85,6 +92,8 @@ class Chiller(BaseNode):
         ]:
             absorp_or_engine = True
 
+
+
         requests = self.get_output_requests(absorp_or_engine)
         output_data = self.get_output_data(requests)
         for key in [
@@ -142,6 +151,10 @@ class Chiller(BaseNode):
             output_data.get("Design Parameters - Condenser Flow")
         )
 
+        self.full_load_efficiency = 1/self.try_float(
+            output_data.get("Design Parameters - Electric Input Ratio")
+        )
+
         self.rated_leaving_evaporator_temperature = self.try_float(
             self.get_inp(BDL_ChillerKeywords.RATED_CHW_T)
         )
@@ -181,6 +194,7 @@ class Chiller(BaseNode):
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
+        b = self.calculate_iplv(absorp_or_engine)
     def get_output_requests(self, absorp_or_engine):
         """Get output data requests for chiller object."""
 
@@ -209,6 +223,11 @@ class Chiller(BaseNode):
                 "Design Parameters - Flow": (2318004, self.u_name, ""),
                 "Design Parameters - Condenser Flow": (
                     2318009,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Electric Input Ratio": (
+                    2318005,
                     self.u_name,
                     "",
                 ),
@@ -242,6 +261,11 @@ class Chiller(BaseNode):
                 ),
                 "Design Parameters - Condenser Flow": (
                     2319010,
+                    self.u_name,
+                    "",
+                ),
+                "Design Parameters - Electric Input Ratio": (
+                    2319005,
                     self.u_name,
                     "",
                 ),
@@ -331,3 +355,46 @@ class Chiller(BaseNode):
             if pump.loop_or_piping == cw_loop_name:  # pump is gauranteed to exist
                 cw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CW_PUMP))
         return chw_pump_interlocked, cw_pump_interlocked
+
+    def calculate_iplv(self, absorp_or_engine):
+        # I am still debating whether we need to check whether the specified rated conditions match AHRI, these were defined above if they need to be checked
+        cap_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.CAPACITY_FT))
+        if not absorp_or_engine:
+            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FT))
+            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FPLR))
+        else:
+            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FT))
+            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FPLR))
+
+        condenser_type = self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
+        condenser_type_iplv_rating_conditions_map = {
+            BDL_CondenserTypes.WATER_COOLED: [85, 75, 65, 65],
+            BDL_CondenserTypes.AIR_COOLED: [95, 80, 65, 55],
+            BDL_CondenserTypes.REMOTE_AIR_COOLED: [125, 107.5, 90, 72.5],
+            BDL_CondenserTypes.REMOTE_EVAP_COOLED: [105, 95, 85, 75],
+        }
+        # Dictionary includes percent of rated capacity as the key and then the percent of hours as value
+        iplv_rating_load_conditions = {
+            1: {'results': []},
+            0.75: {'results': []},
+            0.5: {'results': []},
+            0.25: {'results': []}
+        }
+
+        iplv_percent_of_operation_at_each_load = [0.01, 0.42, 0.45, 0.12]
+
+        # Need to test whether it will still retrieve the coefficients if the input type is data instead of coefficients
+        eff_ft_coeffs = eff_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
+        cap_ft_coeffs = cap_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
+        eff_fplr_coeffs = eff_fplr.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
+
+        for key in iplv_rating_load_conditions:
+            cap_ft_result = 1.08
+            eff_ft_result = 6
+            eff_fplr_result = 7
+            iplv_rating_load_conditions[key]['results'].extend([cap_ft_result, eff_ft_result, eff_fplr_result])
+
+
+
+
+

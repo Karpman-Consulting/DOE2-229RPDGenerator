@@ -118,6 +118,23 @@ class BDLEnums:
                 "HW-FLOW-CTRL",
             ]
         ),
+        "CurveFitKeywords": _ListEnum(
+            [
+                "TYPE",
+                "INPUT-TYPE",
+                "OUTPUT-MIN",
+                "OUTPUT-MAX",
+                "INPUT-TYPE",
+                "COEFFICIENTS",
+            ]
+        ),
+        "CurveFitInputTypes": _ListEnum(
+            [
+                "DATA",
+                "COEFFICIENTS",
+            ]
+        ),
+
         "ChillerTypes": _ListEnum(
             [
                 "ELEC-OPEN-CENT",
@@ -136,6 +153,16 @@ class BDLEnums:
                 "STRAINER-CYCLE",
             ]
         ),
+        "CondenserTypes": _ListEnum(
+            [
+                "WATER-COOLED",
+                "AIR-COOLED",
+                "REMOTE-AIR-COOLED",
+                "REMOTE-EVAP-COOLED",
+
+            ]
+        ),
+
         "FlowControlOptions": _ListEnum(
             [
                 "CONSTANT-FLOW",
@@ -162,6 +189,13 @@ class BDLEnums:
                 "CW-FLOW-CTRL",
                 "HW-FLOW-CTRL",
                 "HTREC-FLOW-CTRL",
+                "EIR-FT",
+                "EIR-FPLR",
+                "CAPACITY-FT",
+                "HIR-FT",
+                "HIR-FPLR",
+                "CONDENSER-TYPE",
+
             ]
         ),
         "CirculationLoopTypes": _ListEnum(
