@@ -40,6 +40,7 @@ class BDLEnums:
                 "ELEC-METER",
                 "STEAM-METER",
                 "CHW-METER",
+                "CURVE-FIT",
                 "FIXED-SHADE",
                 "GLASS-TYPE",
                 "MATERIAL",
