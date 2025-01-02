@@ -119,11 +119,13 @@ class Chiller(BaseNode):
 
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
+            if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions(): self.full_load_efficiency = 1/self.try_float(self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ENGINE,
             BDL_ChillerTypes.GAS_ABSOR,
         ]:
             self.energy_source_type = EnergySourceOptions.NATURAL_GAS
+            if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions(): self.full_load_efficiency = 1 / self.try_float(self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO))
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ABSOR_1,
             BDL_ChillerTypes.ABSOR_2,
@@ -132,6 +134,7 @@ class Chiller(BaseNode):
                 self.get_inp(BDL_ChillerKeywords.HW_LOOP)
             )
             hot_water_loop = self.get_obj(hot_water_loop_name)
+            if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions(): self.full_load_efficiency = 1 / self.try_float(self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO))
             if hot_water_loop:
                 self.energy_source_type = self.get_loop_energy_source(hot_water_loop)
 
@@ -151,10 +154,6 @@ class Chiller(BaseNode):
 
         self.design_flow_condenser = self.try_float(
             output_data.get("Design Parameters - Condenser Flow")
-        )
-        # ToDo: Need to use the model input for this (rather than output) and check that the inputs aligns with AHRI conditions.
-        self.full_load_efficiency = 1/self.try_float(
-            output_data.get("Design Parameters - Electric Input Ratio")
         )
 
         self.rated_leaving_evaporator_temperature = self.try_float(
@@ -196,7 +195,9 @@ class Chiller(BaseNode):
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
-        b = self.calculate_iplv(absorp_or_engine)
+        if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions() and not absorp_or_engine:
+            self.part_load_efficiency.append(self.calculate_iplv(absorp_or_engine))
+            self.part_load_efficiency_metrics.append(ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE)
         c = 5
     def get_output_requests(self, absorp_or_engine):
         """Get output data requests for chiller object."""
@@ -360,10 +361,8 @@ class Chiller(BaseNode):
         return chw_pump_interlocked, cw_pump_interlocked
 
     def calculate_iplv(self, absorp_or_engine):
-        # I am still debating whether we need to check whether the specified rated conditions match AHRI, these were defined above if they need to be checked
-
-        #Evaporator leaving temperature (a.k.a chilled water supply temperature). Always 44F per AHRI 550 and 560.
-        evap_leaving_temp = 44
+        #Evaporator leaving temperature (a.k.a chilled water supply temperature). Should always 44F per AHRI 550 and 560. This is checked elsewhere.
+        evap_leaving_temp = self.rated_leaving_evaporator_temperature
 
         # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
         iplv_rating_load_conditions = {
@@ -383,20 +382,48 @@ class Chiller(BaseNode):
         cap_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.CAPACITY_FT))
 
         if not absorp_or_engine:
-            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FT))
-            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FPLR))
-            condenser_type_iplv_rating_condenser_temp_conditions = condenser_type_iplv_rating_condenser_temp_conditions_map[condenser_type]
+            eff_ft_key = BDL_ChillerKeywords.EIR_FT
+            eff_fplr_key = BDL_ChillerKeywords.EIR_FPLR
+            condenser_type_iplv_rating_condenser_temp_conditions = \
+            condenser_type_iplv_rating_condenser_temp_conditions_map[condenser_type]
         else:
-            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FT))
-            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FPLR))
+            eff_ft_key = BDL_ChillerKeywords.HIR_FT
+            eff_fplr_key = BDL_ChillerKeywords.HIR_FPLR
             condenser_type_iplv_rating_condenser_temp_conditions = [85, 75, 70, 70]
+
+        eff_ft = self.get_obj(self.get_inp(eff_ft_key))
+        eff_fplr = self.get_obj(self.get_inp(eff_fplr_key))
 
         iplv_percent_of_operation_at_each_load = [0.01, 0.42, 0.45, 0.12]
 
-        # Need to test whether it will still retrieve the coefficients if the input type is DATA instead of COEFFICIENTS
-        eff_ft_coeffs = list(map(float, eff_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
-        cap_ft_coeffs = list(map(float, cap_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
-        eff_fplr_coeffs = list(map(float, eff_fplr.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
+        # TODO need to test whether it will still retrieve the coefficients if the input type is DATA instead of COEFFICIENTS
+
+        coefficients = {
+            'eff_ft': eff_ft,
+            'cap_ft': cap_ft,
+            'eff_fplr': eff_fplr
+        }
+
+        coeffs = {}
+        min_outputs = {}
+        max_outputs = {}
+
+        for key, obj in coefficients.items():
+            coeffs[f'{key}_coeffs'] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
+            min_outputs[f'{key}_min_otpt'] = float(obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN))
+            max_outputs[f'{key}_max_otpt'] = float(obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX))
+
+        # Now, you can access the coefficients, min_outputs, and max_outputs dictionaries
+        eff_ft_coeffs = coeffs['eff_ft_coeffs']
+        cap_ft_coeffs = coeffs['cap_ft_coeffs']
+        eff_fplr_coeffs = coeffs['eff_fplr_coeffs']
+
+        eff_ft_min_otpt = min_outputs['eff_ft_min_otpt']
+        eff_ft_max_otpt = max_outputs['eff_ft_max_otpt']
+        cap_ft_min_otpt = min_outputs['cap_ft_min_otpt']
+        cap_ft_max_otpt = max_outputs['cap_ft_max_otpt']
+        eff_fplr_min_otpt = min_outputs['eff_fplr_min_otpt']
+        eff_fplr_max_otpt = max_outputs['eff_fplr_max_otpt']
 
         eff_fplr_curve_type = cap_ft.get_inp(BDL_CurveFitKeywords.TYPE)
 
@@ -405,20 +432,18 @@ class Chiller(BaseNode):
             BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
         }
 
-        # ToDO These calculations likely need adjustment for absorption chillers and gas fired chiller, maybe just exclude for now.
-        # ToDo update functions to account for min and max allowances in the calculations
-        # ToDo Need to check that the entered rated conditions align with AHRI and then only populate EIR and IPLV if they do.
+        # TODO These calculations likely need adjustment for absorption chillers and gas fired chiller, this is not called for these chiller types. Future development may include supporting these.
         for index, key in enumerate(iplv_rating_load_conditions):
             cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[index]
-            cap_ft_result = curve_funcs.calculate_bi_quadratic_in_t(cap_ft_coeffs, evap_leaving_temp, cond_entering_temp)
-            eff_ft_result = curve_funcs.calculate_bi_quadratic_in_t(eff_ft_coeffs, evap_leaving_temp, cond_entering_temp)
+            cap_ft_result = curve_funcs.calculate_bi_quadratic(cap_ft_coeffs, evap_leaving_temp, cond_entering_temp, cap_ft_min_otpt, cap_ft_max_otpt)
+            eff_ft_result = curve_funcs.calculate_bi_quadratic(eff_ft_coeffs, evap_leaving_temp, cond_entering_temp, eff_ft_min_otpt, eff_ft_max_otpt)
             part_load_ratio = (float(self.rated_capacity) * key)/(float(self.rated_capacity) * cap_ft_result)
 
             if eff_fplr_curve_type in curve_function_map:
-                eff_fplr_result = curve_function_map[eff_fplr_curve_type](eff_fplr_coeffs, part_load_ratio)
+                eff_fplr_result = curve_function_map[eff_fplr_curve_type](eff_fplr_coeffs, part_load_ratio, eff_fplr_min_otpt, eff_fplr_max_otpt)
             else:
                 delta_temp = cond_entering_temp - evap_leaving_temp
-                eff_fplr_result = curve_funcs.calculate_bi_quadratic_in_t(eff_fplr_coeffs, part_load_ratio, delta_temp)
+                eff_fplr_result = curve_funcs.calculate_bi_quadratic(eff_fplr_coeffs, part_load_ratio, delta_temp, eff_fplr_min_otpt, eff_fplr_max_otpt)
 
             eff_result_cop = part_load_ratio/1000/((3.412/self.full_load_efficiency)*eff_ft_result * eff_fplr_result/3412)
 
@@ -431,6 +456,27 @@ class Chiller(BaseNode):
             iplv = iplv + weighted_eff_load
 
         return iplv
+
+    def is_rated_full_load_eff_defined_at_ahri_rating_conditions(self):
+        rated_evaporator_leaving_temp = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_CHW_T))
+        rated_condenser_temperature = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_COND_T))
+
+        condenser_type = self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
+        condenser_type_rating_condenser_temp_conditions_map = {
+            BDL_CondenserTypes.WATER_COOLED: 85,
+            BDL_CondenserTypes.AIR_COOLED: 95,
+            BDL_CondenserTypes.REMOTE_AIR_COOLED: 125,
+            BDL_CondenserTypes.REMOTE_EVAP_COOLED: 105,
+        }
+
+        is_rated_full_load_eff_defined_at_ahri_rating_conditions = (
+                rated_evaporator_leaving_temp == 44 and
+                rated_condenser_temperature == condenser_type_rating_condenser_temp_conditions_map[condenser_type]
+        )
+
+        return is_rated_full_load_eff_defined_at_ahri_rating_conditions
+
+
 
 
 

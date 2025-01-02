@@ -213,6 +213,8 @@ class BDLEnums:
                 "HIR-FT",
                 "HIR-FPLR",
                 "CONDENSER-TYPE",
+                "ELEC-INPUT-RATIO",
+                "HEAT-INPUT-RATIO",
 
             ]
         ),
