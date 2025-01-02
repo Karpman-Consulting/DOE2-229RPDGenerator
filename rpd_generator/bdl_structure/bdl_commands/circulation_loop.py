@@ -148,15 +148,14 @@ class CirculationLoop(BaseNode):
             self.type = self.loop_type_map.get(loop_type, FluidLoopOptions.OTHER)
 
             # Populate the data elements for FluidLoopDesignAndControl
-            if self.circulation_loop_type in ["FluidLoop", "SecondaryFluidLoop"]:
-                if self.type == FluidLoopOptions.COOLING:
-                    self.populate_cool_fluid_loop_design_and_control()
-                elif self.type == FluidLoopOptions.CONDENSER:
-                    self.populate_cond_fluid_loop_design_and_control()
-                elif self.type == FluidLoopOptions.HEATING:
-                    self.populate_heat_fluid_loop_design_and_control()
-                elif self.type == FluidLoopOptions.HEATING_AND_COOLING:
-                    self.populate_heat_cool_fluid_loop_design_and_control()
+            if self.type == FluidLoopOptions.COOLING:
+                self.populate_cool_fluid_loop_design_and_control()
+            elif self.type == FluidLoopOptions.CONDENSER:
+                self.populate_cond_fluid_loop_design_and_control()
+            elif self.type == FluidLoopOptions.HEATING:
+                self.populate_heat_fluid_loop_design_and_control()
+            elif self.type == FluidLoopOptions.HEATING_AND_COOLING:
+                self.populate_heat_cool_fluid_loop_design_and_control()
 
         if self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
             self.populate_service_water_heating_distribution_system()
@@ -301,7 +300,7 @@ class CirculationLoop(BaseNode):
     def determine_circ_loop_type(self):
 
         if (
-            self.keyword_value_pairs[BDL_CirculationLoopKeywords.TYPE]
+            self.get_inp(BDL_CirculationLoopKeywords.TYPE)
             == BDL_CirculationLoopTypes.DHW
             and self.get_inp(BDL_CirculationLoopKeywords.SUBTYPE)
             == BDL_CirculationLoopSubtypes.SECONDARY
@@ -309,7 +308,7 @@ class CirculationLoop(BaseNode):
             return "ServiceWaterPiping"
 
         elif (
-            self.keyword_value_pairs[BDL_CirculationLoopKeywords.TYPE]
+            self.get_inp(BDL_CirculationLoopKeywords.TYPE)
             == BDL_CirculationLoopTypes.DHW
         ):
             return "ServiceWaterHeatingDistributionSystem"
@@ -525,6 +524,8 @@ class CirculationLoop(BaseNode):
             self.get_inp(BDL_CirculationLoopKeywords.COOL_SETPT_CTRL)
         )
         if self.temperature_reset_type[0] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
+            """Jackson Q: Should this be the COOL_RESET_SCH? or do we use the same
+            schedule for heating and cooling because it's one unit?"""
             oa_reset_schedule = self.get_obj(
                 self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
             )
@@ -655,6 +656,7 @@ class CirculationLoop(BaseNode):
             valve_type = circulation_loop.get_inp(
                 BDL_CirculationLoopKeywords.VALVE_TYPE_2ND
             )
+
             if (
                 primary_loop == self.u_name
                 and valve_type == BDL_SecondaryLoopValveTypes.TWO_WAY

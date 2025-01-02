@@ -34,6 +34,7 @@ BDL_SystemMinimumOutdoorAirControlOptions = BDLEnums.bdl_enums[
 BDL_DOASAttachedToOptions = BDLEnums.bdl_enums["DOASAttachedToOptions"]
 BDL_ZoneFanRunOptions = BDLEnums.bdl_enums["ZoneFanRunOptions"]
 BDL_ZoneFanControlOptions = BDLEnums.bdl_enums["ZoneFanControlOptions"]
+BDL_ZoneCWValveOptions = BDLEnums.bdl_enums["ZoneCWValveOptions"]
 BDL_ZoneInductionSourceOptions = BDLEnums.bdl_enums["ZoneInductionSourceOptions"]
 BDL_OutputCoolingTypes = BDLEnums.bdl_enums["OutputCoolingTypes"]
 BDL_OutputHeatingTypes = BDLEnums.bdl_enums["OutputHeatingTypes"]

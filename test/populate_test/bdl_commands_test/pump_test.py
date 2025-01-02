@@ -1,6 +1,22 @@
 import unittest
 from unittest.mock import patch
 
+from rpd_generator.bdl_structure.bdl_commands.boiler import (
+    Boiler,
+    BDL_BoilerKeywords,
+    BDL_BoilerTypes,
+)
+from rpd_generator.bdl_structure.bdl_commands.chiller import (
+    Chiller,
+    BDL_ChillerKeywords,
+)
+from rpd_generator.bdl_structure.bdl_commands.circulation_loop import (
+    CirculationLoop,
+    BDL_CirculationLoopKeywords,
+    BDL_CirculationLoopTypes,
+    BDL_HeatRejectionKeywords,
+)
+from rpd_generator.bdl_structure.bdl_commands.heat_rejection import HeatRejection
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.pump import *
@@ -12,7 +28,7 @@ class TestPumps(unittest.TestCase):
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
-        self.pump = Pump("Test Pump", self.rmd)
+        self.pump = Pump("Pump 1", self.rmd)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_data_with_pump(self, mock_get_output_data):
@@ -23,7 +39,6 @@ class TestPumps(unittest.TestCase):
             "Pump - Motor Eff (frac)": 0.80,
             "Pump - Flow (gal/min)": 30,
         }
-
         self.pump.keyword_value_pairs = {
             BDL_PumpKeywords.NUMBER: "2",
             BDL_PumpKeywords.PUMP_KW: "100",
@@ -32,12 +47,10 @@ class TestPumps(unittest.TestCase):
             BDL_PumpKeywords.FLOW: "2.0",
         }
 
-        self.pump.populate_data_elements()
-        self.pump.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structures = [
             {
-                "id": "Test Pump",
+                "id": "Pump 1",
                 "output_validation_points": [],
                 "specification_method": "SIMPLE",
                 "design_electric_power": 100.0,
@@ -49,7 +62,7 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": False,
             },
             {
-                "id": "Test Pump 1",
+                "id": "Pump 1 1",
                 "output_validation_points": [],
                 "specification_method": "SIMPLE",
                 "design_electric_power": 100.0,
@@ -61,7 +74,6 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": False,
             },
         ]
-
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -70,7 +82,6 @@ class TestPumps(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Power (kW)": 125,
         }
-
         self.pump.keyword_value_pairs = {
             BDL_PumpKeywords.NUMBER: "1",
             BDL_PumpKeywords.HEAD: "5",
@@ -78,12 +89,10 @@ class TestPumps(unittest.TestCase):
             BDL_PumpKeywords.FLOW: "2.0",
         }
 
-        self.pump.populate_data_elements()
-        self.pump.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structures = [
             {
-                "id": "Test Pump",
+                "id": "Pump 1",
                 "output_validation_points": [],
                 "specification_method": "DETAILED",
                 "design_electric_power": 125.0,
@@ -92,7 +101,6 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": False,
             }
         ]
-
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -101,7 +109,6 @@ class TestPumps(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Power (kW)": 125,
         }
-
         self.pump.keyword_value_pairs = {
             BDL_PumpKeywords.NUMBER: "1",
             BDL_PumpKeywords.HEAD: "5",
@@ -109,12 +116,10 @@ class TestPumps(unittest.TestCase):
             BDL_PumpKeywords.FLOW: "2.0",
         }
 
-        self.pump.populate_data_elements()
-        self.pump.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structures = [
             {
-                "id": "Test Pump",
+                "id": "Pump 1",
                 "output_validation_points": [],
                 "specification_method": "DETAILED",
                 "design_electric_power": 125.0,
@@ -123,7 +128,6 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": False,
             }
         ]
-
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -132,7 +136,6 @@ class TestPumps(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Power (kW)": 125,
         }
-
         self.pump.keyword_value_pairs = {
             BDL_PumpKeywords.NUMBER: "1",
             BDL_PumpKeywords.HEAD: "5",
@@ -140,12 +143,10 @@ class TestPumps(unittest.TestCase):
             BDL_PumpKeywords.FLOW: "2.0",
         }
 
-        self.pump.populate_data_elements()
-        self.pump.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structures = [
             {
-                "id": "Test Pump",
+                "id": "Pump 1",
                 "output_validation_points": [],
                 "specification_method": "DETAILED",
                 "design_electric_power": 125.0,
@@ -154,7 +155,6 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": False,
             }
         ]
-
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -163,19 +163,16 @@ class TestPumps(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Power (kW)": 125,
         }
-
         self.pump.keyword_value_pairs = {
             BDL_PumpKeywords.NUMBER: "1",
             BDL_PumpKeywords.HEAD: "5",
             BDL_PumpKeywords.CAP_CTRL: BDL_PumpCapacityControlOptions.VAR_SPEED_PUMP,
         }
 
-        self.pump.populate_data_elements()
-        self.pump.populate_data_group()
-
+        self.rmd.populate_rmd_data(testing=True)
         expected_data_structures = [
             {
-                "id": "Test Pump",
+                "id": "Pump 1",
                 "output_validation_points": [],
                 "specification_method": "DETAILED",
                 "design_electric_power": 125.0,
@@ -184,5 +181,90 @@ class TestPumps(unittest.TestCase):
                 "is_flow_sized_based_on_design_day": True,
             }
         ]
+        self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
 
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_pump_as_child_of_boiler(self, mock_get_output_data):
+        """Tests that Pump outputs contains expected values, given valid inputs and the pump is a child of a boiler"""
+        mock_get_output_data.return_value = {
+            "Boilers - Rated Capacity at Peak (Btu/hr)": 188203.578125,
+        }
+        self.boiler = Boiler("Boiler 1", self.rmd)
+        self.loop = CirculationLoop("Test HW Loop", self.rmd)
+        self.boiler.keyword_value_pairs = {
+            BDL_BoilerKeywords.TYPE: BDL_BoilerTypes.HW_BOILER,
+            BDL_BoilerKeywords.HW_PUMP: "Pump 1",
+            BDL_BoilerKeywords.HW_LOOP: "Test HW Loop",
+        }
+        self.loop.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.TYPE: "HOT_WATER",
+        }
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "1"}
+
+        self.rmd.populate_rmd_data(testing=True)
+        expected_data_structures = [
+            {
+                "id": "Pump 1",
+                "output_validation_points": [],
+                "specification_method": "DETAILED",
+                "is_flow_sized_based_on_design_day": True,
+                "loop_or_piping": "Test HW Loop",
+            }
+        ]
+        self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_pump_as_child_of_chiller(self, mock_get_output_data):
+        """Tests that Pump outputs contains expected values, given valid inputs and the pump is a child of a chiller"""
+        mock_get_output_data.return_value = {}
+        self.chiller = Chiller("Chiller 1", self.rmd)
+        self.loop_chw = CirculationLoop("Test CHW Loop", self.rmd)
+        self.chiller.keyword_value_pairs = {
+            BDL_ChillerKeywords.CW_PUMP: "Pump 1",
+            BDL_ChillerKeywords.CW_LOOP: "Test CHW Loop",
+        }
+        self.loop_chw.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
+        }
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "1"}
+
+        self.rmd.populate_rmd_data(testing=True)
+        expected_data_structures = [
+            {
+                "id": "Pump 1",
+                "output_validation_points": [],
+                "specification_method": "DETAILED",
+                "is_flow_sized_based_on_design_day": True,
+                "loop_or_piping": "Test CHW Loop",
+            }
+        ]
+        self.assertEqual(expected_data_structures, self.pump.pump_data_structures)
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_pump_as_child_of_heat_rejection(
+        self, mock_get_output_data
+    ):
+        """Tests that Pump outputs contains expected values, given valid inputs and the pump is a child of heat rejection"""
+        mock_get_output_data.return_value = {}
+        self.heat_rejection = HeatRejection("Heat Rejection 1", self.rmd)
+        self.loop_cw = CirculationLoop("Test CW Loop", self.rmd)
+        self.heat_rejection.keyword_value_pairs = {
+            BDL_HeatRejectionKeywords.CW_PUMP: "Pump 1",
+            BDL_HeatRejectionKeywords.CW_LOOP: "Test CW Loop",
+        }
+        self.loop_cw.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CW,
+        }
+        self.pump.keyword_value_pairs = {BDL_PumpKeywords.NUMBER: "1"}
+
+        self.rmd.populate_rmd_data(testing=True)
+        expected_data_structures = [
+            {
+                "id": "Pump 1",
+                "output_validation_points": [],
+                "specification_method": "DETAILED",
+                "is_flow_sized_based_on_design_day": True,
+                "loop_or_piping": "Test CW Loop",
+            }
+        ]
         self.assertEqual(expected_data_structures, self.pump.pump_data_structures)

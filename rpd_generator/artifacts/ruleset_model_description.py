@@ -52,6 +52,7 @@ class RulesetModelDescription(Base):
         "STEAM-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
         "CHW-METER",  # Meters must populate before Systems, Boilers, DW-Heaters, Chillers
         "UTILITY-RATE",
+        "CURVE-FIT",
         "FIXED-SHADE",
         "GLASS-TYPE",
         "MATERIAL",  # Materials must populate before Layers, Constructions
@@ -101,6 +102,7 @@ class RulesetModelDescription(Base):
         self.fuel_meter_names = []
         self.steam_meter_names = []
         self.chilled_water_meter_names = []
+        self.curve_fit_names = []
         self.utility_rate_names = []
         self.elec_generator_names = []
         self.system_names = []
