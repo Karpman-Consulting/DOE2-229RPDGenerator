@@ -246,22 +246,20 @@ if __name__ == "__main__":
 
     # Test generating an RPD JSON file from one of the test BDL files
     validate_configuration.find_equest_installation()
-
-    # write_rpd_json_from_bdl(
-    #     str(
-    #         Path(__file__).parents[1]
-    #         / "test"
-    #         / "full_rpd_test"
-    #         / "E-1"
-    #         / "229 Test Case E-1 (PSZHP).BDL"
-    #     ),
-    #     str(
-    #         Path(__file__).parents[1]
-    #         / "test"
-    #         / "full_rpd_test"
-    #         / "E-1"
-    #         / "229 Test Case E-1 (PSZHP).json"
-    #     ),
-    # )
-
-    # write_rpd_json_from_inp(r"C:\Users\JacksonJarboe\Karpman Consulting Dropbox\Jackson Jarboe\02_Model Projects\2024\Eversource Modeling\Betances Learning Lab\Model\BL FN\[BL_PDS] Betances FN.inp")
+    # write_rpd_json_from_inp(r"")
+    write_rpd_json_from_bdl(
+        str(
+            Path(__file__).parents[1]
+            / "test"
+            / "full_rpd_test"
+            / "E-1"
+            / "229 Test Case E-1 (PSZHP).BDL"
+        ),
+        str(
+            Path(__file__).parents[1]
+            / "test"
+            / "full_rpd_test"
+            / "E-1"
+            / "229 Test Case E-1 (PSZHP).json"
+        ),
+    )
