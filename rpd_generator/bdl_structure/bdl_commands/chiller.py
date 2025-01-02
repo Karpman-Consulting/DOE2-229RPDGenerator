@@ -1,6 +1,7 @@
 from rpd_generator.bdl_structure.base_node import BaseNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
+from rpd_generator.utilities import curve_funcs
 
 
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
@@ -15,6 +16,7 @@ BDL_ChillerTypes = BDLEnums.bdl_enums["ChillerTypes"]
 BDL_CondenserTypes = BDLEnums.bdl_enums["CondenserTypes"]
 BDL_CurveFitKeywords = BDLEnums.bdl_enums["CurveFitKeywords"]
 BDL_CurveFitInputTypes = BDLEnums.bdl_enums["CurveFitInputTypes"]
+BDL_CurveFitTypes = BDLEnums.bdl_enums["CurveFitTypes"]
 OMIT = "OMIT"
 
 
@@ -150,7 +152,7 @@ class Chiller(BaseNode):
         self.design_flow_condenser = self.try_float(
             output_data.get("Design Parameters - Condenser Flow")
         )
-
+        # ToDo: Need to better understand why the EIR input differs from the EIR reported in the out. We can then provide guidance to modelers.
         self.full_load_efficiency = 1/self.try_float(
             output_data.get("Design Parameters - Electric Input Ratio")
         )
@@ -195,6 +197,7 @@ class Chiller(BaseNode):
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
         b = self.calculate_iplv(absorp_or_engine)
+        c = 5
     def get_output_requests(self, absorp_or_engine):
         """Get output data requests for chiller object."""
 
@@ -358,43 +361,74 @@ class Chiller(BaseNode):
 
     def calculate_iplv(self, absorp_or_engine):
         # I am still debating whether we need to check whether the specified rated conditions match AHRI, these were defined above if they need to be checked
-        cap_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.CAPACITY_FT))
-        if not absorp_or_engine:
-            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FT))
-            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FPLR))
-        else:
-            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FT))
-            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FPLR))
+
+        #Evaporator leaving temperature (a.k.a chilled water supply temperature). Always 44F per AHRI 550 and 560.
+        evap_leaving_temp = 44
+
+        # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
+        iplv_rating_load_conditions = {
+            1: {'results': 0.0},
+            0.75: {'results': 0.0},
+            0.5: {'results': 0.0},
+            0.25: {'results': 0.0}
+        }
 
         condenser_type = self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
-        condenser_type_iplv_rating_conditions_map = {
+        condenser_type_iplv_rating_condenser_temp_conditions_map = {
             BDL_CondenserTypes.WATER_COOLED: [85, 75, 65, 65],
             BDL_CondenserTypes.AIR_COOLED: [95, 80, 65, 55],
             BDL_CondenserTypes.REMOTE_AIR_COOLED: [125, 107.5, 90, 72.5],
             BDL_CondenserTypes.REMOTE_EVAP_COOLED: [105, 95, 85, 75],
         }
-        # Dictionary includes percent of rated capacity as the key and then the percent of hours as value
-        iplv_rating_load_conditions = {
-            1: {'results': []},
-            0.75: {'results': []},
-            0.5: {'results': []},
-            0.25: {'results': []}
-        }
+        cap_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.CAPACITY_FT))
+
+        if not absorp_or_engine:
+            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FT))
+            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.EIR_FPLR))
+            condenser_type_iplv_rating_condenser_temp_conditions = condenser_type_iplv_rating_condenser_temp_conditions_map[condenser_type]
+        else:
+            eff_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FT))
+            eff_fplr = self.get_obj(self.get_inp(BDL_ChillerKeywords.HIR_FPLR))
+            condenser_type_iplv_rating_condenser_temp_conditions = [85, 75, 70, 70]
 
         iplv_percent_of_operation_at_each_load = [0.01, 0.42, 0.45, 0.12]
 
-        # Need to test whether it will still retrieve the coefficients if the input type is data instead of coefficients
-        eff_ft_coeffs = eff_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
-        cap_ft_coeffs = cap_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
-        eff_fplr_coeffs = eff_fplr.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)
+        # Need to test whether it will still retrieve the coefficients if the input type is DATA instead of COEFFICIENTS
+        eff_ft_coeffs = list(map(float, eff_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
+        cap_ft_coeffs = list(map(float, cap_ft.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
+        eff_fplr_coeffs = list(map(float, eff_fplr.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
 
-        for key in iplv_rating_load_conditions:
-            cap_ft_result = 1.08
-            eff_ft_result = 6
-            eff_fplr_result = 7
-            iplv_rating_load_conditions[key]['results'].extend([cap_ft_result, eff_ft_result, eff_fplr_result])
+        eff_fplr_curve_type = cap_ft.get_inp(BDL_CurveFitKeywords.TYPE)
 
+        curve_function_map = {
+            BDL_CurveFitTypes.QUADRATIC: curve_funcs.calculate_quadratic,
+            BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
+        }
 
+        # These calculations likely need adjustment for absorption chillers and gas fired
+        for index, key in enumerate(iplv_rating_load_conditions):
+            cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[index]
+            cap_ft_result = curve_funcs.calculate_bi_quadratic_in_t(cap_ft_coeffs, evap_leaving_temp, cond_entering_temp)
+            eff_ft_result = curve_funcs.calculate_bi_quadratic_in_t(eff_ft_coeffs, evap_leaving_temp, cond_entering_temp)
+            part_load_ratio = (float(self.rated_capacity) * key)/(float(self.rated_capacity) * cap_ft_result)
+
+            if eff_fplr_curve_type in curve_function_map:
+                eff_fplr_result = curve_function_map[eff_fplr_curve_type](eff_fplr_coeffs, part_load_ratio)
+            else:
+                delta_temp = cond_entering_temp - evap_leaving_temp
+                eff_fplr_result = curve_funcs.calculate_bi_quadratic_in_t(eff_fplr_coeffs, part_load_ratio, delta_temp)
+
+            eff_result_cop = part_load_ratio/1000/((3.412/self.full_load_efficiency)*eff_ft_result * eff_fplr_result/3412)
+
+            iplv_rating_load_conditions[key]['results'] = eff_result_cop
+
+        keys_list = list(iplv_rating_load_conditions.keys())
+        iplv = 0
+        for index, op_percent in enumerate(iplv_percent_of_operation_at_each_load):
+            weighted_eff_load = op_percent * iplv_rating_load_conditions[keys_list[index]]['results']
+            iplv = iplv + weighted_eff_load
+
+        return iplv
 
 
 

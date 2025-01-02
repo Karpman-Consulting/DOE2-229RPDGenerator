@@ -134,7 +134,25 @@ class BDLEnums:
                 "COEFFICIENTS",
             ]
         ),
-
+        "CurveFitTypes": _ListEnum(
+            [
+                "LINEAR",
+                "BI-LINEAR",
+                "QUADRATIC",
+                "BI-QUADRATIC",
+                "CUBIC",
+                "BI-LINEAR-T",
+                "QUADRATIC-T",
+                "BI-QUADRATIC-T",
+                "BI-QUADRATIC-DT&T",
+                "BI-QUADRATIC-RATIO&T",
+                "CUBIC-T",
+                "BI-QUADRATIC-T&RATIO",
+                "QUADRATIC-DT",
+                "CUBIC-DT",
+                "BI-QUADRATIC-RATIO&dT",
+            ]
+        ),
         "ChillerTypes": _ListEnum(
             [
                 "ELEC-OPEN-CENT",
