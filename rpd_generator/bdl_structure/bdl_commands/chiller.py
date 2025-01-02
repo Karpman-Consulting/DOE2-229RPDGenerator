@@ -152,7 +152,7 @@ class Chiller(BaseNode):
         self.design_flow_condenser = self.try_float(
             output_data.get("Design Parameters - Condenser Flow")
         )
-        # ToDo: Need to better understand why the EIR input differs from the EIR reported in the out. We can then provide guidance to modelers.
+        # ToDo: Need to use the model input for this (rather than output) and check that the inputs aligns with AHRI conditions.
         self.full_load_efficiency = 1/self.try_float(
             output_data.get("Design Parameters - Electric Input Ratio")
         )
@@ -405,7 +405,9 @@ class Chiller(BaseNode):
             BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
         }
 
-        # These calculations likely need adjustment for absorption chillers and gas fired
+        # ToDO These calculations likely need adjustment for absorption chillers and gas fired chiller, maybe just exclude for now.
+        # ToDo update functions to account for min and max allowances in the calculations
+        # ToDo Need to check that the entered rated conditions align with AHRI and then only populate EIR and IPLV if they do.
         for index, key in enumerate(iplv_rating_load_conditions):
             cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[index]
             cap_ft_result = curve_funcs.calculate_bi_quadratic_in_t(cap_ft_coeffs, evap_leaving_temp, cond_entering_temp)

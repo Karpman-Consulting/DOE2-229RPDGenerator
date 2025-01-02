@@ -3,6 +3,7 @@
 def calculate_bi_quadratic_in_t(curve_coeffs: list, x: float, y: float) -> float:
     """Function takes a list of curve coefficients with a = 0 index and f = 5th index and two independent variables x and y.
     Function then computes and returns Z = a + b * x + c * x^2 + d * y + e * y^2 + f * x * y
+    This function also works for BI-QUADRATIC-RATIO&dT
     """
     z = curve_coeffs[0] + curve_coeffs[1] * x + curve_coeffs[2] * x**2 + curve_coeffs[3] * y + curve_coeffs[4] * y**2 + curve_coeffs[5] * x * y
     return z
