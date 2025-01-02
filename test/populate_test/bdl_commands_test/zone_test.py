@@ -283,7 +283,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Power": 0,
             "Zone Fan Power": 1000,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -332,7 +332,7 @@ class TestZones(unittest.TestCase):
                     "has_demand_control_ventilation": False,
                     "heating_capacity": 12000.0,
                     "heating_source": "ELECTRIC",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -358,7 +358,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Airflow": 0,
             "Supply Fan - Power": 0,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -437,7 +437,7 @@ class TestZones(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Zone Fan Power": 0,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -492,7 +492,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -541,7 +541,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Power": 0,
             "Zone Fan Power": 1000,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -599,7 +599,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -634,7 +634,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Power": 0,
             "Zone Fan Power": 1000,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -691,7 +691,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 2000,
@@ -722,7 +722,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Power": 0,
             "Zone Fan Power": 1000,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -776,7 +776,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "primary_airflow": 10000,
                     "secondary_airflow": 0,
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
@@ -827,7 +827,7 @@ class TestZones(unittest.TestCase):
             "Supply Fan - Power": 0,
             "Zone Fan Power": 1000,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -883,7 +883,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "ELECTRIC",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -918,7 +918,7 @@ class TestZones(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Zone Fan Power": 0,
             "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
+            "Zone Minimum Airflow Ratio": 1.0,
             "Zone Outside Airflow": 0.3,
             "Zone Heating Capacity": 12,
             "Zone Cooling Capacity": 0,
@@ -975,7 +975,7 @@ class TestZones(unittest.TestCase):
                     "heating_capacity": 12000.0,
                     "heating_from_loop": "HW Circulation Loop",
                     "heating_source": "HOT_WATER",
-                    "minimum_airflow": 30000000,
+                    "minimum_airflow": 10000,
                     "minimum_outdoor_airflow": 0.3,
                     "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
                     "primary_airflow": 10000,
@@ -998,14 +998,7 @@ class TestZones(unittest.TestCase):
         occupancy CFM
 
         """
-        mock_get_output_data.return_value = {
-            "Zone Fan Power": 0,
-            "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
-            "Zone Outside Airflow": 0.3,
-            "Zone Heating Capacity": 12,
-            "Zone Cooling Capacity": 0,
-        }
+        mock_get_output_data.return_value = {}
 
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
@@ -1020,46 +1013,18 @@ class TestZones(unittest.TestCase):
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
             BDL_SystemKeywords.TYPE: BDL_SystemTypes.PVAVS,
-            BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
-            BDL_SystemKeywords.MAX_SUPPLY_T: "70",
-            BDL_SystemKeywords.MIN_SUPPLY_T: "50",
-            BDL_SystemKeywords.HEAT_SOURCE: BDL_SystemHeatingTypes.HOT_WATER,
-            BDL_SystemKeywords.COOL_SOURCE: BDL_SystemCoolingTypes.CHILLED_WATER,
-            BDL_SystemKeywords.ZONE_HEAT_SOURCE: BDL_ZoneHeatSourceOptions.HOT_WATER,
-            BDL_SystemKeywords.SUPPLY_STATIC: "30",
-            BDL_SystemKeywords.SUPPLY_MTR_EFF: "0.9",
-            BDL_SystemKeywords.SUPPLY_MECH_EFF: "1",
-            BDL_SystemKeywords.MIN_FLOW_RATIO: "0.4",
-            BDL_SystemKeywords.COOL_SET_T: "75",
-            BDL_SystemKeywords.HEAT_SET_T: "75",
-            BDL_SystemKeywords.SUPPLY_FLOW: "2500",
-            BDL_SystemKeywords.HEATING_CAPACITY: "15",
-            BDL_SystemKeywords.COOLING_CAPACITY: "14",
-            BDL_SystemKeywords.HW_LOOP: "HW Circulation Loop",
             BDL_SystemKeywords.ZONE_OA_METHOD: BDL_ZoneOAMethodsOptions.MAX_OCC_OR_AREA,
         }
         self.zone.keyword_value_pairs = {
-            BDL_ZoneKeywords.BASEBOARD_CTRL: BDL_BaseboardControlOptions.NONE,
-            BDL_ZoneKeywords.DESIGN_COOL_T: "85",
-            BDL_ZoneKeywords.COOL_TEMP_SCH: "Thermostat Annual Schedule",
-            BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
-            BDL_ZoneKeywords.HEAT_TEMP_SCH: "Thermostat Annual Schedule",
-            BDL_ZoneKeywords.OA_FLOW_PER: "5",
-            BDL_ZoneKeywords.HW_LOOP: "HW Circulation Loop",
-            BDL_ZoneKeywords.TERMINAL_TYPE: BDL_TerminalTypes.SVAV,
-            BDL_ZoneKeywords.MIN_AIR_SCH: "Flow Annual Schedule",
             BDL_ZoneKeywords.SPACE: "Space 1",
-            BDL_ZoneKeywords.OA_CHANGES: "6",
-            BDL_ZoneKeywords.OA_FLOW_AREA: "100",
-            BDL_ZoneKeywords.MIN_FLOW_CTRL: BDL_MinFlowControlOptions.DCV_RESET_DOWN,
-            BDL_ZoneKeywords.MIN_FLOW_RATIO: "0.6",
+            BDL_ZoneKeywords.OA_FLOW_PER: "5",
+            BDL_ZoneKeywords.OA_CHANGES: "1",
+            BDL_ZoneKeywords.OA_FLOW_AREA: "0.5",
         }
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Zone 1",
-            "design_thermostat_cooling_setpoint": 85.0,
-            "design_thermostat_heating_setpoint": 45.0,
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
@@ -1070,101 +1035,52 @@ class TestZones(unittest.TestCase):
                 {
                     "id": "Zone 1 MainTerminal",
                     "type": "VARIABLE_AIR_VOLUME",
-                    "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
-                    "heating_capacity": 12000.0,
-                    "heating_from_loop": "HW Circulation Loop",
-                    "heating_source": "HOT_WATER",
-                    "minimum_airflow": 30000000,
-                    "minimum_outdoor_airflow": 0.3,
-                    "minimum_outdoor_airflow_multiplier_schedule": "Flow Annual Schedule",
-                    "primary_airflow": 10000,
                     "secondary_airflow": 0,
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
-                    "supply_design_cooling_setpoint_temperature": 50.0,
-                    "supply_design_heating_setpoint_temperature": 70.0,
                 }
             ],
-            "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
-            "thermostat_heating_setpoint_schedule": "Thermostat Annual Schedule",
             "volume": 1000.0,
             "zonal_exhaust_fan": {},
         }
         self.assertEqual(expected_data_structure, self.zone.zone_data_structure)
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
-    def test_populate_zone_with_dcv_prevented_by_min_oa_sch(self, mock_get_output_data):
+    def test_populate_zone_with_dcv_prevented_by_min_flow_sch(
+        self, mock_get_output_data
+    ):
         """
-        Test populating data elements for a zone with demand control ventilation that is prevented by the minimum OA
+        Test populating data elements for a zone with demand control ventilation that is prevented by the zone minimum flow
         schedule(s)
 
         """
-        mock_get_output_data.return_value = {
-            "Zone Fan Power": 0,
-            "Zone Supply Airflow": 10000,
-            "Zone Minimum Airflow Ratio": 3000,
-            "Zone Outside Airflow": 0.3,
-            "Zone Heating Capacity": 12,
-            "Zone Cooling Capacity": 0,
-        }
+        mock_get_output_data.return_value = {}
 
         self.floor = Floor("Floor 1", self.rmd)
         self.space = Space("Space 1", self.floor, self.rmd)
         self.rmd.space_map["Space 1"] = self.zone
 
-        self.space.keyword_value_pairs = {
-            BDL_SpaceKeywords.PEOPLE_SCHEDULE: "People Annual Schedule",
-            BDL_SpaceKeywords.NUMBER_OF_PEOPLE: "10",
-            BDL_SpaceKeywords.VOLUME: "1000",
-            BDL_SpaceKeywords.AREA: "100",
-        }
+        self.space.keyword_value_pairs = {}
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
             BDL_SystemKeywords.TYPE: BDL_SystemTypes.PVAVS,
-            BDL_SystemKeywords.FAN_CONTROL: BDL_SystemFanControlOptions.CONSTANT_VOLUME,
-            BDL_SystemKeywords.MAX_SUPPLY_T: "70",
-            BDL_SystemKeywords.MIN_SUPPLY_T: "50",
-            BDL_SystemKeywords.HEAT_SOURCE: BDL_SystemHeatingTypes.HOT_WATER,
-            BDL_SystemKeywords.COOL_SOURCE: BDL_SystemCoolingTypes.CHILLED_WATER,
-            BDL_SystemKeywords.ZONE_HEAT_SOURCE: BDL_ZoneHeatSourceOptions.HOT_WATER,
-            BDL_SystemKeywords.SUPPLY_STATIC: "30",
-            BDL_SystemKeywords.SUPPLY_MTR_EFF: "0.9",
-            BDL_SystemKeywords.SUPPLY_MECH_EFF: "1",
-            BDL_SystemKeywords.MIN_FLOW_RATIO: "0.4",
-            BDL_SystemKeywords.COOL_SET_T: "75",
-            BDL_SystemKeywords.HEAT_SET_T: "75",
-            BDL_SystemKeywords.SUPPLY_FLOW: "2500",
-            BDL_SystemKeywords.HEATING_CAPACITY: "15",
-            BDL_SystemKeywords.COOLING_CAPACITY: "14",
-            BDL_SystemKeywords.HW_LOOP: "HW Circulation Loop",
-            BDL_SystemKeywords.ZONE_OA_METHOD: BDL_ZoneOAMethodsOptions.MAX_OCC_OR_AREA,
+            BDL_SystemKeywords.ZONE_OA_METHOD: BDL_ZoneOAMethodsOptions.SUM_OCC_AND_AREA,
         }
         self.flow_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.FRAC_DESIGN,
             BDL_DayScheduleKeywords.VALUES: ["-999"] * 24,
         }
         self.zone.keyword_value_pairs = {
-            BDL_ZoneKeywords.BASEBOARD_CTRL: BDL_BaseboardControlOptions.NONE,
-            BDL_ZoneKeywords.DESIGN_COOL_T: "85",
-            BDL_ZoneKeywords.COOL_TEMP_SCH: "Thermostat Annual Schedule",
-            BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
-            BDL_ZoneKeywords.HEAT_TEMP_SCH: "Thermostat Annual Schedule",
             BDL_ZoneKeywords.OA_FLOW_PER: "5",
-            BDL_ZoneKeywords.HW_LOOP: "HW Circulation Loop",
             BDL_ZoneKeywords.TERMINAL_TYPE: BDL_TerminalTypes.SVAV,
             BDL_ZoneKeywords.SPACE: "Space 1",
-            BDL_ZoneKeywords.OA_CHANGES: "6",
-            BDL_ZoneKeywords.OA_FLOW_AREA: "100",
             BDL_ZoneKeywords.MIN_FLOW_CTRL: BDL_MinFlowControlOptions.DCV_RESET_DOWN,
             BDL_ZoneKeywords.MIN_FLOW_SCH: "Flow Annual Schedule",
-            BDL_ZoneKeywords.MIN_FLOW_RATIO: "0.6",
         }
 
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Zone 1",
-            "design_thermostat_cooling_setpoint": 85.0,
-            "design_thermostat_heating_setpoint": 45.0,
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
@@ -1175,23 +1091,11 @@ class TestZones(unittest.TestCase):
                 {
                     "id": "Zone 1 MainTerminal",
                     "type": "VARIABLE_AIR_VOLUME",
-                    "cooling_capacity": 0.0,
                     "has_demand_control_ventilation": False,
-                    "heating_capacity": 12000.0,
-                    "heating_from_loop": "HW Circulation Loop",
-                    "heating_source": "HOT_WATER",
-                    "minimum_airflow": 30000000,
-                    "minimum_outdoor_airflow": 0.3,
-                    "primary_airflow": 10000,
                     "secondary_airflow": 0,
                     "served_by_heating_ventilating_air_conditioning_system": "System 1",
-                    "supply_design_cooling_setpoint_temperature": 50.0,
-                    "supply_design_heating_setpoint_temperature": 70.0,
                 }
             ],
-            "thermostat_cooling_setpoint_schedule": "Thermostat Annual Schedule",
-            "thermostat_heating_setpoint_schedule": "Thermostat Annual Schedule",
-            "volume": 1000.0,
             "zonal_exhaust_fan": {},
         }
         self.assertEqual(expected_data_structure, self.zone.zone_data_structure)
