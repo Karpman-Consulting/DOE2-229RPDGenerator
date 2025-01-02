@@ -224,52 +224,6 @@ class TestZones(unittest.TestCase):
             BDL_CirculationLoopKeywords.HEATING_SCHEDULE: "Loop Operation Annual Schedule",
         }
 
-        # KEYWORDS / OUTPUT DATA KEYS FOR REFERENCE
-        # self.zone.keyword_value_pairs = {
-        #     BDL_ZoneKeywords.DESIGN_COOL_T: "85",
-        #     BDL_ZoneKeywords.COOL_TEMP_SCH: "",
-        #     BDL_ZoneKeywords.DESIGN_HEAT_T: "45",
-        #     BDL_ZoneKeywords.HEAT_TEMP_SCH: "",
-        #     BDL_ZoneKeywords.EXHAUST_FLOW: "",
-        #     BDL_ZoneKeywords.EXHAUST_FAN_SCH: "",
-        #     BDL_ZoneKeywords.EXHAUST_STATIC: "",
-        #     BDL_ZoneKeywords.EXHAUST_EFF: "",
-        #     BDL_ZoneKeywords.EXHAUST_KW_FLOW: "",
-        #     BDL_ZoneKeywords.OUTSIDE_AIR_FLOW: "",
-        #     BDL_ZoneKeywords.OA_FLOW_PER: "",
-        #     BDL_ZoneKeywords.ASSIGNED_FLOW: "",
-        #     BDL_ZoneKeywords.HASSIGNED_FLOW: "",
-        #     BDL_ZoneKeywords.FLOW_AREA: "",
-        #     BDL_ZoneKeywords.HFLOW_AREA: "",
-        #     BDL_ZoneKeywords.AIR_CHANGES_HR: "",
-        #     BDL_ZoneKeywords.HAIR_CHANGES_HR: "",
-        #     BDL_ZoneKeywords.MIN_FLOW_AREA: "",
-        #     BDL_ZoneKeywords.HMIN_FLOW_AREA: "",
-        #     BDL_ZoneKeywords.HW_LOOP: "",
-        #     BDL_ZoneKeywords.TERMINAL_TYPE: "",
-        #     BDL_ZoneKeywords.MIN_AIR_SCH: "",
-        #     BDL_ZoneKeywords.MIN_FLOW_RATIO: "",
-        #     BDL_ZoneKeywords.BASEBOARD_RATING: "",
-        #     BDL_ZoneKeywords.SPACE: "",
-        #     BDL_ZoneKeywords.OA_CHANGES: "",
-        #     BDL_ZoneKeywords.OA_FLOW_AREA: "",
-        #     BDL_ZoneKeywords.MIN_FLOW_CTRL: "",
-        #     BDL_ZoneKeywords.MIN_FLOW_SCH: "",
-        #     BDL_ZoneKeywords.CMIN_FLOW_SCH: "",
-        #     BDL_ZoneKeywords.HMIN_FLOW_SCH: ""
-        # }
-        # mock_get_output_data.return_value = {
-        #     "Supply Fan - Airflow": 0,
-        #     "Supply Fan - Power": 0,
-        #     "Zone Fan Power": 0,
-        #     "Zone Supply Airflow": 0,
-        #     "Zone Minimum Airflow Ratio": 0,
-        #     "Zone Outside Airflow": 0,
-        #     "Zone Heating Capacity": 0,
-        #     "Zone Cooling Capacity": 0,
-        #     "Dual-Duct/Multizone Boxes - Outlet Airflow": 0
-        # }
-
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
     def test_populate_zone_constant_volume_constant_temp_data(
         self, mock_get_output_data
