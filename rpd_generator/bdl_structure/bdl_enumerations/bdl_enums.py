@@ -178,10 +178,8 @@ class BDLEnums:
                 "AIR-COOLED",
                 "REMOTE-AIR-COOLED",
                 "REMOTE-EVAP-COOLED",
-
             ]
         ),
-
         "FlowControlOptions": _ListEnum(
             [
                 "CONSTANT-FLOW",
@@ -216,7 +214,6 @@ class BDLEnums:
                 "CONDENSER-TYPE",
                 "ELEC-INPUT-RATIO",
                 "HEAT-INPUT-RATIO",
-
             ]
         ),
         "CirculationLoopTypes": _ListEnum(
