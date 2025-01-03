@@ -126,6 +126,7 @@ class BDLEnums:
                 "OUTPUT-MAX",
                 "INPUT-TYPE",
                 "COEFFICIENTS",
+                "COEF",
             ]
         ),
         "CurveFitInputTypes": _ListEnum(

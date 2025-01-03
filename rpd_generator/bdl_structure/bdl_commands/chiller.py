@@ -396,7 +396,7 @@ class Chiller(BaseNode):
 
         iplv_percent_of_operation_at_each_load = [0.01, 0.42, 0.45, 0.12]
 
-        # TODO need to test whether it will still retrieve the coefficients if the input type is DATA instead of COEFFICIENTS
+        # TODO when the input type is DATA instead of COEFFICIENTS it does not populate the coefficients actually used in the model. The BDL coeffs differ from the ones calculated in the UI and used in the model.
 
         coefficients = {
             'eff_ft': eff_ft,
@@ -408,8 +408,9 @@ class Chiller(BaseNode):
         min_outputs = {}
         max_outputs = {}
 
+        # TODO we need to be able to pull COEF from the BDL because based on testing eQuest uses the full length coeffs and not the truncated ones in the COEFFICIENT keyword
         for key, obj in coefficients.items():
-            coeffs[f'{key}_coeffs'] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEFFICIENTS)))
+            coeffs[f'{key}_coeffs'] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEF)))
             min_outputs[f'{key}_min_otpt'] = float(obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN))
             max_outputs[f'{key}_max_otpt'] = float(obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX))
 
