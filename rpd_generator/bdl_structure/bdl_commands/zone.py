@@ -687,7 +687,7 @@ class Zone(ChildNode):
                 ),
             }
 
-            match self.parent.output_cool_type:
+            match self.parent.bdl_output_cool_type:
                 case BDL_OutputCoolingTypes.CHILLED_WATER:
                     # Design data for Cooling - chilled water - ZONE - capacity, btu/hr
                     requests["Design Cooling capacity"] = (
@@ -789,7 +789,7 @@ class Zone(ChildNode):
                         self.u_name,
                     )
 
-            match self.parent.output_heat_type:
+            match self.parent.bdl_output_heat_type:
                 case BDL_OutputHeatingTypes.FURNACE:
                     # Design data for Heating - furnace - ZONE - capacity, btu/hr
                     requests["Design Heating capacity"] = (
