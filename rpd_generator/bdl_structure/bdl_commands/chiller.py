@@ -51,8 +51,8 @@ class Chiller(BaseNode):
         self.chiller_data_structure = {}
 
         # data elements with children
-        self.part_load_efficiency = []
-        self.part_load_efficiency_metrics = []
+        self.efficiency_metric_values = []
+        self.efficiency_metric_types = []
         self.capacity_validation_points = []
         self.power_validation_points = []
 
@@ -70,7 +70,6 @@ class Chiller(BaseNode):
         self.design_flow_condenser = None
         self.design_entering_condenser_temperature = None
         self.design_leaving_evaporator_temperature = None
-        self.full_load_efficiency = None
         self.is_chilled_water_pump_interlocked = None
         self.is_condenser_water_pump_interlocked = None
         self.heat_recovery_loop = None
@@ -114,22 +113,26 @@ class Chiller(BaseNode):
         self.compressor_type = self.compressor_type_map.get(
             self.get_inp(BDL_ChillerKeywords.TYPE)
         )
-
+        # TODO Decide whether to populate full_load_efficiency no matter the rating conditions entered. Also need to update schema ENUMs.
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.full_load_efficiency = 1 / self.try_float(
-                    self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO)
+                self.efficiency_metric_values.append(1 / self.try_float(
+                    self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
                 )
+                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
+            else:
+                self.notes = ""
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ENGINE,
             BDL_ChillerTypes.GAS_ABSOR,
         ]:
             self.energy_source_type = EnergySourceOptions.NATURAL_GAS
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.full_load_efficiency = 1 / self.try_float(
+                self.efficiency_metric_values.append(1 / self.try_float(
                     self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
-                )
+                ))
+                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ABSOR_1,
             BDL_ChillerTypes.ABSOR_2,
@@ -139,9 +142,10 @@ class Chiller(BaseNode):
             )
             hot_water_loop = self.get_obj(hot_water_loop_name)
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.full_load_efficiency = 1 / self.try_float(
+                self.efficiency_metric_values.append(1 / self.try_float(
                     self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
-                )
+                ))
+                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
             if hot_water_loop:
                 self.energy_source_type = self.get_loop_energy_source(hot_water_loop)
 
@@ -202,15 +206,19 @@ class Chiller(BaseNode):
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
-        if (
-            self.is_rated_full_load_eff_defined_at_ahri_rating_conditions()
-            and not absorp_or_engine
-        ):
-            self.part_load_efficiency.append(self.calculate_iplv(absorp_or_engine))
-            self.part_load_efficiency_metrics.append(
-                ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
-            )
-        c = 5
+        iplv_value = self.calculate_iplv(absorp_or_engine)
+
+        if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
+            if iplv_value and iplv_value != "Keyword DATA was used for coefficient determination":
+                self.efficiency_metric_values.append(iplv_value)
+                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE)
+            else:
+                self.notes = "Performance curve INPUT-TYPE of DATA is not currently supported for determining and populating chiller IPLV."
+        elif iplv_value and iplv_value != "Keyword DATA was used for coefficient determination":
+            self.efficiency_metric_values.append(iplv_value)
+            self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.OTHER)
+        else:
+            self.notes = "Performance curve INPUT-TYPE of DATA is not currently supported for determining and populating chiller IPLV."
 
     def get_output_requests(self, absorp_or_engine):
         """Get output data requests for chiller object."""
@@ -297,8 +305,8 @@ class Chiller(BaseNode):
 
         self.chiller_data_structure = {
             "id": self.u_name,
-            "part_load_efficiency": self.part_load_efficiency,
-            "part_load_efficiency_metrics": self.part_load_efficiency_metrics,
+            "efficiency_metric_values": self.efficiency_metric_values,
+            "efficiency_metric_types": self.efficiency_metric_types,
             "capacity_validation_points": self.capacity_validation_points,
             "power_validation_points": self.power_validation_points,
         }
@@ -317,7 +325,6 @@ class Chiller(BaseNode):
             "design_flow_condenser",
             "design_entering_condenser_temperature",
             "design_leaving_evaporator_temperature",
-            "full_load_efficiency",
             "is_chilled_water_pump_interlocked",
             "is_condenser_water_pump_interlocked",
             "heat_recovery_loop",
@@ -374,16 +381,12 @@ class Chiller(BaseNode):
         return chw_pump_interlocked, cw_pump_interlocked
 
     def calculate_iplv(self, absorp_or_engine):
+        """Calculates IPLV based upon the modeled performance curves and the rated full load efficiency."""
         # Evaporator leaving temperature (a.k.a chilled water supply temperature). Should always 44F per AHRI 550 and 560. This is checked elsewhere.
         evap_leaving_temp = self.rated_leaving_evaporator_temperature
 
         # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
-        iplv_rating_load_conditions = {
-            1: {"results": 0.0},
-            0.75: {"results": 0.0},
-            0.5: {"results": 0.0},
-            0.25: {"results": 0.0},
-        }
+        iplv_rating_load_conditions = {key: {"results": 0.0} for key in [1, 0.75, 0.5, 0.25]}
 
         condenser_type = self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
         condenser_type_iplv_rating_condenser_temp_conditions_map = {
@@ -410,7 +413,7 @@ class Chiller(BaseNode):
 
         iplv_percent_of_operation_at_each_load = [0.01, 0.42, 0.45, 0.12]
 
-        # TODO when the input type is DATA instead of COEFFICIENTS it does not populate the coefficients actually used in the model. The BDL coeffs differ from the ones calculated in the UI and used in the model.
+        # TODO when the INPUT-TYPE is DATA instead of COEFFICIENTS it does not populate the coefficients actually used in the model in the BDL. The BDL coeffs differ from the ones calculated in the UI and used in the model. Use linear algebra to figure these out.
 
         coefficients = {"eff_ft": eff_ft, "cap_ft": cap_ft, "eff_fplr": eff_fplr}
 
@@ -418,11 +421,11 @@ class Chiller(BaseNode):
         min_outputs = {}
         max_outputs = {}
 
-        # TODO we need to be able to pull COEF from the BDL because based on testing eQuest uses the full length coeffs and not the truncated ones in the COEFFICIENT keyword
         for key, obj in coefficients.items():
-            coeffs[f"{key}_coeffs"] = list(
-                map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
-            )
+            input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+            if input_type == BDL_CurveFitInputTypes.DATA:
+                return "Keyword DATA was used for coefficient determination"
+            coeffs[f"{key}_coeffs"] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEF)))
             min_outputs[f"{key}_min_otpt"] = float(
                 obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
             )
@@ -430,7 +433,7 @@ class Chiller(BaseNode):
                 obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
             )
 
-        # Now, you can access the coefficients, min_outputs, and max_outputs dictionaries
+        # Coefficients, min_outputs, and max_outputs dictionaries
         eff_ft_coeffs = coeffs["eff_ft_coeffs"]
         cap_ft_coeffs = coeffs["cap_ft_coeffs"]
         eff_fplr_coeffs = coeffs["eff_fplr_coeffs"]
@@ -449,7 +452,6 @@ class Chiller(BaseNode):
             BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
         }
 
-        # TODO These calculations likely need adjustment for absorption chillers and gas fired chiller, this is not called for these chiller types. Future development may include supporting these.
         for index, key in enumerate(iplv_rating_load_conditions):
             cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[
                 index
@@ -488,12 +490,18 @@ class Chiller(BaseNode):
                     eff_fplr_min_otpt,
                     eff_fplr_max_otpt,
                 )
+            # This efficiency may not be defined for self if it was not entered at rated conditions in the model. Hence this is here.
+            full_load_efficiency = 1/self.try_float(
+                self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO)
+            ) if not absorp_or_engine else self.try_float(
+                1/self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
+            )
 
             eff_result_cop = (
                 part_load_ratio
                 / 1000
                 / (
-                    (3.412 / self.full_load_efficiency)
+                    (3.412 / full_load_efficiency)
                     * eff_ft_result
                     * eff_fplr_result
                     / 3412
