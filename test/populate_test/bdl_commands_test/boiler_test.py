@@ -5,7 +5,6 @@ import os
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.boiler import *
-from rpd_generator.bdl_structure.bdl_commands.boiler import Boiler
 from rpd_generator.bdl_structure.bdl_commands.circulation_loop import CirculationLoop
 from rpd_generator.bdl_structure.bdl_commands.utility_and_economics import (
     MasterMeters,
@@ -13,18 +12,8 @@ from rpd_generator.bdl_structure.bdl_commands.utility_and_economics import (
 )
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
-BDL_Commands = BDLEnums.bdl_enums["Commands"]
-BDL_BoilerKeywords = BDLEnums.bdl_enums["BoilerKeywords"]
-BDL_BoilerTypes = BDLEnums.bdl_enums["BoilerTypes"]
+
 BDL_CirculationLoopKeywords = BDLEnums.bdl_enums["CirculationLoopKeywords"]
-BDL_FuelTypes = BDLEnums.bdl_enums["FuelTypes"]
-BDL_FuelMeterKeywords = BDLEnums.bdl_enums["FuelMeterKeywords"]
-BDL_MasterMeterKeywords = BDLEnums.bdl_enums["MasterMeterKeywords"]
-BoilerCombustionOptions = SchemaEnums.schema_enums["BoilerCombustionOptions"]
-EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
-BoilerEfficiencyMetricOptions = SchemaEnums.schema_enums[
-    "BoilerEfficiencyMetricOptions"
-]
 
 
 class TestFuelBoiler(unittest.TestCase):

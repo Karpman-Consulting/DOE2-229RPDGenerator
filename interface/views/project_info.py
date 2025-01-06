@@ -245,6 +245,7 @@ class ProjectInfoView(BaseView):
                 model_type not in self.main.app_data.ruleset_model_file_paths
                 or not self.main.app_data.ruleset_model_file_paths[model_type]
             ):
+                model_type = model_type.replace("User", "Design")
                 self.main.app_data.warnings.append(
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )

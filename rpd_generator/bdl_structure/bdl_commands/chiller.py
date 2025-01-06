@@ -35,7 +35,7 @@ class Chiller(BaseNode):
         BDL_ChillerTypes.ABSOR_1: ChillerCompressorOptions.SINGLE_EFFECT_INDIRECT_FIRED_ABSORPTION,
         BDL_ChillerTypes.ABSOR_2: ChillerCompressorOptions.DOUBLE_EFFECT_INDIRECT_FIRED_ABSORPTION,
         BDL_ChillerTypes.GAS_ABSOR: ChillerCompressorOptions.DOUBLE_EFFECT_DIRECT_FIRED_ABSORPTION,
-        BDL_ChillerTypes.ENGINE: ChillerCompressorOptions.SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION,
+        BDL_ChillerTypes.ENGINE: ChillerCompressorOptions.OTHER,
         BDL_ChillerTypes.HEAT_PUMP: ChillerCompressorOptions.OTHER,
         BDL_ChillerTypes.LOOP_TO_LOOP_HP: ChillerCompressorOptions.OTHER,
         BDL_ChillerTypes.WATER_ECONOMIZER: OMIT,
@@ -366,10 +366,10 @@ class Chiller(BaseNode):
         cw_pump_interlocked = False
         for pump_name in self.rmd.pump_names:
             pump = self.get_obj(pump_name)
-            if pump.loop_or_piping == chw_loop_name:  # pump is gauranteed to exist
+            if pump.loop_or_piping == chw_loop_name:  # pump is guaranteed to exist
                 chw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CHW_PUMP))
 
-            if pump.loop_or_piping == cw_loop_name:  # pump is gauranteed to exist
+            if pump.loop_or_piping == cw_loop_name:  # pump is guaranteed to exist
                 cw_pump_interlocked = bool(self.get_inp(BDL_ChillerKeywords.CW_PUMP))
         return chw_pump_interlocked, cw_pump_interlocked
 

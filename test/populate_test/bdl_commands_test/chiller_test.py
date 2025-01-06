@@ -98,7 +98,7 @@ class TestEngineChillers(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Chiller 1",
-            "compressor_type": "SINGLE_EFFECT_DIRECT_FIRED_ABSORPTION",
+            "compressor_type": "OTHER",
             "cooling_loop": "Chilled Water Loop (Primary)",
             "condensing_loop": "Condenser Water Loop",
             "energy_source_type": "NATURAL_GAS",

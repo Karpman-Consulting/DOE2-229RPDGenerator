@@ -688,6 +688,12 @@ class BDLEnums:
                 "NO",
             ]
         ),
+        "SystemEconoLockoutOptions": _ListEnum(
+            [
+                "YES",
+                "NO",
+            ]
+        ),
         "SystemTypes": _ListEnum(
             [
                 "SUM",
