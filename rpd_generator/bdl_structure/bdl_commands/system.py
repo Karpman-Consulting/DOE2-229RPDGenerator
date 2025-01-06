@@ -383,8 +383,8 @@ class System(ParentNode):
         self.cool_sys_is_sized_based_on_design_day = None
         self.cool_sys_chilled_water_loop = None
         self.cool_sys_condenser_water_loop = None
-        self.cool_sys_efficiency_metric_values = []
-        self.cool_sys_efficiency_metric_types = []
+        self.cool_sys_efficiency_metric_values = None
+        self.cool_sys_efficiency_metric_types = None
         self.cool_sys_dehumidification_type = None
         self.cool_sys_turndown_ratio = None
 
@@ -1494,23 +1494,24 @@ class System(ParentNode):
                 return FanSystemOperationOptions.CYCLING
 
         else:
-            # Handle special case where all fan schedule values are 0 so unoccupied/occupied cannot be distinguished
-            if all(value == 0 for value in fan_sch.hourly_values):
-                return self.unoccupied_fan_operation_map.get(
-                    self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
-                )
-            if all(value == 1 for value in fan_sch.hourly_values):
-                self.fan_sys_operation_during_unoccupied = (
-                    FanSystemOperationOptions.KEEP_OFF
-                )
+            if fan_sch:
+                # Handle special case where all fan schedule values are 0 so unoccupied/occupied cannot be distinguished
+                if all(value == 0 for value in fan_sch.hourly_values):
+                    return self.unoccupied_fan_operation_map.get(
+                        self.get_inp(BDL_SystemKeywords.NIGHT_CYCLE_CTRL)
+                    )
+                if all(value == 1 for value in fan_sch.hourly_values):
+                    self.fan_sys_operation_during_unoccupied = (
+                        FanSystemOperationOptions.KEEP_OFF
+                    )
 
-            if any(value == -999 for value in fan_sch.hourly_values):
-                # TODO raise this error in a window of the GUI
-                raise ValueError(
-                    f"""Fan schedule {fan_sch.u_name} for system {self.u_name} is not allowed to have -999 values. These
-                    flags are not accurately supported by DOE 2.3 (see help text Volume 2: Dictionary > HVAC Components 
-                    > SYSTEM > Airside Control > Fan Availability)"""
-                )
+                if any(value == -999 for value in fan_sch.hourly_values):
+                    # TODO raise this error in a window of the GUI
+                    raise ValueError(
+                        f"""Fan schedule {fan_sch.u_name} for system {self.u_name} is not allowed to have -999 values. These
+                        flags are not accurately supported by DOE 2.3 (see help text Volume 2: Dictionary > HVAC Components 
+                        > SYSTEM > Airside Control > Fan Availability)"""
+                    )
 
             return (
                 FanSystemOperationOptions.CONTINUOUS

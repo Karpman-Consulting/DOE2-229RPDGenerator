@@ -14,7 +14,7 @@ class ProjectInfoView(BaseView):
         # Initialize Widgets
         self.rotation_exception_checkbox = ctk.CTkCheckBox(
             self,
-            text="Meets Table G3.1(5) Baseline Building Performance (a) Exceptions",
+            text="Meets 90.1-2019 Table G3.1(5) Baseline Building Performance (a) Exceptions",
             font=("Arial", 14),
             command=self.toggle_baseline_rotations,
         )
@@ -26,7 +26,7 @@ class ProjectInfoView(BaseView):
             font=("Arial", 16, "bold"),
         )
 
-        directions_text = "Select the ruleset for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the applicable models expected by the \nruleset."
+        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the \napplicable models expected by the ruleset."
         self.directions = ctk.CTkLabel(
             self,
             text=directions_text,
@@ -42,7 +42,7 @@ class ProjectInfoView(BaseView):
             self, text=note_text, anchor="w", justify="left", font=("Arial", 14)
         )
         self.ruleset_label = ctk.CTkLabel(
-            self, text="Project Ruleset:", font=("Arial", 14, "bold"), anchor="e"
+            self, text="Energy Code/Program:", font=("Arial", 14, "bold"), anchor="e"
         )
         self.ruleset_models_frame = ctk.CTkFrame(self, width=800, height=250)
         self.ruleset_dropdown = ctk.CTkOptionMenu(
@@ -54,7 +54,7 @@ class ProjectInfoView(BaseView):
         )
         self.ruleset_models_label = ctk.CTkLabel(
             self,
-            text="Ruleset Models: ",
+            text="Models: ",
             anchor="e",
             justify="left",
             font=("Arial", 14, "bold"),
@@ -104,11 +104,11 @@ class ProjectInfoView(BaseView):
             self.rotation_exception_checkbox.grid(
                 row=3, column=4, columnspan=4, sticky="w", padx=5, pady=10
             )
-            labels = ["User: ", "Proposed: ", "Baseline: "]
+            labels = ["Design: ", "Proposed: ", "Baseline: "]
             if not self.rotation_exception_checkbox.get():
                 labels.extend(["Baseline 90: ", "Baseline 180: ", "Baseline 270: "])
         else:
-            labels = ["User: "]
+            labels = ["Design: "]
 
         # Create and place rows based on the selected ruleset
         self.create_model_rows(parent_frame, labels)
@@ -193,7 +193,7 @@ class ProjectInfoView(BaseView):
                 path_entry.insert(0, trimmed_path)
 
                 self.main.app_data.ruleset_model_file_paths[
-                    label_text.split(":")[0]
+                    label_text.split(":")[0].replace("Design", "User")
                 ] = file_path
 
         select_button = ctk.CTkButton(
@@ -222,6 +222,7 @@ class ProjectInfoView(BaseView):
         ) in self.main.app_data.ruleset_model_file_paths.items():
             if file_path:
                 if not self.main.app_data.verify_associated_files(file_path):
+                    model_type = model_type.replace("User", "Design")
                     self.main.app_data.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
@@ -244,6 +245,7 @@ class ProjectInfoView(BaseView):
                 model_type not in self.main.app_data.ruleset_model_file_paths
                 or not self.main.app_data.ruleset_model_file_paths[model_type]
             ):
+                model_type = model_type.replace("User", "Design")
                 self.main.app_data.warnings.append(
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )

@@ -243,8 +243,10 @@ def _process_command_group(
 
 
 if __name__ == "__main__":
+
     # Test generating an RPD JSON file from one of the test BDL files
     validate_configuration.find_equest_installation()
+    # write_rpd_json_from_inp(r"")
     write_rpd_json_from_bdl(
         str(
             Path(__file__).parents[1]

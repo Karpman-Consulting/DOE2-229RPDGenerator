@@ -13,7 +13,10 @@ BDL_InternalEnergySourceOptions = BDLEnums.bdl_enums["InternalEnergySourceOption
 
 
 class Space(ChildNode, ParentNode):
-    """Space object in the tree."""
+    """Space objects represent the spaces in the building model and populate the Space data group in the 229 schema.
+    Derived from ChildNode to access the parent FLOOR object through the 'parent' attribute.
+    Derived from ParentNode to access the child INTERIOR-WALL, EXTERIOR-WALL, UNDERGROUND-WALL object(s) through the 'children' attribute.
+    """
 
     bdl_command = BDL_Commands.SPACE
 
@@ -90,99 +93,31 @@ class Space(ChildNode, ParentNode):
 
     def populate_data_elements(self):
         """Populate data elements that originate from eQUEST's SPACE command"""
-        # Establish zone and populate the zone volume and space floor area first to use in other data elements
-        self.zone = self.rmd.space_map.get(self.u_name)
-        volume = self.get_inp(BDL_SpaceKeywords.VOLUME)
-        if volume is not None:
-            volume = self.try_float(volume)
-            self.zone.volume = volume
-        self.floor_area = self.try_float(self.get_inp(BDL_SpaceKeywords.AREA))
-
-        # Populate interior lighting data elements
-        space_ltg_scheds = self.get_inp(BDL_SpaceKeywords.LIGHTING_SCHEDUL)
-        self.standardize_dict_values(
-            self.keyword_value_pairs,
-            [BDL_SpaceKeywords.LIGHTING_W_AREA, BDL_SpaceKeywords.LIGHTING_KW],
-            self.try_length(space_ltg_scheds),
-        )
-
-        if not isinstance(space_ltg_scheds, list):
-            space_ltg_scheds = [space_ltg_scheds]
-        for i, sched in enumerate(space_ltg_scheds):
-            self.populate_interior_lighting(i, sched)
-
-        # Populate miscellaneous equipment data elements
-        space_misc_eq_scheds = self.get_inp(BDL_SpaceKeywords.EQUIP_SCHEDULE)
-        self.standardize_dict_values(
-            self.keyword_value_pairs,
-            [
-                BDL_SpaceKeywords.EQUIPMENT_W_AREA,
-                BDL_SpaceKeywords.EQUIPMENT_KW,
-                BDL_SpaceKeywords.EQUIP_SENSIBLE,
-                BDL_SpaceKeywords.EQUIP_LATENT,
-            ],
-            self.try_length(space_misc_eq_scheds),
-        )
-
-        space_int_energy_source_scheds = self.get_inp(BDL_SpaceKeywords.SOURCE_SCHEDULE)
-        if space_int_energy_source_scheds is not None:
-            self.standardize_dict_values(
-                self.keyword_value_pairs,
-                [
-                    BDL_SpaceKeywords.SOURCE_TYPE,
-                    BDL_SpaceKeywords.SOURCE_POWER,
-                    BDL_SpaceKeywords.SOURCE_KW,
-                    BDL_SpaceKeywords.SOURCE_SENSIBLE,
-                    BDL_SpaceKeywords.SOURCE_LATENT,
-                ],
-                self.try_length(space_int_energy_source_scheds),
-            )
-        else:
-            space_int_energy_source_scheds = []
-
-        if not isinstance(space_misc_eq_scheds, list):
-            space_misc_eq_scheds = [space_misc_eq_scheds]
-
-        if not isinstance(space_int_energy_source_scheds, list):
-            space_int_energy_source_scheds = [space_int_energy_source_scheds]
-
-        # Populate one instance of miscellaneous equipment for each schedule associated with equipment or internal energy sources
-        misc_eq_counter = 0
-        for i, sched in enumerate(space_misc_eq_scheds):
-            misc_eq_counter += 1
-            self.populate_miscellaneous_equipment(
-                i, misc_eq_counter, sched, "EQUIPMENT"
-            )
-
-        for i, sched in enumerate(space_int_energy_source_scheds):
-            misc_eq_counter += 1
-            self.populate_miscellaneous_equipment(
-                i, misc_eq_counter, sched, "INTERNAL_ENERGY_SOURCE"
-            )
-
-        # Populate the corresponding zone volume and infiltration from the DOE-2 SPACE command
-        self.populate_zone_infiltration()
-
         # Populate space data elements
+        self.floor_area = self.try_float(self.get_inp(BDL_SpaceKeywords.AREA))
         self.number_of_occupants = self.try_float(
             self.get_inp(BDL_SpaceKeywords.NUMBER_OF_PEOPLE)
         )
-
         self.occupant_multiplier_schedule = self.get_inp(
             BDL_SpaceKeywords.PEOPLE_SCHEDULE
         )
-
-        self.occupant_sensible_heat_gain = self.get_inp(
-            BDL_SpaceKeywords.PEOPLE_HG_SENS
-        )
-
         self.occupant_sensible_heat_gain = self.try_float(
-            self.occupant_sensible_heat_gain
+            self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_SENS)
+        )
+        self.occupant_latent_heat_gain = self.try_float(
+            self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_LAT)
         )
 
-        self.occupant_latent_heat_gain = self.get_inp(BDL_SpaceKeywords.PEOPLE_HG_LAT)
+        # Populate interior lighting data elements
+        self.populate_interior_lighting_data_elements()
 
-        self.occupant_latent_heat_gain = self.try_float(self.occupant_latent_heat_gain)
+        # Populate miscellaneous equipment data elements
+        self.populate_miscellaneous_equipment_data_elements()
+
+        # Populate zone data elements that originate from Space data
+        self.zone = self.rmd.space_map.get(self.u_name)
+        self.zone.volume = self.try_float(self.get_inp(BDL_SpaceKeywords.VOLUME))
+        self.populate_zone_infiltration()
 
     def populate_data_group(self):
         """Populate schema structure for space object."""
@@ -223,7 +158,21 @@ class Space(ChildNode, ParentNode):
         # find the zone that has the "SPACE" attribute value equal to the space object's u_name
         self.zone.spaces.append(self.space_data_structure)
 
-    def populate_interior_lighting(self, i, schedule):
+    def populate_interior_lighting_data_elements(self):
+        space_ltg_scheds = self.get_inp(BDL_SpaceKeywords.LIGHTING_SCHEDUL)
+        if space_ltg_scheds is not None:
+            if not isinstance(space_ltg_scheds, list):
+                space_ltg_scheds = [space_ltg_scheds]
+            self.standardize_dict_values(
+                self.keyword_value_pairs,
+                [BDL_SpaceKeywords.LIGHTING_W_AREA, BDL_SpaceKeywords.LIGHTING_KW],
+                self.try_length(space_ltg_scheds),
+            )
+
+            for i, sched in enumerate(space_ltg_scheds):
+                self.populate_interior_lighting_instance(i, sched)
+
+    def populate_interior_lighting_instance(self, i, schedule):
         """Populate interior lighting data elements for an instance of InteriorLighting"""
         int_ltg_id = f"{self.u_name} IntLtg{i + 1}"
         int_ltg_lpd = self.try_float(
@@ -265,7 +214,55 @@ class Space(ChildNode, ParentNode):
                 None
             )
 
-    def populate_miscellaneous_equipment(self, i, n, schedule, equip_type):
+    def populate_miscellaneous_equipment_data_elements(self):
+        # Populate one instance of miscellaneous equipment for each schedule associated with equipment or internal energy sources
+        misc_eq_counter = 0
+        space_misc_eq_scheds = self.get_inp(BDL_SpaceKeywords.EQUIP_SCHEDULE)
+        space_int_energy_source_scheds = self.get_inp(BDL_SpaceKeywords.SOURCE_SCHEDULE)
+
+        if space_misc_eq_scheds is not None:
+            if not isinstance(space_misc_eq_scheds, list):
+                space_misc_eq_scheds = [space_misc_eq_scheds]
+            self.standardize_dict_values(
+                self.keyword_value_pairs,
+                [
+                    BDL_SpaceKeywords.EQUIPMENT_W_AREA,
+                    BDL_SpaceKeywords.EQUIPMENT_KW,
+                    BDL_SpaceKeywords.EQUIP_SENSIBLE,
+                    BDL_SpaceKeywords.EQUIP_LATENT,
+                ],
+                self.try_length(space_misc_eq_scheds),
+            )
+
+            for i, sched in enumerate(space_misc_eq_scheds):
+                misc_eq_counter += 1
+                self.populate_miscellaneous_equipment_instance(
+                    i, misc_eq_counter, sched, "EQUIPMENT"
+                )
+
+        if space_int_energy_source_scheds is not None:
+            if not isinstance(space_int_energy_source_scheds, list):
+                space_int_energy_source_scheds = [space_int_energy_source_scheds]
+            self.standardize_dict_values(
+                self.keyword_value_pairs,
+                [
+                    BDL_SpaceKeywords.SOURCE_TYPE,
+                    BDL_SpaceKeywords.SOURCE_POWER,
+                    BDL_SpaceKeywords.SOURCE_SENSIBLE,
+                    BDL_SpaceKeywords.SOURCE_LATENT,
+                ],
+                self.try_length(space_int_energy_source_scheds),
+            )
+
+            for i, sched in enumerate(space_int_energy_source_scheds):
+                misc_eq_counter += 1
+                self.populate_miscellaneous_equipment_instance(
+                    i, misc_eq_counter, sched, "INTERNAL_ENERGY_SOURCE"
+                )
+
+    def populate_miscellaneous_equipment_instance(
+        self, i: int, n: int, schedule, equip_type
+    ):
         """Populate miscellaneous equipment data elements for an instance of MiscellaneousEquipment"""
         misc_eq_id = f"{self.u_name} MiscEqp{n}"
 
@@ -329,14 +326,35 @@ class Space(ChildNode, ParentNode):
             if n == 1:
                 self.misc_eq_id = [misc_eq_id]
                 self.misc_eq_energy_type = [energy_type]
+                self.misc_eq_power = [
+                    self.try_convert_units(
+                        self.try_float(
+                            self.try_access_index(
+                                self.get_inp(BDL_SpaceKeywords.SOURCE_POWER), i
+                            )
+                        ),
+                        "Btu/hr",
+                        "kW",
+                    )
+                ]
             else:
                 self.misc_eq_id.append(misc_eq_id)
                 self.misc_eq_energy_type.append(energy_type)
+                self.misc_eq_power.append(
+                    self.try_convert_units(
+                        self.try_float(
+                            self.try_access_index(
+                                self.get_inp(BDL_SpaceKeywords.SOURCE_POWER), i
+                            )
+                        ),
+                        "Btu/hr",
+                        "kW",
+                    )
+                )
 
                 # Lists must be the same length, even when elements are not populated
                 self.misc_eq_reporting_name.append(None)
                 self.misc_eq_notes.append(None)
-                self.misc_eq_power.append(None)
                 self.misc_eq_multiplier_schedule.append(None)
                 self.misc_eq_sensible_fraction.append(None)
                 self.misc_eq_latent_fraction.append(None)
