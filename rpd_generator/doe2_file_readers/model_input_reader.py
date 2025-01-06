@@ -124,6 +124,10 @@ class ModelInputReader:
 
             active_command_dict = None
             record_data_for = False
+            special_read_flag = False
+            special_data = {}
+            multiline_key = None
+            multiline_value = []
 
             for line in bdl_file:
 
@@ -150,6 +154,11 @@ class ModelInputReader:
                     )
                     # check if the command type is one that the RPD Generator uses:
                     if command in self.bdl_command_dict:
+
+                        # check if the library entry requires special handling
+                        if "CURVE-FIT" in line:
+                            special_read_flag = True
+
                         command_dict = {"command": command}
                         self._track_current_parents(unique_name, command)
                         command_dict = self._set_parent(command, command_dict)
@@ -183,6 +192,50 @@ class ModelInputReader:
                     else:
                         active_command_dict[keyword] = value
 
+                elif special_read_flag:
+                    active_command_dict = file_commands.get(unique_name)
+
+                    # Parse keyword-value pairs
+                    keywords_values = re.split(r"\s+(?![^(]*\))|=", line[15:])
+                    if any("(" in item for item in keywords_values):
+                        # Combine all parts starting from the "("
+                        paren_idx = next(
+                            i for i, item in enumerate(keywords_values) if "(" in item
+                        )
+                        keywords_values = keywords_values[:paren_idx] + [
+                            " ".join(keywords_values[paren_idx:])
+                        ]
+
+                    # filter out empty strings and ".."
+                    keywords_values = [
+                        item for item in keywords_values if item and item != ".."
+                    ]
+
+                    if multiline_key:
+                        keywords_values.insert(0, multiline_key)
+                        multiline_value += line[15:].split(")")[0] + ")"
+                        keywords_values[1] = multiline_value
+                        multiline_key = None
+
+                    for i in range(0, len(keywords_values), 2):
+                        key = keywords_values[i]
+                        value = keywords_values[i + 1]
+                        if "(" in value:
+                            special_data[key] = self._parse_parentheses_values(value)
+                        else:
+                            special_data[key] = value
+
+                    if "(" in line and ")" not in line:
+                        multiline_key = keywords_values[-2]
+                        multiline_value = keywords_values[-1]
+
+                    # End special read block at `..`
+                    if ".." in line:
+                        special_read_flag = False
+                        if active_command_dict and "COEF" in special_data:
+                            active_command_dict["COEF"] = special_data["COEF"]
+                        special_data = {}
+
             file_commands = self._group_by_command(file_commands)
             return {"doe2_version": doe2_version, "file_commands": file_commands}
 
@@ -211,6 +264,16 @@ class ModelInputReader:
         command = line[60:76].strip()
         command = command.replace("MAT", "MATERIAL")
         return unique_name, command
+
+    @staticmethod
+    def _parse_parentheses_values(text):
+        """
+        Extract values enclosed in parentheses.
+        """
+        match = re.search(r"\((.*?)\)", text)
+        if match:
+            return [v.strip() for v in match.group(1).split(",")]
+        return []
 
     @staticmethod
     def _group_by_command(commands_dict):
