@@ -74,7 +74,7 @@ class CirculationLoop(BaseNode):
         self.rmd.bdl_obj_instances[u_name] = self
 
         # keep track of the type of circulation loop (different from self.type which is the schema data element: FluidLoop.type)
-        self.circulation_loop_type = None  # "ServiceWaterPiping", "ServiceWaterHeatingDistributionSystem", "FluidLoop", or "SecondaryFluidLoop"
+        self.circulation_loop_type = None  # "ServiceWaterHeatingDistributionSystem", "FluidLoop", or "SecondaryFluidLoop"
 
         # Initialize the data structure for the different types of circulation loops
         self.data_structure = {}
@@ -89,8 +89,12 @@ class CirculationLoop(BaseNode):
         self.pump_power_per_flow_rate = None
 
         # ServiceWaterHeatingDistributionSystem data elements with children
-        self.service_water_piping = {}
-        self.tanks = {}
+        self.service_water_piping = []
+        self.tanks = []
+
+        # ServiceWaterPiping data elements with children
+        # self.child = None   this is commented out because in eQUEST every secondary loop is a child of a primary loop
+        self.service_water_heating_design_and_control = {}
 
         # FluidLoopDesignAndControl data elements with no children [cooling, heating]
         self.design_supply_temperature: list = [None, None]
@@ -124,12 +128,12 @@ class CirculationLoop(BaseNode):
 
         # ServiceWaterPiping data elements with no children
         self.is_recirculation_loop = None
+        self.are_thermal_losses_modeled = None
         self.insulation_thickness = None
         self.loop_pipe_location = None
         self.location_zone = None
         self.length = None
         self.diameter = None
-        # self.child = None   this is commented out because in eQUEST every secondary loop is a child of a primary loop
 
     def __repr__(self):
         return f"CirculationLoop(u_name='{self.u_name}')"
