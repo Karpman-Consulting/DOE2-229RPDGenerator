@@ -51,3 +51,43 @@ def calculate_quadratic(
     z = max(min_val, min(z, max_val))
 
     return z
+
+def convert_to_ahri_conditions(curves: dict, x: float, y: float) -> list:
+    """The curves dictionary should contain the following keys eff_ft, cap_ft, eff_fplr which are the curve objects.
+     x is likely equal to the evaporator leaving temp and y is likely equal to condenser entering temp. These
+     temperatures were entered in eQuest for the rated temperatures for the capacity and efficiency."""
+
+    coeffs = {}
+    min_outputs = {}
+    max_outputs = {}
+
+    for key, obj in curves.items():
+        input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+        if input_type == BDL_CurveFitInputTypes.DATA:
+            return "Keyword DATA was used for coefficient determination"
+        coeffs[f"{key}_coeffs"] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEF)))
+        min_outputs[f"{key}_min_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
+        )
+        max_outputs[f"{key}_max_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
+        )
+
+    # Coefficients, min_outputs, and max_outputs dictionaries
+    eff_ft_coeffs = coeffs["eff_ft_coeffs"]
+    cap_ft_coeffs = coeffs["cap_ft_coeffs"]
+    eff_fplr_coeffs = coeffs["eff_fplr_coeffs"]
+
+    eff_ft_min_otpt = min_outputs["eff_ft_min_otpt"]
+    eff_ft_max_otpt = max_outputs["eff_ft_max_otpt"]
+    cap_ft_min_otpt = min_outputs["cap_ft_min_otpt"]
+    cap_ft_max_otpt = max_outputs["cap_ft_max_otpt"]
+    eff_fplr_min_otpt = min_outputs["eff_fplr_min_otpt"]
+    eff_fplr_max_otpt = max_outputs["eff_fplr_max_otpt"]
+
+    eff_fplr_curve_type = cap_ft.get_inp(BDL_CurveFitKeywords.TYPE)
+
+    curve_function_map = {
+        BDL_CurveFitTypes.QUADRATIC: curve_funcs.calculate_quadratic,
+        BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
+    }
