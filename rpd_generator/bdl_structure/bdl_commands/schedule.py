@@ -1,7 +1,10 @@
 from rpd_generator.bdl_structure.base_node import BaseNode
 from rpd_generator.bdl_structure.base_definition import BaseDefinition
+from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
+ScheduleOptions = SchemaEnums.schema_enums["ScheduleOptions"]
+ScheduleSequenceOptions = SchemaEnums.schema_enums["ScheduleSequenceOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ScheduleTypes = BDLEnums.bdl_enums["ScheduleTypes"]
 BDL_DayScheduleKeywords = BDLEnums.bdl_enums["DayScheduleKeywords"]
@@ -31,7 +34,7 @@ class DaySchedulePD(BaseDefinition):
     def populate_data_elements(self):
         """Populate data elements that originate from eQUEST's DAY-SCHEDULE-PD command"""
         day_sch_type = self.get_inp(BDL_DayScheduleKeywords.TYPE)
-        if day_sch_type in Schedule.supported_hourly_schedules:
+        if day_sch_type in Schedule.schedule_type_map:
             self.hourly_values = [
                 self.try_float(val)
                 for val in self.get_inp(BDL_DayScheduleKeywords.VALUES)
@@ -74,7 +77,7 @@ class WeekSchedulePD(BaseDefinition):
     def populate_data_elements(self):
         """Create lists of length 12, including Mon-Sun, Holidays and then 4 design day schedules"""
         wk_sch_type = self.get_inp(BDL_WeekScheduleKeywords.TYPE)
-        if wk_sch_type in Schedule.supported_hourly_schedules:
+        if wk_sch_type in Schedule.schedule_type_map:
             day_schedule_names = self.get_inp(BDL_WeekScheduleKeywords.DAY_SCHEDULES)
             # for day_name in day_schedule_names:
             #     d = self.get_obj(day_name)
@@ -115,14 +118,14 @@ class Schedule(BaseNode):
     holiday_months = None
     holiday_days = None
     annual_calendar = {}
-    supported_hourly_schedules = [
-        BDL_ScheduleTypes.ON_OFF,
-        BDL_ScheduleTypes.ON_OFF_FLAG,
-        BDL_ScheduleTypes.FRACTION,
-        BDL_ScheduleTypes.MULTIPLIER,
-        BDL_ScheduleTypes.TEMPERATURE,
-        BDL_ScheduleTypes.FRAC_DESIGN,
-    ]
+    schedule_type_map = {
+        BDL_ScheduleTypes.ON_OFF: ScheduleOptions.MULTIPLIER_DIMENSIONLESS,
+        BDL_ScheduleTypes.ON_OFF_FLAG: ScheduleOptions.MULTIPLIER_DIMENSIONLESS,
+        BDL_ScheduleTypes.FRACTION: ScheduleOptions.MULTIPLIER_DIMENSIONLESS,
+        BDL_ScheduleTypes.MULTIPLIER: ScheduleOptions.MULTIPLIER_DIMENSIONLESS,
+        BDL_ScheduleTypes.TEMPERATURE: ScheduleOptions.TEMPERATURE,
+        BDL_ScheduleTypes.FRAC_DESIGN: ScheduleOptions.MULTIPLIER_DIMENSIONLESS,
+    }
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
@@ -154,13 +157,16 @@ class Schedule(BaseNode):
         return f"Schedule(u_name='{self.u_name}')"
 
     def populate_data_elements(self):
-
+        """Populate data elements for schedule object."""
         # Get the type of schedule
         ann_sch_type = self.get_inp(BDL_ScheduleKeywords.TYPE)
 
+        self.type = self.schedule_type_map.get(ann_sch_type)
+        self.sequence_type = ScheduleSequenceOptions.HOURLY
+
         # There are no hourly values for temperature and ratio reset schedules so ignore those types
         if ann_sch_type in [
-            *self.supported_hourly_schedules,
+            *self.schedule_type_map.keys(),
             BDL_ScheduleTypes.RESET_TEMP,
         ]:
             proj_calendar = self.annual_calendar
@@ -193,7 +199,7 @@ class Schedule(BaseNode):
             # result is an 8760 list with the hourly schedule value for the whole year.
             wk_sch_index = 0
 
-            if ann_sch_type in self.supported_hourly_schedules:
+            if ann_sch_type in self.schedule_type_map:
                 hourly_values = []
                 for day_index, day_type in enumerate(proj_calendar.values()):
                     # Check if the index is a change point. If so, continue to the next weekly schedule index
