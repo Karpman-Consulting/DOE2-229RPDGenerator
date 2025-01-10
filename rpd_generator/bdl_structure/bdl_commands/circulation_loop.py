@@ -397,8 +397,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[1] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.HEATING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[1] = self.get_inp(
+                BDL_CirculationLoopKeywords.HEATING_SCHEDULE
+            )
+            if self.operation_schedule[1] and self.is_operation_schedule_continuous(
+                self.operation_schedule[1]
+            ):
                 self.operation[1] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[1] = FluidLoopOperationOptions.SCHEDULED
@@ -458,8 +462,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -519,8 +527,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -580,8 +592,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -634,8 +650,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[1] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.HEATING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[1] = self.get_inp(
+                BDL_CirculationLoopKeywords.HEATING_SCHEDULE
+            )
+            if self.operation_schedule[1] and self.is_operation_schedule_continuous(
+                self.operation_schedule[1]
+            ):
                 self.operation[1] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[1] = FluidLoopOperationOptions.SCHEDULED
