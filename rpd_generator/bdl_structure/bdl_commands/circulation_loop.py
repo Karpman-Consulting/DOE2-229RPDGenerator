@@ -548,10 +548,8 @@ class CirculationLoop(BaseNode):
             self.get_inp(BDL_CirculationLoopKeywords.COOL_SETPT_CTRL)
         )
         if self.temperature_reset_type[0] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
-            """Jackson Q: Should this be the COOL_RESET_SCH? or do we use the same
-            schedule for heating and cooling because it's one unit?"""
             oa_reset_schedule = self.get_obj(
-                self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
+                self.get_inp(BDL_CirculationLoopKeywords.COOL_RESET_SCH)
             )
             if oa_reset_schedule:
                 self.outdoor_high_for_loop_supply_reset_temperature[0] = (
