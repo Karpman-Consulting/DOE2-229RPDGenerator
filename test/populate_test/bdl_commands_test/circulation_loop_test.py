@@ -109,7 +109,8 @@ class TestCHWLoop(unittest.TestCase):
             BDL_ScheduleKeywords.DAY: "31",
         }
         self.fan_schedule_day_schedule.keyword_value_pairs = {
-            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF
+            BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
+            BDL_DayScheduleKeywords.VALUES: ["0"] * 24,
         }
         self.fan_schedule_week_schedule.keyword_value_pairs = {
             BDL_WeekScheduleKeywords.TYPE: BDL_ScheduleTypes.ON_OFF,
@@ -143,9 +144,6 @@ class TestCHWLoop(unittest.TestCase):
         self.loop_operation_day_schedule.keyword_value_pairs[
             BDL_DayScheduleKeywords.VALUES
         ] = ["1"] * 24
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.temp_reset_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -268,9 +266,6 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 300,
             "Pump - Power (kW)": 15,
         }
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -316,9 +311,6 @@ class TestCHWLoop(unittest.TestCase):
             "Pump - Flow (gal/min)": 300,
             "Pump - Power (kW)": 15,
         }
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
             BDL_SystemKeywords.CHW_LOOP: "Circulation Loop 2",
@@ -356,7 +348,6 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-        self.circulation_loop.insert_to_rpd(self.rmd)
         self.circulation_loop_2.insert_to_rpd(self.rmd)
         expected_data_structure = {
             "id": "Circulation Loop 1",
@@ -409,15 +400,12 @@ class TestCHWLoop(unittest.TestCase):
             - Continuous LOOP-OPERATION-SCHEDULE
         """
         mock_get_output_data.return_value = {
-            "Pump - Flow (gal/min)": 30,
-            "Pump - Power (kW)": 150,
+            "Pump - Flow (gal/min)": 300,
+            "Pump - Power (kW)": 15,
         }
         self.loop_operation_day_schedule.keyword_value_pairs[
             BDL_DayScheduleKeywords.VALUES
         ] = ["1"] * 24
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -449,7 +437,7 @@ class TestCHWLoop(unittest.TestCase):
                 "operation": "CONTINUOUS",
             },
             "child_loops": [],
-            "pump_power_per_flow_rate": 5000.0,
+            "pump_power_per_flow_rate": 50.0,
         }
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
@@ -464,12 +452,9 @@ class TestCHWLoop(unittest.TestCase):
             - DEMAND LOOP-OPERATION
         """
         mock_get_output_data.return_value = {
-            "Pump - Flow (gal/min)": 30,
-            "Pump - Power (kW)": 150,
+            "Pump - Flow (gal/min)": 300,
+            "Pump - Power (kW)": 15,
         }
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -499,7 +484,7 @@ class TestCHWLoop(unittest.TestCase):
                 "operation": "INTERMITTENT",
             },
             "child_loops": [],
-            "pump_power_per_flow_rate": 5000.0,
+            "pump_power_per_flow_rate": 50.0,
         }
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
@@ -521,9 +506,6 @@ class TestCHWLoop(unittest.TestCase):
         self.loop_operation_day_schedule.keyword_value_pairs[
             BDL_DayScheduleKeywords.VALUES
         ] = ["1"] * 24
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.temp_reset_day_schedule.keyword_value_pairs = {
             BDL_DayScheduleKeywords.TYPE: BDL_ScheduleTypes.RESET_TEMP,
             BDL_DayScheduleKeywords.OUTSIDE_HI: "100",
@@ -591,15 +573,12 @@ class TestCHWLoop(unittest.TestCase):
             - Continuous LOOP-OPERATION-SCHEDULE
         """
         mock_get_output_data.return_value = {
-            "Pump - Flow (gal/min)": 30,
-            "Pump - Power (kW)": 150,
+            "Pump - Flow (gal/min)": 300,
+            "Pump - Power (kW)": 15,
         }
         self.loop_operation_day_schedule.keyword_value_pairs[
             BDL_DayScheduleKeywords.VALUES
         ] = ["1"] * 24
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.SIZING_OPTION: BDL_CirculationLoopSizingOptions.PRIMARY,
@@ -644,7 +623,7 @@ class TestCHWLoop(unittest.TestCase):
                 "operation": "CONTINUOUS",
             },
             "child_loops": [],
-            "pump_power_per_flow_rate": 5000.0,
+            "pump_power_per_flow_rate": 50.0,
         }
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
@@ -654,13 +633,7 @@ class TestCHWLoop(unittest.TestCase):
         Tests that circulation_loop output contains expected values, given valid inputs for loop with:
             - TYPE DHW
         """
-        mock_get_output_data.return_value = {
-            "Pump - Flow (gal/min)": 30,
-            "Pump - Power (kW)": 150,
-        }
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
+        mock_get_output_data.return_value = {}
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
@@ -675,8 +648,72 @@ class TestCHWLoop(unittest.TestCase):
             "design_supply_temperature": 160.0,
             "design_supply_temperature_difference": 30.0,
             "is_ground_temperature_used_for_entering_water": False,
-            "tanks": {},
-            "service_water_piping": {},
+            "tanks": [],
+            "service_water_piping": [
+                {
+                    "id": "Circulation Loop 1 ServiceWaterPiping",
+                    "is_recirculation_loop": False,
+                    "are_thermal_losses_modeled": False,
+                    "child": [],
+                    "service_water_heating_design_and_control": {},
+                }
+            ],
+        }
+        self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
+
+    @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
+    def test_populate_data_with_secndary_swh_loop(self, mock_get_output_data):
+        """
+        Tests that circulation_loop output contains expected values, given valid inputs for loop with:
+            - TYPE DHW
+        """
+        mock_get_output_data.return_value = {}
+
+        self.circulation_loop.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
+            BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "160",
+            BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "30",
+            BDL_CirculationLoopKeywords.DHW_INLET_T: "68",
+        }
+
+        circulation_loop_2 = CirculationLoop("Circulation Loop 2", self.rmd)
+        circulation_loop_2.keyword_value_pairs = {
+            BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.DHW,
+            BDL_CirculationLoopKeywords.SUBTYPE: BDL_CirculationLoopSubtypes.SECONDARY,
+            BDL_CirculationLoopKeywords.PRIMARY_LOOP: "Circulation Loop 1",
+            BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "160",
+            BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "30",
+            BDL_CirculationLoopKeywords.DHW_INLET_T: "68",
+            BDL_CirculationLoopKeywords.SUPPLY_UA: "10",
+        }
+
+        self.rmd.populate_rmd_data(testing=True)
+        circulation_loop_2.insert_to_rpd(self.rmd)
+        expected_data_structure = {
+            "id": "Circulation Loop 1",
+            "design_supply_temperature": 160.0,
+            "design_supply_temperature_difference": 30.0,
+            "is_ground_temperature_used_for_entering_water": False,
+            "tanks": [],
+            "service_water_piping": [
+                {
+                    "id": "Circulation Loop 1 ServiceWaterPiping",
+                    "is_recirculation_loop": False,
+                    "are_thermal_losses_modeled": False,
+                    "service_water_heating_design_and_control": {},
+                    "child": [
+                        {
+                            "id": "Circulation Loop 2",
+                            "is_recirculation_loop": False,
+                            "are_thermal_losses_modeled": True,
+                            "service_water_heating_design_and_control": {},
+                            "child": [],
+                        }
+                    ],
+                }
+            ],
         }
         self.assertEqual(expected_data_structure, self.circulation_loop.data_structure)
 
@@ -691,9 +728,6 @@ class TestCHWLoop(unittest.TestCase):
             - Loop 2 VALVE_TYPE_2ND TWO-WAY
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
         }
@@ -723,9 +757,6 @@ class TestCHWLoop(unittest.TestCase):
             - Chiller CHW-FLOW-CTRL VARIABLE-FLOW
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.chiller.keyword_value_pairs = {
             BDL_ChillerKeywords.CHW_LOOP: "Circulation Loop 1",
             BDL_ChillerKeywords.CHW_FLOW_CTRL: BDL_FlowControlOptions.VARIABLE_FLOW,
@@ -750,9 +781,6 @@ class TestCHWLoop(unittest.TestCase):
             - System PHW-VALVE-TYPE TWO-WAY
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule",
             BDL_SystemKeywords.PHW_LOOP: "Circulation Loop 1",
@@ -778,9 +806,6 @@ class TestCHWLoop(unittest.TestCase):
             - Zone HW-VALVE-TYPE TWO-WAY
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.zone.keyword_value_pairs = {
             BDL_ZoneKeywords.HW_LOOP: "Circulation Loop 1",
             BDL_ZoneKeywords.HW_VALVE_TYPE: BDL_SystemHeatingValveTypes.TWO_WAY,
@@ -804,9 +829,6 @@ class TestCHWLoop(unittest.TestCase):
             - TYPE HW
             - Boiler HW-FLOW-CTRL VARIABLE-FLOW
         """
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.boiler = Boiler("Boiler 1", self.rmd)
         self.boiler.keyword_value_pairs = {
             BDL_BoilerKeywords.HW_LOOP: "Circulation Loop 1",
@@ -835,9 +857,6 @@ class TestCHWLoop(unittest.TestCase):
             - HP SYSTEM CW-VALVE YES
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.zone.keyword_value_pairs = {
             BDL_ZoneKeywords.CW_LOOP: "Circulation Loop 1",
             BDL_ZoneKeywords.CW_VALVE: BDL_ZoneCWValveOptions.YES,
@@ -861,9 +880,6 @@ class TestCHWLoop(unittest.TestCase):
             - TYPE CW
             - Heat Rejection CW-FLOW-CTRL VARIABLE-FLOW
         """
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.heat_rejection = HeatRejection("Heat Rejection 1", self.rmd)
         self.heat_rejection.keyword_value_pairs = {
             BDL_HeatRejectionKeywords.CW_LOOP: "Circulation Loop 1",
@@ -889,9 +905,6 @@ class TestCHWLoop(unittest.TestCase):
             - TYPE CW
             - GLHX HX-FLOW-CTRL VARIABLE-FLOW
         """
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.ground_loop_hx = GroundLoopHX("Ground Loop HX 1", self.rmd)
         self.ground_loop_hx.keyword_value_pairs = {
             BDL_GroundLoopHXKeywords.CIRCULATION_LOOP: "Circulation Loop 1",
@@ -919,9 +932,6 @@ class TestCHWLoop(unittest.TestCase):
             - System CHW-VALVE-TYPE TWO-WAY
         """
         mock_get_output_data.return_value = {}
-        self.fan_schedule_day_schedule.keyword_value_pairs[
-            BDL_DayScheduleKeywords.VALUES
-        ] = ["0"] * 24
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.CHW_LOOP: "Circulation Loop 1",
             BDL_SystemKeywords.CHW_VALVE_TYPE: BDL_SystemHeatingValveTypes.TWO_WAY,
