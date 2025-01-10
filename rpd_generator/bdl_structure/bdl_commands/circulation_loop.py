@@ -6,6 +6,7 @@ FluidLoopOptions = SchemaEnums.schema_enums["FluidLoopOptions"]
 FluidLoopOperationOptions = SchemaEnums.schema_enums["FluidLoopOperationOptions"]
 FluidLoopFlowControlOptions = SchemaEnums.schema_enums["FluidLoopFlowControlOptions"]
 TemperatureResetOptions = SchemaEnums.schema_enums["TemperatureResetOptions"]
+ComponentLocationOptions = SchemaEnums.schema_enums["ComponentLocationOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_CirculationLoopKeywords = BDLEnums.bdl_enums["CirculationLoopKeywords"]
 BDL_CirculationLoopTypes = BDLEnums.bdl_enums["CirculationLoopTypes"]
@@ -16,6 +17,9 @@ BDL_CirculationLoopOperationOptions = BDLEnums.bdl_enums[
 ]
 BDL_CirculationLoopTemperatureResetOptions = BDLEnums.bdl_enums[
     "CirculationLoopTemperatureResetOptions"
+]
+BDL_CirculationLoopLocationOptions = BDLEnums.bdl_enums[
+    "CirculationLoopLocationOptions"
 ]
 BDL_SecondaryLoopValveTypes = BDLEnums.bdl_enums["CirculationLoopSecondaryValveTypes"]
 BDL_SystemCoolingValveTypes = BDLEnums.bdl_enums["SystemCoolingValveTypes"]
@@ -44,14 +48,12 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopTypes.PIPE2: FluidLoopOptions.HEATING_AND_COOLING,
         BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.CONDENSER,
     }
-
     sizing_option_map = {
         BDL_CirculationLoopSizingOptions.COINCIDENT: True,
         BDL_CirculationLoopSizingOptions.NON_COINCIDENT: False,
         BDL_CirculationLoopSizingOptions.PRIMARY: False,
         BDL_CirculationLoopSizingOptions.SECONDARY: True,
     }
-
     loop_operation_map = {
         BDL_CirculationLoopOperationOptions.STANDBY: None,  # This is a special case
         BDL_CirculationLoopOperationOptions.DEMAND: FluidLoopOperationOptions.INTERMITTENT,
@@ -59,13 +61,18 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopOperationOptions.SCHEDULED: None,  # This is a special case
         BDL_CirculationLoopOperationOptions.SUBHOUR_DEMAND: FluidLoopOperationOptions.INTERMITTENT,
     }
-
     temp_reset_map = {
         BDL_CirculationLoopTemperatureResetOptions.FIXED: TemperatureResetOptions.NO_RESET,
         BDL_CirculationLoopTemperatureResetOptions.OA_RESET: TemperatureResetOptions.OUTSIDE_AIR_RESET,
         BDL_CirculationLoopTemperatureResetOptions.SCHEDULED: TemperatureResetOptions.OTHER,
         BDL_CirculationLoopTemperatureResetOptions.LOAD_RESET: TemperatureResetOptions.LOAD_RESET,
         BDL_CirculationLoopTemperatureResetOptions.WETBULB_RESET: TemperatureResetOptions.OTHER,
+    }
+    piping_location_map = {
+        BDL_CirculationLoopLocationOptions.OUTDOORS: ComponentLocationOptions.OUTSIDE,
+        BDL_CirculationLoopLocationOptions.ZONE: ComponentLocationOptions.IN_ZONE,
+        BDL_CirculationLoopLocationOptions.TUNNEL: ComponentLocationOptions.CRAWL_SPACE,
+        BDL_CirculationLoopLocationOptions.UNDERGROUND: ComponentLocationOptions.UNDERGROUND,
     }
 
     def __init__(self, u_name, rmd):
@@ -93,7 +100,7 @@ class CirculationLoop(BaseNode):
         self.tanks = []
 
         # ServiceWaterPiping data elements with children
-        # self.child = None   this is commented out because in eQUEST every secondary loop is a child of a primary loop
+        self.child = []
         self.service_water_heating_design_and_control = {}
 
         # FluidLoopDesignAndControl data elements with no children [cooling, heating]
@@ -161,12 +168,12 @@ class CirculationLoop(BaseNode):
             elif self.type == FluidLoopOptions.HEATING_AND_COOLING:
                 self.populate_heat_cool_fluid_loop_design_and_control()
 
-        if self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
+        elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
             self.populate_service_water_heating_distribution_system()
+            self.populate_service_water_piping()
 
-        if self.circulation_loop_type == "ServiceWaterPiping":
-            # None of the data elements for ServiceWaterPiping can be populated from model inputs or outputs
-            pass
+        elif self.circulation_loop_type == "ServiceWaterPiping":
+            self.populate_service_water_piping()
 
         # Populate pump_power_per_flow_rate
         if pump_name is not None:
@@ -218,6 +225,7 @@ class CirculationLoop(BaseNode):
 
         service_water_piping_elements = [
             "is_recirculation_loop",
+            "are_thermal_losses_modeled",
             "insulation_thickness",
             "loop_pipe_location",
             "location_zone",
@@ -228,6 +236,8 @@ class CirculationLoop(BaseNode):
         if self.circulation_loop_type == "ServiceWaterPiping":
             self.data_structure = {
                 "id": self.u_name,
+                "child": self.child,
+                "service_water_heating_design_and_control": self.service_water_heating_design_and_control,
             }
 
             for attr in service_water_piping_elements:
@@ -236,6 +246,18 @@ class CirculationLoop(BaseNode):
                     self.data_structure[attr] = value
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
+            primary_service_water_piping = {
+                "id": self.u_name + " ServiceWaterPiping",
+                "child": self.child,
+                "service_water_heating_design_and_control": self.service_water_heating_design_and_control,
+            }
+            for attr in service_water_piping_elements:
+                value = getattr(self, attr, None)
+                if value is not None:
+                    primary_service_water_piping[attr] = value
+
+            self.service_water_piping.append(primary_service_water_piping)
+
             self.data_structure = {
                 "id": self.u_name,
                 "tanks": self.tanks,
@@ -285,21 +307,19 @@ class CirculationLoop(BaseNode):
             rmd.fluid_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "SecondaryFluidLoop":
-            primary_loop = self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
-            for fluid_loop in rmd.fluid_loops:
-                if fluid_loop["id"] == primary_loop:
-                    fluid_loop["child_loops"].append(self.data_structure)
+            primary_loop = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
+            )
+            primary_loop.child_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
             rmd.service_water_heating_distribution_systems.append(self.data_structure)
 
         elif self.circulation_loop_type == "ServiceWaterPiping":
-            primary_loop = self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
-            for swh_distribution_sys in rmd.service_water_heating_distribution_systems:
-                if swh_distribution_sys["id"] == primary_loop:
-                    swh_distribution_sys["service_water_piping"].append(
-                        self.data_structure
-                    )
+            primary_loop = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
+            )
+            primary_loop.child.append(self.data_structure)
 
     def determine_circ_loop_type(self):
 
@@ -632,7 +652,17 @@ class CirculationLoop(BaseNode):
         )
 
     def populate_service_water_piping(self):
-        pass
+        self.are_thermal_losses_modeled = bool(
+            self.try_float(self.get_inp(BDL_CirculationLoopKeywords.SUPPLY_UA))
+            or self.try_float(self.get_inp(BDL_CirculationLoopKeywords.SUPPLY_LOSS_DT))
+        )
+        self.is_recirculation_loop = bool(
+            self.try_float(self.get_inp(BDL_CirculationLoopKeywords.LOOP_RECIRC_FLOW))
+        )
+        self.loop_pipe_location = self.piping_location_map.get(
+            self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOCN)
+        )
+        self.location_zone = self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOSS_ZONE)
 
     def populate_pump_data_elements(self, pump_name):
         pump = self.get_obj(pump_name)
