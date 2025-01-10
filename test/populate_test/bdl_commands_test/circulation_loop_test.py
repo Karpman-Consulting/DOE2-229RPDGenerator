@@ -675,6 +675,7 @@ class TestCHWLoop(unittest.TestCase):
             BDL_CirculationLoopKeywords.DESIGN_HEAT_T: "160",
             BDL_CirculationLoopKeywords.LOOP_DESIGN_DT: "30",
             BDL_CirculationLoopKeywords.DHW_INLET_T: "68",
+            BDL_CirculationLoopKeywords.LOOP_RECIRC_FLOW: "30",
         }
 
         circulation_loop_2 = CirculationLoop("Circulation Loop 2", self.rmd)
@@ -700,7 +701,7 @@ class TestCHWLoop(unittest.TestCase):
             "service_water_piping": [
                 {
                     "id": "Circulation Loop 1 ServiceWaterPiping",
-                    "is_recirculation_loop": False,
+                    "is_recirculation_loop": True,
                     "are_thermal_losses_modeled": False,
                     "service_water_heating_design_and_control": {},
                     "child": [
