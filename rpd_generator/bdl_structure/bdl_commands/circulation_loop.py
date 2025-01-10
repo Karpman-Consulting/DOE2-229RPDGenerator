@@ -234,6 +234,11 @@ class CirculationLoop(BaseNode):
         ]
 
         if self.circulation_loop_type == "ServiceWaterPiping":
+            for attr in design_and_control_elements:
+                value_list = getattr(self, attr, None)
+                if value_list[1] is not None:
+                    self.service_water_heating_design_and_control[attr] = value_list[1]
+
             self.data_structure = {
                 "id": self.u_name,
                 "child": self.child,
@@ -246,6 +251,11 @@ class CirculationLoop(BaseNode):
                     self.data_structure[attr] = value
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
+            for attr in design_and_control_elements:
+                value_list = getattr(self, attr, None)
+                if value_list[1] is not None:
+                    self.service_water_heating_design_and_control[attr] = value_list[1]
+
             primary_service_water_piping = {
                 "id": self.u_name + " ServiceWaterPiping",
                 "child": self.child,
@@ -637,6 +647,37 @@ class CirculationLoop(BaseNode):
         else:
             self.operation[1] = self.loop_operation_map.get(operation)
 
+    def populate_swh_piping_design_and_control(self):
+        self.service_water_heating_design_and_control["id"] = (
+            self.u_name + " Design/Control"
+        )
+        self.design_supply_temperature[1] = self.try_float(
+            self.get_inp(BDL_CirculationLoopKeywords.DESIGN_HEAT_T)
+        )
+        self.minimum_flow_fraction[1] = self.try_float(
+            self.get_inp(BDL_CirculationLoopKeywords.LOOP_MIN_FLOW)
+        )
+        self.temperature_reset_type[1] = self.temp_reset_map.get(
+            self.get_inp(BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL)
+        )
+        if self.temperature_reset_type[1] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
+            oa_reset_schedule = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
+            )
+            if oa_reset_schedule:
+                self.outdoor_high_for_loop_supply_reset_temperature[1] = (
+                    oa_reset_schedule.outdoor_high_for_loop_supply_reset_temperature
+                )
+                self.outdoor_low_for_loop_supply_reset_temperature[1] = (
+                    oa_reset_schedule.outdoor_low_for_loop_supply_reset_temperature
+                )
+                self.loop_supply_temperature_at_outdoor_high[1] = (
+                    oa_reset_schedule.loop_supply_temperature_at_outdoor_high
+                )
+                self.loop_supply_temperature_at_outdoor_low[1] = (
+                    oa_reset_schedule.loop_supply_temperature_at_outdoor_low
+                )
+
     def populate_service_water_heating_distribution_system(self):
         self.swh_design_supply_temperature = self.try_float(
             self.get_inp(BDL_CirculationLoopKeywords.DESIGN_HEAT_T)
@@ -661,6 +702,7 @@ class CirculationLoop(BaseNode):
             self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOCN)
         )
         self.location_zone = self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOSS_ZONE)
+        self.populate_swh_piping_design_and_control()
 
     def populate_pump_data_elements(self, pump_name):
         pump = self.get_obj(pump_name)
