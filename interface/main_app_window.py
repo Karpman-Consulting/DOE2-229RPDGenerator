@@ -83,7 +83,7 @@ class MainApplicationWindow(ctk.CTk):
         self.create_button_bar()
         self.create_nav_bar()
 
-        if not self.app_data.installation_path.get():
+        if self.app_data.installation_path.get() == "None":
             # Initialize the configuration window to select and verify the eQUEST installation path
             self.show_view("Configuration")
 

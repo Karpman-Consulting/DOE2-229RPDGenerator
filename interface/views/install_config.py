@@ -11,7 +11,7 @@ class InstallConfigView(BaseView):
     def __repr__(self):
         return "InstallConfigView"
 
-    def show_view(self):
+    def open_view(self):
         directions_label = ctk.CTkLabel(
             self,
             text="Directions: ",
