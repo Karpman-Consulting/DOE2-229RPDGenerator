@@ -35,6 +35,7 @@ class ExteriorWall(ChildNode, ParentNode):
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.ext_wall_names.append(u_name)
         self.rmd.bdl_obj_instances[u_name] = self
 
         self.exterior_wall_data_structure = {}
