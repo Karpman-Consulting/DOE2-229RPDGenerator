@@ -12,3 +12,4 @@ class BuildingsView(BaseView):
 
     def open_view(self):
         self.toggle_active_button("Buildings")
+        self.grid_propagate(False)

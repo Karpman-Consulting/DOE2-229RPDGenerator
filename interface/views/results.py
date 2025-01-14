@@ -12,3 +12,4 @@ class ResultsView(BaseView):
 
     def open_view(self):
         self.toggle_active_button("Results")
+        self.grid_propagate(False)
