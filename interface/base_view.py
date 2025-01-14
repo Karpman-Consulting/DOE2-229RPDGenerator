@@ -6,7 +6,6 @@ class BaseView(ctk.CTkFrame):
         super().__init__(main)
         self.main = main
 
-        self.grid_propagate(False)
         self.configure(height=600)
 
     def toggle_active_button(self, active_button_name):
