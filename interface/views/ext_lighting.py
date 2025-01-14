@@ -12,3 +12,4 @@ class ExteriorLightingView(BaseView):
 
     def open_view(self):
         self.toggle_active_button("Ext. Lighting")
+        self.grid_propagate(False)

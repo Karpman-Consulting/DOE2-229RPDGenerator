@@ -12,3 +12,4 @@ class SurfacesView(BaseView):
 
     def open_view(self):
         self.toggle_active_button("Surfaces")
+        self.grid_propagate(False)

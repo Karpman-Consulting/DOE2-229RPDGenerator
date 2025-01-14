@@ -70,6 +70,7 @@ class ProjectInfoView(BaseView):
         self.update_warnings_errors()
 
         self.toggle_active_button("Project Info")
+        self.grid_propagate(False)
 
         # Place widgets
         # Row 0
