@@ -117,10 +117,13 @@ class Chiller(BaseNode):
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.efficiency_metric_values.append(1 / self.try_float(
-                    self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
+                self.efficiency_metric_values.append(
+                    1
+                    / self.try_float(self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
                 )
-                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
+                self.efficiency_metric_types.append(
+                    ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY
+                )
             else:
                 self.notes = ""
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
@@ -129,10 +132,13 @@ class Chiller(BaseNode):
         ]:
             self.energy_source_type = EnergySourceOptions.NATURAL_GAS
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.efficiency_metric_values.append(1 / self.try_float(
-                    self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
-                ))
-                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
+                self.efficiency_metric_values.append(
+                    1
+                    / self.try_float(self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO))
+                )
+                self.efficiency_metric_types.append(
+                    ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY
+                )
         elif self.get_inp(BDL_ChillerKeywords.TYPE) in [
             BDL_ChillerTypes.ABSOR_1,
             BDL_ChillerTypes.ABSOR_2,
@@ -142,10 +148,13 @@ class Chiller(BaseNode):
             )
             hot_water_loop = self.get_obj(hot_water_loop_name)
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-                self.efficiency_metric_values.append(1 / self.try_float(
-                    self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
-                ))
-                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY)
+                self.efficiency_metric_values.append(
+                    1
+                    / self.try_float(self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO))
+                )
+                self.efficiency_metric_types.append(
+                    ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY
+                )
             if hot_water_loop:
                 self.energy_source_type = self.get_loop_energy_source(hot_water_loop)
 
@@ -209,12 +218,20 @@ class Chiller(BaseNode):
         iplv_value = self.calculate_iplv(absorp_or_engine)
 
         if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
-            if iplv_value and iplv_value != "Keyword DATA was used for coefficient determination":
+            if (
+                iplv_value
+                and iplv_value != "Keyword DATA was used for coefficient determination"
+            ):
                 self.efficiency_metric_values.append(iplv_value)
-                self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE)
+                self.efficiency_metric_types.append(
+                    ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
+                )
             else:
                 self.notes = "Performance curve INPUT-TYPE of DATA is not currently supported for determining and populating chiller IPLV."
-        elif iplv_value and iplv_value != "Keyword DATA was used for coefficient determination":
+        elif (
+            iplv_value
+            and iplv_value != "Keyword DATA was used for coefficient determination"
+        ):
             self.efficiency_metric_values.append(iplv_value)
             self.efficiency_metric_types.append(ChillerEfficiencyMetricOptions.OTHER)
         else:
@@ -386,7 +403,9 @@ class Chiller(BaseNode):
         evap_leaving_temp = self.rated_leaving_evaporator_temperature
 
         # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
-        iplv_rating_load_conditions = {key: {"results": 0.0} for key in [1, 0.75, 0.5, 0.25]}
+        iplv_rating_load_conditions = {
+            key: {"results": 0.0} for key in [1, 0.75, 0.5, 0.25]
+        }
 
         condenser_type = self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
         condenser_type_iplv_rating_condenser_temp_conditions_map = {
@@ -425,7 +444,9 @@ class Chiller(BaseNode):
             input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
             if input_type == BDL_CurveFitInputTypes.DATA:
                 return "Keyword DATA was used for coefficient determination"
-            coeffs[f"{key}_coeffs"] = list(map(float, obj.get_inp(BDL_CurveFitKeywords.COEF)))
+            coeffs[f"{key}_coeffs"] = list(
+                map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
+            )
             min_outputs[f"{key}_min_otpt"] = float(
                 obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
             )
@@ -491,10 +512,12 @@ class Chiller(BaseNode):
                     eff_fplr_max_otpt,
                 )
             # This efficiency may not be defined for self if it was not entered at rated conditions in the model. Hence this is here.
-            full_load_efficiency = 1/self.try_float(
-                self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO)
-            ) if not absorp_or_engine else self.try_float(
-                1/self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
+            full_load_efficiency = (
+                1 / self.try_float(self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
+                if not absorp_or_engine
+                else self.try_float(
+                    1 / self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
+                )
             )
 
             eff_result_cop = (
