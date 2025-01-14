@@ -3685,20 +3685,15 @@
                     "units": "C",
                     "notes": "The temperature leaving the evaporator portion of the chiller at design conditions."
                 },
-                "full_load_efficiency": {
-                    "description": "Full Load Efficiency expressed as a coefficient of performance (COP)",
-                    "type": "number",
-                    "units": "W/W"
-                },
-                "part_load_efficiency": {
-                    "description": "Efficiency value based on the selected part_load_efficiency_metric",
+                "efficiency_metric_values": {
+                    "description": "Efficiency value based on the selected efficiency_metric_types",
                     "type": "number",
                     "minimum": 0.0,
                     "units": "W/W"
                 },
-                "part_load_efficiency_metric": {
-                    "description": "The type of part load efficiency metric used",
-                    "$ref": "ASHRAE229.schema.json#/definitions/ChillerPartLoadEfficiencyMetricOptions"
+                "efficiency_metric_types": {
+                    "description": "The type of efficiency metric used",
+                    "$ref": "ASHRAE229.schema.json#/definitions/ChillerEfficiencyMetricOptions"
                 },
                 "capacity_validation_points": {
                     "description": "Capacity validation points",
@@ -3743,14 +3738,16 @@
             ],
             "additionalProperties": false
         },
-        "ChillerPartLoadEfficiencyMetricOptions": {
+        "ChillerEfficiencyMetricOptions": {
             "type": "string",
             "enum": [
+                "FULL_LOAD_EFFICIENCY",
                 "INTEGRATED_PART_LOAD_VALUE",
                 "NONSTANDARD_PART_LOAD_VALUE",
                 "OTHER"
             ],
             "descriptions": [
+                "Full load efficiency expressed as a coefficient of performance (COP)",
                 "Integrated part load value efficiency expressed as a coefficient of performance (COP)",
                 "Nonstandard part load value efficiency expressed as a coefficient of performance (COP)",
                 "Other part load efficiency metric"

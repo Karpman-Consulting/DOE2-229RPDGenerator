@@ -7,7 +7,7 @@ from rpd_generator.utilities import curve_funcs
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 ChillerCompressorOptions = SchemaEnums.schema_enums["ChillerCompressorOptions"]
 ChillerEfficiencyMetricOptions = SchemaEnums.schema_enums[
-    "ChillerPartLoadEfficiencyMetricOptions"
+    "ChillerEfficiencyMetricOptions"
 ]
 
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
@@ -113,7 +113,8 @@ class Chiller(BaseNode):
         self.compressor_type = self.compressor_type_map.get(
             self.get_inp(BDL_ChillerKeywords.TYPE)
         )
-        # TODO Decide whether to populate full_load_efficiency no matter the rating conditions entered. Also need to update schema ENUMs.
+        # TODO Decide whether to populate full_load_efficiency no matter the rating conditions entered. Maybe populate now that you have the
+        # TODO continued function to adjust from entered to rated conditions
         if not absorp_or_engine:
             self.energy_source_type = EnergySourceOptions.ELECTRICITY
             if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
@@ -216,7 +217,7 @@ class Chiller(BaseNode):
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
         iplv_value = self.calculate_iplv(absorp_or_engine)
-
+        #TODO modify this because now the entered conditions are converted to rated when calculating IPLV so this can always be populated as IPLV
         if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
             if (
                 iplv_value
@@ -398,9 +399,9 @@ class Chiller(BaseNode):
         return chw_pump_interlocked, cw_pump_interlocked
 
     def calculate_iplv(self, absorp_or_engine):
-        """Calculates IPLV based upon the modeled performance curves and the rated full load efficiency."""
-        # Evaporator leaving temperature (a.k.a chilled water supply temperature). Should always 44F per AHRI 550 and 560. This is checked elsewhere.
-        evap_leaving_temp = self.rated_leaving_evaporator_temperature
+        """Calculates IPLV based upon the modeled performance curves and the rated conditions and entered efficiency."""
+        #TODO incorporate the E+ logic where it accounts for minimum load ratio.
+        #TODO continued Do more testing to ensure it producing the correct results
 
         # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
         iplv_rating_load_conditions = {
@@ -414,6 +415,16 @@ class Chiller(BaseNode):
             BDL_CondenserTypes.REMOTE_AIR_COOLED: [125, 107.5, 90, 72.5],
             BDL_CondenserTypes.REMOTE_EVAP_COOLED: [105, 95, 85, 75],
         }
+
+        # Evaporator leaving temperature (a.k.a chilled water supply temperature). 44F AHRI 550 and 560 rated conditions.
+        evap_leaving_temp_entered = self.rated_leaving_evaporator_temperature
+        evap_leaving_temp_rated = 44
+
+        cond_entering_temp_entered = self.rated_entering_condenser_temperature
+        cond_entering_temp_rated = (
+            condenser_type_iplv_rating_condenser_temp_conditions_map[condenser_type][0]
+        )
+
         cap_ft = self.get_obj(self.get_inp(BDL_ChillerKeywords.CAPACITY_FT))
 
         if not absorp_or_engine:
@@ -473,58 +484,64 @@ class Chiller(BaseNode):
             BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
         }
 
+        full_load_efficiency_entered = (
+            1 / self.try_float(self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
+            if not absorp_or_engine
+            else self.try_float(1 / self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO))
+        )
+        capacity_entered = self.rated_capacity
+
+        # Returns a list with the rated capacity as index 1 and rated efficiency as index 0. If the capacity and efficiency were
+        # defined at rated conditions the function should return the same rated as entered values.
+        capacity_and_full_load_efficiency_at_rated_conditions = (
+            curve_funcs.convert_cop_and_capacity_to_ahri_conditions(
+                coefficients,
+                evap_leaving_temp_entered,
+                cond_entering_temp_entered,
+                evap_leaving_temp_rated,
+                cond_entering_temp_rated,
+                full_load_efficiency_entered,
+                capacity_entered,
+            )
+        )
+        full_load_efficiency_rated = capacity_and_full_load_efficiency_at_rated_conditions[0]
+
         for index, key in enumerate(iplv_rating_load_conditions):
             cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[
                 index
             ]
-            cap_ft_result = curve_funcs.calculate_bi_quadratic(
-                cap_ft_coeffs,
-                evap_leaving_temp,
+            # Returns
+            # "cap_ft_result": cap_ft_result,
+            # "eff_ft_result": eff_ft_result,
+            # "part_load_ratio": part_load_ratio,
+            # "eff_fplr_result": eff_fplr_result
+            results = curve_funcs.calculate_results_of_performance_curves(
+                evap_leaving_temp_rated,
                 cond_entering_temp,
+                cap_ft_coeffs,
+                eff_ft_coeffs,
                 cap_ft_min_otpt,
                 cap_ft_max_otpt,
-            )
-            eff_ft_result = curve_funcs.calculate_bi_quadratic(
-                eff_ft_coeffs,
-                evap_leaving_temp,
-                cond_entering_temp,
                 eff_ft_min_otpt,
                 eff_ft_max_otpt,
-            )
-            part_load_ratio = (float(self.rated_capacity) * key) / (
-                float(self.rated_capacity) * cap_ft_result
+                eff_fplr_curve_type,
+                eff_fplr_coeffs,
+                eff_fplr_min_otpt,
+                eff_fplr_max_otpt,
+                curve_function_map,
+                curve_funcs,
             )
 
-            if eff_fplr_curve_type in curve_function_map:
-                eff_fplr_result = curve_function_map[eff_fplr_curve_type](
-                    eff_fplr_coeffs,
-                    part_load_ratio,
-                    eff_fplr_min_otpt,
-                    eff_fplr_max_otpt,
-                )
-            else:
-                delta_temp = cond_entering_temp - evap_leaving_temp
-                eff_fplr_result = curve_funcs.calculate_bi_quadratic(
-                    eff_fplr_coeffs,
-                    part_load_ratio,
-                    delta_temp,
-                    eff_fplr_min_otpt,
-                    eff_fplr_max_otpt,
-                )
-            # This efficiency may not be defined for self if it was not entered at rated conditions in the model. Hence this is here.
-            full_load_efficiency = (
-                1 / self.try_float(self.get_inp(BDL_ChillerKeywords.ELEC_INPUT_RATIO))
-                if not absorp_or_engine
-                else self.try_float(
-                    1 / self.get_inp(BDL_ChillerKeywords.HEAT_INPUT_RATIO)
-                )
-            )
+            eff_ft_result = results["eff_ft_result"]
+            eff_fplr_result = results["eff_fplr_result"]
+            part_load_ratio = results["part_load_ratio"]
+
 
             eff_result_cop = (
                 part_load_ratio
                 / 1000
                 / (
-                    (3.412 / full_load_efficiency)
+                    (3.412 / full_load_efficiency_rated)
                     * eff_ft_result
                     * eff_fplr_result
                     / 3412

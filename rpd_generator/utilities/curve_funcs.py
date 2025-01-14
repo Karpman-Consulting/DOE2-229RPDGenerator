@@ -1,9 +1,11 @@
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
-rom rpd_generator.utilities import curve_funcs
+from rpd_generator.utilities import curve_funcs
 
 BDL_CurveFitKeywords = BDLEnums.bdl_enums["CurveFitKeywords"]
 BDL_CurveFitInputTypes = BDLEnums.bdl_enums["CurveFitInputTypes"]
 BDL_CurveFitTypes = BDLEnums.bdl_enums["CurveFitTypes"]
+
+
 def calculate_bi_quadratic(
     curve_coeffs: list, x: float, y: float, min_val: float, max_val: float
 ) -> float:
@@ -116,34 +118,72 @@ def convert_cop_and_capacity_to_ahri_conditions(
     }
 
     data_entered = {
-        'evap_leaving_temp': evap_leaving_temp_entered,
-        'condenser_entering_temp': condenser_entering_temp_entered,
+        "evap_leaving_temp": evap_leaving_temp_entered,
+        "condenser_entering_temp": condenser_entering_temp_entered,
     }
 
     data_rated = {
-        'evap_leaving_temp': evap_leaving_temp_rated,
-        'condenser_entering_temp': condenser_entering_temp_rated,
+        "evap_leaving_temp": evap_leaving_temp_rated,
+        "condenser_entering_temp": condenser_entering_temp_rated,
     }
 
     # Calculate and retrieve the results
     all_results = execute_calculations(
-        data_entered, data_rated, cap_ft_coeffs, eff_ft_coeffs, cap_ft_min_otpt, cap_ft_max_otpt,
-        eff_ft_min_otpt, eff_ft_max_otpt, eff_fplr_curve_type, eff_fplr_coeffs, eff_fplr_min_otpt,
-        eff_fplr_max_otpt, curve_function_map, curve_funcs)
+        data_entered,
+        data_rated,
+        cap_ft_coeffs,
+        eff_ft_coeffs,
+        cap_ft_min_otpt,
+        cap_ft_max_otpt,
+        eff_ft_min_otpt,
+        eff_ft_max_otpt,
+        eff_fplr_curve_type,
+        eff_fplr_coeffs,
+        eff_fplr_min_otpt,
+        eff_fplr_max_otpt,
+        curve_function_map,
+        curve_funcs,
+    )
 
-    #TODO NEED TO TEST!!! Also, give the functions being called better names.
-    #To convert from entered capacity conditions to rated. Rated capacity =  Entered capacity/ (CAPftentered/CAPftrated)
-    #MultiplierEntered = (EIRftentered * EIRfPLRentered)/PLRentered and Multiplierrated = (EIRftrated * EIRfPLRrated)/PLRrated. Rated COP =  COPentered * (Multiplierentered/Multiplierrated)
+    # TODO NEED TO TEST!!! Also, give the functions being called better names.
+    # To convert from entered capacity conditions to rated. Rated capacity =  Entered capacity/ (CAPftentered/CAPftrated)
+    # MultiplierEntered = (EIRftentered * EIRfPLRentered)/PLRentered and Multiplierrated = (EIRftrated * EIRfPLRrated)/PLRrated. Rated COP =  COPentered * (Multiplierentered/Multiplierrated)
 
-    capacity_adjusted_to_rated = capacity_entered/(all_results["entered_results"]["cap_ft_result"]/all_results["rated_results"]["cap_ft_result"])
-    helper_multiplier_entered = (all_results["entered_results"]["eff_ft_result"] * all_results["entered_results"]["eff_fplr_result"])/all_results["entered_results"]["part_load_ratio"]
-    helper_multiplier_rated = (all_results["rated_results"]["eff_ft_result"] * all_results["rated_results"]["eff_fplr_result"])/all_results["rated_results"]["part_load_ratio"]
-    efficiency_adjusted_to_rated = cop_entered * (helper_multiplier_entered/helper_multiplier_rated)
+    capacity_adjusted_to_rated = capacity_entered / (
+        all_results["entered_results"]["cap_ft_result"]
+        / all_results["rated_results"]["cap_ft_result"]
+    )
+    helper_multiplier_entered = (
+        all_results["entered_results"]["eff_ft_result"]
+        * all_results["entered_results"]["eff_fplr_result"]
+    ) / all_results["entered_results"]["part_load_ratio"]
+    helper_multiplier_rated = (
+        all_results["rated_results"]["eff_ft_result"]
+        * all_results["rated_results"]["eff_fplr_result"]
+    ) / all_results["rated_results"]["part_load_ratio"]
+    efficiency_adjusted_to_rated = cop_entered * (
+        helper_multiplier_entered / helper_multiplier_rated
+    )
 
     return [efficiency_adjusted_to_rated, capacity_adjusted_to_rated]
-def calculate_results(evap_leaving_temp, condenser_entering_temp, cap_ft_coeffs, eff_ft_coeffs, cap_ft_min_otpt,
-                      cap_ft_max_otpt, eff_ft_min_otpt, eff_ft_max_otpt, eff_fplr_curve_type, eff_fplr_coeffs,
-                      eff_fplr_min_otpt, eff_fplr_max_otpt, curve_function_map, curve_funcs):
+
+
+def calculate_results_of_performance_curves(
+    evap_leaving_temp,
+    condenser_entering_temp,
+    cap_ft_coeffs,
+    eff_ft_coeffs,
+    cap_ft_min_otpt,
+    cap_ft_max_otpt,
+    eff_ft_min_otpt,
+    eff_ft_max_otpt,
+    eff_fplr_curve_type,
+    eff_fplr_coeffs,
+    eff_fplr_min_otpt,
+    eff_fplr_max_otpt,
+    curve_function_map,
+    curve_funcs,
+):
     cap_ft_result = curve_funcs.calculate_bi_quadratic(
         cap_ft_coeffs,
         evap_leaving_temp,
@@ -180,38 +220,62 @@ def calculate_results(evap_leaving_temp, condenser_entering_temp, cap_ft_coeffs,
         "cap_ft_result": cap_ft_result,
         "eff_ft_result": eff_ft_result,
         "part_load_ratio": part_load_ratio,
-        "eff_fplr_result": eff_fplr_result
+        "eff_fplr_result": eff_fplr_result,
     }
     return results
 
 
-def execute_calculations(data_entered, data_rated, cap_ft_coeffs, eff_ft_coeffs, cap_ft_min_otpt, cap_ft_max_otpt,
-                         eff_ft_min_otpt, eff_ft_max_otpt, eff_fplr_curve_type, eff_fplr_coeffs, eff_fplr_min_otpt,
-                         eff_fplr_max_otpt, curve_function_map, curve_funcs):
+def execute_calculations(
+    data_entered,
+    data_rated,
+    cap_ft_coeffs,
+    eff_ft_coeffs,
+    cap_ft_min_otpt,
+    cap_ft_max_otpt,
+    eff_ft_min_otpt,
+    eff_ft_max_otpt,
+    eff_fplr_curve_type,
+    eff_fplr_coeffs,
+    eff_fplr_min_otpt,
+    eff_fplr_max_otpt,
+    curve_function_map,
+    curve_funcs,
+):
     # Calculate with "entered" variables
-    entered_results = calculate_results(
-        data_entered['evap_leaving_temp'], data_entered['condenser_entering_temp'],
-        cap_ft_coeffs, eff_ft_coeffs, cap_ft_min_otpt, cap_ft_max_otpt,
-        eff_ft_min_otpt, eff_ft_max_otpt, eff_fplr_curve_type, eff_fplr_coeffs,
-        eff_fplr_min_otpt, eff_fplr_max_otpt, curve_function_map, curve_funcs
+    entered_results = calculate_results_of_performance_curves(
+        data_entered["evap_leaving_temp"],
+        data_entered["condenser_entering_temp"],
+        cap_ft_coeffs,
+        eff_ft_coeffs,
+        cap_ft_min_otpt,
+        cap_ft_max_otpt,
+        eff_ft_min_otpt,
+        eff_ft_max_otpt,
+        eff_fplr_curve_type,
+        eff_fplr_coeffs,
+        eff_fplr_min_otpt,
+        eff_fplr_max_otpt,
+        curve_function_map,
+        curve_funcs,
     )
 
     # Calculate with "rated" variables
-    rated_results = calculate_results(
-        data_rated['evap_leaving_temp'], data_rated['condenser_entering_temp'],
-        cap_ft_coeffs, eff_ft_coeffs, cap_ft_min_otpt, cap_ft_max_otpt,
-        eff_ft_min_otpt, eff_ft_max_otpt, eff_fplr_curve_type, eff_fplr_coeffs,
-        eff_fplr_min_otpt, eff_fplr_max_otpt, curve_function_map, curve_funcs
+    rated_results = calculate_results_of_performance_curves(
+        data_rated["evap_leaving_temp"],
+        data_rated["condenser_entering_temp"],
+        cap_ft_coeffs,
+        eff_ft_coeffs,
+        cap_ft_min_otpt,
+        cap_ft_max_otpt,
+        eff_ft_min_otpt,
+        eff_ft_max_otpt,
+        eff_fplr_curve_type,
+        eff_fplr_coeffs,
+        eff_fplr_min_otpt,
+        eff_fplr_max_otpt,
+        curve_function_map,
+        curve_funcs,
     )
 
     # Return a dictionary of all results
-    return {
-        "entered_results": entered_results,
-        "rated_results": rated_results
-    }
-
-
-
-
-
-
+    return {"entered_results": entered_results, "rated_results": rated_results}
