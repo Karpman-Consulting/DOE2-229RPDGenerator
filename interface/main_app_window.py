@@ -32,7 +32,19 @@ class MainApplicationWindow(ctk.CTk):
         self.grid_propagate(False)
         self.bg_color = self.cget("fg_color")[0]
 
+        self.license_window = None
+        self.disclaimer_window = None
+        self.error_window = None
+        self.current_view = None
+        self.errors_button = None
+        self.warnings_button = None
+        self.continue_button = None
         self.app_data = MainAppData()
+        self.navbar_buttons = {}
+        self.create_button_bar()
+        # Create main application widgets
+        self.menubar = self.create_menu_bar()
+        self.create_nav_bar()
         self.views = {
             "Test": TestView(self),
             "Configuration": InstallConfigView(self),
@@ -46,42 +58,6 @@ class MainApplicationWindow(ctk.CTk):
             "Misc.": MiscellaneousView(self),
             "Results": ResultsView(self),
         }
-
-        self.navbar_buttons = {}
-
-        # Initialize attributes to hold references to Widgets & Windows
-        self.current_view = None
-
-        self.warnings_button = ctk.CTkButton(
-            self,
-            text="Warnings",
-            width=90,
-            fg_color="orange",
-            hover_color="#FF8C00",
-            corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.warnings)),
-        )
-        self.errors_button = ctk.CTkButton(
-            self,
-            text="Errors",
-            width=90,
-            fg_color="red",
-            hover_color="#E60000",
-            corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.errors)),
-        )
-        self.continue_button = ctk.CTkButton(
-            self, text="Continue", width=100, corner_radius=12
-        )
-
-        self.license_window = None
-        self.disclaimer_window = None
-        self.error_window = None
-
-        # Create main application widgets
-        self.menubar = self.create_menu_bar()
-        self.create_button_bar()
-        self.create_nav_bar()
 
         if self.app_data.installation_path.get() == "None":
             # Initialize the configuration window to select and verify the eQUEST installation path
@@ -188,11 +164,35 @@ class MainApplicationWindow(ctk.CTk):
             button.image = icon_image
 
     def create_nav_bar(self):
-        # Create the button to continue to the Buildings page
-        self.continue_button.grid(row=2, column=3, columnspan=3, pady=5)
-        # Create the errors and warnings buttons
-        self.warnings_button.grid(row=2, column=0, pady=5)
-        self.errors_button.grid(row=2, column=1, pady=5)
+        warnings_button = ctk.CTkButton(
+            self,
+            text="Warnings",
+            width=90,
+            fg_color="orange",
+            hover_color="#FF8C00",
+            corner_radius=12,
+            command=lambda: self.raise_error_window("\n".join(self.app_data.warnings)),
+        )
+        errors_button = ctk.CTkButton(
+            self,
+            text="Errors",
+            width=90,
+            fg_color="red",
+            hover_color="#E60000",
+            corner_radius=12,
+            command=lambda: self.raise_error_window("\n".join(self.app_data.errors)),
+        )
+        continue_button = ctk.CTkButton(
+            self, text="Continue", width=100, corner_radius=12
+        )
+
+        warnings_button.grid(row=2, column=0, pady=5)
+        errors_button.grid(row=2, column=1, pady=5)
+        continue_button.grid(row=2, column=3, columnspan=3, pady=5)
+
+        self.continue_button = continue_button
+        self.warnings_button = warnings_button
+        self.errors_button = errors_button
 
     def show_view(self, view_name):
         # Clear previous view
