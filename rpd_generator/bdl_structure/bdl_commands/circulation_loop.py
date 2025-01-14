@@ -6,6 +6,7 @@ FluidLoopOptions = SchemaEnums.schema_enums["FluidLoopOptions"]
 FluidLoopOperationOptions = SchemaEnums.schema_enums["FluidLoopOperationOptions"]
 FluidLoopFlowControlOptions = SchemaEnums.schema_enums["FluidLoopFlowControlOptions"]
 TemperatureResetOptions = SchemaEnums.schema_enums["TemperatureResetOptions"]
+ComponentLocationOptions = SchemaEnums.schema_enums["ComponentLocationOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_CirculationLoopKeywords = BDLEnums.bdl_enums["CirculationLoopKeywords"]
 BDL_CirculationLoopTypes = BDLEnums.bdl_enums["CirculationLoopTypes"]
@@ -16,6 +17,9 @@ BDL_CirculationLoopOperationOptions = BDLEnums.bdl_enums[
 ]
 BDL_CirculationLoopTemperatureResetOptions = BDLEnums.bdl_enums[
     "CirculationLoopTemperatureResetOptions"
+]
+BDL_CirculationLoopLocationOptions = BDLEnums.bdl_enums[
+    "CirculationLoopLocationOptions"
 ]
 BDL_SecondaryLoopValveTypes = BDLEnums.bdl_enums["CirculationLoopSecondaryValveTypes"]
 BDL_SystemCoolingValveTypes = BDLEnums.bdl_enums["SystemCoolingValveTypes"]
@@ -44,14 +48,12 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopTypes.PIPE2: FluidLoopOptions.HEATING_AND_COOLING,
         BDL_CirculationLoopTypes.WLHP: FluidLoopOptions.CONDENSER,
     }
-
     sizing_option_map = {
         BDL_CirculationLoopSizingOptions.COINCIDENT: True,
         BDL_CirculationLoopSizingOptions.NON_COINCIDENT: False,
         BDL_CirculationLoopSizingOptions.PRIMARY: False,
         BDL_CirculationLoopSizingOptions.SECONDARY: True,
     }
-
     loop_operation_map = {
         BDL_CirculationLoopOperationOptions.STANDBY: None,  # This is a special case
         BDL_CirculationLoopOperationOptions.DEMAND: FluidLoopOperationOptions.INTERMITTENT,
@@ -59,13 +61,18 @@ class CirculationLoop(BaseNode):
         BDL_CirculationLoopOperationOptions.SCHEDULED: None,  # This is a special case
         BDL_CirculationLoopOperationOptions.SUBHOUR_DEMAND: FluidLoopOperationOptions.INTERMITTENT,
     }
-
     temp_reset_map = {
         BDL_CirculationLoopTemperatureResetOptions.FIXED: TemperatureResetOptions.NO_RESET,
         BDL_CirculationLoopTemperatureResetOptions.OA_RESET: TemperatureResetOptions.OUTSIDE_AIR_RESET,
         BDL_CirculationLoopTemperatureResetOptions.SCHEDULED: TemperatureResetOptions.OTHER,
         BDL_CirculationLoopTemperatureResetOptions.LOAD_RESET: TemperatureResetOptions.LOAD_RESET,
         BDL_CirculationLoopTemperatureResetOptions.WETBULB_RESET: TemperatureResetOptions.OTHER,
+    }
+    piping_location_map = {
+        BDL_CirculationLoopLocationOptions.OUTDOORS: ComponentLocationOptions.OUTSIDE,
+        BDL_CirculationLoopLocationOptions.ZONE: ComponentLocationOptions.IN_ZONE,
+        BDL_CirculationLoopLocationOptions.TUNNEL: ComponentLocationOptions.CRAWL_SPACE,
+        BDL_CirculationLoopLocationOptions.UNDERGROUND: ComponentLocationOptions.UNDERGROUND,
     }
 
     def __init__(self, u_name, rmd):
@@ -74,7 +81,7 @@ class CirculationLoop(BaseNode):
         self.rmd.bdl_obj_instances[u_name] = self
 
         # keep track of the type of circulation loop (different from self.type which is the schema data element: FluidLoop.type)
-        self.circulation_loop_type = None  # "ServiceWaterPiping", "ServiceWaterHeatingDistributionSystem", "FluidLoop", or "SecondaryFluidLoop"
+        self.circulation_loop_type = None  # "ServiceWaterHeatingDistributionSystem", "FluidLoop", or "SecondaryFluidLoop"
 
         # Initialize the data structure for the different types of circulation loops
         self.data_structure = {}
@@ -89,8 +96,12 @@ class CirculationLoop(BaseNode):
         self.pump_power_per_flow_rate = None
 
         # ServiceWaterHeatingDistributionSystem data elements with children
-        self.service_water_piping = {}
-        self.tanks = {}
+        self.service_water_piping = []
+        self.tanks = []
+
+        # ServiceWaterPiping data elements with children
+        self.child = []
+        self.service_water_heating_design_and_control = {}
 
         # FluidLoopDesignAndControl data elements with no children [cooling, heating]
         self.design_supply_temperature: list = [None, None]
@@ -124,12 +135,12 @@ class CirculationLoop(BaseNode):
 
         # ServiceWaterPiping data elements with no children
         self.is_recirculation_loop = None
+        self.are_thermal_losses_modeled = None
         self.insulation_thickness = None
         self.loop_pipe_location = None
         self.location_zone = None
         self.length = None
         self.diameter = None
-        # self.child = None   this is commented out because in eQUEST every secondary loop is a child of a primary loop
 
     def __repr__(self):
         return f"CirculationLoop(u_name='{self.u_name}')"
@@ -157,12 +168,12 @@ class CirculationLoop(BaseNode):
             elif self.type == FluidLoopOptions.HEATING_AND_COOLING:
                 self.populate_heat_cool_fluid_loop_design_and_control()
 
-        if self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
+        elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
             self.populate_service_water_heating_distribution_system()
+            self.populate_service_water_piping()
 
-        if self.circulation_loop_type == "ServiceWaterPiping":
-            # None of the data elements for ServiceWaterPiping can be populated from model inputs or outputs
-            pass
+        elif self.circulation_loop_type == "ServiceWaterPiping":
+            self.populate_service_water_piping()
 
         # Populate pump_power_per_flow_rate
         if pump_name is not None:
@@ -214,6 +225,7 @@ class CirculationLoop(BaseNode):
 
         service_water_piping_elements = [
             "is_recirculation_loop",
+            "are_thermal_losses_modeled",
             "insulation_thickness",
             "loop_pipe_location",
             "location_zone",
@@ -222,8 +234,15 @@ class CirculationLoop(BaseNode):
         ]
 
         if self.circulation_loop_type == "ServiceWaterPiping":
+            for attr in design_and_control_elements:
+                value_list = getattr(self, attr, None)
+                if value_list[1] is not None:
+                    self.service_water_heating_design_and_control[attr] = value_list[1]
+
             self.data_structure = {
                 "id": self.u_name,
+                "child": self.child,
+                "service_water_heating_design_and_control": self.service_water_heating_design_and_control,
             }
 
             for attr in service_water_piping_elements:
@@ -232,6 +251,23 @@ class CirculationLoop(BaseNode):
                     self.data_structure[attr] = value
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
+            for attr in design_and_control_elements:
+                value_list = getattr(self, attr, None)
+                if value_list[1] is not None:
+                    self.service_water_heating_design_and_control[attr] = value_list[1]
+
+            primary_service_water_piping = {
+                "id": self.u_name + " ServiceWaterPiping",
+                "child": self.child,
+                "service_water_heating_design_and_control": self.service_water_heating_design_and_control,
+            }
+            for attr in service_water_piping_elements:
+                value = getattr(self, attr, None)
+                if value is not None:
+                    primary_service_water_piping[attr] = value
+
+            self.service_water_piping.append(primary_service_water_piping)
+
             self.data_structure = {
                 "id": self.u_name,
                 "tanks": self.tanks,
@@ -281,21 +317,19 @@ class CirculationLoop(BaseNode):
             rmd.fluid_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "SecondaryFluidLoop":
-            primary_loop = self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
-            for fluid_loop in rmd.fluid_loops:
-                if fluid_loop["id"] == primary_loop:
-                    fluid_loop["child_loops"].append(self.data_structure)
+            primary_loop = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
+            )
+            primary_loop.child_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
             rmd.service_water_heating_distribution_systems.append(self.data_structure)
 
         elif self.circulation_loop_type == "ServiceWaterPiping":
-            primary_loop = self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
-            for swh_distribution_sys in rmd.service_water_heating_distribution_systems:
-                if swh_distribution_sys["id"] == primary_loop:
-                    swh_distribution_sys["service_water_piping"].append(
-                        self.data_structure
-                    )
+            primary_loop = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.PRIMARY_LOOP)
+            )
+            primary_loop.child.append(self.data_structure)
 
     def determine_circ_loop_type(self):
 
@@ -363,8 +397,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[1] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.HEATING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[1] = self.get_inp(
+                BDL_CirculationLoopKeywords.HEATING_SCHEDULE
+            )
+            if self.operation_schedule[1] and self.is_operation_schedule_continuous(
+                self.operation_schedule[1]
+            ):
                 self.operation[1] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[1] = FluidLoopOperationOptions.SCHEDULED
@@ -424,8 +462,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -485,8 +527,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -524,10 +570,8 @@ class CirculationLoop(BaseNode):
             self.get_inp(BDL_CirculationLoopKeywords.COOL_SETPT_CTRL)
         )
         if self.temperature_reset_type[0] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
-            """Jackson Q: Should this be the COOL_RESET_SCH? or do we use the same
-            schedule for heating and cooling because it's one unit?"""
             oa_reset_schedule = self.get_obj(
-                self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
+                self.get_inp(BDL_CirculationLoopKeywords.COOL_RESET_SCH)
             )
             if oa_reset_schedule:
                 self.outdoor_high_for_loop_supply_reset_temperature[0] = (
@@ -548,8 +592,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[0] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.COOLING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[0] = self.get_inp(
+                BDL_CirculationLoopKeywords.COOLING_SCHEDULE
+            )
+            if self.operation_schedule[0] and self.is_operation_schedule_continuous(
+                self.operation_schedule[0]
+            ):
                 self.operation[0] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[0] = FluidLoopOperationOptions.SCHEDULED
@@ -602,8 +650,12 @@ class CirculationLoop(BaseNode):
         self.flow_control[1] = self.determine_loop_flow_control()
         operation = self.get_inp(BDL_CirculationLoopKeywords.LOOP_OPERATION)
         if operation == BDL_CirculationLoopOperationOptions.SCHEDULED:
-            schedule = self.get_inp(BDL_CirculationLoopKeywords.HEATING_SCHEDULE)
-            if schedule and self.is_operation_schedule_continuous(schedule):
+            self.operation_schedule[1] = self.get_inp(
+                BDL_CirculationLoopKeywords.HEATING_SCHEDULE
+            )
+            if self.operation_schedule[1] and self.is_operation_schedule_continuous(
+                self.operation_schedule[1]
+            ):
                 self.operation[1] = FluidLoopOperationOptions.CONTINUOUS
             else:
                 self.operation[1] = FluidLoopOperationOptions.SCHEDULED
@@ -614,6 +666,37 @@ class CirculationLoop(BaseNode):
                 self.operation[1] = FluidLoopOperationOptions.INTERMITTENT
         else:
             self.operation[1] = self.loop_operation_map.get(operation)
+
+    def populate_swh_piping_design_and_control(self):
+        self.service_water_heating_design_and_control["id"] = (
+            self.u_name + " Design/Control"
+        )
+        self.design_supply_temperature[1] = self.try_float(
+            self.get_inp(BDL_CirculationLoopKeywords.DESIGN_HEAT_T)
+        )
+        self.minimum_flow_fraction[1] = self.try_float(
+            self.get_inp(BDL_CirculationLoopKeywords.LOOP_MIN_FLOW)
+        )
+        self.temperature_reset_type[1] = self.temp_reset_map.get(
+            self.get_inp(BDL_CirculationLoopKeywords.HEAT_SETPT_CTRL)
+        )
+        if self.temperature_reset_type[1] == TemperatureResetOptions.OUTSIDE_AIR_RESET:
+            oa_reset_schedule = self.get_obj(
+                self.get_inp(BDL_CirculationLoopKeywords.HEAT_RESET_SCH)
+            )
+            if oa_reset_schedule:
+                self.outdoor_high_for_loop_supply_reset_temperature[1] = (
+                    oa_reset_schedule.outdoor_high_for_loop_supply_reset_temperature
+                )
+                self.outdoor_low_for_loop_supply_reset_temperature[1] = (
+                    oa_reset_schedule.outdoor_low_for_loop_supply_reset_temperature
+                )
+                self.loop_supply_temperature_at_outdoor_high[1] = (
+                    oa_reset_schedule.loop_supply_temperature_at_outdoor_high
+                )
+                self.loop_supply_temperature_at_outdoor_low[1] = (
+                    oa_reset_schedule.loop_supply_temperature_at_outdoor_low
+                )
 
     def populate_service_water_heating_distribution_system(self):
         self.swh_design_supply_temperature = self.try_float(
@@ -628,7 +711,18 @@ class CirculationLoop(BaseNode):
         )
 
     def populate_service_water_piping(self):
-        pass
+        self.are_thermal_losses_modeled = bool(
+            self.try_float(self.get_inp(BDL_CirculationLoopKeywords.SUPPLY_UA))
+            or self.try_float(self.get_inp(BDL_CirculationLoopKeywords.SUPPLY_LOSS_DT))
+        )
+        self.is_recirculation_loop = bool(
+            self.try_float(self.get_inp(BDL_CirculationLoopKeywords.LOOP_RECIRC_FLOW))
+        )
+        self.loop_pipe_location = self.piping_location_map.get(
+            self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOCN)
+        )
+        self.location_zone = self.get_inp(BDL_CirculationLoopKeywords.LOOP_LOSS_ZONE)
+        self.populate_swh_piping_design_and_control()
 
     def populate_pump_data_elements(self, pump_name):
         pump = self.get_obj(pump_name)

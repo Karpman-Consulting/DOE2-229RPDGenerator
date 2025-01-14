@@ -264,6 +264,14 @@ class BDLEnums:
                 "THREE-WAY",
             ]
         ),
+        "CirculationLoopLocationOptions": _ListEnum(
+            [
+                "OUTDOORS",
+                "ZONE",
+                "TUNNEL",
+                "UNDERGROUND",
+            ]
+        ),
         "CirculationLoopKeywords": _ListEnum(
             [
                 "LOOP-PUMP",
@@ -277,6 +285,7 @@ class BDLEnums:
                 "LOOP-DESIGN-DT",
                 "SIZING-OPTION",
                 "LOOP-MIN-FLOW",
+                "LOOP-RECIRC-FLOW",
                 "HEAT-SETPT-CTRL",
                 "COOL-SETPT-CTRL",
                 "HEAT-RESET-SCH",
@@ -287,6 +296,10 @@ class BDLEnums:
                 "DHW-INLET-T-SCH",
                 "COOLING-SCHEDULE",
                 "HEATING-SCHEDULE",
+                "SUPPLY-UA",
+                "SUPPLY-LOSS-DT",
+                "LOOP-LOCN",
+                "LOOP-LOSS-ZONE",
             ]
         ),
         "ConstructionTypes": _ListEnum(
