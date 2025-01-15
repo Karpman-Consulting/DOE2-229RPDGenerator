@@ -214,6 +214,7 @@ class BDLEnums:
                 "CONDENSER-TYPE",
                 "ELEC-INPUT-RATIO",
                 "HEAT-INPUT-RATIO",
+                "CAPACITY",
             ]
         ),
         "CirculationLoopTypes": _ListEnum(

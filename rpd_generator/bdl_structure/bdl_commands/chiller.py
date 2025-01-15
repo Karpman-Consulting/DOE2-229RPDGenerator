@@ -164,10 +164,27 @@ class Chiller(BaseNode):
             output_data.get("Design Parameters - Capacity")
         )
 
-        # This value comes out in Btu/hr
-        self.rated_capacity = self.try_float(
-            output_data.get("Normalized (ARI) Capacity at Peak (Btu/hr)")
-        )
+        # TODO modify this to reference the input instead of this output
+        # TODO Update to use the entered capacity if populated and if autosized to reference PV-A?
+        # TODO Need to check the capacity that is actually used on an hour basis
+        # TODO Rated capacity is defined at a PLR in eQuest, default is 0.92. If it isnot manually entered assume 0.92.
+        # TODO If capacity is hard coded then rated capacity at 100% PLR is the entered rated capacity divided by the PLR rated from eQuest.
+        # TODO If capacity is autosized then need to obtain the design capacity and design conditions and then convert it to AHRI conditions
+        # TODO Apply the following formula to autosized design cap to convert to rated (1/PLR rated) * (1/(Capft at design conditions/Capft rated conditions))
+        # TODO All of this is based on seeing what is used in hourly reports
+
+
+        if self.try_float(self.get_inp(BDL_ChillerKeywords.CAPACITY)):
+            self.rated_capacity = self.try_float(
+                self.get_inp(BDL_ChillerKeywords.CAPACITY)
+            )
+        else:
+            self.rated_capacity = (
+                self.try_float(
+                    output_data.get("Primary Equipment (Chillers) - Capacity (Btu/hr)")
+                )
+                / 1000000
+            )
 
         self.design_flow_evaporator = self.try_float(
             output_data.get("Design Parameters - Flow")
@@ -217,7 +234,7 @@ class Chiller(BaseNode):
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
         iplv_value = self.calculate_iplv(absorp_or_engine)
-        #TODO modify this because now the entered conditions are converted to rated when calculating IPLV so this can always be populated as IPLV
+        # TODO modify this because now the entered conditions are converted to rated when calculating IPLV so this can always be populated as IPLV
         if self.is_rated_full_load_eff_defined_at_ahri_rating_conditions():
             if (
                 iplv_value
@@ -273,6 +290,11 @@ class Chiller(BaseNode):
                     2318005,
                     self.u_name,
                     "",
+                ),
+                "Primary Equipment (Chillers) - Capacity (Btu/hr)": (
+                    2401051,
+                    "",
+                    self.u_name,
                 ),
             }
         else:
@@ -399,9 +421,11 @@ class Chiller(BaseNode):
         return chw_pump_interlocked, cw_pump_interlocked
 
     def calculate_iplv(self, absorp_or_engine):
-        """Calculates IPLV based upon the modeled performance curves and the rated conditions and entered efficiency."""
-        #TODO incorporate the E+ logic where it accounts for minimum load ratio.
-        #TODO continued Do more testing to ensure it producing the correct results
+        """Calculates IPLV based upon the modeled performance curves and the rated conditions and entered efficiency.
+        No corrections for fouling factor have been included - perhaps not relevant."""
+        # TODO incorporate the E+ logic where it accounts for minimum load ratio.
+        # TODO continued Do more testing to ensure it producing the correct results
+        # ToDO continued also for full load and IPLV set up to handle if you do not know rated conditions
 
         # Dictionary includes percent of rated capacity as the key and then the efficiency result at each percentage. 0.0s are placeholders
         iplv_rating_load_conditions = {
@@ -494,7 +518,7 @@ class Chiller(BaseNode):
         # Returns a list with the rated capacity as index 1 and rated efficiency as index 0. If the capacity and efficiency were
         # defined at rated conditions the function should return the same rated as entered values.
         capacity_and_full_load_efficiency_at_rated_conditions = (
-            curve_funcs.convert_cop_and_capacity_to_ahri_conditions(
+            curve_funcs.convert_cop_and_capacity_to_different_conditions(
                 coefficients,
                 evap_leaving_temp_entered,
                 cond_entering_temp_entered,
@@ -504,7 +528,9 @@ class Chiller(BaseNode):
                 capacity_entered,
             )
         )
-        full_load_efficiency_rated = capacity_and_full_load_efficiency_at_rated_conditions[0]
+        full_load_efficiency_rated = (
+            capacity_and_full_load_efficiency_at_rated_conditions[0]
+        )
 
         for index, key in enumerate(iplv_rating_load_conditions):
             cond_entering_temp = condenser_type_iplv_rating_condenser_temp_conditions[
@@ -530,12 +556,12 @@ class Chiller(BaseNode):
                 eff_fplr_max_otpt,
                 curve_function_map,
                 curve_funcs,
+                key,
             )
 
             eff_ft_result = results["eff_ft_result"]
             eff_fplr_result = results["eff_fplr_result"]
             part_load_ratio = results["part_load_ratio"]
-
 
             eff_result_cop = (
                 part_load_ratio

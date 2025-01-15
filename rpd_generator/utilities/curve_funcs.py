@@ -61,22 +61,21 @@ def calculate_quadratic(
     return z
 
 
-def convert_cop_and_capacity_to_ahri_conditions(
+def convert_cop_and_capacity_to_different_conditions(
     curves: dict,
-    evap_leaving_temp_entered: float,
-    condenser_entering_temp_entered: float,
-    evap_leaving_temp_rated: float,
-    condenser_entering_temp_rated: float,
-    cop_entered: float,
-    capacity_entered: float,
+    evap_leaving_temp_starting_condition: float,
+    condenser_entering_temp_starting_condition: float,
+    evap_leaving_temp_new_condition: float,
+    condenser_entering_temp_new_condition: float,
+    cop_starting_condition: float,
+    capacity_starting_condition: float,
 ) -> list:
     """The curves dictionary should contain the following keys eff_ft, cap_ft, eff_fplr which should have the curve objects as values.
-    evap_leaving_temp_entered is the evaporator leaving temp in which the user defined efficiency and capacity and
-    condenser_entering_temp_entered is the condenser entering temp in which the user defined efficiency and capacity. These
-    temperatures were entered in eQuest for the rated temperatures for the capacity and efficiency. evap_leaving_temp_rated is the evaporator
-    leaving temp at actual AHRI rating conditions and condenser_entering_temp_rated is the condenser entering temp at actual AHRI rated conditions.
-    cop_entered and capacity_entered were entered by the modeler as the efficiency and capacity and these will be adjusted. This function returns
-    a list with the first index being the adjusted COP and the second being the adjusted capacity. This assumes 100% load.
+    evap_leaving_temp_starting_condition is the evaporator leaving temp in which the cop_starting_condition and capacity_starting_condition are defined
+    condenser_entering_temp_starting_condition is the condenser entering temp in which the cop_starting_condition and capacity_starting_condition are defined. These
+    temperatures were likely entered in eQuest for the rated temperatures for the capacity and efficiency but they do not have to be. evap_leaving_temp_new_condition is the
+    temperature condition that the efficiency and capacity are being converted to. Sme with condenser_entering_temp_new_condition.
+    cop_starting_condition and capacity_starting_condition will be adjusted. This function returns a list with the first index being the adjusted COP and the second being the adjusted capacity. This assumes 100% load.
     """
 
     coeffs = {}
@@ -117,20 +116,21 @@ def convert_cop_and_capacity_to_ahri_conditions(
         BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
     }
 
-    data_entered = {
-        "evap_leaving_temp": evap_leaving_temp_entered,
-        "condenser_entering_temp": condenser_entering_temp_entered,
+    data_starting_condition = {
+        "evap_leaving_temp": evap_leaving_temp_starting_condition,
+        "condenser_entering_temp": condenser_entering_temp_starting_condition,
     }
 
-    data_rated = {
-        "evap_leaving_temp": evap_leaving_temp_rated,
-        "condenser_entering_temp": condenser_entering_temp_rated,
+    data_new_condition = {
+        "evap_leaving_temp": evap_leaving_temp_new_condition,
+        "condenser_entering_temp": condenser_entering_temp_new_condition,
     }
 
+    load_percent = 1.0
     # Calculate and retrieve the results
     all_results = execute_calculations(
-        data_entered,
-        data_rated,
+        data_starting_condition,
+        data_new_condition,
         cap_ft_coeffs,
         eff_ft_coeffs,
         cap_ft_min_otpt,
@@ -143,29 +143,26 @@ def convert_cop_and_capacity_to_ahri_conditions(
         eff_fplr_max_otpt,
         curve_function_map,
         curve_funcs,
+        load_percent,
     )
 
-    # TODO NEED TO TEST!!! Also, give the functions being called better names.
-    # To convert from entered capacity conditions to rated. Rated capacity =  Entered capacity/ (CAPftentered/CAPftrated)
-    # MultiplierEntered = (EIRftentered * EIRfPLRentered)/PLRentered and Multiplierrated = (EIRftrated * EIRfPLRrated)/PLRrated. Rated COP =  COPentered * (Multiplierentered/Multiplierrated)
-
-    capacity_adjusted_to_rated = capacity_entered / (
+    capacity_adjusted_to_new_condition = capacity_starting_condition / (
         all_results["entered_results"]["cap_ft_result"]
         / all_results["rated_results"]["cap_ft_result"]
     )
-    helper_multiplier_entered = (
+    helper_multiplier_starting_condition = (
         all_results["entered_results"]["eff_ft_result"]
         * all_results["entered_results"]["eff_fplr_result"]
     ) / all_results["entered_results"]["part_load_ratio"]
-    helper_multiplier_rated = (
+    helper_multiplier_new_condition = (
         all_results["rated_results"]["eff_ft_result"]
         * all_results["rated_results"]["eff_fplr_result"]
     ) / all_results["rated_results"]["part_load_ratio"]
-    efficiency_adjusted_to_rated = cop_entered * (
-        helper_multiplier_entered / helper_multiplier_rated
+    efficiency_adjusted_to_new_condition = cop_starting_condition * (
+        helper_multiplier_starting_condition / helper_multiplier_new_condition
     )
 
-    return [efficiency_adjusted_to_rated, capacity_adjusted_to_rated]
+    return [efficiency_adjusted_to_new_condition, capacity_adjusted_to_new_condition]
 
 
 def calculate_results_of_performance_curves(
@@ -183,7 +180,9 @@ def calculate_results_of_performance_curves(
     eff_fplr_max_otpt,
     curve_function_map,
     curve_funcs,
+    load_percent,
 ):
+    """Returns the results of performance curves and partload ratio for cap_ft, eir_PLR, eir_ft"""
     cap_ft_result = curve_funcs.calculate_bi_quadratic(
         cap_ft_coeffs,
         evap_leaving_temp,
@@ -198,7 +197,7 @@ def calculate_results_of_performance_curves(
         eff_ft_min_otpt,
         eff_ft_max_otpt,
     )
-    part_load_ratio = 1 / cap_ft_result
+    part_load_ratio = (1 / cap_ft_result) * load_percent
 
     if eff_fplr_curve_type in curve_function_map:
         eff_fplr_result = curve_function_map[eff_fplr_curve_type](
@@ -226,8 +225,8 @@ def calculate_results_of_performance_curves(
 
 
 def execute_calculations(
-    data_entered,
-    data_rated,
+    data_starting_condition,
+    data_new_condition,
     cap_ft_coeffs,
     eff_ft_coeffs,
     cap_ft_min_otpt,
@@ -240,11 +239,12 @@ def execute_calculations(
     eff_fplr_max_otpt,
     curve_function_map,
     curve_funcs,
+    load_percent,
 ):
     # Calculate with "entered" variables
     entered_results = calculate_results_of_performance_curves(
-        data_entered["evap_leaving_temp"],
-        data_entered["condenser_entering_temp"],
+        data_starting_condition["evap_leaving_temp"],
+        data_starting_condition["condenser_entering_temp"],
         cap_ft_coeffs,
         eff_ft_coeffs,
         cap_ft_min_otpt,
@@ -257,12 +257,13 @@ def execute_calculations(
         eff_fplr_max_otpt,
         curve_function_map,
         curve_funcs,
+        load_percent,
     )
 
     # Calculate with "rated" variables
     rated_results = calculate_results_of_performance_curves(
-        data_rated["evap_leaving_temp"],
-        data_rated["condenser_entering_temp"],
+        data_new_condition["evap_leaving_temp"],
+        data_new_condition["condenser_entering_temp"],
         cap_ft_coeffs,
         eff_ft_coeffs,
         cap_ft_min_otpt,
@@ -275,6 +276,7 @@ def execute_calculations(
         eff_fplr_max_otpt,
         curve_function_map,
         curve_funcs,
+        load_percent,
     )
 
     # Return a dictionary of all results
