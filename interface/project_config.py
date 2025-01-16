@@ -4,6 +4,7 @@ from pathlib import Path
 
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
+from interface.main_app_window import MainApplicationWindow
 
 
 class ProjectConfigWindow(ctk.CTk):
@@ -298,6 +299,13 @@ class ProjectConfigWindow(ctk.CTk):
                 )
 
         # If there are no errors, open the Main Application Window
+        if len(self.errors) == 0:
+            this_app_data_to_transfer = {
+                "installation_path": "C:/Program Files/eQUEST 3-65-7175",
+                "user_lib_path": "C:/Program Files/eQUEST 3-65-7175/UserLib.dat",
+            }
+            main_app_window = MainApplicationWindow(this_app_data_to_transfer)
+            main_app_window.mainloop()
 
         else:
             self.raise_error_window("\n".join(self.errors))
