@@ -215,6 +215,7 @@ class BDLEnums:
                 "ELEC-INPUT-RATIO",
                 "HEAT-INPUT-RATIO",
                 "CAPACITY",
+                "RATED-PLR",
             ]
         ),
         "CirculationLoopTypes": _ListEnum(
