@@ -136,6 +136,7 @@ class InstallConfigWindow(ctk.CTk):
             self.raise_error_window(error)
 
     def continue_past_configuration(self):
+        self.destroy()
         project_config_window = ProjectConfigWindow()
         project_config_window.mainloop()
 

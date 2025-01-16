@@ -71,24 +71,6 @@ class ProjectConfigWindow(ctk.CTk):
             font=("Arial", 14, "bold"),
         )
 
-        self.warnings_button = ctk.CTkButton(
-            self,
-            text="Warnings",
-            width=90,
-            fg_color="orange",
-            hover_color="#FF8C00",
-            corner_radius=12,
-            # command=lambda: self.raise_error_window("\n".join(self.warnings)),
-        )
-        self.errors_button = ctk.CTkButton(
-            self,
-            text="Errors",
-            width=90,
-            fg_color="red",
-            hover_color="#E60000",
-            corner_radius=12,
-            # command=lambda: self.raise_error_window("\n".join(self.errors)),
-        )
         self.continue_button = ctk.CTkButton(
             self,
             text="Continue",
@@ -104,9 +86,6 @@ class ProjectConfigWindow(ctk.CTk):
         return "ProjectConfigWindow"
 
     def create_nav_bar(self):
-        # Create the errors and warnings buttons
-        self.warnings_button.grid(row=5, column=0, pady=5)
-        self.errors_button.grid(row=5, column=1, pady=5)
         # Create the button to continue to the Buildings page
         self.continue_button.grid(row=5, column=3, columnspan=3, pady=5)
 
@@ -143,9 +122,6 @@ class ProjectConfigWindow(ctk.CTk):
         self.error_window.after(100, self.error_window.lift)
 
     def place_widgets(self):
-        # Update the errors and warnings button formatting
-        self.update_warnings_errors()
-
         # Place widgets
         # Row 0
         self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
@@ -282,7 +258,6 @@ class ProjectConfigWindow(ctk.CTk):
         # Check that at least 1 file path has been selected
         if not any(self.ruleset_model_file_paths.values()):
             self.errors = ["At least one file must be selected to continue."]
-            self.update_warnings_errors()
             return
 
         # If the code reaches this point, at least one file is selected so clear any errors
@@ -299,7 +274,6 @@ class ProjectConfigWindow(ctk.CTk):
                     self.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
-                    self.update_warnings_errors()
 
         if len(self.errors) > 0:
             return
@@ -323,38 +297,10 @@ class ProjectConfigWindow(ctk.CTk):
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
-        self.update_warnings_errors()
         # If there are no errors, open the Main Application Window
 
-    def update_warnings_errors(self):
-        if len(self.warnings) > 0:
-            self.warnings_button.configure(
-                text=f"Warnings ({len(self.warnings)})",
-                font=("Arial", 12, "bold"),
-                state="normal",
-                fg_color="orange",
-            )
         else:
-            self.warnings_button.configure(
-                text=f"Warnings",
-                font=("Arial", 12),
-                state="disabled",
-                fg_color="gray",
-            )
-        if len(self.errors) > 0:
-            self.errors_button.configure(
-                text=f"Errors ({len(self.errors)})",
-                font=("Arial", 12, "bold"),
-                state="normal",
-                fg_color="red",
-            )
-        else:
-            self.errors_button.configure(
-                text=f"Errors",
-                font=("Arial", 12),
-                state="disabled",
-                fg_color="gray",
-            )
+            self.raise_error_window("\n".join(self.errors))
 
     @staticmethod
     def verify_associated_files(file_path: str) -> bool:
