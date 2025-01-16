@@ -4,7 +4,6 @@ from tkinter import Menu
 
 from interface.main_app_data import MainAppData
 from interface.views.test import TestView
-from interface.views.install_config import InstallConfigView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
 from interface.views.building_areas import BuildingAreasView
@@ -35,7 +34,6 @@ class MainApplicationWindow(ctk.CTk):
         self.app_data = MainAppData()
         self.views = {
             "Test": TestView(self),
-            "Configuration": InstallConfigView(self),
             "Project Info": ProjectInfoView(self),
             "Buildings": BuildingsView(self),
             "Building Areas": BuildingAreasView(self),
@@ -83,15 +81,11 @@ class MainApplicationWindow(ctk.CTk):
         self.create_button_bar()
         self.create_nav_bar()
 
-        if not self.app_data.installation_path.get():
-            # Initialize the configuration window to select and verify the eQUEST installation path
-            self.show_view("Configuration")
-
-        elif test_mode:
+        if test_mode:
             self.show_view("Test")
 
         else:
-            # If the eQUEST installation path is found, continue to the Project Info page
+            self.app_data.generate_rmds()
             self.navbar_buttons["Project Info"].configure(state="normal")
             self.show_view("Project Info")
 
