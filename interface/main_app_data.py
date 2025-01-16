@@ -6,7 +6,6 @@ from rpd_generator.artifacts.ruleset_project_description import (
     RulesetProjectDescription,
 )
 from rpd_generator.doe2_file_readers.model_input_reader import ModelInputReader
-from rpd_generator.utilities import validate_configuration
 from rpd_generator.config import Config
 
 
@@ -31,8 +30,6 @@ class MainAppData:
         self.warnings = []
         self.errors = []
 
-        # Attempt to automatically find the eQUEST installation path and set the data paths from the config files
-        validate_configuration.find_equest_installation()
         self.installation_path.set(Config.EQUEST_INSTALL_PATH)
 
     @staticmethod
