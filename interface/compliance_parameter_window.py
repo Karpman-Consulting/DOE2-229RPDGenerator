@@ -22,8 +22,8 @@ ctk.set_default_color_theme(
 )  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-class MainApplicationWindow(ctk.CTk):
-    def __init__(self, previous_app_data, test_mode=False):
+class ComplianceParameterWindow(ctk.CTkToplevel):
+    def __init__(self, main_app, configuration_data, test_mode=False):
         super().__init__()
         self.title("eQUEST 229 RPD Generator")
         self.geometry(f"{1300}x{700}")
@@ -32,7 +32,8 @@ class MainApplicationWindow(ctk.CTk):
         self.bg_color = self.cget("fg_color")[0]
 
         self.app_data = MainAppData()
-        self.transfer_previous_app_data(previous_app_data)
+        self.main_app = main_app
+        self.configuration_data = configuration_data
 
         self.views = {
             "Test": TestView(self),
@@ -212,7 +213,3 @@ class MainApplicationWindow(ctk.CTk):
     def raise_error_window(self, error_text):
         self.error_window = ErrorWindow(self, error_text)
         self.error_window.after(100, self.error_window.lift)
-
-    def transfer_previous_app_data(self, prev_app_data):
-        self.app_data.installation_path.set(prev_app_data.get("installation_path"))
-        self.app_data.user_lib_path = prev_app_data.get("user_lib_path")

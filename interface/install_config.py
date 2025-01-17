@@ -1,21 +1,24 @@
 import customtkinter as ctk
+from tkinter import ttk
 
 import rpd_generator.utilities.validate_configuration as validate_configuration
-from interface.project_config import ProjectConfigWindow
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
 
 
-class InstallConfigWindow(ctk.CTk):
-    def __init__(self):
+class InstallConfigWindow(ctk.CTkToplevel):
+    def __init__(self, main_app, configuration_data):
         super().__init__()
         self.title("eQUEST Installation Configuration")
         self.license_window = None
         self.disclaimer_window = None
         self.error_window = None
 
+        self.main_app = main_app
+        self.configuration_data = configuration_data
+
         self.installation_path = ctk.StringVar()
-        self.user_lib_path = None
+        self.user_lib_path = ctk.StringVar()
         self.files_verified = False
         self.bg_color = self.cget("fg_color")[0]
 
@@ -40,7 +43,13 @@ class InstallConfigWindow(ctk.CTk):
         directions = ctk.CTkLabel(
             self, text=instruction_text, anchor="w", justify="left", font=("Arial", 14)
         )
-        directions.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=20)
+        directions.grid(
+            row=1, column=1, columnspan=8, sticky="ew", padx=(5, 20), pady=(20, 5)
+        )
+
+        # Directions separator
+        separator = ttk.Separator(self, orient="horizontal")
+        separator.grid(row=2, column=0, columnspan=9, sticky="ew", padx=20, pady=15)
 
         # Create the labels for the path entry fields
         install_path_label = ctk.CTkLabel(
@@ -50,7 +59,7 @@ class InstallConfigWindow(ctk.CTk):
             justify="right",
             font=("Arial", 16, "bold"),
         )
-        install_path_label.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
+        install_path_label.grid(row=3, column=0, sticky="nsew", padx=(20, 5), pady=5)
 
         # Create the path entry field
         install_path_entry = ctk.CTkEntry(
@@ -60,24 +69,24 @@ class InstallConfigWindow(ctk.CTk):
             textvariable=self.installation_path,
         )
         install_path_entry.grid(
-            row=2, column=1, columnspan=7, sticky="ew", padx=5, pady=5
+            row=3, column=1, columnspan=7, sticky="ew", padx=5, pady=5
         )
 
         # Create the button to manually browse for the eQUEST installation
         install_browse_button = ctk.CTkButton(
             self, text="Browse", width=100, corner_radius=12
         )
-        install_browse_button.grid(row=2, column=8, padx=5, pady=5)
+        install_browse_button.grid(row=3, column=8, padx=5, pady=5)
 
         # Create the labels for the path entry fields
-        userlib_path_label = ctk.CTkLabel(
+        user_lib_path_label = ctk.CTkLabel(
             self,
             text="(Optional)      \nUser Library: ",
             anchor="e",
             justify="right",
             font=("Arial", 16, "bold"),
         )
-        userlib_path_label.grid(row=3, column=0, sticky="nsew", padx=5, pady=5)
+        user_lib_path_label.grid(row=4, column=0, sticky="nsew", padx=5, pady=5)
 
         # Create the path entry field
         user_lib_path_entry = ctk.CTkEntry(
@@ -87,19 +96,19 @@ class InstallConfigWindow(ctk.CTk):
             textvariable=self.user_lib_path,
         )
         user_lib_path_entry.grid(
-            row=3, column=1, columnspan=7, sticky="ew", padx=5, pady=(20, 5)
+            row=4, column=1, columnspan=7, sticky="ew", padx=5, pady=(20, 5)
         )
 
         # Create the button to manually browse for the eQUEST installation
         user_lib_browse_button = ctk.CTkButton(
             self, text="Browse", width=100, corner_radius=12
         )
-        user_lib_browse_button.grid(row=3, column=8, padx=5, pady=(20, 5))
+        user_lib_browse_button.grid(row=4, column=8, padx=5, pady=(20, 5))
 
         # Create a frame to hold the Test button
-        lower_button_frame = ctk.CTkFrame(self, fg_color=self.bg_color)
+        lower_button_frame = ctk.CTkFrame(self, fg_color="transparent")
         lower_button_frame.grid(
-            row=4, column=1, columnspan=7, sticky="ew", padx=5, pady=(30, 5)
+            row=5, column=1, columnspan=7, sticky="ew", padx=5, pady=(25, 10)
         )
         lower_button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
@@ -119,7 +128,8 @@ class InstallConfigWindow(ctk.CTk):
             text="Continue",
             width=100,
             corner_radius=12,
-            state="disabled",
+            # TODO: re-disable this button after browse buttons are implemented
+            # state="disabled",
             command=self.continue_past_configuration,
         )
         self.continue_button.grid(row=0, column=2, padx=(5, 350), pady=5)
@@ -136,9 +146,8 @@ class InstallConfigWindow(ctk.CTk):
             self.raise_error_window(error)
 
     def continue_past_configuration(self):
-        self.destroy()
-        project_config_window = ProjectConfigWindow()
-        project_config_window.mainloop()
+        self.save_configuration_data()
+        self.main_app.install_config_complete()
 
     def toggle_continue_button(self):
         if self.files_verified:
@@ -156,3 +165,9 @@ class InstallConfigWindow(ctk.CTk):
     def raise_error_window(self, error_text):
         self.error_window = ErrorWindow(self, error_text)
         self.error_window.after(100, self.error_window.lift)
+
+    def save_configuration_data(self):
+        if self.installation_path.get():
+            self.configuration_data["installation_path"] = self.installation_path.get()
+        if self.user_lib_path.get():
+            self.configuration_data["user_lib_path"] = self.user_lib_path.get()

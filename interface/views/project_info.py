@@ -170,8 +170,13 @@ class ProjectInfoView(BaseView):
             anchor="e",  # Align text to the right within the label
         )
 
-        # Create entry
+        # Create entry, prepopulate project info if selected in project config on startup
+        # TODO: Need to update logic so that prepopulating from config data counts as selecting file
         path_entry = ctk.CTkEntry(parent_frame, width=700, font=("Arial", 12))
+        if label_text == "Design: " and self.main.configuration_data.get("User"):
+            path_entry.insert(0, self.main.configuration_data["User"])
+        elif self.main.configuration_data.get(label_text):
+            path_entry.insert(0, self.main.configuration_data[label_text])
 
         # File select button
         def select_file():

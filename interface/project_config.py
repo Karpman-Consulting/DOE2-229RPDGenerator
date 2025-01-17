@@ -4,16 +4,18 @@ from pathlib import Path
 
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
-from interface.main_app_window import MainApplicationWindow
 
 
-class ProjectConfigWindow(ctk.CTk):
-    def __init__(self):
+class ProjectConfigWindow(ctk.CTkToplevel):
+    def __init__(self, main_app, configuration_data):
         super().__init__()
         self.title("Project Configuration")
         self.license_window = None
         self.disclaimer_window = None
         self.error_window = None
+
+        self.main_app = main_app
+        self.configuration_data = configuration_data
 
         self.ruleset_model_file_paths = {}
         self.ruleset_model_row_widgets = {}
@@ -38,7 +40,7 @@ class ProjectConfigWindow(ctk.CTk):
             font=("Arial", 16, "bold"),
         )
 
-        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the \napplicable models expected by the ruleset."
+        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) \nassociated with each of the applicable models expected by the ruleset."
         self.directions = ctk.CTkLabel(
             self,
             text=directions_text,
@@ -88,7 +90,7 @@ class ProjectConfigWindow(ctk.CTk):
 
     def create_nav_bar(self):
         # Create the button to continue to the Buildings page
-        self.continue_button.grid(row=5, column=3, columnspan=3, pady=5)
+        self.continue_button.grid(row=5, column=0, columnspan=9, pady=15)
 
     def create_menu_bar(self):
         menubar = Menu(self)
@@ -126,14 +128,14 @@ class ProjectConfigWindow(ctk.CTk):
         # Place widgets
         # Row 0
         self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
-        self.directions.grid(
-            row=0, column=1, columnspan=8, sticky="new", padx=5, pady=20
-        )
+        self.directions.grid(row=0, column=1, columnspan=6, sticky="new", pady=20)
         # Row 1
         self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=20)
-        self.note.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=20)
+        self.note.grid(
+            row=1, column=1, columnspan=8, sticky="ew", padx=(5, 20), pady=20
+        )
         # Row 2
-        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=5, pady=10)
+        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=(20, 5), pady=10)
         self.ruleset_dropdown.grid(
             row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
         )
@@ -142,7 +144,7 @@ class ProjectConfigWindow(ctk.CTk):
         self.ruleset_models_label.grid(row=4, column=0, sticky="ew", padx=5, pady=20)
 
         self.show_ruleset_models(self.ruleset_models_frame)
-        self.ruleset_models_frame.grid(row=4, column=1, columnspan=8, sticky="nsew")
+        self.ruleset_models_frame.grid(row=4, column=1, columnspan=6, sticky="nsew")
 
     def update_ruleset_model_frame(self, ruleset_models_frame, selected_ruleset):
         self.selected_ruleset.set(selected_ruleset)
@@ -154,7 +156,7 @@ class ProjectConfigWindow(ctk.CTk):
         # Main logic
         if self.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
-                row=3, column=4, columnspan=4, sticky="w", padx=5, pady=10
+                row=3, column=3, columnspan=4, sticky="w", padx=5, pady=10
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
             if not self.rotation_exception_checkbox.get():
@@ -190,6 +192,11 @@ class ProjectConfigWindow(ctk.CTk):
         for row_widgets in self.ruleset_model_row_widgets.values():
             for widget in row_widgets:
                 widget.grid_remove()
+
+    # TODO: Discuss this.
+    """We could disable the widgets here on checkbox toggle to avoid the jarring ui effect. We could also 
+    add a placeholder and keep the current behavior. This would basically be swapping an empty widget
+    in and out on toggle."""
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
@@ -300,12 +307,8 @@ class ProjectConfigWindow(ctk.CTk):
 
         # If there are no errors, open the Main Application Window
         if len(self.errors) == 0:
-            this_app_data_to_transfer = {
-                "installation_path": "C:/Program Files/eQUEST 3-65-7175",
-                "user_lib_path": "C:/Program Files/eQUEST 3-65-7175/UserLib.dat",
-            }
-            main_app_window = MainApplicationWindow(this_app_data_to_transfer)
-            main_app_window.mainloop()
+            self.save_configuration_data()
+            self.main_app.project_config_complete()
 
         else:
             self.raise_error_window("\n".join(self.errors))
@@ -339,3 +342,7 @@ class ProjectConfigWindow(ctk.CTk):
                 return False
 
         return True
+
+    # TODO: Could really be a one liner above, but leaving it for now in case we want to change data passing
+    def save_configuration_data(self):
+        self.configuration_data.update(self.ruleset_model_file_paths)
