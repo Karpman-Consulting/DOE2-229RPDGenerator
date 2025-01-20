@@ -159,8 +159,19 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 row=3, column=3, columnspan=4, sticky="w", padx=5, pady=10
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
+            """PH stands for Placeholder. Used to fill a UI gap when the rotation exception checkbox is checked.
+            Label will not be displayed and other widgets in the row will not be created."""
             if not self.rotation_exception_checkbox.get():
-                labels.extend(["Baseline 90: ", "Baseline 180: ", "Baseline 270: "])
+                labels.extend(
+                    [
+                        "Baseline 90: ",
+                        "Baseline 180: ",
+                        "Baseline 270: ",
+                        "PH Baseline 90: ",
+                        "PH Baseline 180: ",
+                        "PH Baseline 270: ",
+                    ]
+                )
         else:
             labels = ["Design: "]
 
@@ -181,6 +192,14 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             )
             select_button.grid(row=row_num, column=8, sticky="ew", padx=5, pady=5)
 
+            # If the label is a placeholder, do not place the widgets. Only place blank label.
+            if label_text in [
+                "PH Baseline 90: ",
+                "PH Baseline 180: ",
+                "PH Baseline 270: ",
+            ]:
+                label.grid_remove()
+
             # Store created widgets for reuse
             self.ruleset_model_row_widgets[label_text.split(":")[0]] = (
                 label,
@@ -193,10 +212,12 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             for widget in row_widgets:
                 widget.grid_remove()
 
-    # TODO: Discuss this.
-    """We could disable the widgets here on checkbox toggle to avoid the jarring ui effect. We could also 
-    add a placeholder and keep the current behavior. This would basically be swapping an empty widget
-    in and out on toggle."""
+    """To avoid the jarring experience of the UI elements shifting around when the rotation exception checkbox
+     is checked, I made blank placeholder rows for each of the 3 baseline rotations. There is a little bit of 
+     movement when the checkbox is toggled, but it is much less noticeable. I think the best solution for this
+     would be to disable the baseline rotation rows when the exception checkbox is checked. Tkinter does not handle
+     disabling input fields very well, so I went with this solution instead. I could be very easily convinced to
+     change my mind here either way."""
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
@@ -205,6 +226,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 "Baseline 90: ",
                 "Baseline 180: ",
                 "Baseline 270: ",
+                "",
             ]:
                 if row_widgets[0].winfo_ismapped():
                     # If visible, hide them
@@ -219,6 +241,11 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         """Create a row of widgets without placing them using grid()."""
         if self.ruleset_model_row_widgets.get(label_text.split(":")[0]):
             return self.ruleset_model_row_widgets[label_text.split(":")[0]]
+
+        # If the label is a placeholder, do not place the widgets. Only place blank label.
+        if label_text in ["PH Baseline 90: ", "PH Baseline 180: ", "PH Baseline 270: "]:
+            label = ctk.CTkLabel(parent_frame, text="")
+            return label, label, label
 
         # Create label
         label = ctk.CTkLabel(

@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 
 import rpd_generator.utilities.validate_configuration as validate_configuration
 from interface.disclaimer_window import DisclaimerWindow
@@ -74,7 +74,11 @@ class InstallConfigWindow(ctk.CTkToplevel):
 
         # Create the button to manually browse for the eQUEST installation
         install_browse_button = ctk.CTkButton(
-            self, text="Browse", width=100, corner_radius=12
+            self,
+            text="Browse",
+            width=100,
+            corner_radius=12,
+            command=self.select_install_directory,
         )
         install_browse_button.grid(row=3, column=8, padx=5, pady=5)
 
@@ -101,7 +105,11 @@ class InstallConfigWindow(ctk.CTkToplevel):
 
         # Create the button to manually browse for the eQUEST installation
         user_lib_browse_button = ctk.CTkButton(
-            self, text="Browse", width=100, corner_radius=12
+            self,
+            text="Browse",
+            width=100,
+            corner_radius=12,
+            command=self.select_user_lib_directory,
         )
         user_lib_browse_button.grid(row=4, column=8, padx=5, pady=(20, 5))
 
@@ -128,8 +136,7 @@ class InstallConfigWindow(ctk.CTkToplevel):
             text="Continue",
             width=100,
             corner_radius=12,
-            # TODO: re-disable this button after browse buttons are implemented
-            # state="disabled",
+            state="disabled",
             command=self.continue_past_configuration,
         )
         self.continue_button.grid(row=0, column=2, padx=(5, 350), pady=5)
@@ -137,8 +144,11 @@ class InstallConfigWindow(ctk.CTkToplevel):
     def __repr__(self):
         return "InstallConfigWindow"
 
+    # TODO: I think we should remove the test button. Verify on browse/entry change or on continue button press.
     def verify_installation_files(self):
-        error = validate_configuration.verify_equest_installation()
+        error = validate_configuration.verify_equest_installation(
+            self.installation_path.get()
+        )
         if error == "":
             self.files_verified = True
             self.toggle_continue_button()
@@ -171,3 +181,13 @@ class InstallConfigWindow(ctk.CTkToplevel):
             self.configuration_data["installation_path"] = self.installation_path.get()
         if self.user_lib_path.get():
             self.configuration_data["user_lib_path"] = self.user_lib_path.get()
+
+    def select_install_directory(self):
+        directory_path = filedialog.askdirectory(mustexist=True)
+        if directory_path:
+            self.installation_path.set(directory_path)
+
+    def select_user_lib_directory(self):
+        directory_path = filedialog.askdirectory(mustexist=True)
+        if directory_path:
+            self.user_lib_path.set(directory_path)
