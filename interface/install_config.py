@@ -113,51 +113,29 @@ class InstallConfigWindow(ctk.CTkToplevel):
         )
         user_lib_browse_button.grid(row=4, column=8, padx=5, pady=(20, 5))
 
-        # Create a frame to hold the Test button
-        lower_button_frame = ctk.CTkFrame(self, fg_color="transparent")
-        lower_button_frame.grid(
-            row=5, column=1, columnspan=7, sticky="ew", padx=5, pady=(25, 10)
-        )
-        lower_button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
-
-        # Create the button to test the eQUEST installation files
-        test_button = ctk.CTkButton(
-            lower_button_frame,
-            text="Test",
-            width=100,
-            corner_radius=12,
-            command=self.verify_installation_files,
-        )
-        test_button.grid(row=0, column=1, padx=(350, 5), pady=5)
-
         # Create the button to continue to the Project Info page
         self.continue_button = ctk.CTkButton(
-            lower_button_frame,
+            self,
             text="Continue",
             width=100,
             corner_radius=12,
-            state="disabled",
             command=self.continue_past_configuration,
         )
-        self.continue_button.grid(row=0, column=2, padx=(5, 350), pady=5)
+        self.continue_button.grid(row=5, column=0, columnspan=9, pady=15)
 
     def __repr__(self):
         return "InstallConfigWindow"
 
-    # TODO: I think we should remove the test button. Verify on browse/entry change or on continue button press.
-    def verify_installation_files(self):
+    def continue_past_configuration(self):
         error = validate_configuration.verify_equest_installation(
             self.installation_path.get()
         )
         if error == "":
             self.files_verified = True
-            self.toggle_continue_button()
+            self.save_configuration_data()
+            self.main_app.install_config_complete()
         else:
             self.raise_error_window(error)
-
-    def continue_past_configuration(self):
-        self.save_configuration_data()
-        self.main_app.install_config_complete()
 
     def toggle_continue_button(self):
         if self.files_verified:
