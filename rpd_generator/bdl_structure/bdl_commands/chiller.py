@@ -274,18 +274,18 @@ class Chiller(BaseNode):
                     rated_part_load_ratio,
                 )
                 rated_efficiency = self.convert_capacity_and_efficiency_from_non_ahri_user_defined_conditions_to_ahri_rated_conditions(
-                    self.rated_capacity, eff_converted_to_100_percent_part_load_ratio
+                    self.rated_capacity, 1/eff_converted_to_100_percent_part_load_ratio
                 )
-                self.efficiency_metric_values.append(1 / rated_efficiency[0])
+                self.efficiency_metric_values.append(rated_efficiency[0])
                 self.efficiency_metric_types.append(
                     ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY
                 )
             else:
                 rated_efficiency = self.convert_capacity_and_efficiency_from_non_ahri_user_defined_conditions_to_ahri_rated_conditions(
                     self.rated_capacity,
-                    self.try_float(self.get_inp(input_ratio_keyword)),
+                    1/self.try_float(self.get_inp(input_ratio_keyword)),
                 )
-                self.efficiency_metric_values.append(1 / rated_efficiency[0])
+                self.efficiency_metric_values.append(rated_efficiency[0])
                 self.efficiency_metric_types.append(
                     ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY
                 )
@@ -802,6 +802,9 @@ class Chiller(BaseNode):
         """This function converts efficiency from the rated_PLR to 100% PLR. The 100% PLR
         value is what is used in hourly calculations in eQuest. It returns an adjusted rated EIR.
         """
+
+        # TODO I am not sure if this will work in all cases. Like what if 100% load at ahri rated conditions produces less than 100% PLR?
+
         coefficients, coeffs, min_outputs, max_outputs = (
             self.get_dict_of_curve_coefficient_min_and_max()
         )
@@ -874,7 +877,9 @@ class Chiller(BaseNode):
             / 1000
             / (3.412 * eff_ft_result * eff_fplr_result_plr / 3412)
         )
-        # Below is not needed, thought it would be. Left it here in case it is needed.
-        # eff_adjustment_helper_100_plr = 1/1000/(3.412*eff_ft_result*eff_fplr_result_100_plr/3412)
 
-        return efficiency * eff_adjustment_helper_plr
+        eff_adjustment_helper_100_plr = 1/1000/(3.412*eff_ft_result*eff_fplr_result_100_plr/3412)
+
+        eff_adjustment = eff_adjustment_helper_plr/eff_adjustment_helper_100_plr
+
+        return efficiency * eff_adjustment
