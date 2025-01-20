@@ -804,6 +804,8 @@ class Chiller(BaseNode):
         """
 
         # TODO I am not sure if this will work in all cases. Like what if 100% load at ahri rated conditions produces less than 100% PLR?
+        # TODO check hourly reports to better understand what eQuest is doing. Issue came up with Mods and also when I added the divider
+        # TODO by 100 PLR, maybe that is not needed for some reason. Check hourly reports on Conditions Modified to try and understand.
 
         coefficients, coeffs, min_outputs, max_outputs = (
             self.get_dict_of_curve_coefficient_min_and_max()
@@ -880,6 +882,7 @@ class Chiller(BaseNode):
 
         eff_adjustment_helper_100_plr = 1/1000/(3.412*eff_ft_result*eff_fplr_result_100_plr/3412)
 
-        eff_adjustment = eff_adjustment_helper_plr/eff_adjustment_helper_100_plr
+        #eff_adjustment = eff_adjustment_helper_plr/eff_adjustment_helper_100_plr
+        eff_adjustment = eff_adjustment_helper_plr
 
         return efficiency * eff_adjustment
