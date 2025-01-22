@@ -8,38 +8,39 @@ class SurfacesView(BaseView):
     def __init__(self, main):
         super().__init__(main)
 
+        """All subviews will be placed inside this frame. Single row/column allows formatting of subview to be
+        handled by the subview itself"""
+        self.subview_frame = ctk.CTkFrame(self)
+        self.current_subview = None
+
         self.subviews = {
-            "Exterior": ExteriorSurfaceView(self),
-            "Interior": InteriorSurfaceView(self),
-            "Underground": UndergroundSurfaceView(self),
-            "Windows": WindowSurfaceView(self),
-            "Skylights": SkylightSurfaceView(self),
-            "Doors": DoorSurfaceView(self),
+            "Exterior": ExteriorSurfaceView(self.subview_frame),
+            "Interior": InteriorSurfaceView(self.subview_frame),
+            "Underground": UndergroundSurfaceView(self.subview_frame),
+            "Windows": WindowSurfaceView(self.subview_frame),
+            "Skylights": SkylightSurfaceView(self.subview_frame),
+            "Doors": DoorSurfaceView(self.subview_frame),
         }
 
-        self.current_subview = None
-        self.subview_buttons = {}
-        self.subview_button_frame = ctk.CTkFrame(self, corner_radius=0)
-
+        """Directions frame holds all directions info and will get 'gridded' within the surfaces view grid"""
+        self.directions_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.directions_label = ctk.CTkLabel(
-            self,
+            self.directions_frame,
             text="Directions: ",
-            anchor="e",
-            justify="left",
             font=("Arial", 16, "bold"),
         )
         self.directions_widget = ctk.CTkLabel(
-            self,
+            self.directions_frame,
             text=" Assign the various data parameters for each surface.",
-            anchor="w",
-            justify="left",
             font=("Arial", 14),
         )
-        self.create_subbutton_bar()
 
-        # # Makes subview frame fill the window.
-        # self.grid_rowconfigure(2, weight=1)
-        # self.grid_columnconfigure(0, weight=1)
+        # Subview buttons
+        self.subview_buttons = {}
+        self.subview_button_frame = ctk.CTkFrame(
+            self, corner_radius=0, fg_color="transparent"
+        )
+        self.create_subbutton_bar()
 
     def __repr__(self):
         return "SurfacesView"
@@ -48,17 +49,27 @@ class SurfacesView(BaseView):
         self.toggle_active_button("Surfaces")
         self.grid_propagate(False)
 
-        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
-        self.directions_widget.grid(
-            row=0, column=1, columnspan=5, sticky="new", padx=5, pady=20
-        )
+        """3 rows in the main surface view structure. Subview frame (row 3, index 2) has a weight to make it fill up
+        the empty space in the window"""
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        self.subview_button_frame.grid(row=1, column=0, columnspan=6, sticky="nsew")
+        # Directions
+        self.directions_frame.grid(row=0, column=0, sticky="nsew", padx=50, pady=20)
+        self.directions_label.grid(row=0, column=0)
+        self.directions_widget.grid(row=0, column=1)
 
+        # Subview buttons
+        self.subview_button_frame.grid(row=1, column=0, sticky="w", padx=20)
         for index, name in enumerate(self.subview_buttons):
             # Layout the button inside the frame
             button = self.subview_buttons[name]
-            button.grid(row=0, column=index)
+            button.grid(row=0, column=index, padx=(0, 4))
+
+        # Subview frame
+        self.subview_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=(0, 20))
+        self.subview_frame.grid_rowconfigure(0, weight=1)
+        self.subview_frame.grid_columnconfigure(0, weight=1)
 
     def create_subbutton_bar(self):
         callback_methods = {
@@ -78,11 +89,10 @@ class SurfacesView(BaseView):
                 fg_color="#FFD966",
                 hover_color="#FFD966",
                 text_color="black",
-                font=("Arial", 11),
+                font=("Arial", 12, "bold"),
                 width=140,
                 height=30,
                 corner_radius=0,
-                compound="left",
                 command=callback_methods[name],
             )
             self.subview_buttons[name] = button
@@ -96,7 +106,7 @@ class SurfacesView(BaseView):
         subview = self.subviews.get(subview_name)
         if subview:
             self.current_subview = subview
-            self.current_subview.grid(row=2, column=0, columnspan=9, sticky="nsew")
+            self.current_subview.grid(row=0, column=0, sticky="nsew")
             self.current_subview.open_subview()
 
     def toggle_active_subbutton(self, active_subbutton_name):
@@ -106,30 +116,23 @@ class SurfacesView(BaseView):
                     fg_color="#FFED67",
                     hover_color="#FFED67",
                     text_color="black",
-                    font=("Arial", 12, "bold"),
                 )
             else:
                 self.subview_buttons[name].configure(
                     fg_color="#FFD966",
                     hover_color="#FFD966",
                     text_color="black",
-                    font=("Arial", 12, "bold"),
                 )
-
-    def dummy_fill(self, subview_frame):
-        for i in range(10):
-            for j in range(10):
-                label = ctk.CTkButton(subview_frame, text=f"Row {i}, Column {j}")
-                label.grid(row=i, column=j, padx=20, pady=10)
 
 
 class ExteriorSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
+        self.surfaces_view = master.master
+
         """Here we can add however many widgets in grid form like normal. The scroll bars will appear when the
          widgets exceed the frame size. Calling this 'dummy fill' method just to show scrolling works"""
-        self.surfaces_view.dummy_fill(self)
+        self.dummy_fill()
 
     def __repr__(self):
         return "ExteriorSurfaceView"
@@ -137,12 +140,19 @@ class ExteriorSurfaceView(CTkXYFrame):
     def open_subview(self):
         self.surfaces_view.toggle_active_subbutton("Exterior")
 
+    def dummy_fill(self):
+        for i in range(20):
+            for j in range(20):
+                button = ctk.CTkButton(self, text=f"Row {i}, Column {j}")
+                button.grid(row=i, column=j, padx=(0, 20), pady=(0, 20))
+
 
 class InteriorSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
-        self.surfaces_view.dummy_fill(self)
+        self.surfaces_view = master.master
+        self.subview_label = ctk.CTkLabel(self, text="Interior Surface Subview")
+        self.subview_label.grid()
 
     def __repr__(self):
         return "InteriorSurfaceView"
@@ -154,8 +164,9 @@ class InteriorSurfaceView(CTkXYFrame):
 class UndergroundSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
-        self.surfaces_view.dummy_fill(self)
+        self.surfaces_view = master.master
+        self.subview_label = ctk.CTkLabel(self, text="Underground Surface Subview")
+        self.subview_label.grid()
 
     def __repr__(self):
         return "UndergroundSurfaceView"
@@ -167,8 +178,9 @@ class UndergroundSurfaceView(CTkXYFrame):
 class WindowSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
-        self.surfaces_view.dummy_fill(self)
+        self.surfaces_view = master.master
+        self.subview_label = ctk.CTkLabel(self, text="Window Surface Subview")
+        self.subview_label.grid()
 
     def __repr__(self):
         return "WindowSurfaceView"
@@ -180,8 +192,9 @@ class WindowSurfaceView(CTkXYFrame):
 class SkylightSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
-        self.surfaces_view.dummy_fill(self)
+        self.surfaces_view = master.master
+        self.subview_label = ctk.CTkLabel(self, text="Skylight Surface Subview")
+        self.subview_label.grid()
 
     def __repr__(self):
         return "SkylightSurfaceView"
@@ -193,8 +206,9 @@ class SkylightSurfaceView(CTkXYFrame):
 class DoorSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.surfaces_view = master
-        self.surfaces_view.dummy_fill(self)
+        self.surfaces_view = master.master
+        self.subview_label = ctk.CTkLabel(self, text="Door Surface Subview")
+        self.subview_label.grid()
 
     def __repr__(self):
         return "DoorSurfaceView"

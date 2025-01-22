@@ -45,6 +45,15 @@ class MainApplicationWindow(ctk.CTk):
         # Create main application widgets
         self.menubar = self.create_menu_bar()
         self.create_nav_bar()
+
+        # Expand subviews vertically to fill maximum window space, support for vertical window resizing
+        self.grid_rowconfigure(1, weight=1)
+
+        """Uncomment this if we want to be able to expand the window and have all the contents scale with the resize.
+        If so, we'll have to make some adjustments so the top button bar doesn't act weird."""
+        # for i in range(self.grid_size()[0]):
+        #     self.grid_columnconfigure(i, weight=1)
+
         self.views = {
             "Test": TestView(self),
             "Configuration": InstallConfigView(self),
