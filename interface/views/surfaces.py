@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from interface.CTkXYFrame import CTkXYFrame
 from interface.base_view import BaseView
 
 
@@ -35,6 +36,10 @@ class SurfacesView(BaseView):
             font=("Arial", 14),
         )
         self.create_subbutton_bar()
+
+        # # Makes subview frame fill the window.
+        # self.grid_rowconfigure(2, weight=1)
+        # self.grid_columnconfigure(0, weight=1)
 
     def __repr__(self):
         return "SurfacesView"
@@ -111,11 +116,20 @@ class SurfacesView(BaseView):
                     font=("Arial", 12, "bold"),
                 )
 
+    def dummy_fill(self, subview_frame):
+        for i in range(10):
+            for j in range(10):
+                label = ctk.CTkButton(subview_frame, text=f"Row {i}, Column {j}")
+                label.grid(row=i, column=j, padx=20, pady=10)
 
-class ExteriorSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+
+class ExteriorSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        """Here we can add however many widgets in grid form like normal. The scroll bars will appear when the
+         widgets exceed the frame size. Calling this 'dummy fill' method just to show scrolling works"""
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "ExteriorSurfaceView"
@@ -124,10 +138,11 @@ class ExteriorSurfaceView(ctk.CTkFrame):
         self.surfaces_view.toggle_active_subbutton("Exterior")
 
 
-class InteriorSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+class InteriorSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "InteriorSurfaceView"
@@ -136,10 +151,11 @@ class InteriorSurfaceView(ctk.CTkFrame):
         self.surfaces_view.toggle_active_subbutton("Interior")
 
 
-class UndergroundSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+class UndergroundSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "UndergroundSurfaceView"
@@ -148,10 +164,11 @@ class UndergroundSurfaceView(ctk.CTkFrame):
         self.surfaces_view.toggle_active_subbutton("Underground")
 
 
-class WindowSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+class WindowSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "WindowSurfaceView"
@@ -160,10 +177,11 @@ class WindowSurfaceView(ctk.CTkFrame):
         self.surfaces_view.toggle_active_subbutton("Windows")
 
 
-class SkylightSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+class SkylightSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "SkylightSurfaceView"
@@ -172,10 +190,11 @@ class SkylightSurfaceView(ctk.CTkFrame):
         self.surfaces_view.toggle_active_subbutton("Skylights")
 
 
-class DoorSurfaceView(ctk.CTkFrame):
-    def __init__(self, surfaces_view):
-        ctk.CTkFrame.__init__(self, surfaces_view)
-        self.surfaces_view = surfaces_view
+class DoorSurfaceView(CTkXYFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.surfaces_view = master
+        self.surfaces_view.dummy_fill(self)
 
     def __repr__(self):
         return "DoorSurfaceView"
