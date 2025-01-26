@@ -46,8 +46,6 @@ def process_input_file(
     no_scrn_msg = 0
     write_nhk_file = 0
     callback_func_pointer = ctypes.POINTER(ctypes.c_int)()
-    # Calling the function from the DLL located in the eQUEST installation directory results in an OSError
-    # Use a try/except block to bypass the error, then verify that the BDL output file was created
     try:
         bdlcio32.BDLCIO32_ReadInput(
             work_dir.encode("utf-8"),
@@ -60,7 +58,7 @@ def process_input_file(
         )
         print("INP file processed to BDL.")
 
-    except OSError:
-        print("Bypassing OSError from eQUEST installation DLL file.")
+    except OSError as e:
+        print(f"Error processing INP file to BDL: {e}")
 
     return
