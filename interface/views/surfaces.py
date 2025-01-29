@@ -129,22 +129,28 @@ class ExteriorSurfaceView(CTkXYFrame):
     def __init__(self, master):
         super().__init__(master)
         self.surfaces_view = master.master
-
-        """Here we can add however many widgets in grid form like normal. The scroll bars will appear when the
-         widgets exceed the frame size. Calling this 'dummy fill' method just to show scrolling works"""
-        self.dummy_fill()
+        self.main_app_data = self.surfaces_view.master.app_data
+        self.is_subview_populated = False
 
     def __repr__(self):
         return "ExteriorSurfaceView"
 
     def open_subview(self):
         self.surfaces_view.toggle_active_subbutton("Exterior")
+        self.populate_subview() if not self.is_subview_populated else None
 
-    def dummy_fill(self):
-        for i in range(20):
-            for j in range(20):
-                button = ctk.CTkButton(self, text=f"Row {i}, Column {j}")
-                button.grid(row=i, column=j, padx=(0, 20), pady=(0, 20))
+    # Example of how to pull rmd data from main app
+    def populate_subview(self):
+        ext_walls = self.main_app_data.rmds[0].ext_wall_names
+
+        # TODO: Align surface names to left side of column
+        for i in range(len(ext_walls)):
+            surface_label = ctk.CTkLabel(self, text=f"{ext_walls[i]}")
+            surface_label.grid(row=i, column=0, padx=(0, 20), pady=(0, 20))
+            status_combo = ctk.CTkComboBox(self, values=["Value 1", "Value 2"])
+            status_combo.grid(row=i, column=1, padx=(0, 20), pady=(0, 20))
+
+        self.is_subview_populated = True
 
 
 class InteriorSurfaceView(CTkXYFrame):
