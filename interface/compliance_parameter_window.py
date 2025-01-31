@@ -2,9 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 from tkinter import Menu
 
-from interface.main_app_data import MainAppData
 from interface.views.test import TestView
-from interface.views.install_config import InstallConfigView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
 from interface.views.building_areas import BuildingAreasView
@@ -23,28 +21,16 @@ ctk.set_default_color_theme(
 )  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-class MainApplicationWindow(ctk.CTk):
-    def __init__(self, test_mode=False):
+class ComplianceParameterWindow(ctk.CTkToplevel):
+    def __init__(self, main_app, test_mode=False):
         super().__init__()
+        self.main_app = main_app
+
         self.title("eQUEST 229 RPD Generator")
         self.geometry(f"{1300}x{700}")
         self.minsize(1300, 350)
         self.grid_propagate(False)
         self.bg_color = self.cget("fg_color")[0]
-
-        self.license_window = None
-        self.disclaimer_window = None
-        self.error_window = None
-        self.current_view = None
-        self.errors_button = None
-        self.warnings_button = None
-        self.continue_button = None
-        self.app_data = MainAppData()
-        self.navbar_buttons = {}
-        self.create_button_bar()
-        # Create main application widgets
-        self.menubar = self.create_menu_bar()
-        self.create_nav_bar()
 
         # Expand subviews vertically to fill maximum window space, support for vertical window resizing
         self.grid_rowconfigure(1, weight=1)
@@ -56,7 +42,6 @@ class MainApplicationWindow(ctk.CTk):
 
         self.views = {
             "Test": TestView(self),
-            "Configuration": InstallConfigView(self),
             "Project Info": ProjectInfoView(self),
             "Buildings": BuildingsView(self),
             "Building Areas": BuildingAreasView(self),
@@ -68,16 +53,50 @@ class MainApplicationWindow(ctk.CTk):
             "Results": ResultsView(self),
         }
 
-        if self.app_data.installation_path.get() == "None":
-            # Initialize the configuration window to select and verify the eQUEST installation path
-            self.show_view("Configuration")
+        self.navbar_buttons = {}
 
-        elif test_mode:
+        # Initialize attributes to hold references to Widgets & Windows
+        self.current_view = None
+
+        self.warnings_button = ctk.CTkButton(
+            self,
+            text="Warnings",
+            width=90,
+            fg_color="orange",
+            hover_color="#FF8C00",
+            corner_radius=12,
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.warnings)
+            ),
+        )
+        self.errors_button = ctk.CTkButton(
+            self,
+            text="Errors",
+            width=90,
+            fg_color="red",
+            hover_color="#E60000",
+            corner_radius=12,
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.errors)
+            ),
+        )
+        self.continue_button = ctk.CTkButton(
+            self, text="Continue", width=100, corner_radius=12
+        )
+
+        self.license_window = None
+        self.disclaimer_window = None
+        self.error_window = None
+
+        # Create main application widgets
+        self.menubar = self.create_menu_bar()
+        self.create_button_bar()
+        self.create_nav_bar()
+
+        if test_mode:
             self.show_view("Test")
 
         else:
-            # If the eQUEST installation path is found, continue to the Project Info page
-            self.navbar_buttons["Project Info"].configure(state="normal")
             self.show_view("Project Info")
 
     def create_menu_bar(self):
@@ -162,7 +181,6 @@ class MainApplicationWindow(ctk.CTk):
                 width=140,
                 height=30,
                 corner_radius=0,
-                state="disabled",
                 compound="left",
                 command=callback_methods[name],
             )

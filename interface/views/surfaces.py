@@ -5,8 +5,8 @@ from interface.base_view import BaseView
 
 
 class SurfacesView(BaseView):
-    def __init__(self, main):
-        super().__init__(main)
+    def __init__(self, window):
+        super().__init__(window)
 
         """All subviews will be placed inside this frame. Single row/column allows formatting of subview to be
         handled by the subview itself"""
