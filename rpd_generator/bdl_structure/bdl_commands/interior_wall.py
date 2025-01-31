@@ -42,6 +42,7 @@ class InteriorWall(
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
+        self.rmd.int_wall_names.append(u_name)
         self.rmd.bdl_obj_instances[u_name] = self
 
         self.interior_wall_data_structure = {}
