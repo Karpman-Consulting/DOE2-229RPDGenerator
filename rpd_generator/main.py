@@ -34,12 +34,11 @@ def write_rpd_json_from_inp(inp_path_str):
         bdl_path = temp_inp_path.with_suffix(".BDL")
         json_path = temp_inp_path.with_suffix(".json")
         doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
-        # TODO Correct this path to the eQUEST installation path when BDLCIO32 issue is resolved
-        test_bdlcio32_path = Path(__file__).parents[1] / "test" / "BDLCIO32.dll"
+        bdlcio32_path = Path(Config.EQUEST_INSTALL_PATH) / "Bdlcio32.dll"
 
         # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory
         process_input_file(
-            str(test_bdlcio32_path),
+            str(bdlcio32_path),
             str(doe23_path) + "\\",
             str(temp_inp_path.parent) + "\\",
             temp_inp_path.name,
@@ -129,12 +128,11 @@ def generate_rmd_from_inp(inp_path_str: str):
         temp_inp_path = Path(temp_file_path)
         bdl_path = temp_inp_path.with_suffix(".BDL")
         doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
-        # TODO Correct this path to the eQUEST installation path when BDLCIO32 issue is resolved
-        test_bdlcio32_path = Path(__file__).parents[1] / "test" / "BDLCIO32.dll"
+        bdlcio32_path = Path(Config.EQUEST_INSTALL_PATH) / "Bdlcio32.dll"
 
         # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory
         process_input_file(
-            str(test_bdlcio32_path),
+            str(bdlcio32_path),
             str(doe23_path) + "\\",
             str(temp_inp_path.parent) + "\\",
             temp_inp_path.name,
