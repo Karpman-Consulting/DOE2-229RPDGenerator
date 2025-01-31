@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from interface.CTkXYFrame import CTkXYFrame
+from interface.ctk_xyframe import CTkXYFrame
 from interface.base_view import BaseView
 
 
@@ -126,10 +126,10 @@ class SurfacesView(BaseView):
 
 
 class ExteriorSurfaceView(CTkXYFrame):
-    def __init__(self, master):
-        super().__init__(master)
-        self.surfaces_view = master.master
-        self.main_app_data = self.surfaces_view.master.app_data
+    def __init__(self, subview_frame):
+        super().__init__(subview_frame)
+        self.surfaces_view = subview_frame.master
+        self.main_app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
