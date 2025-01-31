@@ -65,7 +65,7 @@ class ProjectInfoView(BaseView):
 
     def open_view(self):
         # Overwrite behavior of the continue button
-        self.window.continue_button.configure(command=self.validate_project_info)
+        self.window.continue_button.configure(command=self.view_continue)
         # Update the errors and warnings button formatting
         self.update_warnings_errors()
 
@@ -210,6 +210,7 @@ class ProjectInfoView(BaseView):
 
         return label, path_entry, select_button
 
+    # TODO: When model files are changed, show a button that allows regeneration of the RMDs
     def validate_project_info(self):
         """Verify that all required file paths have been selected."""
         # Check that at least 1 file path has been selected
@@ -259,17 +260,11 @@ class ProjectInfoView(BaseView):
                 )
 
         self.update_warnings_errors()
-        # If there are no errors, continue to the next page
-        self.read_project_files__continue()
+        # If there are no errors, reload the model files and refresh the GUI data
+        self.reload_model_files()
 
-    def read_project_files__continue(self):
+    def reload_model_files(self):
         self.window.main_app.data.generate_rmds()
-        self.toggle_project_tabs()
-        self.window.show_view("Buildings")
 
-    def toggle_project_tabs(self):
-        for name, button in islice(self.window.navbar_buttons.items(), 1, None):
-            if self.window.navbar_buttons[name].cget("state") == "disabled":
-                self.window.navbar_buttons[name].configure(state="normal")
-            else:
-                self.window.navbar_buttons[name].configure(state="disabled")
+    def view_continue(self):
+        self.window.show_view("Buildings")

@@ -89,8 +89,6 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             self.show_view("Test")
 
         else:
-            self.main_app.data.generate_rmds()
-            self.navbar_buttons["Project Info"].configure(state="normal")
             self.show_view("Project Info")
 
     def create_menu_bar(self):
@@ -175,7 +173,6 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
                 width=140,
                 height=30,
                 corner_radius=0,
-                state="disabled",
                 compound="left",
                 command=callback_methods[name],
             )

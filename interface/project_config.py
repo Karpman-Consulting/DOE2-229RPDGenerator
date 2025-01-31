@@ -16,10 +16,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.disclaimer_window = None
         self.error_window = None
 
-        self.ruleset_model_file_paths = {}
         self.ruleset_model_row_widgets = {}
-        self.warnings = []
-        self.errors = []
 
         self.selected_ruleset = ctk.StringVar()
         self.selected_ruleset.set("ASHRAE 90.1-2019")
@@ -277,7 +274,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 path_entry.delete(0, "end")
                 path_entry.insert(0, trimmed_path)
 
-                self.ruleset_model_file_paths[
+                self.main_app.data.ruleset_model_file_paths[
                     label_text.split(":")[0].replace("Design", "User")
                 ] = file_path
 
@@ -290,30 +287,32 @@ class ProjectConfigWindow(ctk.CTkToplevel):
     def validate_project_info(self):
         """Verify that all required file paths have been selected."""
         # Check that at least 1 file path has been selected
-        if not any(self.ruleset_model_file_paths.values()):
-            self.errors = ["At least one file must be selected to continue."]
+        if not any(self.main_app.data.ruleset_model_file_paths.values()):
+            self.main_app.data.errors = [
+                "At least one file must be selected to continue."
+            ]
             return
 
         # If the code reaches this point, at least one file is selected so clear any errors
-        self.errors.clear()
+        self.main_app.data.errors.clear()
 
         # For each file that is selected, make sure that the directory also contains the associated output files
         for (
             model_type,
             file_path,
-        ) in self.ruleset_model_file_paths.items():
+        ) in self.main_app.data.ruleset_model_file_paths.items():
             if file_path:
                 if not self.verify_associated_files(file_path):
                     model_type = model_type.replace("User", "Design")
-                    self.errors.append(
+                    self.main_app.data.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
 
-        if len(self.errors) > 0:
+        if len(self.main_app.data.errors) > 0:
             return
 
         # If the code reaches this point, at least one file is selected and all associated files are found so clear any errors
-        self.errors.clear()
+        self.main_app.data.errors.clear()
 
         # Required model types
         required_models = ["User", "Proposed", "Baseline"]
@@ -323,21 +322,22 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         # Check if all required model types have file paths selected
         for model_type in required_models:
             if (
-                model_type not in self.ruleset_model_file_paths
-                or not self.ruleset_model_file_paths[model_type]
+                model_type not in self.main_app.data.ruleset_model_file_paths
+                or not self.main_app.data.ruleset_model_file_paths[model_type]
             ):
                 model_type = model_type.replace("User", "Design")
-                self.warnings.append(
+                self.main_app.data.warnings.append(
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
-        # If there are no errors, open the Main Application Window
-        if len(self.errors) == 0:
+        # If there are no errors, generate RMDs and open the Main Application Window
+        if len(self.main_app.data.errors) == 0:
             self.save_configuration_data()
+            self.main_app.data.generate_rmds()
             self.main_app.project_config_complete()
 
         else:
-            self.raise_error_window("\n".join(self.errors))
+            self.raise_error_window("\n".join(self.main_app.data.errors))
 
     @staticmethod
     def verify_associated_files(file_path: str) -> bool:
@@ -371,4 +371,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
     # TODO: Could really be a one liner above, but leaving it for now in case we want to change data passing
     def save_configuration_data(self):
-        self.main_app.data.configuration_data.update(self.ruleset_model_file_paths)
+        self.main_app.data.configuration_data.update(
+            self.main_app.data.ruleset_model_file_paths
+        )
