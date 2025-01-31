@@ -11,6 +11,10 @@ from rpd_generator.config import Config
 
 class MainAppData:
     def __init__(self):
+        self.bdl_reader = ModelInputReader()
+        RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
+        self.rpd = RulesetProjectDescription()
+
         # Config data
         self.installation_path = ctk.StringVar()
         self.user_lib_path = None
@@ -23,14 +27,13 @@ class MainAppData:
         self.selected_ruleset = ctk.StringVar()
         self.selected_ruleset.set("ASHRAE 90.1-2019")
         self.ruleset_model_file_paths = {}
-        self.bdl_reader = ModelInputReader()
-        RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
-        self.rpd = RulesetProjectDescription()
+
         self.rmds = []
         self.warnings = []
         self.errors = []
 
         self.installation_path.set(Config.EQUEST_INSTALL_PATH)
+        self.configuration_data = {}
 
     @staticmethod
     def verify_associated_files(file_path: str) -> bool:

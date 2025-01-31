@@ -2,7 +2,6 @@ import customtkinter as ctk
 from PIL import Image
 from tkinter import Menu
 
-from interface.main_app_data import MainAppData
 from interface.views.test import TestView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
@@ -23,17 +22,15 @@ ctk.set_default_color_theme(
 
 
 class ComplianceParameterWindow(ctk.CTkToplevel):
-    def __init__(self, main_app, configuration_data, test_mode=False):
+    def __init__(self, main_app, test_mode=False):
         super().__init__()
+        self.main_app = main_app
+
         self.title("eQUEST 229 RPD Generator")
         self.geometry(f"{1300}x{700}")
         self.minsize(1300, 350)
         self.grid_propagate(False)
         self.bg_color = self.cget("fg_color")[0]
-
-        self.app_data = MainAppData()
-        self.main_app = main_app
-        self.configuration_data = configuration_data
 
         self.views = {
             "Test": TestView(self),
@@ -60,7 +57,9 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             fg_color="orange",
             hover_color="#FF8C00",
             corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.warnings)),
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.warnings)
+            ),
         )
         self.errors_button = ctk.CTkButton(
             self,
@@ -69,7 +68,9 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#E60000",
             corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.errors)),
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.errors)
+            ),
         )
         self.continue_button = ctk.CTkButton(
             self, text="Continue", width=100, corner_radius=12
@@ -88,7 +89,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             self.show_view("Test")
 
         else:
-            self.app_data.generate_rmds()
+            self.main_app.data.generate_rmds()
             self.navbar_buttons["Project Info"].configure(state="normal")
             self.show_view("Project Info")
 

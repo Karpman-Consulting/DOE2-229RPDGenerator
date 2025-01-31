@@ -7,15 +7,14 @@ from interface.error_window import ErrorWindow
 
 
 class InstallConfigWindow(ctk.CTkToplevel):
-    def __init__(self, main_app, configuration_data):
+    def __init__(self, main_app):
         super().__init__()
+        self.main_app = main_app
+
         self.title("eQUEST Installation Configuration")
         self.license_window = None
         self.disclaimer_window = None
         self.error_window = None
-
-        self.main_app = main_app
-        self.configuration_data = configuration_data
 
         self.installation_path = ctk.StringVar()
         self.user_lib_path = ctk.StringVar()
@@ -156,9 +155,13 @@ class InstallConfigWindow(ctk.CTkToplevel):
 
     def save_configuration_data(self):
         if self.installation_path.get():
-            self.configuration_data["installation_path"] = self.installation_path.get()
+            self.main_app.data.configuration_data["installation_path"] = (
+                self.installation_path.get()
+            )
         if self.user_lib_path.get():
-            self.configuration_data["user_lib_path"] = self.user_lib_path.get()
+            self.main_app.data.configuration_data["user_lib_path"] = (
+                self.user_lib_path.get()
+            )
 
     def select_install_directory(self):
         directory_path = filedialog.askdirectory(mustexist=True)

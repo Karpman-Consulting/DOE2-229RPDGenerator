@@ -1,9 +1,9 @@
-import customtkinter as ctk
 import tkinter as tk
 
 from interface.compliance_parameter_window import ComplianceParameterWindow
 from interface.install_config import InstallConfigWindow
 from interface.project_config import ProjectConfigWindow
+from interface.main_app_data import MainAppData
 
 from rpd_generator.config import Config
 from rpd_generator.utilities import validate_configuration
@@ -20,18 +20,21 @@ background. It looks like this your_window.protocol("WM_DELETE_WINDOW", self.qui
 class MainApplication(tk.Tk):
     def __init__(self, test_mode=False):
         super().__init__()
+        self.data = MainAppData()
         self.test_mode = test_mode
+
         self.install_config_window = None
         self.project_config_window = None
         self.compliance_parameter_window = None
 
-        # Data container for passing between top level windows
-        self.configuration_data = {}
-
         # Placeholder so we can see main app window open for sanity check.
         # If it becomes visible we will at least know what it is.
         self.title("Main Application Window")
-        self.main_app_window_label = tk.Label(self, text="Main Application Window")
+        self.main_app_window_label = tk.Label(
+            self,
+            text="\U0001F419 ...You shouldn't be seeing this... \U0001F419",
+            font=("Segoe UI Emoji", 20),
+        )
         self.main_app_window_label.pack(anchor="center", padx=10, pady=10)
         self.withdraw()
 
@@ -44,28 +47,24 @@ class MainApplication(tk.Tk):
         """
         if self.test_mode:
             self.compliance_parameter_window = ComplianceParameterWindow(
-                self, self.configuration_data, self.test_mode
+                self, self.test_mode
             )
             self.compliance_parameter_window.protocol("WM_DELETE_WINDOW", self.quit)
 
         else:
             validate_configuration.find_equest_installation()
             if Config.EQUEST_INSTALL_PATH:
-                self.project_config_window = ProjectConfigWindow(
-                    self, self.configuration_data
-                )
+                self.project_config_window = ProjectConfigWindow(self)
                 self.project_config_window.protocol("WM_DELETE_WINDOW", self.quit)
             else:
-                self.install_config_window = InstallConfigWindow(
-                    self, self.configuration_data
-                )
+                self.install_config_window = InstallConfigWindow(self)
                 self.install_config_window.protocol("WM_DELETE_WINDOW", self.quit)
 
     def install_config_complete(self):
         """Called by InstallConfigWindow when the user has successfully configured the installation path. Closes
         the InstallConfigWindow and opens the ProjectConfigWindow"""
         self.install_config_window.destroy()
-        self.project_config_window = ProjectConfigWindow(self, self.configuration_data)
+        self.project_config_window = ProjectConfigWindow(self)
         self.project_config_window.protocol("WM_DELETE_WINDOW", self.quit)
 
     def project_config_complete(self):
@@ -73,6 +72,6 @@ class MainApplication(tk.Tk):
         ProjectConfigWindow and opens the ComplianceParameterWindow"""
         self.project_config_window.destroy()
         self.compliance_parameter_window = ComplianceParameterWindow(
-            self, self.configuration_data, self.test_mode
+            self, self.test_mode
         )
         self.compliance_parameter_window.protocol("WM_DELETE_WINDOW", self.quit)

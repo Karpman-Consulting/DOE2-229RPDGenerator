@@ -6,8 +6,8 @@ from interface.base_view import BaseView
 
 
 class ProjectInfoView(BaseView):
-    def __init__(self, main):
-        super().__init__(main)
+    def __init__(self, window):
+        super().__init__(window)
 
         self.ruleset_model_row_widgets = {}
 
@@ -65,7 +65,7 @@ class ProjectInfoView(BaseView):
 
     def open_view(self):
         # Overwrite behavior of the continue button
-        self.main.continue_button.configure(command=self.validate_project_info)
+        self.window.continue_button.configure(command=self.validate_project_info)
         # Update the errors and warnings button formatting
         self.update_warnings_errors()
 
@@ -93,14 +93,14 @@ class ProjectInfoView(BaseView):
         self.ruleset_models_frame.grid(row=4, column=1, columnspan=8, sticky="nsew")
 
     def update_ruleset_model_frame(self, ruleset_models_frame, selected_ruleset):
-        self.main.app_data.selected_ruleset.set(selected_ruleset)
+        self.window.main_app.data.selected_ruleset.set(selected_ruleset)
         self.rotation_exception_checkbox.grid_remove()
         self.clear_ruleset_models_frame()
         self.show_ruleset_models(ruleset_models_frame)
 
     def show_ruleset_models(self, parent_frame):
         # Main logic
-        if self.main.app_data.selected_ruleset.get() == "ASHRAE 90.1-2019":
+        if self.window.main_app.data.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
                 row=3, column=4, columnspan=4, sticky="w", padx=5, pady=10
             )
@@ -173,10 +173,12 @@ class ProjectInfoView(BaseView):
         # Create entry, prepopulate project info if selected in project config on startup
         path_entry = ctk.CTkEntry(parent_frame, width=700, font=("Arial", 12))
         label_text = label_text.split(":")[0].replace("Design", "User")
-        if self.main.configuration_data.get(label_text):
-            path_entry.insert(0, self.main.configuration_data[label_text])
-            self.main.app_data.ruleset_model_file_paths[label_text] = (
-                self.main.configuration_data[label_text]
+        if self.window.main_app.data.configuration_data.get(label_text):
+            path_entry.insert(
+                0, self.window.main_app.data.configuration_data[label_text]
+            )
+            self.window.main_app.data.ruleset_model_file_paths[label_text] = (
+                self.window.main_app.data.configuration_data[label_text]
             )
 
         # File select button
@@ -198,7 +200,7 @@ class ProjectInfoView(BaseView):
                 path_entry.delete(0, "end")
                 path_entry.insert(0, trimmed_path)
 
-                self.main.app_data.ruleset_model_file_paths[
+                self.window.main_app.data.ruleset_model_file_paths[
                     label_text.split(":")[0].replace("Design", "User")
                 ] = file_path
 
@@ -211,34 +213,34 @@ class ProjectInfoView(BaseView):
     def validate_project_info(self):
         """Verify that all required file paths have been selected."""
         # Check that at least 1 file path has been selected
-        if not any(self.main.app_data.ruleset_model_file_paths.values()):
-            self.main.app_data.errors = [
+        if not any(self.window.main_app.data.ruleset_model_file_paths.values()):
+            self.window.main_app.data.errors = [
                 "At least one file must be selected to continue."
             ]
             self.update_warnings_errors()
             return
 
         # If the code reaches this point, at least one file is selected so clear any errors
-        self.main.app_data.errors.clear()
+        self.window.main_app.data.errors.clear()
 
         # For each file that is selected, make sure that the directory also contains the associated output files
         for (
             model_type,
             file_path,
-        ) in self.main.app_data.ruleset_model_file_paths.items():
+        ) in self.window.main_app.data.ruleset_model_file_paths.items():
             if file_path:
-                if not self.main.app_data.verify_associated_files(file_path):
+                if not self.window.main_app.data.verify_associated_files(file_path):
                     model_type = model_type.replace("User", "Design")
-                    self.main.app_data.errors.append(
+                    self.window.main_app.data.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
                     self.update_warnings_errors()
 
-        if len(self.main.app_data.errors) > 0:
+        if len(self.window.main_app.data.errors) > 0:
             return
 
         # If the code reaches this point, at least one file is selected and all associated files are found so clear any errors
-        self.main.app_data.errors.clear()
+        self.window.main_app.data.errors.clear()
 
         # Required model types
         required_models = ["User", "Proposed", "Baseline"]
@@ -248,11 +250,11 @@ class ProjectInfoView(BaseView):
         # Check if all required model types have file paths selected
         for model_type in required_models:
             if (
-                model_type not in self.main.app_data.ruleset_model_file_paths
-                or not self.main.app_data.ruleset_model_file_paths[model_type]
+                model_type not in self.window.main_app.data.ruleset_model_file_paths
+                or not self.window.main_app.data.ruleset_model_file_paths[model_type]
             ):
                 model_type = model_type.replace("User", "Design")
-                self.main.app_data.warnings.append(
+                self.window.main_app.data.warnings.append(
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
@@ -261,13 +263,13 @@ class ProjectInfoView(BaseView):
         self.read_project_files__continue()
 
     def read_project_files__continue(self):
-        self.main.app_data.generate_rmds()
+        self.window.main_app.data.generate_rmds()
         self.toggle_project_tabs()
-        self.main.show_view("Buildings")
+        self.window.show_view("Buildings")
 
     def toggle_project_tabs(self):
-        for name, button in islice(self.main.navbar_buttons.items(), 1, None):
-            if self.main.navbar_buttons[name].cget("state") == "disabled":
-                self.main.navbar_buttons[name].configure(state="normal")
+        for name, button in islice(self.window.navbar_buttons.items(), 1, None):
+            if self.window.navbar_buttons[name].cget("state") == "disabled":
+                self.window.navbar_buttons[name].configure(state="normal")
             else:
-                self.main.navbar_buttons[name].configure(state="disabled")
+                self.window.navbar_buttons[name].configure(state="disabled")

@@ -7,15 +7,14 @@ from interface.error_window import ErrorWindow
 
 
 class ProjectConfigWindow(ctk.CTkToplevel):
-    def __init__(self, main_app, configuration_data):
+    def __init__(self, main_app):
         super().__init__()
+        self.main_app = main_app
+
         self.title("Project Configuration")
         self.license_window = None
         self.disclaimer_window = None
         self.error_window = None
-
-        self.main_app = main_app
-        self.configuration_data = configuration_data
 
         self.ruleset_model_file_paths = {}
         self.ruleset_model_row_widgets = {}
@@ -372,4 +371,4 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
     # TODO: Could really be a one liner above, but leaving it for now in case we want to change data passing
     def save_configuration_data(self):
-        self.configuration_data.update(self.ruleset_model_file_paths)
+        self.main_app.data.configuration_data.update(self.ruleset_model_file_paths)
