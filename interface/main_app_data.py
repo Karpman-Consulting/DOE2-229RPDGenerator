@@ -6,12 +6,15 @@ from rpd_generator.artifacts.ruleset_project_description import (
     RulesetProjectDescription,
 )
 from rpd_generator.doe2_file_readers.model_input_reader import ModelInputReader
-from rpd_generator.utilities import validate_configuration
 from rpd_generator.config import Config
 
 
 class MainAppData:
     def __init__(self):
+        self.bdl_reader = ModelInputReader()
+        RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
+        self.rpd = RulesetProjectDescription()
+
         # Config data
         self.installation_path = ctk.StringVar()
         self.user_lib_path = None
@@ -24,16 +27,13 @@ class MainAppData:
         self.selected_ruleset = ctk.StringVar()
         self.selected_ruleset.set("ASHRAE 90.1-2019")
         self.ruleset_model_file_paths = {}
-        self.bdl_reader = ModelInputReader()
-        RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
-        self.rpd = RulesetProjectDescription()
+
         self.rmds = []
         self.warnings = []
         self.errors = []
 
-        # Attempt to automatically find the eQUEST installation path and set the data paths from the config files
-        validate_configuration.find_equest_installation()
         self.installation_path.set(Config.EQUEST_INSTALL_PATH)
+        self.configuration_data = {}
 
     @staticmethod
     def verify_associated_files(file_path: str) -> bool:
