@@ -2,7 +2,6 @@ import re
 from itertools import chain
 from jsonpath_ng.ext import parse
 from typing import TypedDict
-from collections import defaultdict
 
 
 class ZonesTerminalsServedByHVACSys(TypedDict):
