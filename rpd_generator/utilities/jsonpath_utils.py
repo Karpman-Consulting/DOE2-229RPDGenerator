@@ -2,6 +2,7 @@ import re
 from itertools import chain
 from jsonpath_ng.ext import parse
 from typing import TypedDict
+from collections import defaultdict
 
 
 class ZonesTerminalsServedByHVACSys(TypedDict):
@@ -13,8 +14,13 @@ def create_enum_dict(obj):
     enum_dict = {}
     if "definitions" in obj:
         for key, value in obj["definitions"].items():
+            enum_description = {}
             if "enum" in value:
-                enum_dict[key] = value["enum"]
+                enum_description["enum"] = value["enum"]
+            if "descriptions" in value:
+                enum_description["descriptions"] = value["descriptions"]
+            enum_dict[key] = enum_description
+
     return enum_dict
 
 
