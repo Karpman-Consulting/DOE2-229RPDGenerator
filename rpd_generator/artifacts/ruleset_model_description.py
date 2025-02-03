@@ -217,6 +217,13 @@ class RulesetModelDescription(Base):
         )
         return [t[1] for t in sorted_tuples]
 
+    def get_obj(self, u_name):
+        """
+        Return the object instance by its u_name.
+        :param u_name: str
+        """
+        return self.bdl_obj_instances.get(u_name, None)
+
     def populate_data_elements(self):
         site_parameter_obj = self.bdl_obj_instances.get(self.site_parameter_name)
         altitude = site_parameter_obj.get_inp(BDL_SiteParameterKeywords.ALTITUDE)
