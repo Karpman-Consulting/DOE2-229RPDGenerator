@@ -5,6 +5,9 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 ScheduleOptions = SchemaEnums.schema_enums["ScheduleOptions"]
 ScheduleSequenceOptions = SchemaEnums.schema_enums["ScheduleSequenceOptions"]
+PrescribedScheduleOptions = SchemaEnums.schema_enums[
+    "PrescribedScheduleOptions2019ASHRAE901"
+]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ScheduleTypes = BDLEnums.bdl_enums["ScheduleTypes"]
 BDL_DayScheduleKeywords = BDLEnums.bdl_enums["DayScheduleKeywords"]
@@ -150,7 +153,7 @@ class Schedule(BaseNode):
         self.event_times_cooling_design_day = None
         self.event_values_cooling_design_day = None
         self.type = None
-        self.prescribed_type = None
+        self.prescribed_type = PrescribedScheduleOptions.NOT_APPLICABLE
         self.is_modified_for_workaround = None
 
     def __repr__(self):

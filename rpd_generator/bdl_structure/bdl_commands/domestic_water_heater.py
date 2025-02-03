@@ -5,7 +5,6 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 ComponentLocationOptions = SchemaEnums.schema_enums["ComponentLocationOptions"]
-ServiceWaterHeaterOptions = SchemaEnums.schema_enums["ServiceWaterHeaterOptions"]
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_DWHeaterKeywords = BDLEnums.bdl_enums["DomesticWaterHeaterKeywords"]
@@ -20,12 +19,6 @@ class DomesticWaterHeater(BaseNode):
     """DomesticWaterHeater object in the tree."""
 
     bdl_command = BDL_Commands.DW_HEATER
-
-    heater_type_map = {
-        BDL_DWHeaterTypes.GAS: ServiceWaterHeaterOptions.CONVENTIONAL,
-        BDL_DWHeaterTypes.ELEC: ServiceWaterHeaterOptions.CONVENTIONAL,
-        BDL_DWHeaterTypes.HEAT_PUMP: ServiceWaterHeaterOptions.HEAT_PUMP_PACKAGED,
-    }
 
     location_map = {
         BDL_DWHeaterLocationOptions.OUTDOOR: ComponentLocationOptions.OUTSIDE,
@@ -91,9 +84,6 @@ class DomesticWaterHeater(BaseNode):
                     output_data[key], "Btu/hr", "MMbtu_h"
                 )
 
-        self.heater_type = self.heater_type_map.get(
-            self.get_inp(BDL_DWHeaterKeywords.TYPE)
-        )
         if self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.ELEC:
             self.heater_fuel_type = EnergySourceOptions.ELECTRICITY
         elif self.get_inp(BDL_DWHeaterKeywords.TYPE) == BDL_DWHeaterTypes.HEAT_PUMP:
