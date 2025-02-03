@@ -142,12 +142,13 @@ class ExteriorSurfaceView(CTkXYFrame):
     # Example of how to pull rmd data from main app
     def populate_subview(self):
         ext_walls = self.main_app_data.rmds[0].ext_wall_names
-
-        # TODO: Align surface names to left side of column
-        for i in range(len(ext_walls)):
-            surface_label = ctk.CTkLabel(self, text=f"{ext_walls[i]}")
-            surface_label.grid(row=i, column=0, padx=(0, 20), pady=(0, 20))
-            status_combo = ctk.CTkComboBox(self, values=["Value 1", "Value 2"])
+        for i, ext_wall in enumerate(ext_walls):
+            surface_label = ctk.CTkLabel(self, text=f"{ext_wall}")
+            surface_label.grid(row=i, column=0, padx=(0, 20), pady=(0, 20), sticky="w")
+            status_combo = ctk.CTkComboBox(
+                self, values=["Value 1", "Value 2"], state="readonly"
+            )
+            status_combo._entry.configure(justify="left")
             status_combo.grid(row=i, column=1, padx=(0, 20), pady=(0, 20))
 
         self.is_subview_populated = True
