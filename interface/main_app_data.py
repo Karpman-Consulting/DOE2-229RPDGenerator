@@ -11,7 +11,7 @@ from rpd_generator.schema.schema_enums import SchemaEnums
 
 
 class MainAppData:
-    print(SchemaEnums.schema_descriptions)
+
     CommonConstructionClassificationOptions = SchemaEnums.schema_descriptions[
         "CommonConstructionClassificationOptions"
     ]
