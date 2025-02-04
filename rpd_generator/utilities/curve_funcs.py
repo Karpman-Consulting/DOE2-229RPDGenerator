@@ -290,7 +290,8 @@ def are_curve_outputs_all_equal_to_a_value_of_one(
     percent_margin_of_error: float,
 ):
     """ This assumes 100% load. The function checks whether the output of each curve is equal to 1 with the specified margin of error.
-    The function returns a True or False. This was created to assess cap_ft, eff_ct, and eir_fplr curves only.
+    The function returns a True or False. This was created to assess cap_ft, eff_ct, and eir_fplr curves only. The margin of error
+    is expected to be a number from 0 to 100 (not a fraction). Default based on observations of curves 1.5.
         """
 
     coeffs = {}
@@ -370,3 +371,69 @@ def is_within_margin(value, target, percent_margin):
     lower_bound = target * (1 - percent_margin / 100)
     upper_bound = target * (1 + percent_margin / 100)
     return lower_bound <= value <= upper_bound
+
+
+def adjust_capacity_for_entered_plr(plr_rated: float, capacity: float, capft_result: float):
+    """ Function adjusts capacity for the situation when part load ratio rated in defined.
+    This formula adjusts to AHRI rated conditions. plr_rated is the part load ratio defined in the
+    eQuest UI. Capacity is the unadjusted capacity. cap_ft_result is the results of the capacity as
+    a function of temperature curve"""
+
+    capacity_adj = capacity * (1/capft_result) * (1/plr_rated)
+
+    return capacity_adj
+
+def calculate_results_of_efficiency_performance_curves_with_specific_part_load_ratio(
+    evap_leaving_temp,
+    condenser_entering_temp,
+    curves: dict,
+    part_load_ratio,
+):
+
+    # Coefficients, min_outputs, and max_outputs dictionaries
+    eff_ft_coeffs = coeffs["eff_ft_coeffs"]
+    eff_fplr_coeffs = coeffs["eff_fplr_coeffs"]
+
+    eff_ft_min_otpt = min_outputs["eff_ft_min_otpt"]
+    eff_ft_max_otpt = max_outputs["eff_ft_max_otpt"]
+    eff_fplr_min_otpt = min_outputs["eff_fplr_min_otpt"]
+    eff_fplr_max_otpt = max_outputs["eff_fplr_max_otpt"]
+
+    eff_fplr_curve_type = curves["cap_ft"].get_inp(BDL_CurveFitKeywords.TYPE)
+
+    curve_function_map = {
+        BDL_CurveFitTypes.QUADRATIC: curve_funcs.calculate_quadratic,
+        BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
+    }
+
+
+    eff_ft_result = curve_funcs.calculate_bi_quadratic(
+        eff_ft_coeffs,
+        evap_leaving_temp,
+        condenser_entering_temp,
+        eff_ft_min_otpt,
+        eff_ft_max_otpt,
+    )
+
+
+    if eff_fplr_curve_type in curve_function_map:
+        eff_fplr_result = curve_function_map[eff_fplr_curve_type](
+            eff_fplr_coeffs,
+            part_load_ratio,
+            eff_fplr_min_otpt,
+            eff_fplr_max_otpt,
+        )
+    else:
+        delta_temp = condenser_entering_temp - evap_leaving_temp
+        eff_fplr_result = curve_funcs.calculate_bi_quadratic(
+            eff_fplr_coeffs,
+            part_load_ratio,
+            delta_temp,
+            eff_fplr_min_otpt,
+            eff_fplr_max_otpt,
+        )
+    results = {
+        "eff_ft_result": eff_ft_result,
+        "eff_fplr_result": eff_fplr_result,
+    }
+    return results
