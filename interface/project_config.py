@@ -22,6 +22,12 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.selected_ruleset.set("ASHRAE 90.1-2019")
 
         # Initialize Widgets
+        self.new_construction_checkbox = None
+        self.new_construction_checkbox = ctk.CTkCheckBox(
+            self,
+            text="All new construction?",
+            font=("Arial", 14),
+        )
         self.rotation_exception_checkbox = ctk.CTkCheckBox(
             self,
             text="Meets 90.1-2019 Table G3.1(5) Baseline Building Performance (a) Exceptions",
@@ -134,6 +140,9 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.ruleset_label.grid(row=2, column=0, sticky="e", padx=(20, 5), pady=10)
         self.ruleset_dropdown.grid(
             row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
+        )
+        self.new_construction_checkbox.grid(
+            row=2, column=3, sticky="w", padx=5, pady=10
         )
         # Row 3 Placeholder for the rotation exception checkbox
         # Row 4
@@ -369,8 +378,11 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         return True
 
-    # TODO: Could really be a one liner above, but leaving it for now in case we want to change data passing
+    # TODO: Magic string dictionary values in config data. Should we make enums for these?
     def save_configuration_data(self):
         self.main_app.data.configuration_data.update(
             self.main_app.data.ruleset_model_file_paths
+        )
+        self.main_app.data.configuration_data["new_construction"] = bool(
+            self.new_construction_checkbox.get()
         )
