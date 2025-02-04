@@ -1,15 +1,25 @@
 import customtkinter as ctk
-from tkinter import filedialog
-from itertools import islice
+from tkinter import Menu, filedialog
+from pathlib import Path
 
-from interface.base_view import BaseView
+from interface.disclaimer_window import DisclaimerWindow
+from interface.error_window import ErrorWindow
 
 
-class ProjectInfoView(BaseView):
-    def __init__(self, window):
-        super().__init__(window)
+class ProjectConfigWindow(ctk.CTkToplevel):
+    def __init__(self, main_app):
+        super().__init__()
+        self.main_app = main_app
+
+        self.title("Project Configuration")
+        self.license_window = None
+        self.disclaimer_window = None
+        self.error_window = None
 
         self.ruleset_model_row_widgets = {}
+
+        self.selected_ruleset = ctk.StringVar()
+        self.selected_ruleset.set("ASHRAE 90.1-2019")
 
         # Initialize Widgets
         self.rotation_exception_checkbox = ctk.CTkCheckBox(
@@ -26,7 +36,7 @@ class ProjectInfoView(BaseView):
             font=("Arial", 16, "bold"),
         )
 
-        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) associated with each of the \napplicable models expected by the ruleset."
+        directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) \nassociated with each of the applicable models expected by the ruleset."
         self.directions = ctk.CTkLabel(
             self,
             text=directions_text,
@@ -60,28 +70,68 @@ class ProjectInfoView(BaseView):
             font=("Arial", 14, "bold"),
         )
 
+        self.continue_button = ctk.CTkButton(
+            self,
+            text="Continue",
+            width=100,
+            corner_radius=12,
+            command=self.validate_project_info,
+        )
+        self.menubar = self.create_menu_bar()
+        self.place_widgets()
+        self.create_nav_bar()
+
     def __repr__(self):
-        return "ProjectInfoView"
+        return "ProjectConfigWindow"
 
-    def open_view(self):
-        # Overwrite behavior of the continue button
-        self.window.continue_button.configure(command=self.view_continue)
-        # Update the errors and warnings button formatting
-        self.update_warnings_errors()
+    def create_nav_bar(self):
+        # Create the button to continue to the Buildings page
+        self.continue_button.grid(row=5, column=0, columnspan=9, pady=15)
 
-        self.toggle_active_button("Project Info")
+    def create_menu_bar(self):
+        menubar = Menu(self)
+        file_menu = Menu(menubar, tearoff=0)
+        file_menu.add_command(label="New", command="donothing")
+        file_menu.add_command(label="Open", command="donothing")
+        file_menu.add_command(label="Save", command="donothing")
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self.quit)
+        menubar.add_cascade(label="File", menu=file_menu)
 
+        help_menu = Menu(menubar, tearoff=0)
+        help_menu.add_command(label="Instructions", command="donothing")
+        help_menu.add_command(label="Background", command="donothing")
+        help_menu.add_separator()
+        help_menu.add_command(label="License", command="donothing")
+        help_menu.add_command(label="Disclaimer", command=self.raise_disclaimer_window)
+        menubar.add_cascade(label="About", menu=help_menu)
+
+        self.config(menu=menubar)
+        return menubar
+
+    def raise_disclaimer_window(self):
+        if self.disclaimer_window is None or not self.disclaimer_window.winfo_exists():
+            self.disclaimer_window = DisclaimerWindow(self)
+            self.disclaimer_window.after(100, self.disclaimer_window.lift)
+        else:
+            self.disclaimer_window.focus()  # if window exists, focus it
+
+    def raise_error_window(self, error_text):
+        self.error_window = ErrorWindow(self, error_text)
+        self.error_window.after(100, self.error_window.lift)
+
+    def place_widgets(self):
         # Place widgets
         # Row 0
         self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
-        self.directions.grid(
-            row=0, column=1, columnspan=8, sticky="new", padx=5, pady=20
-        )
+        self.directions.grid(row=0, column=1, columnspan=6, sticky="new", pady=20)
         # Row 1
         self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=20)
-        self.note.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=20)
+        self.note.grid(
+            row=1, column=1, columnspan=8, sticky="ew", padx=(5, 20), pady=20
+        )
         # Row 2
-        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=5, pady=10)
+        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=(20, 5), pady=10)
         self.ruleset_dropdown.grid(
             row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
         )
@@ -90,23 +140,34 @@ class ProjectInfoView(BaseView):
         self.ruleset_models_label.grid(row=4, column=0, sticky="ew", padx=5, pady=20)
 
         self.show_ruleset_models(self.ruleset_models_frame)
-        self.ruleset_models_frame.grid(row=4, column=1, columnspan=8, sticky="nsew")
+        self.ruleset_models_frame.grid(row=4, column=1, columnspan=6, sticky="nsew")
 
     def update_ruleset_model_frame(self, ruleset_models_frame, selected_ruleset):
-        self.window.main_app.data.selected_ruleset.set(selected_ruleset)
+        self.selected_ruleset.set(selected_ruleset)
         self.rotation_exception_checkbox.grid_remove()
         self.clear_ruleset_models_frame()
         self.show_ruleset_models(ruleset_models_frame)
 
     def show_ruleset_models(self, parent_frame):
         # Main logic
-        if self.window.main_app.data.selected_ruleset.get() == "ASHRAE 90.1-2019":
+        if self.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
-                row=3, column=4, columnspan=4, sticky="w", padx=5, pady=10
+                row=3, column=3, columnspan=4, sticky="w", padx=5, pady=10
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
+            """PH stands for Placeholder. Used to fill a UI gap when the rotation exception checkbox is checked.
+            Label will not be displayed and other widgets in the row will not be created."""
             if not self.rotation_exception_checkbox.get():
-                labels.extend(["Baseline 90: ", "Baseline 180: ", "Baseline 270: "])
+                labels.extend(
+                    [
+                        "Baseline 90: ",
+                        "Baseline 180: ",
+                        "Baseline 270: ",
+                        "PH Baseline 90: ",
+                        "PH Baseline 180: ",
+                        "PH Baseline 270: ",
+                    ]
+                )
         else:
             labels = ["Design: "]
 
@@ -127,6 +188,14 @@ class ProjectInfoView(BaseView):
             )
             select_button.grid(row=row_num, column=8, sticky="ew", padx=5, pady=5)
 
+            # If the label is a placeholder, do not place the widgets. Only place blank label.
+            if label_text in [
+                "PH Baseline 90: ",
+                "PH Baseline 180: ",
+                "PH Baseline 270: ",
+            ]:
+                label.grid_remove()
+
             # Store created widgets for reuse
             self.ruleset_model_row_widgets[label_text.split(":")[0]] = (
                 label,
@@ -139,6 +208,13 @@ class ProjectInfoView(BaseView):
             for widget in row_widgets:
                 widget.grid_remove()
 
+    """To avoid the jarring experience of the UI elements shifting around when the rotation exception checkbox
+     is checked, I made blank placeholder rows for each of the 3 baseline rotations. There is a little bit of 
+     movement when the checkbox is toggled, but it is much less noticeable. I think the best solution for this
+     would be to disable the baseline rotation rows when the exception checkbox is checked. Tkinter does not handle
+     disabling input fields very well, so I went with this solution instead. I could be very easily convinced to
+     change my mind here either way."""
+
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
         for row_widgets in self.ruleset_model_row_widgets.values():
@@ -146,6 +222,7 @@ class ProjectInfoView(BaseView):
                 "Baseline 90: ",
                 "Baseline 180: ",
                 "Baseline 270: ",
+                "",
             ]:
                 if row_widgets[0].winfo_ismapped():
                     # If visible, hide them
@@ -161,6 +238,11 @@ class ProjectInfoView(BaseView):
         if self.ruleset_model_row_widgets.get(label_text.split(":")[0]):
             return self.ruleset_model_row_widgets[label_text.split(":")[0]]
 
+        # If the label is a placeholder, do not place the widgets. Only place blank label.
+        if label_text in ["PH Baseline 90: ", "PH Baseline 180: ", "PH Baseline 270: "]:
+            label = ctk.CTkLabel(parent_frame, text="")
+            return label, label, label
+
         # Create label
         label = ctk.CTkLabel(
             parent_frame,
@@ -170,16 +252,8 @@ class ProjectInfoView(BaseView):
             anchor="e",  # Align text to the right within the label
         )
 
-        # Create entry, prepopulate project info if selected in project config on startup
+        # Create entry
         path_entry = ctk.CTkEntry(parent_frame, width=700, font=("Arial", 12))
-        label_text = label_text.split(":")[0].replace("Design", "User")
-        if self.window.main_app.data.configuration_data.get(label_text):
-            path_entry.insert(
-                0, self.window.main_app.data.configuration_data[label_text]
-            )
-            self.window.main_app.data.ruleset_model_file_paths[label_text] = (
-                self.window.main_app.data.configuration_data[label_text]
-            )
 
         # File select button
         def select_file():
@@ -200,7 +274,7 @@ class ProjectInfoView(BaseView):
                 path_entry.delete(0, "end")
                 path_entry.insert(0, trimmed_path)
 
-                self.window.main_app.data.ruleset_model_file_paths[
+                self.main_app.data.ruleset_model_file_paths[
                     label_text.split(":")[0].replace("Design", "User")
                 ] = file_path
 
@@ -210,38 +284,35 @@ class ProjectInfoView(BaseView):
 
         return label, path_entry, select_button
 
-    # TODO: When model files are changed, show a button that allows regeneration of the RMDs
     def validate_project_info(self):
         """Verify that all required file paths have been selected."""
         # Check that at least 1 file path has been selected
-        if not any(self.window.main_app.data.ruleset_model_file_paths.values()):
-            self.window.main_app.data.errors = [
+        if not any(self.main_app.data.ruleset_model_file_paths.values()):
+            self.main_app.data.errors = [
                 "At least one file must be selected to continue."
             ]
-            self.update_warnings_errors()
             return
 
         # If the code reaches this point, at least one file is selected so clear any errors
-        self.window.main_app.data.errors.clear()
+        self.main_app.data.errors.clear()
 
         # For each file that is selected, make sure that the directory also contains the associated output files
         for (
             model_type,
             file_path,
-        ) in self.window.main_app.data.ruleset_model_file_paths.items():
+        ) in self.main_app.data.ruleset_model_file_paths.items():
             if file_path:
-                if not self.window.main_app.data.verify_associated_files(file_path):
+                if not self.verify_associated_files(file_path):
                     model_type = model_type.replace("User", "Design")
-                    self.window.main_app.data.errors.append(
+                    self.main_app.data.errors.append(
                         f"Associated simulation output files not found for the selected '{model_type}' model."
                     )
-                    self.update_warnings_errors()
 
-        if len(self.window.main_app.data.errors) > 0:
+        if len(self.main_app.data.errors) > 0:
             return
 
         # If the code reaches this point, at least one file is selected and all associated files are found so clear any errors
-        self.window.main_app.data.errors.clear()
+        self.main_app.data.errors.clear()
 
         # Required model types
         required_models = ["User", "Proposed", "Baseline"]
@@ -251,20 +322,55 @@ class ProjectInfoView(BaseView):
         # Check if all required model types have file paths selected
         for model_type in required_models:
             if (
-                model_type not in self.window.main_app.data.ruleset_model_file_paths
-                or not self.window.main_app.data.ruleset_model_file_paths[model_type]
+                model_type not in self.main_app.data.ruleset_model_file_paths
+                or not self.main_app.data.ruleset_model_file_paths[model_type]
             ):
                 model_type = model_type.replace("User", "Design")
-                self.window.main_app.data.warnings.append(
+                self.main_app.data.warnings.append(
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
-        self.update_warnings_errors()
-        # If there are no errors, reload the model files and refresh the GUI data
-        self.reload_model_files()
+        # If there are no errors, generate RMDs and open the Main Application Window
+        if len(self.main_app.data.errors) == 0:
+            self.save_configuration_data()
+            self.main_app.data.generate_rmds()
+            self.main_app.project_config_complete()
 
-    def reload_model_files(self):
-        self.window.main_app.data.generate_rmds()
+        else:
+            self.raise_error_window("\n".join(self.main_app.data.errors))
 
-    def view_continue(self):
-        self.window.show_view("Buildings")
+    @staticmethod
+    def verify_associated_files(file_path: str) -> bool:
+        """
+        Check if the directory of the given file contains files with the same name
+        or the same name with the suffix ' - Baseline Design' for the specified file types.
+
+        Args:
+            file_path (str): The file path to check.
+
+        Returns:
+            bool: True if all related files are found, False otherwise.
+        """
+        # Expected file extensions
+        file_extensions = [".erp", ".srp", ".lrp", ".nhk"]
+
+        file_path = Path(file_path)
+        base_name = file_path.stem
+        directory = file_path.parent
+
+        # Check for each file type
+        for ext in file_extensions:
+            # Construct file names to check
+            normal_file = directory / f"{base_name}{ext}"
+            baseline_file = directory / f"{base_name} - Baseline Design{ext}"
+            # Check existence
+            if not normal_file.is_file() and not baseline_file.is_file():
+                return False
+
+        return True
+
+    # TODO: Could really be a one liner above, but leaving it for now in case we want to change data passing
+    def save_configuration_data(self):
+        self.main_app.data.configuration_data.update(
+            self.main_app.data.ruleset_model_file_paths
+        )

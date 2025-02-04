@@ -65,7 +65,6 @@ class TestInteriorWalls(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [
                     {"id": "Simplified Material", "r_value": 0.6399999999999999}
                 ],
@@ -114,7 +113,6 @@ class TestInteriorWalls(unittest.TestCase):
             "classification": "WALL",
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "framing_layers": [],
                 "insulation_locations": [],
                 "primary_layers": [{"id": "Simplified Material", "r_value": 2.0}],
@@ -158,7 +156,6 @@ class TestInteriorWalls(unittest.TestCase):
                     {"id": "Simplified Material", "r_value": 0.6399999999999999}
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.5,
             },
             "optical_properties": {
@@ -201,7 +198,6 @@ class TestInteriorWalls(unittest.TestCase):
                 "insulation_locations": [],
                 "primary_layers": [{"id": "Simplified Material"}],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.0,
             },
             "optical_properties": {
@@ -236,7 +232,6 @@ class TestInteriorWalls(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -280,7 +275,6 @@ class TestInteriorWalls(unittest.TestCase):
                     {"id": "Simplified Material", "r_value": 0.6399999999999999}
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.5,
             },
             "optical_properties": {
@@ -305,9 +299,7 @@ class TestInteriorWalls(unittest.TestCase):
     def test_populate_data_with_interior_wall_construction_layers_mixed_material_types(
         self,
     ):
-        """Tests that construction layers with mixed material types produce expected values
-        and that surface_construction_input_option is LAYERS when >= 1 detailed material type is provided
-        """
+        """Tests that construction layers with mixed material types produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.material1.keyword_value_pairs = {
@@ -376,7 +368,6 @@ class TestInteriorWalls(unittest.TestCase):
                     },
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "LAYERS",
                 "u_factor": 0.5,
             },
             "area": 300.0,
@@ -397,9 +388,7 @@ class TestInteriorWalls(unittest.TestCase):
     def test_populate_data_with_interior_wall_construction_layers_all_no_mass(
         self,
     ):
-        """Tests that construction layers with all material types of RESISTANCE produce expected values
-        and that surface_construction_input_option is SIMPLIFIED no detailed material types are provided
-        """
+        """Tests that construction layers with all material types of RESISTANCE produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.material1.keyword_value_pairs = {
@@ -462,7 +451,6 @@ class TestInteriorWalls(unittest.TestCase):
                     },
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.5,
             },
             "area": 300.0,

@@ -1,8 +1,9 @@
-from interface.main_app_window import MainApplicationWindow
+from interface.main_application import MainApplication
 
 
 def main(test_mode=False):
-    app = MainApplicationWindow(test_mode)
+
+    app = MainApplication(test_mode)
     app.mainloop()
 
 

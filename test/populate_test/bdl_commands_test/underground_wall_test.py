@@ -77,7 +77,6 @@ class TestUndergroundWalls(unittest.TestCase):
                     {"id": "Simplified Material", "r_value": -0.6000000000000001}
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 12.5,
             },
             "adjacent_to": "GROUND",
@@ -110,7 +109,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "optical_properties": {"id": "Below Grade Wall 1 OpticalProps"},
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -138,7 +136,6 @@ class TestUndergroundWalls(unittest.TestCase):
             "optical_properties": {"id": "Below Grade Wall 1 OpticalProps"},
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -154,9 +151,7 @@ class TestUndergroundWalls(unittest.TestCase):
     def test_populate_data_with_interior_wall_construction_layers_mixed_material_types(
         self,
     ):
-        """Tests that construction layers with mixed material types produce expected values
-        and that surface_construction_input_option is LAYERS when >= 1 detailed material type is provided
-        """
+        """Tests that construction layers with mixed material types produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.material1.keyword_value_pairs = {
@@ -230,7 +225,6 @@ class TestUndergroundWalls(unittest.TestCase):
                     },
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "LAYERS",
                 "u_factor": 0.5,
             },
             "adjacent_to": "GROUND",
@@ -245,9 +239,7 @@ class TestUndergroundWalls(unittest.TestCase):
     def test_populate_data_with_interior_wall_construction_layers_all_no_mass(
         self,
     ):
-        """Tests that construction layers with all material types of RESISTANCE produce expected values
-        and that surface_construction_input_option is SIMPLIFIED no detailed material types are provided
-        """
+        """Tests that construction layers with all material types of RESISTANCE produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "10"}
         self.material1.keyword_value_pairs = {
@@ -315,7 +307,6 @@ class TestUndergroundWalls(unittest.TestCase):
                     },
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 0.5,
             },
             "adjacent_to": "GROUND",
