@@ -281,3 +281,92 @@ def execute_calculations(
 
     # Return a dictionary of all results
     return {"entered_results": entered_results, "rated_results": rated_results}
+
+
+def are_curve_outputs_all_equal_to_a_value_of_one(
+    curves: dict,
+    evap_leaving_temp: float,
+    condenser_entering_temp: float,
+    percent_margin_of_error: float,
+):
+    """ This assumes 100% load. The function checks whether the output of each curve is equal to 1 with the specified margin of error.
+    The function returns a True or False. This was created to assess cap_ft, eff_ct, and eir_fplr curves only.
+        """
+
+    coeffs = {}
+    min_outputs = {}
+    max_outputs = {}
+
+    for key, obj in curves.items():
+        input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+        if input_type == BDL_CurveFitInputTypes.DATA:
+            # Currently, we are unable to obtain the curve coefficients when DATA is the input_type
+            return ["Keyword DATA was used for coefficient determination"]
+        coeffs[f"{key}_coeffs"] = list(
+            map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
+        )
+        min_outputs[f"{key}_min_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
+        )
+        max_outputs[f"{key}_max_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
+        )
+
+    # Coefficients, min_outputs, and max_outputs dictionaries
+    eff_ft_coeffs = coeffs["eff_ft_coeffs"]
+    cap_ft_coeffs = coeffs["cap_ft_coeffs"]
+    eff_fplr_coeffs = coeffs["eff_fplr_coeffs"]
+
+    eff_ft_min_otpt = min_outputs["eff_ft_min_otpt"]
+    eff_ft_max_otpt = max_outputs["eff_ft_max_otpt"]
+    cap_ft_min_otpt = min_outputs["cap_ft_min_otpt"]
+    cap_ft_max_otpt = max_outputs["cap_ft_max_otpt"]
+    eff_fplr_min_otpt = min_outputs["eff_fplr_min_otpt"]
+    eff_fplr_max_otpt = max_outputs["eff_fplr_max_otpt"]
+
+    eff_fplr_curve_type = curves["cap_ft"].get_inp(BDL_CurveFitKeywords.TYPE)
+
+    curve_function_map = {
+        BDL_CurveFitTypes.QUADRATIC: curve_funcs.calculate_quadratic,
+        BDL_CurveFitTypes.CUBIC: curve_funcs.calculate_cubic,
+    }
+
+    load_percent = 1
+
+    # Calculate and retrieve the results
+    results = calculate_results_of_performance_curves(
+        evap_leaving_temp,
+        condenser_entering_temp,
+        cap_ft_coeffs,
+        eff_ft_coeffs,
+        cap_ft_min_otpt,
+        cap_ft_max_otpt,
+        eff_ft_min_otpt,
+        eff_ft_max_otpt,
+        eff_fplr_curve_type,
+        eff_fplr_coeffs,
+        eff_fplr_min_otpt,
+        eff_fplr_max_otpt,
+        curve_function_map,
+        curve_funcs,
+        load_percent,
+    )
+
+    result_cap_ft = results["cap_ft_result"]
+    result_eff_ft = results["eff_ft_result"]
+    result_eff_plr = results["eff_fplr_result"]
+    result_plr = results["part_load_ratio"]
+
+    is_cap_ft_within_margin = is_within_margin(result_cap_ft, 1, percent_margin_of_error)
+    is_eff_ft_within_margin = is_within_margin(result_eff_ft, 1, percent_margin_of_error)
+    is_eff_plr_within_margin = is_within_margin(result_eff_plr, 1, percent_margin_of_error)
+
+    all_within_margin = all([is_cap_ft_within_margin, is_eff_ft_within_margin, is_eff_plr_within_margin])
+
+    return all_within_margin
+
+
+def is_within_margin(value, target, percent_margin):
+    lower_bound = target * (1 - percent_margin / 100)
+    upper_bound = target * (1 + percent_margin / 100)
+    return lower_bound <= value <= upper_bound
