@@ -3845,7 +3845,8 @@
         "ChillerEfficiencyMetricOptions": {
             "type": "string",
             "enum": [
-                "FULL_LOAD_EFFICIENCY",
+                "FULL_LOAD_EFFICIENCY_RATED",
+                "FULL_LOAD_EFFICIENCY_DESIGN",
                 "INTEGRATED_PART_LOAD_VALUE",
                 "NONSTANDARD_PART_LOAD_VALUE",
                 "OTHER"
