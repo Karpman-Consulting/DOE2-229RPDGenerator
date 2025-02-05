@@ -4,14 +4,17 @@ from pathlib import Path
 from rpd_generator.config import Config
 
 
-def find_equest_installation():
+def find_equest_installation(installation_path=None):
     """
     Search recursively for a directory that matches a target directory starting from start_path.
     If found, checks if all target files exist within that directory in a case-insensitive manner.
 
     :return: Path of the directory if it exists with all target files, else None.
     """
-    start_path = Path(os.environ.get("ProgramFiles(x86)", "C:/"))
+    if not installation_path:
+        start_path = Path(os.environ.get("ProgramFiles(x86)", "C:/"))
+    else:
+        start_path = Path(installation_path)
     target_dir = "eQUEST 3-65-7175".lower()  # Convert target directory to lowercase
     target_files = [
         "equest.ini",
@@ -33,9 +36,22 @@ def find_equest_installation():
                 set_data_paths_from_config()
 
 
-def verify_equest_installation():
+def verify_equest_installation(installation_path=None):
     error_message = ""
-    find_equest_installation()
+    find_equest_installation(installation_path)
+    all_paths_found = True
+
+    if not Config.EQUEST_INSTALL_PATH:
+        error_message += "eQUEST installation not found.\n"
+        all_paths_found = False
+    if not Config.DOE22_DATA_PATH:
+        error_message += "DOE-22 data path not found.\n"
+        all_paths_found = False
+    if not Config.DOE23_DATA_PATH:
+        error_message += "DOE-23 data path not found.\n"
+        all_paths_found = False
+    if not all_paths_found:
+        return error_message  # Return early if any paths are missing
 
     # List of files to check
     files_to_check = [

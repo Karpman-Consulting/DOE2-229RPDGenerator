@@ -70,7 +70,6 @@ class TestExteriorWall(unittest.TestCase):
                     {"id": "Simplified Material", "r_value": -0.6000000000000001}
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "SIMPLIFIED",
                 "u_factor": 4.0,
             },
             "area": 300.0,
@@ -107,7 +106,6 @@ class TestExteriorWall(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -139,7 +137,6 @@ class TestExteriorWall(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -171,7 +168,6 @@ class TestExteriorWall(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "primary_layers": [{"id": "Simplified Material"}],
                 "framing_layers": [],
                 "insulation_locations": [],
@@ -192,9 +188,7 @@ class TestExteriorWall(unittest.TestCase):
     def test_populate_data_with_exterior_wall_construction_layers_mixed_material_types(
         self,
     ):
-        """Tests that construction layers with mixed material types produce expected values
-        and that surface_construction_input_option is LAYERS when >= 1 detailed material type is provided
-        """
+        """Tests that construction layers with mixed material types produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "0"}
         self.material1.keyword_value_pairs = {
@@ -262,7 +256,6 @@ class TestExteriorWall(unittest.TestCase):
                     },
                 ],
                 "r_values": [],
-                "surface_construction_input_option": "LAYERS",
                 "u_factor": 0.4608294930875576,
             },
             "area": 300.0,
@@ -286,9 +279,7 @@ class TestExteriorWall(unittest.TestCase):
     def test_populate_data_with_exterior_wall_construction_layers_homogeneous_material_types(
         self,
     ):
-        """Tests that construction layers with all material types of RESISTANCE produce expected values
-        and that surface_construction_input_option is SIMPLIFIED no detailed material types are provided
-        """
+        """Tests that construction layers with all material types of RESISTANCE produce expected values"""
         self.floor.keyword_value_pairs = {BDL_FloorKeywords.AZIMUTH: "130"}
         self.space.keyword_value_pairs = {BDL_SpaceKeywords.AZIMUTH: "0"}
         self.material1.keyword_value_pairs = {
@@ -333,7 +324,6 @@ class TestExteriorWall(unittest.TestCase):
             "subsurfaces": [],
             "construction": {
                 "id": "Construction 1",
-                "surface_construction_input_option": "SIMPLIFIED",
                 "insulation_locations": [],
                 "primary_layers": [
                     {

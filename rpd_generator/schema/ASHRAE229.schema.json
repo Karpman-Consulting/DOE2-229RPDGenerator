@@ -77,6 +77,83 @@
             ],
             "additionalProperties": false
         },
+        "CommonOutputSchemaOptions": {
+            "type": "string",
+            "enum": [
+                "OTHER"
+            ],
+            "descriptions": [
+                "other"
+            ]
+        },
+        "Metadata": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Unique data set identifier",
+                    "notes": "Assigned by *data publisher* to identify this data. `id` shall remain unchanged for revisions of the same data."
+                },
+                "schema_author": {
+                    "description": "Name of the organization that published the schema",
+                    "type": "string",
+                    "notes": "Identifies the organization that defined the schema. Is should be set to: ASHRAE SPC 229 Schema Working Group"
+                },
+                "schema_name": {
+                    "description": "Schema name or identifier",
+                    "type": "string",
+                    "notes": "Identifies the schema used to define the data content. It should be set to Ruleset Evaluation Schema"
+                },
+                "schema_version": {
+                    "description": "The version of the schema the data complies with",
+                    "notes": "Common versions may include 0.0.36 from the first public review period. This is the value of the version field in the top of the ASRAE229.schema.json file or the version in the ASHRAE229.schema.yaml Schema data group."
+                },
+                "schema_url": {
+                    "description": "The Uniform Resource Locator (url) for the schema definition and/or documentation",
+                    "type": "string",
+                    "notes": "Should be set to: https://github.com/open229/ruleset-model-description-schema"
+                },
+                "author": {
+                    "description": "Name of the entity creating the serialization",
+                    "type": "string",
+                    "notes": "Identifies the organization that created the file"
+                },
+                "description": {
+                    "description": "Description of data content (suitable for display)",
+                    "type": "string"
+                },
+                "time_of_creation": {
+                    "description": "Timestamp indicating when the serialization was created",
+                    "$ref": "ASHRAE229.schema.json#/definitions/Timestamp",
+                    "notes": "Updated anytime any data content is modified."
+                },
+                "version": {
+                    "description": "Integer version identifier for the data",
+                    "notes": "Used by data publisher to track revisions of the data. Shall be incremented for each data revision"
+                },
+                "source": {
+                    "description": "Source(s) of the data",
+                    "type": "string",
+                    "notes": "Used by data publisher to document methods (e.g., software and version) used to generate data. **Informative note:** `source` may be different from other data source(s) included elsewhere within the data"
+                },
+                "disclaimer": {
+                    "description": "Characterization of accuracy, limitations, and applicability of this data",
+                    "type": "string"
+                },
+                "notes": {
+                    "description": "Additional Information",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "schema_author",
+                "schema_name",
+                "schema_version",
+                "author",
+                "description",
+                "time_of_creation"
+            ],
+            "additionalProperties": false
+        },
         "RulesetModelDescription": {
             "type": "object",
             "properties": {
@@ -225,6 +302,21 @@
                 "type"
             ],
             "additionalProperties": false
+        },
+        "CommonRulesetModelOptions": {
+            "type": "string",
+            "enum": [
+                "USER",
+                "PROPOSED"
+            ],
+            "descriptions": [
+                "The building model as described without consideration of the ruleset",
+                "The proposed building model"
+            ],
+            "notes": [
+                null,
+                "The proposed building model typically transformed from the USER model following specific changes for the ruleset"
+            ]
         },
         "Building": {
             "type": "object",
@@ -966,6 +1058,29 @@
                 "Other"
             ]
         },
+        "CommonConstructionClassificationOptions": {
+            "type": "string",
+            "enum": [
+                "METAL_BUILDING",
+                "WOOD_FRAMED",
+                "INSULATION_ENTIRELY_ABOVE_DECK",
+                "ATTIC",
+                "BELOW_GRADE_WALL",
+                "STEEL_JOIST",
+                "SLAB_ON_GRADE",
+                "OTHER"
+            ],
+            "descriptions": [
+                "Metal building",
+                "Wood-framed",
+                "Insulation entirely above deck",
+                "Attic",
+                "Below-grade wall",
+                "Steel joist",
+                "Slab-on-grade",
+                "Other"
+            ]
+        },
         "Material": {
             "type": "object",
             "properties": {
@@ -1106,17 +1221,6 @@
                 "Interior surface if adjacent to another space which is explicity modeled.",
                 "Surface adjacent to a environment identical to the space. Sometimes this is described as adiabatic surface since no heat is transfered. The space on the other side of the surface is not explicity modeled.",
                 "The surface adjacency cannot be determined by the software."
-            ]
-        },
-        "SurfaceConstructionInputOptions": {
-            "type": "string",
-            "enum": [
-                "LAYERS",
-                "SIMPLIFIED"
-            ],
-            "descriptions": [
-                "Construction is entered layer-by-layer.",
-                "Construction is entered by R-value only."
             ]
         },
         "Subsurface": {
@@ -3840,6 +3944,27 @@
                 "Other"
             ]
         },
+        "ChillerFunctionOptions": {
+            "type": "string",
+            "enum": [
+                "CHILLED_WATER_ONLY",
+                "HOT_WATER_ONLY",
+                "CHILLED_AND_HOT_WATER",
+                "OTHER"
+            ],
+            "descriptions": [
+                "Chilled water only",
+                "Hot water only",
+                "Chilled and hot water",
+                "Other"
+            ],
+            "notes": [
+                "Chiller is being used as a traditional chiller to only produce chilled water.",
+                "Chiller is being used exclusively as a heat pump instead of a boiler.",
+                "Chiller can produce either chilled or hot water.",
+                null
+            ]
+        },
         "HeatRejection": {
             "type": "object",
             "properties": {
@@ -4487,30 +4612,30 @@
             ],
             "additionalProperties": false
         },
-        "ServiceWaterHeaterOptions": {
+        "ServiceWaterHeatingEfficiencyMetricOptions": {
             "type": "string",
             "enum": [
-                "CONVENTIONAL",
-                "HEAT_PUMP_PACKAGED",
-                "HEAT_PUMP_SPLIT",
-                "HEAT_FROM_HOT_WATER_LOOP",
-                "COMBINATION_SERVICE_AND_SPACE",
+                "ENERGY_FACTOR",
+                "UNIFORM_ENERGY_FACTOR",
+                "THERMAL_EFFICIENCY",
+                "STANDBY_LOSS_FRACTION",
+                "STANDBY_LOSS_ENERGY",
                 "OTHER"
             ],
             "descriptions": [
-                "Conventional",
-                "Heat pump packaged",
-                "Heat pump split",
-                "Heat from hot water loop",
-                "Combination space and service water heater.",
+                "Energy factor",
+                "Uniform energy factor",
+                "Thermal efficiency",
+                "Standby loss fraction",
+                "Standby loss fraction",
                 "Other"
             ],
             "notes": [
                 null,
+                "See 10 CFR 430 Appendix E Uniform Test Method for Measuring the Energy Consumption of Water Heaters for more information.",
                 null,
                 null,
-                "Should also specifiy hot water loop when this is used",
-                "Should also specifiy hot water loop when this is used",
+                "Units are watts and can be converted from STANDBY_LOSS_FRACTION based forumulat found in CBECC-Res User Manual",
                 null
             ]
         },
@@ -4538,6 +4663,23 @@
                 "Crawl space",
                 "Underground",
                 "Unconditioned",
+                "Other"
+            ]
+        },
+        "DrawPatternOptions": {
+            "type": "string",
+            "enum": [
+                "VERY_SMALL",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "OTHER"
+            ],
+            "descriptions": [
+                "Very small",
+                "Low",
+                "Medium",
+                "High",
                 "Other"
             ]
         },

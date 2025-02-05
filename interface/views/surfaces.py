@@ -4,8 +4,8 @@ from interface.base_view import BaseView
 
 
 class SurfacesView(BaseView):
-    def __init__(self, main):
-        super().__init__(main)
+    def __init__(self, window):
+        super().__init__(window)
 
     def __repr__(self):
         return "SurfacesView"

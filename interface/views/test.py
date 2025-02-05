@@ -5,8 +5,8 @@ from interface.base_view import BaseView
 
 
 class TestView(BaseView):
-    def __init__(self, main):
-        super().__init__(main)
+    def __init__(self, window):
+        super().__init__(window)
 
     def __repr__(self):
         return "TestView"
@@ -17,7 +17,7 @@ class TestView(BaseView):
 
         entry = ctk.CTkEntry(
             self,
-            textvariable=self.main.app_data.test_inp_path,
+            textvariable=self.window.main_app.data.test_inp_path,
             state="disabled",
             width=400,
         )
@@ -31,7 +31,7 @@ class TestView(BaseView):
         create_rpd_button = ctk.CTkButton(
             self,
             text="Create JSON",
-            command=self.main.app_data.call_write_rpd_json_from_inp,
+            command=self.window.main_app.data.call_write_rpd_json_from_inp,
         )
         create_rpd_button.grid(row=1, column=1, padx=10, pady=(20, 10), sticky="ew")
 
@@ -40,4 +40,4 @@ class TestView(BaseView):
         filepath = filedialog.askopenfilename(filetypes=[("INP files", "*.inp")])
         if filepath:
             # Display the selected file path in the text entry box
-            self.main.app_data.test_inp_path.set(filepath)
+            self.window.main_app.data.test_inp_path.set(filepath)

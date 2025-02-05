@@ -4,8 +4,8 @@ from interface.base_view import BaseView
 
 
 class SystemsView(BaseView):
-    def __init__(self, main):
-        super().__init__(main)
+    def __init__(self, window):
+        super().__init__(window)
 
         self.subviews = {
             "Heat Rejection": HeatRejectionView(self),
