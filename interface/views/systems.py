@@ -68,12 +68,18 @@ class SystemsView(BaseView):
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
     def create_subbutton_bar(self):
-        # TODO: Check for heat rejections and zonal fans before showing buttons
-        callback_methods = {
-            "Heat Rejection": lambda: self.show_subview("Heat Rejection"),
-            "HVAC Systems": lambda: self.show_subview("HVAC Systems"),
-            "Zonal Exhaust": lambda: self.show_subview("Zonal Exhaust"),
-        }
+        # TODO: Check for empty subviews
+        if not self.window.main_app.data.is_all_new_construction():
+            callback_methods = {
+                "Heat Rejection": lambda: self.show_subview("Heat Rejection"),
+                "HVAC Systems": lambda: self.show_subview("HVAC Systems"),
+                "Zonal Exhaust": lambda: self.show_subview("Zonal Exhaust"),
+            }
+        else:
+            callback_methods = {
+                "Heat Rejection": lambda: self.show_subview("Heat Rejection"),
+                "HVAC Systems": lambda: self.show_subview("HVAC Systems"),
+            }
 
         for name in callback_methods:
             # Create the button to go inside this button frame
@@ -184,8 +190,9 @@ class HVACSystemView(ctk.CTkFrame):
         validate_command = self.register(self.systems_view.validate_entry)
         name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
         name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+        if not self.main_app_data.is_all_new_construction():
+            status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
+            status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
         dehumidification_type_label = ctk.CTkLabel(
             self, text="Dehumidification Type", font=("Arial", 16, "bold")
         )
@@ -203,11 +210,12 @@ class HVACSystemView(ctk.CTkFrame):
             system_label.grid(
                 row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
             )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+            if not self.main_app_data.is_all_new_construction():
+                status_combo = ctk.CTkComboBox(
+                    self, values=["Existing", "New"], state="readonly"
+                )
+                status_combo._entry.configure(justify="left")
+                status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
             dehumidification_type_combo = ctk.CTkComboBox(
                 self, values=["Desiccant", "Mechanical Cooling"], state="readonly"
             )
