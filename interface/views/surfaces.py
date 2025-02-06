@@ -72,14 +72,22 @@ class SurfacesView(BaseView):
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
     def create_subbutton_bar(self):
-        callback_methods = {
-            "Exterior": lambda: self.show_subview("Exterior"),
-            "Interior": lambda: self.show_subview("Interior"),
-            "Underground": lambda: self.show_subview("Underground"),
-            "Windows": lambda: self.show_subview("Windows"),
-            "Skylights": lambda: self.show_subview("Skylights"),
-            "Doors": lambda: self.show_subview("Doors"),
-        }
+        callback_methods = {}
+        if not self.window.main_app.data.is_all_new_construction():
+            callback_methods.update(
+                {
+                    "Exterior": lambda: self.show_subview("Exterior"),
+                    "Interior": lambda: self.show_subview("Interior"),
+                    "Underground": lambda: self.show_subview("Underground"),
+                }
+            )
+        callback_methods.update(
+            {
+                "Windows": lambda: self.show_subview("Windows"),
+                "Skylights": lambda: self.show_subview("Skylights"),
+                "Doors": lambda: self.show_subview("Doors"),
+            }
+        )
 
         for index, name in enumerate(callback_methods):
             # Create the button to go inside this button frame
@@ -249,7 +257,12 @@ class WindowSurfaceView(CTkXYFrame):
         # Remove skylights from windows list
         for window in windows:
             window_obj = self.main_app_data.rmds[0].get_obj(window)
-            if window_obj and window_obj.classification == "Skylight":
+            # TODO: Hate this. It works but find a better way
+            # "window_obj.classification" not populated yet, but key_value_pairs are
+            is_skylight = bool(
+                float(window_obj.keyword_value_pairs.get("C-IS-SKYLIGHT"))
+            )
+            if window_obj and is_skylight:
                 skylights.append(window)
         # TODO: List comprehension seemed like the best choice here. Please correct if not ideal
         windows = [window for window in windows if window not in skylights]
@@ -331,7 +344,11 @@ class SkylightSurfaceView(CTkXYFrame):
         # Get only skylights in the current list of windows
         for window in windows:
             window_obj = self.main_app_data.rmds[0].get_obj(window)
-            if window_obj and window_obj.classification == "Skylight":
+            # TODO: See window subview above. Hacky solution.
+            is_skylight = bool(
+                float(window_obj.keyword_value_pairs.get("C-IS-SKYLIGHT"))
+            )
+            if window_obj and is_skylight:
                 skylights.append(window)
         if not skylights:
             return
@@ -360,8 +377,8 @@ class SkylightSurfaceView(CTkXYFrame):
             self, text="Manual Interior Shades?", font=("Arial", 16, "bold")
         )
         manual_interior_shades_label.grid(row=0, column=6, padx=(0, 20), pady=5)
-        for i, window in enumerate(windows):
-            surface_label = ctk.CTkLabel(self, text=f"{window}")
+        for i, skylight in enumerate(skylights):
+            surface_label = ctk.CTkLabel(self, text=f"{skylight}")
             surface_label.grid(
                 row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
             )

@@ -150,3 +150,9 @@ class MainAppData:
 
     def call_write_rpd_json_from_inp(self):
         rpd_generator.write_rpd_json_from_inp(str(self.test_inp_path.get()))
+
+    def is_all_new_construction(self):
+        is_all_new_construction = self.configuration_data.get("new_construction")
+        if is_all_new_construction:
+            return True
+        return False

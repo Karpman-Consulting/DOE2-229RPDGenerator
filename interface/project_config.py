@@ -123,6 +123,8 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             self.disclaimer_window.focus()  # if window exists, focus it
 
     def raise_error_window(self, error_text):
+        if not error_text:
+            return
         self.error_window = ErrorWindow(self, error_text)
         self.error_window.after(100, self.error_window.lift)
 
@@ -300,6 +302,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             self.main_app.data.errors = [
                 "At least one file must be selected to continue."
             ]
+            self.raise_error_window("\n".join(self.main_app.data.errors))
             return
 
         # If the code reaches this point, at least one file is selected so clear any errors
@@ -318,6 +321,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                     )
 
         if len(self.main_app.data.errors) > 0:
+            self.raise_error_window("\n".join(self.main_app.data.errors))
             return
 
         # If the code reaches this point, at least one file is selected and all associated files are found so clear any errors
