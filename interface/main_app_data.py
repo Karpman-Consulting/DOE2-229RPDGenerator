@@ -69,6 +69,7 @@ class MainAppData:
         for ruleset_model_type, file_path in self.ruleset_model_file_paths.items():
             if file_path:
                 rmd = rpd_generator.generate_rmd_from_inp(file_path)
+                rmd.populate_rmd_data()
                 rmd.type = ruleset_model_type
                 self.rmds.append(rmd)
 
