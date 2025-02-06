@@ -389,6 +389,24 @@ def calculate_results_of_efficiency_performance_curves_with_specific_part_load_r
     curves: dict,
     part_load_ratio,
 ):
+    coeffs = {}
+    min_outputs = {}
+    max_outputs = {}
+
+    for key, obj in curves.items():
+        input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+        if input_type == BDL_CurveFitInputTypes.DATA:
+            # Currently, we are unable to obtain the curve coefficients when DATA is the input_type
+            return ["Keyword DATA was used for coefficient determination"]
+        coeffs[f"{key}_coeffs"] = list(
+            map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
+        )
+        min_outputs[f"{key}_min_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
+        )
+        max_outputs[f"{key}_max_otpt"] = float(
+            obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
+        )
 
     # Coefficients, min_outputs, and max_outputs dictionaries
     eff_ft_coeffs = coeffs["eff_ft_coeffs"]
