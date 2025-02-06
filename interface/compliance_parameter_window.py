@@ -81,7 +81,11 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             ),
         )
         self.continue_button = ctk.CTkButton(
-            self, text="Continue", width=100, corner_radius=12
+            self,
+            text="Continue",
+            width=100,
+            corner_radius=12,
+            command=self.raise_error_window("\n".join(self.main_app.data.errors)),
         )
 
         self.license_window = None
@@ -198,7 +202,9 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             fg_color="orange",
             hover_color="#FF8C00",
             corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.warnings)),
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.warnings)
+            ),
         )
         errors_button = ctk.CTkButton(
             self,
@@ -207,7 +213,9 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             fg_color="red",
             hover_color="#E60000",
             corner_radius=12,
-            command=lambda: self.raise_error_window("\n".join(self.app_data.errors)),
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.errors)
+            ),
         )
         continue_button = ctk.CTkButton(
             self, text="Continue", width=100, corner_radius=12
@@ -241,5 +249,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             self.disclaimer_window.focus()  # if window exists, focus it
 
     def raise_error_window(self, error_text):
+        if not error_text:
+            return
         self.error_window = ErrorWindow(self, error_text)
         self.error_window.after(100, self.error_window.lift)
