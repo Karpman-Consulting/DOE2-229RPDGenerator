@@ -29,6 +29,9 @@ class MainAppData:
     CoolingDesignDayDescriptions = SchemaEnums.schema_descriptions[
         "CoolingDesignDayOptions"
     ]
+    DehumidificationDescriptions = SchemaEnums.schema_descriptions[
+        "DehumidificationOptions"
+    ]
     DrawPatternDescriptions = SchemaEnums.schema_descriptions["DrawPatternOptions"]
     HeatRejectionFanDescriptions = SchemaEnums.schema_descriptions[
         "HeatRejectionFanOptions"
