@@ -32,6 +32,14 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
         self.grid_propagate(False)
         self.bg_color = self.cget("fg_color")[0]
 
+        # Expand subviews vertically to fill maximum window space, support for vertical window resizing
+        self.grid_rowconfigure(1, weight=1)
+
+        """Uncomment this if we want to be able to expand the window and have all the contents scale with the resize.
+        If so, we'll have to make some adjustments so the top button bar doesn't act weird."""
+        # for i in range(self.grid_size()[0]):
+        #     self.grid_columnconfigure(i, weight=1)
+
         self.views = {
             "Test": TestView(self),
             "Project Info": ProjectInfoView(self),
@@ -73,7 +81,11 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             ),
         )
         self.continue_button = ctk.CTkButton(
-            self, text="Continue", width=100, corner_radius=12
+            self,
+            text="Continue",
+            width=100,
+            corner_radius=12,
+            command=self.raise_error_window("\n".join(self.main_app.data.errors)),
         )
 
         self.license_window = None
@@ -183,11 +195,39 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             button.image = icon_image
 
     def create_nav_bar(self):
-        # Create the button to continue to the Buildings page
-        self.continue_button.grid(row=2, column=3, columnspan=3, pady=5)
-        # Create the errors and warnings buttons
-        self.warnings_button.grid(row=2, column=0, pady=5)
-        self.errors_button.grid(row=2, column=1, pady=5)
+        warnings_button = ctk.CTkButton(
+            self,
+            text="Warnings",
+            width=90,
+            fg_color="orange",
+            hover_color="#FF8C00",
+            corner_radius=12,
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.warnings)
+            ),
+        )
+        errors_button = ctk.CTkButton(
+            self,
+            text="Errors",
+            width=90,
+            fg_color="red",
+            hover_color="#E60000",
+            corner_radius=12,
+            command=lambda: self.raise_error_window(
+                "\n".join(self.main_app.data.errors)
+            ),
+        )
+        continue_button = ctk.CTkButton(
+            self, text="Continue", width=100, corner_radius=12
+        )
+
+        warnings_button.grid(row=2, column=0, pady=5)
+        errors_button.grid(row=2, column=1, pady=5)
+        continue_button.grid(row=2, column=3, columnspan=3, pady=5)
+
+        self.continue_button = continue_button
+        self.warnings_button = warnings_button
+        self.errors_button = errors_button
 
     def show_view(self, view_name):
         # Clear previous view
@@ -209,5 +249,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             self.disclaimer_window.focus()  # if window exists, focus it
 
     def raise_error_window(self, error_text):
+        if not error_text:
+            return
         self.error_window = ErrorWindow(self, error_text)
         self.error_window.after(100, self.error_window.lift)

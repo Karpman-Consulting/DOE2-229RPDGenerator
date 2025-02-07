@@ -12,6 +12,7 @@ class SystemsView(BaseView):
 
     def open_view(self):
         self.toggle_active_button("Systems")
+        self.grid_propagate(False)
 
         # Create a button to test accessing rmd data
         test_button = ctk.CTkButton(

@@ -107,6 +107,11 @@ class RulesetModelDescription(Base):
         self.elec_generator_names = []
         self.system_names = []
         self.zone_names = []
+        self.ext_wall_names = []
+        self.int_wall_names = []
+        self.undg_wall_names = []
+        self.window_names = []
+        self.door_names = []
         self.circulation_loop_names = []
         self.boiler_names = []
         self.chiller_names = []
@@ -211,6 +216,13 @@ class RulesetModelDescription(Base):
             command_tuples, key=lambda x: order_map.get(x[0], float("inf"))
         )
         return [t[1] for t in sorted_tuples]
+
+    def get_obj(self, u_name):
+        """
+        Return the object instance by its u_name.
+        :param u_name: str
+        """
+        return self.bdl_obj_instances.get(u_name, None)
 
     def populate_data_elements(self):
         site_parameter_obj = self.bdl_obj_instances.get(self.site_parameter_name)
