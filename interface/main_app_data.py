@@ -1,3 +1,6 @@
+import atexit
+import tempfile
+
 import customtkinter as ctk
 from pathlib import Path
 
@@ -11,6 +14,9 @@ from rpd_generator.config import Config
 
 class MainAppData:
     def __init__(self):
+        self.processing_dir = tempfile.TemporaryDirectory()
+        atexit.register(self.processing_dir.cleanup)
+
         self.bdl_reader = ModelInputReader()
         RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
         self.rpd = RulesetProjectDescription()
@@ -68,7 +74,11 @@ class MainAppData:
     def generate_rmds(self):
         for ruleset_model_type, file_path in self.ruleset_model_file_paths.items():
             if file_path:
-                rmd = rpd_generator.generate_rmd_from_inp(file_path)
+                rmd = rpd_generator.generate_rmd_from_inp(
+                    file_path, self.processing_dir
+                )
+                rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
+
                 rmd.populate_rmd_data()
                 rmd.type = ruleset_model_type
                 self.rmds.append(rmd)
