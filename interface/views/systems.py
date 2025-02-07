@@ -4,12 +4,18 @@ from interface.ctk_xyframe import CTkXYFrame
 from interface.base_view import BaseView
 
 
+ARIAL_16_BOLD = ("Arial", 16, "bold")
+READONLY = "readonly"
+W = "w"
+LEFT = "left"
+PAD20 = (0, 20)
+
+
 class SystemsView(BaseView):
     def __init__(self, window):
         super().__init__(window)
 
-        """All subviews will be placed inside this frame. Single row/column allows formatting of subview to be
-        handled by the subview itself"""
+        # All subviews will be placed inside this frame. Single row/column allows formatting of subview to be handled by the subview itself
         self.subview_frame = ctk.CTkFrame(self)
         self.current_subview = None
 
@@ -19,12 +25,12 @@ class SystemsView(BaseView):
             "Zonal Exhaust": ZonalExhaustView(self.subview_frame),
         }
 
-        """Directions frame holds all directions info and will get 'gridded' within the surfaces view grid"""
+        # Directions frame holds all directions info and will get 'gridded' within the surfaces view grid
         self.directions_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.directions_label = ctk.CTkLabel(
             self.directions_frame,
             text="Directions: ",
-            font=("Arial", 16, "bold"),
+            font=ARIAL_16_BOLD,
         )
         self.directions_widget = ctk.CTkLabel(
             self.directions_frame,
@@ -45,8 +51,7 @@ class SystemsView(BaseView):
         self.toggle_active_button("Systems")
         self.grid_propagate(False)
 
-        """3 rows in the main surface view structure. Subview frame (row 3, index 2) has a weight to make it fill up
-        the empty space in the window"""
+        # 3 rows in the main surface view structure. Subview frame (row 3, index 2) has a weight to make it fill up the empty space in the window
         self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
@@ -56,14 +61,14 @@ class SystemsView(BaseView):
         self.directions_widget.grid(row=0, column=1)
 
         # Subview buttons
-        self.subview_button_frame.grid(row=1, column=0, sticky="w", padx=20)
+        self.subview_button_frame.grid(row=1, column=0, sticky=W, padx=20)
         for index, name in enumerate(self.subview_buttons):
             # Layout the button inside the frame
             button = self.subview_buttons[name]
             button.grid(row=0, column=index, padx=(0, 4))
 
         # Subview frame
-        self.subview_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=(0, 20))
+        self.subview_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=PAD20)
         self.subview_frame.grid_rowconfigure(0, weight=1)
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
@@ -93,7 +98,7 @@ class SystemsView(BaseView):
                 width=140,
                 height=30,
                 corner_radius=0,
-                compound="left",
+                compound=LEFT,
                 command=callback_methods[name],
             )
             self.subview_buttons[name] = button
@@ -127,8 +132,9 @@ class SystemsView(BaseView):
                     font=("Arial", 11, "bold"),
                 )
 
-    def validate_entry(self, P):
-        if str.isdigit(P) or P == "":
+    @staticmethod
+    def validate_entry(arg):
+        if str.isdigit(arg) or arg == "":
             return True
         else:
             return False
@@ -149,26 +155,33 @@ class HeatRejectionView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        heat_rejections = self.main_app_data.rmds[0].heat_rejection_names
-        if len(heat_rejections) == 0:
+        if len(self.main_app_data.rmds[0].heat_rejection_names) == 0:
             # TODO: No heat rejection data, hide tab
             return
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        fan_type_label = ctk.CTkLabel(self, text="Fan Type", font=("Arial", 16, "bold"))
-        fan_type_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        for i, heat_rejection in enumerate(heat_rejections):
-            heat_rejection_label = ctk.CTkLabel(self, text=f"{heat_rejection}")
-            heat_rejection_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            fan_type_combo = ctk.CTkComboBox(
-                self, values=["Axial", "Centrifugal"], state="readonly"
-            )
-            fan_type_combo._entry.configure(justify="left")
-            fan_type_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+
+        for i, heat_rejection_name in enumerate(
+            self.main_app_data.rmds[0].heat_rejection_names
+        ):
+            self.add_row(i, heat_rejection_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=ARIAL_16_BOLD)
+        name_label.grid(row=0, column=0, padx=PAD20, pady=5)
+        fan_type_label = ctk.CTkLabel(self, text="Fan Type", font=ARIAL_16_BOLD)
+        fan_type_label.grid(row=0, column=1, padx=PAD20, pady=5)
+
+    def add_row(self, i, heat_rejection_name):
+        heat_rejection_label = ctk.CTkLabel(self, text=f"{heat_rejection_name}")
+        heat_rejection_label.grid(
+            row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W
+        )
+        fan_type_combo = ctk.CTkComboBox(
+            self, values=["Axial", "Centrifugal"], state=READONLY
+        )
+        fan_type_combo._entry.configure(justify=LEFT)
+        fan_type_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
 
 
 class HVACSystemView(ctk.CTkFrame):
@@ -177,6 +190,7 @@ class HVACSystemView(ctk.CTkFrame):
         self.systems_view = subview_frame.master
         self.main_app_data = self.systems_view.window.main_app.data
         self.is_subview_populated = False
+        self.validate_command = self.register(self.systems_view.validate_entry)
 
     def __repr__(self):
         return "HVACSystemView"
@@ -186,58 +200,59 @@ class HVACSystemView(ctk.CTkFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        systems = self.main_app_data.rmds[0].system_names
-        validate_command = self.register(self.systems_view.validate_entry)
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        if not self.main_app_data.is_all_new_construction():
-            status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-            status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        dehumidification_type_label = ctk.CTkLabel(
-            self, text="Dehumidification Type", font=("Arial", 16, "bold")
-        )
-        dehumidification_type_label.grid(row=0, column=2, padx=(0, 20), pady=5)
-        ducted_supply_label = ctk.CTkLabel(
-            self, text="Ducted Supply?", font=("Arial", 16, "bold")
-        )
-        ducted_supply_label.grid(row=0, column=3, padx=(0, 20), pady=5)
-        air_filter_merv_rating_label = ctk.CTkLabel(
-            self, text="Air Filter MERV Rating", font=("Arial", 16, "bold")
-        )
-        air_filter_merv_rating_label.grid(row=0, column=4, padx=(0, 20), pady=5)
-        for i, system in enumerate(systems):
-            system_label = ctk.CTkLabel(self, text=f"{system}")
-            system_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            if not self.main_app_data.is_all_new_construction():
-                status_combo = ctk.CTkComboBox(
-                    self, values=["Existing", "New"], state="readonly"
-                )
-                status_combo._entry.configure(justify="left")
-                status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
-            dehumidification_type_combo = ctk.CTkComboBox(
-                self, values=["Desiccant", "Mechanical Cooling"], state="readonly"
-            )
-            dehumidification_type_combo._entry.configure(justify="left")
-            dehumidification_type_combo.grid(
-                row=(i + 1), column=2, padx=(0, 20), pady=(0, 20)
-            )
-            ducted_supply_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            ducted_supply_checkbox.grid(
-                row=(i + 1), column=3, padx=(0, 20), pady=(0, 20)
-            )
-            air_filter_merv_rating_input = ctk.CTkEntry(
-                self,
-                width=125,
-                validate="all",
-                validatecommand=(validate_command, "%P"),
-            )
-            air_filter_merv_rating_input.grid(
-                row=(i + 1), column=4, padx=(0, 20), pady=(0, 20)
-            )
+        self.add_column_headers()
+
+        for i, hvac_system_name in enumerate(self.main_app_data.rmds[0].system_names):
+            self.add_row(i, hvac_system_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=ARIAL_16_BOLD)
+        name_label.grid(row=0, column=0, padx=PAD20, pady=5)
+        if not self.main_app_data.is_all_new_construction():
+            status_label = ctk.CTkLabel(self, text="Status", font=ARIAL_16_BOLD)
+            status_label.grid(row=0, column=1, padx=PAD20, pady=5)
+        dehumidification_type_label = ctk.CTkLabel(
+            self, text="Dehumidification Type", font=ARIAL_16_BOLD
+        )
+        dehumidification_type_label.grid(row=0, column=2, padx=PAD20, pady=5)
+        ducted_supply_label = ctk.CTkLabel(
+            self, text="Ducted Supply?", font=ARIAL_16_BOLD
+        )
+        ducted_supply_label.grid(row=0, column=3, padx=PAD20, pady=5)
+        air_filter_merv_rating_label = ctk.CTkLabel(
+            self, text="Air Filter MERV Rating", font=ARIAL_16_BOLD
+        )
+        air_filter_merv_rating_label.grid(row=0, column=4, padx=PAD20, pady=5)
+
+    def add_row(self, i, hvac_system_name):
+        system_label = ctk.CTkLabel(self, text=f"{hvac_system_name}")
+        system_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
+        if not self.main_app_data.is_all_new_construction():
+            status_combo = ctk.CTkComboBox(
+                self,
+                values=self.main_app_data.StatusDescriptions.get_list(),
+                state=READONLY,
+            )
+            status_combo._entry.configure(justify=LEFT)
+            status_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
+        dehumidification_type_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.DehumidificationDescriptions.get_list(),
+            state=READONLY,
+        )
+        dehumidification_type_combo._entry.configure(justify=LEFT)
+        dehumidification_type_combo.grid(row=(i + 1), column=2, padx=PAD20, pady=PAD20)
+        ducted_supply_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        ducted_supply_checkbox.grid(row=(i + 1), column=3, padx=PAD20, pady=PAD20)
+        air_filter_merv_rating_input = ctk.CTkEntry(
+            self,
+            width=125,
+            validate="all",
+            validatecommand=(self.validate_command, "%arg"),
+        )
+        air_filter_merv_rating_input.grid(row=(i + 1), column=4, padx=PAD20, pady=PAD20)
 
 
 class ZonalExhaustView(ctk.CTkFrame):
@@ -255,32 +270,41 @@ class ZonalExhaustView(ctk.CTkFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        zones = self.main_app_data.rmds[0].zone_names
-        zonal_exhaust_fans = {}
-
-        # Capture existing zonal exhaust fan data
-        for zone in zones:
-            zone_obj = self.main_app_data.rmds[0].get_obj(zone)
-            if zone_obj and len(zone_obj.zonal_exhaust_fan) > 0:
-                zonal_exhaust_fans.update(zone_obj.zonal_exhaust_fan)
+        zonal_exhaust_fans = self.get_zonal_exhaust_fans()
 
         if len(zonal_exhaust_fans) == 0:
             # TODO: No zonal exhaust fans, hide tab
             return
 
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Fan Type", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        for i, zone in enumerate(zones):
-            heat_rejection_label = ctk.CTkLabel(self, text=f"{zone}")
-            heat_rejection_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Axial", "Centrifugal"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        for i, exhaust_fan_dict in enumerate(zonal_exhaust_fans):
+            self.add_row(i, exhaust_fan_dict)
 
         self.is_subview_populated = True
+
+    def get_zonal_exhaust_fans(self):
+        # TODO: Review this approach..may be problematic once we are trying to set data back to the rmds
+        zonal_exhaust_fans = []
+        for zone_name in self.main_app_data.rmds[0].zone_names:
+            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+            if zone_obj.zonal_exhaust_fan:
+                zonal_exhaust_fans.append(zone_obj.zonal_exhaust_fan)
+        return zonal_exhaust_fans
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=ARIAL_16_BOLD)
+        name_label.grid(row=0, column=0, padx=PAD20, pady=5)
+        status_label = ctk.CTkLabel(self, text="Fan Type", font=ARIAL_16_BOLD)
+        status_label.grid(row=0, column=1, padx=PAD20, pady=5)
+
+    def add_row(self, i, exhaust_fan_dict):
+        zonal_exhaust_fan_label = ctk.CTkLabel(self, text=f"{exhaust_fan_dict['id']}")
+        zonal_exhaust_fan_label.grid(
+            row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W
+        )
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
