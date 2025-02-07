@@ -30,6 +30,7 @@ class _ListEnum:
 
 class SchemaEnums:
     schema_enums = {}
+    schema_descriptions = {}
 
     @staticmethod
     def update_schema_enum(ruleset: Ruleset):
@@ -54,6 +55,7 @@ class SchemaEnums:
         _schema_enum_jsonpath_value_dict = create_enum_dict(_schema_obj)
 
         combined_enum_jsonpath_value_dict = defaultdict(list)
+        combined_desription_jsonpath_value_dict = defaultdict(list)
 
         # Merge dictionaries while combining values
         for d in (
@@ -63,7 +65,12 @@ class SchemaEnums:
         ):
             for key, value in d.items():
                 # Extend the list for the key with new values
-                combined_enum_jsonpath_value_dict[key].extend(value)
+                if "enum" in value:
+                    combined_enum_jsonpath_value_dict[key].extend(value["enum"])
+                if "descriptions" in value:
+                    combined_desription_jsonpath_value_dict[key].extend(
+                        value["descriptions"]
+                    )
 
         # Create a dictionary of all the enumerations as dictionaries
         combined_enum_dict = {
@@ -74,6 +81,18 @@ class SchemaEnums:
         # Assign to SchemaEnums with the combined lists
         SchemaEnums.schema_enums = {
             key: _ListEnum(enum_list) for key, enum_list in combined_enum_dict.items()
+        }
+
+        # Create a dictionary of all the descriptions as dictionaries
+        combined_description_dict = {
+            description_name: description_list
+            for description_name, description_list in combined_desription_jsonpath_value_dict.items()
+        }
+
+        # Assign to SchemaEnums with the combined lists
+        SchemaEnums.schema_descriptions = {
+            key: _ListEnum(description_list)
+            for key, description_list in combined_description_dict.items()
         }
 
 

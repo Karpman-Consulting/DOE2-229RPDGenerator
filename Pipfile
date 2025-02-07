@@ -8,7 +8,7 @@ customtkinter = "*"
 pillow = "*"
 tksheet = "*"
 pint = "*"
-pip = "==23.2"
+pip = "==23.3"
 rpd-generator = {file = ".", editable = true}
 jsonschema = "*"
 jsonpath-ng = "*"

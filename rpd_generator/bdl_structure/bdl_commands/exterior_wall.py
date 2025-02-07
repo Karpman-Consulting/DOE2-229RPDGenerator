@@ -12,9 +12,6 @@ AdditionalSurfaceAdjacencyOptions2019ASHRAE901 = SchemaEnums.schema_enums[
     "AdditionalSurfaceAdjacencyOptions2019ASHRAE901"
 ]
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
-SurfaceConstructionInputOptions = SchemaEnums.schema_enums[
-    "SurfaceConstructionInputOptions"
-]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ExteriorWallKeywords = BDLEnums.bdl_enums["ExteriorWallKeywords"]
 BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]

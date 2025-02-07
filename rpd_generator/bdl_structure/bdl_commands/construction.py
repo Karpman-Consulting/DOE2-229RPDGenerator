@@ -2,9 +2,6 @@ from rpd_generator.bdl_structure.base_node import BaseNode
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
-SurfaceConstructionInputOptions = SchemaEnums.schema_enums[
-    "SurfaceConstructionInputOptions"
-]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_ConstructionKeywords = BDLEnums.bdl_enums["ConstructionKeywords"]
 BDL_MaterialTypes = BDLEnums.bdl_enums["MaterialTypes"]
@@ -52,12 +49,6 @@ class Construction(BaseNode):
             material = self.get_obj(material_reference)
             if material and material.material_type == BDL_MaterialTypes.PROPERTIES:
                 any_detailed_materials = True
-
-        self.surface_construction_input_option = (
-            SurfaceConstructionInputOptions.LAYERS
-            if any_detailed_materials
-            else SurfaceConstructionInputOptions.SIMPLIFIED
-        )
 
         if len(self.material_references) == 0:
             simplified_material = {"id": "Simplified Material"}
