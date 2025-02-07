@@ -186,13 +186,14 @@ class Chiller(BaseNode):
         rated_entering_condenser_temperature = rated_temperatures[1]
 
         curves_normalized_to_ahri_allowed_margin_of_error = 1.5
-        are_curve_outputs_all_equal_to_one_at_ahri_temperatures = curve_funcs.are_curve_outputs_all_equal_to_a_value_of_one(
+        are_curve_outputs_all_equal_to_one_at_ahri_temperatures = (
+            curve_funcs.are_curve_outputs_all_equal_to_a_value_of_one(
                 coefficients,
                 rated_leaving_evaporator_temperature,
                 rated_entering_condenser_temperature,
                 curves_normalized_to_ahri_allowed_margin_of_error,
             )
-
+        )
 
         # The if statement checks if any of the performance curves were defined as data_input type of DATA. If so, at this point in time we cannot perform
         # efficiency or capacity adjustments or IPLV calculations using the curves so we take the approach shown below.
@@ -200,10 +201,12 @@ class Chiller(BaseNode):
         # If the answer to both is no then the logic is run.
         if not coeffs or (
             not self.is_user_defined_rated_eff_and_cap_defined_at_ahri_rating_conditions()
-            and not are_curve_outputs_all_equal_to_one_at_ahri_temperatures):
+            and not are_curve_outputs_all_equal_to_one_at_ahri_temperatures
+        ):
             # Instead of setting these to AHRI conditions and adjusting capacity and efficiency to match AHRI conditions we just populate these
             # as defined.
-            if not coeffs: self.notes = "Performance curve INPUT-TYPE of DATA is not currently supported for determining and populating chiller IPLV."
+            if not coeffs:
+                self.notes = "Performance curve INPUT-TYPE of DATA is not currently supported for determining and populating chiller IPLV."
             self.rated_leaving_evaporator_temperature = self.try_float(
                 self.get_inp(BDL_ChillerKeywords.RATED_CHW_T)
             )
