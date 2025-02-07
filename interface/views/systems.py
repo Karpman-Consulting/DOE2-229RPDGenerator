@@ -276,6 +276,8 @@ class ZonalExhaustView(ctk.CTkFrame):
             # TODO: No zonal exhaust fans, hide tab
             return
 
+        self.add_column_headers()
+
         for i, exhaust_fan_dict in enumerate(zonal_exhaust_fans):
             self.add_row(i, exhaust_fan_dict)
 
