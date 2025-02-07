@@ -2,6 +2,7 @@ import json
 import shutil
 import tempfile
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from rpd_generator.artifacts.ruleset_project_description import (
     RulesetProjectDescription,
@@ -113,36 +114,35 @@ def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models:
     return rmds
 
 
-def generate_rmd_from_inp(inp_path_str: str):
+def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory):
     inp_path = Path(inp_path_str)
-    # Create a temporary directory to store the files for processing
-    with tempfile.TemporaryDirectory() as temp_dir:
+    temp_dir = processing_dir.name
 
-        # Prepare the inp file for processing and save the revised copy to the temporary directory
-        temp_file_path = prepare_inp(inp_path, Path(temp_dir))
+    # Prepare the inp file for processing and save the revised copy to the temporary directory
+    temp_file_path = prepare_inp(inp_path, Path(temp_dir))
 
-        # Copy the model output files to the temporary directory (.erp, .lrp, .srp, .nhk)
-        copy_files_to_temp_dir(inp_path, Path(temp_dir))
+    # Copy the model output files to the temporary directory (.erp, .lrp, .srp, .nhk)
+    copy_files_to_temp_dir(inp_path, Path(temp_dir))
 
-        # Set the paths for the inp file, json file, and the directories
-        temp_inp_path = Path(temp_file_path)
-        bdl_path = temp_inp_path.with_suffix(".BDL")
-        doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
-        bdlcio32_path = Path(Config.EQUEST_INSTALL_PATH) / "Bdlcio32.dll"
+    # Set the paths for the inp file, json file, and the directories
+    temp_inp_path = Path(temp_file_path)
+    bdl_path = temp_inp_path.with_suffix(".BDL")
+    doe23_path = Path(Config.DOE23_DATA_PATH) / "DOE23"
+    bdlcio32_path = Path(Config.EQUEST_INSTALL_PATH) / "Bdlcio32.dll"
 
-        # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory
-        process_input_file(
-            str(bdlcio32_path),
-            str(doe23_path) + "\\",
-            str(temp_inp_path.parent) + "\\",
-            temp_inp_path.name,
-        )
+    # Process the inp file to create the BDL file with Diagnostic Comments (defaults and evaluated values) in the temporary directory
+    process_input_file(
+        str(bdlcio32_path),
+        str(doe23_path) + "\\",
+        str(temp_inp_path.parent) + "\\",
+        temp_inp_path.name,
+    )
 
-        # Generate the RMD object from the BDL file in the temporary directory
-        bdl_input_reader = ModelInputReader()
-        rmd = generate_rmds_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
+    # Generate the RMD object from the BDL file in the temporary directory
+    bdl_input_reader = ModelInputReader()
+    rmd = generate_rmds_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
 
-        return rmd
+    return rmd
 
 
 def prepare_inp(model_path: Path, output_dir: Path = None) -> str:
