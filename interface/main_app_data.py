@@ -14,76 +14,90 @@ from rpd_generator.schema.schema_enums import SchemaEnums
 
 
 class MainAppData:
-
-    CommonConstructionClassificationOptions = SchemaEnums.schema_descriptions[
+    SubsurfaceClassificationOptions = SchemaEnums.schema_enums[
+        "SubsurfaceClassificationOptions"
+    ]
+    CommonConstructionClassificationDescriptions = SchemaEnums.schema_descriptions[
         "CommonConstructionClassificationOptions"
     ]
-    CommonRulesetModelOptions = SchemaEnums.schema_descriptions[
+    CommonRulesetModelDescriptions = SchemaEnums.schema_descriptions[
         "CommonRulesetModelOptions"
     ]
-    ComponentLocationOptions = SchemaEnums.schema_descriptions[
+    ComponentLocationDescriptions = SchemaEnums.schema_descriptions[
         "ComponentLocationOptions"
     ]
-    CoolingDesignDayOptions = SchemaEnums.schema_descriptions["CoolingDesignDayOptions"]
-    DrawPatternOptions = SchemaEnums.schema_descriptions["DrawPatternOptions"]
-    HeatRejectionFanOptions = SchemaEnums.schema_descriptions["HeatRejectionFanOptions"]
-    HeatingDesignDayOptions = SchemaEnums.schema_descriptions["HeatingDesignDayOptions"]
-    MiscellaneousEquipmentOptions = SchemaEnums.schema_descriptions[
+    CoolingDesignDayDescriptions = SchemaEnums.schema_descriptions[
+        "CoolingDesignDayOptions"
+    ]
+    DrawPatternDescriptions = SchemaEnums.schema_descriptions["DrawPatternOptions"]
+    HeatRejectionFanDescriptions = SchemaEnums.schema_descriptions[
+        "HeatRejectionFanOptions"
+    ]
+    HeatingDesignDayDescriptions = SchemaEnums.schema_descriptions[
+        "HeatingDesignDayOptions"
+    ]
+    MiscellaneousEquipmentDescriptions = SchemaEnums.schema_descriptions[
         "MiscellaneousEquipmentOptions"
     ]
-    SpaceFunctionOptions = SchemaEnums.schema_descriptions["SpaceFunctionOptions"]
-    StatusOptions = SchemaEnums.schema_descriptions["StatusOptions"]
-    WeatherFileDataSourceOptions = SchemaEnums.schema_descriptions[
+    SpaceFunctionDescriptions = SchemaEnums.schema_descriptions["SpaceFunctionOptions"]
+    StatusDescriptions = SchemaEnums.schema_descriptions["StatusOptions"]
+    WeatherFileDataSourceDescriptions = SchemaEnums.schema_descriptions[
         "WeatherFileDataSourceOptions"
     ]
-    ClimateZoneOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    ClimateZoneDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "ClimateZoneOptions2019ASHRAE901"
     ]
-    CompliancePathOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    CompliancePathDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "CompliancePathOptions2019ASHRAE901"
     ]
-    ConstructionClassificationOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "ConstructionClassificationOptions2019ASHRAE901"
-    ]
-    EnvelopeSpaceOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    ConstructionClassificationDescriptions2019ASHRAE901 = (
+        SchemaEnums.schema_descriptions[
+            "ConstructionClassificationOptions2019ASHRAE901"
+        ]
+    )
+    EnvelopeSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "EnvelopeSpaceOptions2019ASHRAE901"
     ]
-    ExteriorLightingZoneOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    ExteriorLightingZoneDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "ExteriorLightingZoneOptions2019ASHRAE901"
     ]
-    HeatingVentilatingAirConditioningBuildingAreaOptions2019ASHRAE901 = (
+    HeatingVentilatingAirConditioningBuildingAreaDescriptions2019ASHRAE901 = (
         SchemaEnums.schema_descriptions[
             "HeatingVentilatingAirConditioningBuildingAreaOptions2019ASHRAE901"
         ]
     )
-    LightingBuildingAreaOptions2019ASHRAE901T951TG38 = SchemaEnums.schema_descriptions[
-        "LightingBuildingAreaOptions2019ASHRAE901T951TG38"
-    ]
-    LightingPurposeOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    LightingBuildingAreaDescriptions2019ASHRAE901T951TG38 = (
+        SchemaEnums.schema_descriptions[
+            "LightingBuildingAreaOptions2019ASHRAE901T951TG38"
+        ]
+    )
+    LightingPurposeDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "LightingPurposeOptions2019ASHRAE901"
     ]
-    LightingSpaceOptions2019ASHRAE901TG37 = SchemaEnums.schema_descriptions[
+    LightingSpaceDescriptions2019ASHRAE901TG37 = SchemaEnums.schema_descriptions[
         "LightingSpaceOptions2019ASHRAE901TG37"
     ]
-    OutputSchemaOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    OutputSchemaDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "OutputSchemaOptions2019ASHRAE901"
     ]
-    RulesetModelOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    RulesetModelDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "RulesetModelOptions2019ASHRAE901"
     ]
-    ServiceWaterHeatingSpaceOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    ServiceWaterHeatingSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "ServiceWaterHeatingSpaceOptions2019ASHRAE901"
     ]
-    SubsurfaceFrameOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    SubsurfaceFrameDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "SubsurfaceFrameOptions2019ASHRAE901"
     ]
-    SubsurfaceSubclassificationOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "SubsurfaceSubclassificationOptions2019ASHRAE901"
-    ]
-    VentilationSpaceOptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
+    SubsurfaceSubclassificationDescriptions2019ASHRAE901 = (
+        SchemaEnums.schema_descriptions[
+            "SubsurfaceSubclassificationOptions2019ASHRAE901"
+        ]
+    )
+    VentilationSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "VentilationSpaceOptions2019ASHRAE901"
     ]
-    VerticalFenestrationBuildingAreaOptions2019ASHRAE901 = (
+    VerticalFenestrationBuildingAreaDescriptions2019ASHRAE901 = (
         SchemaEnums.schema_descriptions[
             "VerticalFenestrationBuildingAreaOptions2019ASHRAE901"
         ]

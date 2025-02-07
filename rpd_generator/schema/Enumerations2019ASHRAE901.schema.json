@@ -1073,13 +1073,13 @@
                 "OTHER"
             ],
             "descriptions": [
-                "an upward-acting, nonswinging door assembly consisting of interlocking horizontal slats or sheets that, upon opening the door, roll up around a horizontal barrel above the door opening.",
-                "roll-up, metal coiling, sliding, and any other door that is not a swinging door.",
-                "an upward-acting, nonswinging door assembly made of two or more horizontal panels hinged together vertically.",
-                "a door having an operable opaque panel with hinges or pivots on one side.",
-                "opaque glass that conceals structural building components from being visible from the exterior of the building",
-                "a translucent, hollow or solid block of glass for glazing openings or constructing partitions",
-                "other subclassifications"
+                "Metal Coiling Door",
+                "Non-swinging Door",
+                "Sectional Garage Door",
+                "Swinging Door",
+                "Spandrel Glass",
+                "Glass Block",
+                "Other"
             ]
         },
         "HeatingVentilatingAirConditioningBuildingAreaOptions2019ASHRAE901": {

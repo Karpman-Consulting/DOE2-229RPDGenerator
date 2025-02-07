@@ -4,6 +4,12 @@ from interface.ctk_xyframe import CTkXYFrame
 from interface.base_view import BaseView
 
 
+STANDARD_FONT = ("Arial", 16, "bold")
+READONLY = "readonly"
+LEFT = "left"
+W = "w"
+
+
 class SurfacesView(BaseView):
     def __init__(self, window):
         super().__init__(window)
@@ -27,7 +33,7 @@ class SurfacesView(BaseView):
         self.directions_label = ctk.CTkLabel(
             self.directions_frame,
             text="Directions: ",
-            font=("Arial", 16, "bold"),
+            font=STANDARD_FONT,
         )
         self.directions_widget = ctk.CTkLabel(
             self.directions_frame,
@@ -60,7 +66,7 @@ class SurfacesView(BaseView):
         self.directions_widget.grid(row=0, column=1)
 
         # Subview buttons
-        self.subview_button_frame.grid(row=1, column=0, sticky="w", padx=20)
+        self.subview_button_frame.grid(row=1, column=0, sticky=W, padx=20)
         for index, name in enumerate(self.subview_buttons):
             # Layout the button inside the frame
             button = self.subview_buttons[name]
@@ -147,25 +153,30 @@ class ExteriorSurfaceView(CTkXYFrame):
         self.surfaces_view.toggle_active_subbutton("Exterior")
         self.populate_subview() if not self.is_subview_populated else None
 
-    # Example of how to pull rmd data from main app
     def populate_subview(self):
-        ext_walls = self.main_app_data.rmds[0].ext_wall_names
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        for i, ext_wall in enumerate(ext_walls):
-            surface_label = ctk.CTkLabel(self, text=f"{ext_wall}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Value 1", "Value 2"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        self.add_column_headers()
+
+        for i, ext_wall_name in enumerate(self.main_app_data.rmds[0].ext_wall_names):
+            self.add_row(i, ext_wall_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+
+    def add_row(self, i, ext_wall_name):
+        surface_label = ctk.CTkLabel(self, text=f"{ext_wall_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
 
 
 class InteriorSurfaceView(CTkXYFrame):
@@ -183,23 +194,29 @@ class InteriorSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        int_walls = self.main_app_data.rmds[0].int_wall_names
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        for i, int_wall in enumerate(int_walls):
-            surface_label = ctk.CTkLabel(self, text=f"{int_wall}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        self.add_column_headers()
+
+        for i, int_wall_name in enumerate(self.main_app_data.rmds[0].int_wall_names):
+            self.add_row(i, int_wall_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+
+    def add_row(self, i, int_wall_name):
+        surface_label = ctk.CTkLabel(self, text=f"{int_wall_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
 
 
 class UndergroundSurfaceView(CTkXYFrame):
@@ -217,23 +234,29 @@ class UndergroundSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        undg_walls = self.main_app_data.rmds[0].undg_wall_names
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        for i, undg_wall in enumerate(undg_walls):
-            surface_label = ctk.CTkLabel(self, text=f"{undg_wall}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        self.add_column_headers()
+
+        for i, undg_wall_name in enumerate(self.main_app_data.rmds[0].undg_wall_names):
+            self.add_row(i, undg_wall_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+
+    def add_row(self, i, undg_wall_name):
+        surface_label = ctk.CTkLabel(self, text=f"{undg_wall_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
 
 
 class WindowSurfaceView(CTkXYFrame):
@@ -251,76 +274,78 @@ class WindowSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        windows = self.main_app_data.rmds[0].window_names
-        skylights = []
+        vertical_window_names = self.get_vertical_windows_subset()
 
-        # Remove skylights from windows list
-        for window in windows:
-            window_obj = self.main_app_data.rmds[0].get_obj(window)
-            # TODO: Hate this. It works but find a better way
-            # "window_obj.classification" not populated yet, but key_value_pairs are
-            is_skylight = bool(
-                float(window_obj.keyword_value_pairs.get("C-IS-SKYLIGHT"))
-            )
-            if window_obj and is_skylight:
-                skylights.append(window)
-        # TODO: List comprehension seemed like the best choice here. Please correct if not ideal
-        windows = [window for window in windows if window not in skylights]
+        self.add_column_headers()
 
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        classification_label = ctk.CTkLabel(
-            self, text="Classification", font=("Arial", 16, "bold")
-        )
-        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
-        framing_type_label = ctk.CTkLabel(
-            self, text="Framing Type", font=("Arial", 16, "bold")
-        )
-        framing_type_label.grid(row=0, column=3, padx=(0, 20), pady=5)
-        operable_label = ctk.CTkLabel(
-            self, text="Operable?", font=("Arial", 16, "bold")
-        )
-        operable_label.grid(row=0, column=4, padx=(0, 20), pady=5)
-        open_sensor_label = ctk.CTkLabel(
-            self, text="Open Sensor?", font=("Arial", 16, "bold")
-        )
-        open_sensor_label.grid(row=0, column=5, padx=(0, 20), pady=5)
-        manual_interior_shades_label = ctk.CTkLabel(
-            self, text="Manual Interior Shades?", font=("Arial", 16, "bold")
-        )
-        manual_interior_shades_label.grid(row=0, column=6, padx=(0, 20), pady=5)
-        for i, window in enumerate(windows):
-            surface_label = ctk.CTkLabel(self, text=f"{window}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
-            classification_combo = ctk.CTkComboBox(
-                self, values=["Spandrel", "Other", "Glass Block"], state="readonly"
-            )
-            classification_combo._entry.configure(justify="left")
-            classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
-            framing_type_combo = ctk.CTkComboBox(
-                self, values=["Metal", "Wood", "Vinyl", "Other"], state="readonly"
-            )
-            framing_type_combo._entry.configure(justify="left")
-            framing_type_combo.grid(row=(i + 1), column=3, padx=(0, 20), pady=(0, 20))
-            operable_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            operable_checkbox.grid(row=(i + 1), column=4, padx=(0, 20), pady=(0, 20))
-            open_sensor_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            open_sensor_checkbox.grid(row=(i + 1), column=5, padx=(0, 20), pady=(0, 20))
-            manual_interior_shades_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            manual_interior_shades_checkbox.grid(
-                row=(i + 1), column=6, padx=(0, 20), pady=(0, 20)
-            )
+        for i, window_name in enumerate(vertical_window_names):
+            self.add_row(i, window_name)
 
         self.is_subview_populated = True
+
+    def get_vertical_windows_subset(self):
+        vertical_window_names = []
+        for window_name in self.main_app_data.rmds[0].window_names:
+            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
+            if (
+                window_obj.classification
+                != self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
+            ):
+                vertical_window_names.append(window_name)
+        return vertical_window_names
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+        classification_label = ctk.CTkLabel(
+            self, text="Classification", font=STANDARD_FONT
+        )
+        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
+        framing_type_label = ctk.CTkLabel(self, text="Framing Type", font=STANDARD_FONT)
+        framing_type_label.grid(row=0, column=3, padx=(0, 20), pady=5)
+        operable_label = ctk.CTkLabel(self, text="Operable?", font=STANDARD_FONT)
+        operable_label.grid(row=0, column=4, padx=(0, 20), pady=5)
+        open_sensor_label = ctk.CTkLabel(self, text="Open Sensor?", font=STANDARD_FONT)
+        open_sensor_label.grid(row=0, column=5, padx=(0, 20), pady=5)
+        manual_interior_shades_label = ctk.CTkLabel(
+            self, text="Manual Interior Shades?", font=STANDARD_FONT
+        )
+        manual_interior_shades_label.grid(row=0, column=6, padx=(0, 20), pady=5)
+
+    def add_row(self, i, window_name):
+        surface_label = ctk.CTkLabel(self, text=f"{window_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        classification_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            state=READONLY,
+        )
+        classification_combo._entry.configure(justify=LEFT)
+        classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
+        framing_type_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            state=READONLY,
+        )
+        framing_type_combo._entry.configure(justify=LEFT)
+        framing_type_combo.grid(row=(i + 1), column=3, padx=(0, 20), pady=(0, 20))
+        operable_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        operable_checkbox.grid(row=(i + 1), column=4, padx=(0, 20), pady=(0, 20))
+        open_sensor_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        open_sensor_checkbox.grid(row=(i + 1), column=5, padx=(0, 20), pady=(0, 20))
+        manual_interior_shades_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        manual_interior_shades_checkbox.grid(
+            row=(i + 1), column=6, padx=(0, 20), pady=(0, 20)
+        )
 
 
 class SkylightSurfaceView(CTkXYFrame):
@@ -338,75 +363,78 @@ class SkylightSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        windows = self.main_app_data.rmds[0].window_names
-        skylights = []
+        skylight_names = self.get_skylights_subset()
 
-        # Get only skylights in the current list of windows
-        for window in windows:
-            window_obj = self.main_app_data.rmds[0].get_obj(window)
-            # TODO: See window subview above. Hacky solution.
-            is_skylight = bool(
-                float(window_obj.keyword_value_pairs.get("C-IS-SKYLIGHT"))
-            )
-            if window_obj and is_skylight:
-                skylights.append(window)
-        if not skylights:
-            return
+        self.add_column_headers()
 
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        classification_label = ctk.CTkLabel(
-            self, text="Classification", font=("Arial", 16, "bold")
-        )
-        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
-        framing_type_label = ctk.CTkLabel(
-            self, text="Framing Type", font=("Arial", 16, "bold")
-        )
-        framing_type_label.grid(row=0, column=3, padx=(0, 20), pady=5)
-        operable_label = ctk.CTkLabel(
-            self, text="Operable?", font=("Arial", 16, "bold")
-        )
-        operable_label.grid(row=0, column=4, padx=(0, 20), pady=5)
-        open_sensor_label = ctk.CTkLabel(
-            self, text="Open Sensor?", font=("Arial", 16, "bold")
-        )
-        open_sensor_label.grid(row=0, column=5, padx=(0, 20), pady=5)
-        manual_interior_shades_label = ctk.CTkLabel(
-            self, text="Manual Interior Shades?", font=("Arial", 16, "bold")
-        )
-        manual_interior_shades_label.grid(row=0, column=6, padx=(0, 20), pady=5)
-        for i, skylight in enumerate(skylights):
-            surface_label = ctk.CTkLabel(self, text=f"{skylight}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
-            classification_combo = ctk.CTkComboBox(
-                self, values=["Spandrel", "Other", "Glass Block"], state="readonly"
-            )
-            classification_combo._entry.configure(justify="left")
-            classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
-            framing_type_combo = ctk.CTkComboBox(
-                self, values=["Metal", "Wood", "Vinyl", "Other"], state="readonly"
-            )
-            framing_type_combo._entry.configure(justify="left")
-            framing_type_combo.grid(row=(i + 1), column=3, padx=(0, 20), pady=(0, 20))
-            operable_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            operable_checkbox.grid(row=(i + 1), column=4, padx=(0, 20), pady=(0, 20))
-            open_sensor_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            open_sensor_checkbox.grid(row=(i + 1), column=5, padx=(0, 20), pady=(0, 20))
-            manual_interior_shades_checkbox = ctk.CTkCheckBox(self, text="", width=30)
-            manual_interior_shades_checkbox.grid(
-                row=(i + 1), column=6, padx=(0, 20), pady=(0, 20)
-            )
+        for i, skylight_name in enumerate(skylight_names):
+            self.add_row(i, skylight_name)
 
         self.is_subview_populated = True
+
+    def get_skylights_subset(self):
+        skylight_names = []
+        for window_name in self.main_app_data.rmds[0].window_names:
+            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
+            if (
+                window_obj.classification
+                == self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
+            ):
+                skylight_names.append(window_name)
+        return skylight_names
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+        classification_label = ctk.CTkLabel(
+            self, text="Classification", font=STANDARD_FONT
+        )
+        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
+        framing_type_label = ctk.CTkLabel(self, text="Framing Type", font=STANDARD_FONT)
+        framing_type_label.grid(row=0, column=3, padx=(0, 20), pady=5)
+        operable_label = ctk.CTkLabel(self, text="Operable?", font=STANDARD_FONT)
+        operable_label.grid(row=0, column=4, padx=(0, 20), pady=5)
+        open_sensor_label = ctk.CTkLabel(self, text="Open Sensor?", font=STANDARD_FONT)
+        open_sensor_label.grid(row=0, column=5, padx=(0, 20), pady=5)
+        manual_interior_shades_label = ctk.CTkLabel(
+            self, text="Manual Interior Shades?", font=STANDARD_FONT
+        )
+        manual_interior_shades_label.grid(row=0, column=6, padx=(0, 20), pady=5)
+
+    def add_row(self, i, skylight_name):
+        surface_label = ctk.CTkLabel(self, text=f"{skylight_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        classification_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            state=READONLY,
+        )
+        classification_combo._entry.configure(justify=LEFT)
+        classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
+        framing_type_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.SubsurfaceFrameDescriptions2019ASHRAE901.get_list(),
+            state=READONLY,
+        )
+        framing_type_combo._entry.configure(justify=LEFT)
+        framing_type_combo.grid(row=(i + 1), column=3, padx=(0, 20), pady=(0, 20))
+        operable_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        operable_checkbox.grid(row=(i + 1), column=4, padx=(0, 20), pady=(0, 20))
+        open_sensor_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        open_sensor_checkbox.grid(row=(i + 1), column=5, padx=(0, 20), pady=(0, 20))
+        manual_interior_shades_checkbox = ctk.CTkCheckBox(self, text="", width=30)
+        manual_interior_shades_checkbox.grid(
+            row=(i + 1), column=6, padx=(0, 20), pady=(0, 20)
+        )
 
 
 class DoorSurfaceView(CTkXYFrame):
@@ -424,29 +452,37 @@ class DoorSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        doors = self.main_app_data.rmds[0].door_names
-        name_label = ctk.CTkLabel(self, text="Name", font=("Arial", 16, "bold"))
-        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        status_label = ctk.CTkLabel(self, text="Status", font=("Arial", 16, "bold"))
-        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
-        classification_label = ctk.CTkLabel(
-            self, text="Classification", font=("Arial", 16, "bold")
-        )
-        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
-        for i, door in enumerate(doors):
-            surface_label = ctk.CTkLabel(self, text=f"{door}")
-            surface_label.grid(
-                row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky="w"
-            )
-            status_combo = ctk.CTkComboBox(
-                self, values=["Existing", "New"], state="readonly"
-            )
-            status_combo._entry.configure(justify="left")
-            status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
-            classification_combo = ctk.CTkComboBox(
-                self, values=["Swinging", "Non-swinging", "Other"], state="readonly"
-            )
-            classification_combo._entry.configure(justify="left")
-            classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
+        self.add_column_headers()
+
+        for i, door_name in enumerate(self.main_app_data.rmds[0].door_names):
+            self.add_row(i, door_name)
 
         self.is_subview_populated = True
+
+    def add_column_headers(self):
+        name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
+        name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
+        status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+        classification_label = ctk.CTkLabel(
+            self, text="Classification", font=STANDARD_FONT
+        )
+        classification_label.grid(row=0, column=2, padx=(0, 20), pady=5)
+
+    def add_row(self, i, door_name):
+        surface_label = ctk.CTkLabel(self, text=f"{door_name}")
+        surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        status_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.StatusDescriptions.get_list(),
+            state=READONLY,
+        )
+        status_combo._entry.configure(justify=LEFT)
+        status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        classification_combo = ctk.CTkComboBox(
+            self,
+            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            state=READONLY,
+        )
+        classification_combo._entry.configure(justify=LEFT)
+        classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
