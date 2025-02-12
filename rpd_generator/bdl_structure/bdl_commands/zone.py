@@ -203,7 +203,7 @@ class Zone(ChildNode):
         ]
 
         space = self.get_obj(self.get_inp(BDL_ZoneKeywords.SPACE))
-        self.floor_name = space.parent.u_name
+        self.floor_name = space.parent.u_name if space else None
 
         self.design_thermostat_cooling_setpoint = self.try_float(
             self.get_inp(BDL_ZoneKeywords.DESIGN_COOL_T)

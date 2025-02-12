@@ -35,6 +35,8 @@ class ZonesView(BaseView):
             "Spaces column to open the Child Spaces window. Child Spaces should be created as necessary to represent the entirety of the Zone, e.g. an aggregated \n"
             "zone that is in reality 3 zones where each zone has 2 spaces should have 6 Child Spaces total.",
             font=("Arial", 14, "bold"),
+            anchor="w",
+            justify="left",
         )
 
     def __repr__(self):
