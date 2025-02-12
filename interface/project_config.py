@@ -452,19 +452,19 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             values > 0 for HEAT-INPUT-RATIO, HEAT-INPUT-RATIO, and FURNACE-HIR respectively"""
             for boiler in rmd.boiler_names:
                 boiler_obj = rmd.get_obj(boiler)
-                heat_input_ratio = float(
-                    boiler_obj.keyword_value_pairs["HEAT-INPUT-RATIO"]
+                heat_input_ratio = boiler_obj.keyword_value_pairs.get(
+                    "HEAT-INPUT-RATIO"
                 )
-                if heat_input_ratio <= 0.0:
+                if heat_input_ratio and float(heat_input_ratio) <= 0.0:
                     self.main_app.data.errors.append(
                         f"Warning: '{rmd.type}' model, boiler '{boiler}' has a heat input ratio of {heat_input_ratio}"
                     )
             for domestic_water_heater in rmd.domestic_water_heater_names:
                 domestic_water_heater_obj = rmd.get_obj(domestic_water_heater)
-                heat_input_ratio = float(
-                    domestic_water_heater_obj.keyword_value_pairs["HEAT-INPUT-RATIO"]
+                heat_input_ratio = domestic_water_heater_obj.keyword_value_pairs.get(
+                    "HEAT-INPUT-RATIO"
                 )
-                if heat_input_ratio <= 0.0:
+                if heat_input_ratio and float(heat_input_ratio) <= 0.0:
                     self.main_app.data.errors.append(
                         f"Warning: '{rmd.type}' model, domestic water heater '{domestic_water_heater}' "
                         f"has a heat input ratio of {heat_input_ratio}"
