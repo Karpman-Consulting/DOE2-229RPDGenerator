@@ -29,16 +29,21 @@ AHRI_550_590_2023_COND_ENTERING_T = {
 }
 AHRI_550_590_2023_EVAP_LEAVING_T = 44
 TYPICAL_IPLV_COND_ENTERING_T_BY_CONDENSER_TYPE = {
-    BDL_CondenserTypes.WATER_COOLED: [85, 75, 65, 65],
-    BDL_CondenserTypes.AIR_COOLED: [95, 80, 65, 55],
-    BDL_CondenserTypes.REMOTE_AIR_COOLED: [125, 107.5, 90, 72.5],
-    BDL_CondenserTypes.REMOTE_EVAP_COOLED: [105, 95, 85, 75],
+    BDL_CondenserTypes.WATER_COOLED: {0.25: 65, 0.50: 65, 0.75: 75, 1.00: 85},
+    BDL_CondenserTypes.AIR_COOLED: {0.25: 55, 0.50: 65, 0.75: 80, 1.00: 95},
+    BDL_CondenserTypes.REMOTE_AIR_COOLED: {
+        0.25: 72.5,
+        0.50: 90,
+        0.75: 107.5,
+        1.00: 125,
+    },
+    BDL_CondenserTypes.REMOTE_EVAP_COOLED: {0.25: 75, 0.50: 85, 0.75: 95, 1.00: 105},
 }
-ABSORP_ENG_IPLV_COND_ENTERING_T = {0.25: 70, 0.5: 70, 0.75: 75, 1: 85}
+ABSORP_ENG_IPLV_COND_ENTERING_T = {0.25: 70, 0.50: 70, 0.75: 75, 1.00: 85}
 
 # Percent of time at each PLR 25%, 50%, 75%, 100%
-IPLV_PART_LOAD_PCT_TIME = {0.25: 0.01, 0.50: 0.42, 0.75: 0.45, 1.0: 0.12}
-PCT_ERROR_MARGIN = 0.015
+IPLV_PART_LOAD_PCT_TIME = {0.25: 0.01, 0.50: 0.42, 0.75: 0.45, 1.00: 0.12}
+ERROR_MARGIN = 0.015
 MIN_AHRI_PART_LOAD = 0.25
 
 
@@ -214,8 +219,7 @@ class Chiller(BaseNode):
             if pump is not None:
                 pump.loop_or_piping = [self.condensing_loop] * pump.qty
 
-        # Obtain the AHRI rated temperatures
-        ahri_evaporator_leaving_t = AHRI_550_590_2023_EVAP_LEAVING_T
+        # Obtain the AHRI rated condenser entering temperature
         ahri_condenser_entering_t = AHRI_550_590_2023_COND_ENTERING_T.get(
             self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
         )
@@ -225,9 +229,9 @@ class Chiller(BaseNode):
         are_curve_outputs_all_equal_to_one_at_ahri_temperatures = (
             curve_funcs.are_curve_outputs_all_equal_to_a_value_of_one(
                 performance_curve_data,
-                ahri_evaporator_leaving_t,
+                AHRI_550_590_2023_EVAP_LEAVING_T,
                 ahri_condenser_entering_t,
-                PCT_ERROR_MARGIN,
+                ERROR_MARGIN,
             )
         )
         # Checks if any of the performance curves were defined as data_input type of DATA or if the entered rated conditions match AHRI and if the performance curves are normalized to ahri conditions.
@@ -480,10 +484,10 @@ class Chiller(BaseNode):
             coefficients[f"{key}_coeffs"] = list(
                 map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
             )
-            min_outputs[f"{key}_min_otpt"] = float(
+            min_outputs[f"{key}_min_output"] = float(
                 obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
             )
-            max_outputs[f"{key}_max_otpt"] = float(
+            max_outputs[f"{key}_max_output"] = float(
                 obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
             )
 
@@ -521,7 +525,7 @@ class Chiller(BaseNode):
             )
         ]
 
-        # Dictionary of rated capacity as the key and efficiency result as the value. 0.0 as placeholder
+        # Dictionary of rated part-load ratio as the key, and efficiency result as the value. 0.0 as placeholder
         iplv_part_load_efficiencies = {plr: 0.0 for plr in IPLV_PART_LOAD_PCT_TIME}
         for plr in iplv_part_load_efficiencies:
             cond_entering_temp = iplv_condenser_temp_conditions[plr]
@@ -553,9 +557,9 @@ class Chiller(BaseNode):
 
         if iplv:
             self.efficiency_metric_values.append(iplv)
-        self.efficiency_metric_types.append(
-            ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
-        )
+            self.efficiency_metric_types.append(
+                ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
+            )
 
     def populate_full_load_efficiency(self, curve_results):
         """Populates the full load efficiency for the chiller object."""
@@ -688,7 +692,7 @@ class Chiller(BaseNode):
             and user_defined_rated_plr != 1
         ):
             # Obtain results of curves at 100% load and design temperature conditions
-            curve_results_at_design_conditions_and_100_percent_load = (
+            curve_results_at_design_conditions_and_full_load = (
                 curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
                     performance_curve_data,
                     self.design_leaving_evaporator_temperature,
@@ -706,11 +710,9 @@ class Chiller(BaseNode):
                     user_defined_rated_plr,
                 )
             )
-            cap_f_t_result_design = (
-                curve_results_at_design_conditions_and_100_percent_load[
-                    "cap_f_t_result"
-                ]
-            )
+            cap_f_t_result_design = curve_results_at_design_conditions_and_full_load[
+                "cap_f_t_result"
+            ]
             autosized_design_capacity = self.try_float(
                 output_data.get("Primary Equipment (Chillers) - Capacity (Btu/hr)")
             )
@@ -749,7 +751,7 @@ class Chiller(BaseNode):
         #  If capacity is auto-sized and Rated is n/a or 1
         else:
             # Obtain results of curves at 100% load and design temperature conditions
-            curve_results_at_design_conditions_and_100_percent_load = (
+            curve_results_at_design_conditions_and_full_load = (
                 curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
                     performance_curve_data,
                     self.design_leaving_evaporator_temperature,
@@ -757,11 +759,9 @@ class Chiller(BaseNode):
                     1,
                 )
             )
-            cap_f_t_result_design = (
-                curve_results_at_design_conditions_and_100_percent_load[
-                    "cap_f_t_result"
-                ]
-            )
+            cap_f_t_result_design = curve_results_at_design_conditions_and_full_load[
+                "cap_f_t_result"
+            ]
 
             autosized_design_capacity = self.try_float(
                 output_data.get("Primary Equipment (Chillers) - Capacity (Btu/hr)")

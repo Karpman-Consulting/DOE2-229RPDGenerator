@@ -66,7 +66,7 @@ def calculate_results_of_performance_curves(
     evap_leaving_temp,
     condenser_entering_temp,
     eff_f_plr_curve_type,
-    load_percent,
+    load_ratio,
 ):
     """Returns the results of performance curves and partload ratio for cap_f_t, eir_PLR, eir_f_t"""
     curve_function_map = {
@@ -91,12 +91,12 @@ def calculate_results_of_performance_curves(
         min_outputs["eff_f_t_min_output"],
         max_outputs["eff_f_t_max_output"],
     )
-    part_load_ratio = (1 / cap_f_t_result) * load_percent
+    adj_part_load_ratio = load_ratio / cap_f_t_result
 
     if eff_f_plr_curve_type in curve_function_map:
         eff_f_plr_result = curve_function_map[eff_f_plr_curve_type](
             coefficients["eff_f_plr_coeffs"],
-            part_load_ratio,
+            adj_part_load_ratio,
             min_outputs["eff_f_plr_min_output"],
             max_outputs["eff_f_plr_max_output"],
         )
@@ -104,7 +104,7 @@ def calculate_results_of_performance_curves(
         delta_temp = condenser_entering_temp - evap_leaving_temp
         eff_f_plr_result = calculate_bi_quadratic(
             coefficients["eff_f_plr_coeffs"],
-            part_load_ratio,
+            adj_part_load_ratio,
             delta_temp,
             min_outputs["eff_f_plr_min_output"],
             max_outputs["eff_f_plr_max_output"],
@@ -112,7 +112,7 @@ def calculate_results_of_performance_curves(
     results = {
         "cap_f_t_result": cap_f_t_result,
         "eff_f_t_result": eff_f_t_result,
-        "part_load_ratio": part_load_ratio,
+        "part_load_ratio": adj_part_load_ratio,
         "eff_f_plr_result": eff_f_plr_result,
     }
     return results
@@ -165,15 +165,21 @@ def are_curve_outputs_all_equal_to_a_value_of_one(
         "cap_f_t"
     ].get_inp(BDL_CurveFitKeywords.TYPE)
 
-    load_percent = 1
+    for curve_name, curve in performance_curve_data["performance_curves"].items():
+        if (
+            curve.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+            == BDL_CurveFitInputTypes.DATA
+        ):
+            # Currently, we are unable to obtain the curve coefficients when DATA is the input_type
+            return ["Keyword DATA was used for coefficient determination"]
 
     # Calculate and retrieve the results
     results = calculate_results_of_performance_curves(
-        performance_curve_data["performance_curves"],
+        performance_curve_data,
         evap_leaving_temp,
         condenser_entering_temp,
         eff_f_plr_curve_type,
-        load_percent,
+        1.00,
     )
 
     is_cap_f_t_within_margin = is_within_margin(
