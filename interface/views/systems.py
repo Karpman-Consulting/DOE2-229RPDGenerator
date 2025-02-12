@@ -250,7 +250,7 @@ class HVACSystemView(ctk.CTkFrame):
             self,
             width=125,
             validate="all",
-            validatecommand=(self.validate_command, "%arg"),
+            validatecommand=(self.validate_command, "%P"),
         )
         air_filter_merv_rating_input.grid(row=(i + 1), column=4, padx=PAD20, pady=PAD20)
 
