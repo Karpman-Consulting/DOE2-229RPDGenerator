@@ -245,13 +245,15 @@ class Chiller(BaseNode):
             # Capacity and efficiency are defined at AHRI conditions, so adjustments for rating conditions are not necessary
             if self.are_user_defined_input_ratio_and_cap_at_ahri_rating_conditions():
                 self.populate_efficiency_when_user_defined_rated_temps_match_ahri(
-                    output_data, are_curve_outputs_all_equal_to_one_at_ahri_temperatures
+                    performance_curve_data,
+                    output_data,
+                    are_curve_outputs_all_equal_to_one_at_ahri_temperatures,
                 )
 
             # Capacity and efficiency are not defined at AHRI conditions, so adjustments for rating conditions must be made.
             else:
                 self.populate_efficiency_when_user_defined_rated_temps_dont_match_ahri(
-                    output_data
+                    performance_curve_data, output_data
                 )
 
     def get_output_requests(self):
@@ -492,10 +494,7 @@ class Chiller(BaseNode):
             "max_outputs": max_outputs,
         }
 
-    def populate_full_load_cop(self):
-        pass
-
-    def populate_iplv(self):
+    def populate_iplv(self, performance_curve_data):
         """Populates IPLV based upon the modeled performance curves and the rated conditions.
         No corrections for fouling factor have been included - perhaps not relevant."""
         # TODO continued Do more testing to ensure it producing the correct results
@@ -503,8 +502,6 @@ class Chiller(BaseNode):
         # If the chiller cannot be unloaded to all the IPLV load categories then do not perform calcs and return nothing
         if self.minimum_load_ratio > MIN_AHRI_PART_LOAD:
             return
-
-        performance_curve_data = self.get_performance_curve_data()
 
         if not performance_curve_data["coefficients"]:
             return "Keyword DATA was used for coefficient determination"
@@ -516,9 +513,8 @@ class Chiller(BaseNode):
             if self.absorp_or_engine
             else TYPICAL_IPLV_COND_ENTERING_T_BY_CONDENSER_TYPE.get(condenser_type)
         )
-        cap_f_t = performance_curve_data["performance_curves"]["cap_f_t"]
-        eff_f_t_curve_type = cap_f_t.get_inp(BDL_CurveFitKeywords.TYPE)
-        # All conversions based on rated conditions will have been made in the logic in the main body when establishing Full_LOAD_EFFICIENCY
+        cap_f_t_curve = performance_curve_data["performance_curves"]["cap_f_t"]
+        eff_f_t_curve_type = cap_f_t_curve.get_inp(BDL_CurveFitKeywords.TYPE)
         full_load_efficiency_rated = self.efficiency_metric_values[
             self.efficiency_metric_types.index(
                 ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
@@ -561,6 +557,27 @@ class Chiller(BaseNode):
             ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
         )
 
+    def populate_full_load_efficiency(self, curve_results):
+        """Populates the full load efficiency for the chiller object."""
+        user_defined_rated_plr = (
+            self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_PLR)) or 1
+        )
+
+        user_defined_input_ratio = self.try_float(
+            self.get_inp(self.input_ratio_keyword)
+        )
+
+        rated_full_load_cop = (
+            curve_results["eff_f_t_result"]
+            * curve_results["eff_f_plr_result"]
+            / (user_defined_input_ratio * user_defined_rated_plr)
+        )
+
+        self.efficiency_metric_values.append(rated_full_load_cop)
+        self.efficiency_metric_types.append(
+            ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
+        )
+
     def are_user_defined_input_ratio_and_cap_at_ahri_rating_conditions(self) -> bool:
         """Function compares the user defined rating conditions (evap leaving and condenser entering
         temperatures) associated with the user entered eff and capacity to AHRI 550 590-2023
@@ -580,26 +597,6 @@ class Chiller(BaseNode):
             user_defined_evaporator_leaving_t == rated_evaporator_leaving_temp
             and user_defined_condenser_entering_t == rated_condenser_entering_temp
         )
-
-    def get_output_of_curves_at_temperature_and_load_conditions(
-        self, evap_leaving_temp: float, cond_entering_temp: float, load: float
-    ):
-        """Returns the results of the Cap_f_t curve given the temperatures and % load sent to the function."""
-
-        performance_curve_data = self.get_performance_curve_data()
-
-        cap_f_t = performance_curve_data["performance_curves"]["cap_f_t"]
-        cap_f_t_curve_type = cap_f_t.get_inp(BDL_CurveFitKeywords.TYPE)
-
-        results = curve_funcs.calculate_results_of_performance_curves(
-            performance_curve_data,
-            evap_leaving_temp,
-            cond_entering_temp,
-            cap_f_t_curve_type,
-            load,
-        )
-
-        return results
 
     def populate_full_load_eff_with_curve_calcs_unavailable(self, coefficients):
         # Instead of setting these to AHRI conditions and adjusting capacity and efficiency to match AHRI conditions we just populate these as defined.
@@ -628,7 +625,10 @@ class Chiller(BaseNode):
         )
 
     def populate_efficiency_when_user_defined_rated_temps_match_ahri(
-        self, output_data, are_curve_outputs_all_equal_to_one_at_ahri_temperatures
+        self,
+        performance_curve_data,
+        output_data,
+        are_curve_outputs_all_equal_to_one_at_ahri_temperatures,
     ):
         # Assign AHRI conditions to these rated temperatures
         self.rated_leaving_evaporator_temperature = AHRI_550_590_2023_EVAP_LEAVING_T
@@ -643,7 +643,8 @@ class Chiller(BaseNode):
 
         # Obtain results of curves at 100% load and AHRI temperature conditions
         curve_results_at_rated_conditions_and_100_percent_load = (
-            self.get_output_of_curves_at_temperature_and_load_conditions(
+            curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
+                performance_curve_data,
                 self.rated_leaving_evaporator_temperature,
                 self.rated_entering_condenser_temperature,
                 1,
@@ -653,69 +654,63 @@ class Chiller(BaseNode):
             "cap_f_t_result"
         ]
 
-        performance_curve_data = self.get_performance_curve_data()
-
-        # Obtain results of efficiency curves (not capacity curves) by plugging the user defined rated part load ratio into the curves equations
-        efficiency_curve_result_rated_part_load = (
-            curve_funcs.calculate_efficiency_at_part_load_ratio(
-                self.rated_leaving_evaporator_temperature,
-                self.rated_entering_condenser_temperature,
-                performance_curve_data["performance_curves"],
-                user_defined_rated_plr,
-            )
-        )
-        eff_f_t_result_rated_part_load = efficiency_curve_result_rated_part_load[
-            "eff_f_t_result"
-        ]
-        eff_f_plr_result_rated_part_load = efficiency_curve_result_rated_part_load[
-            "eff_f_plr_result"
-        ]
-
-        # Obtain results of curves at 100% load and design temperature conditions
-        curve_results_at_design_conditions_and_100_percent_load = (
-            self.get_output_of_curves_at_temperature_and_load_conditions(
-                self.design_leaving_evaporator_temperature,
-                self.design_entering_condenser_temperature,
-                1,
-            )
-        )
-        cap_f_t_result_design = curve_results_at_design_conditions_and_100_percent_load[
-            "cap_f_t_result"
-        ]
-
         # If capacity is hard coded and PLR RATED is entered (not n/a).
         if (
             self.try_float(self.get_inp(BDL_ChillerKeywords.CAPACITY))
             and user_defined_rated_plr != 1
         ):
+            # Obtain results of efficiency curves (not capacity curves) by plugging the user defined rated part load ratio into the curves equations
+            efficiency_curve_result_rated_part_load = (
+                curve_funcs.calculate_efficiency_at_part_load_ratio(
+                    self.rated_leaving_evaporator_temperature,
+                    self.rated_entering_condenser_temperature,
+                    performance_curve_data["performance_curves"],
+                    user_defined_rated_plr,
+                )
+            )
+
             user_defined_capacity = self.try_float(
                 self.get_inp(BDL_ChillerKeywords.CAPACITY)
             )
-            self.rated_capacity = curve_funcs.adjust_capacity_for_entered_plr(
+            self.rated_capacity = curve_funcs.adjust_capacity_for_user_defined_plr(
                 user_defined_rated_plr, user_defined_capacity, cap_f_t_result
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
-            )
-            rated_full_load_cop = (
-                eff_f_t_result_rated_part_load
-                * eff_f_plr_result_rated_part_load
-                / (user_defined_input_ratio * user_defined_rated_plr)
-            )
 
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
+            self.populate_full_load_efficiency(efficiency_curve_result_rated_part_load)
+
             # Check that performance curves are normalized to 1 at ahri temperatures
             if are_curve_outputs_all_equal_to_one_at_ahri_temperatures:
-                self.populate_iplv()
+                self.populate_iplv(performance_curve_data)
 
         # If capacity is auto-sized and PLR RATED is entered (not n/a).
         elif (
             not self.try_float(self.get_inp(BDL_ChillerKeywords.CAPACITY))
             and user_defined_rated_plr != 1
         ):
+            # Obtain results of curves at 100% load and design temperature conditions
+            curve_results_at_design_conditions_and_100_percent_load = (
+                curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
+                    performance_curve_data,
+                    self.design_leaving_evaporator_temperature,
+                    self.design_entering_condenser_temperature,
+                    1,
+                )
+            )
+
+            # Obtain results of efficiency curves (not capacity curves) by plugging the user defined rated part load ratio into the curves equations
+            efficiency_curve_result_rated_part_load = (
+                curve_funcs.calculate_efficiency_at_part_load_ratio(
+                    self.rated_leaving_evaporator_temperature,
+                    self.rated_entering_condenser_temperature,
+                    performance_curve_data["performance_curves"],
+                    user_defined_rated_plr,
+                )
+            )
+            cap_f_t_result_design = (
+                curve_results_at_design_conditions_and_100_percent_load[
+                    "cap_f_t_result"
+                ]
+            )
             autosized_design_capacity = self.try_float(
                 output_data.get("Primary Equipment (Chillers) - Capacity (Btu/hr)")
             )
@@ -725,24 +720,12 @@ class Chiller(BaseNode):
                 / cap_f_t_result_design
                 / user_defined_rated_plr
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
-            )
 
-            rated_full_load_cop = (
-                eff_f_t_result_rated_part_load
-                * eff_f_plr_result_rated_part_load
-                / (user_defined_input_ratio * user_defined_rated_plr)
-            )
-
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
+            self.populate_full_load_efficiency(efficiency_curve_result_rated_part_load)
 
             # Check that performance curves are normalized to 1 at ahri temperatures
             if are_curve_outputs_all_equal_to_one_at_ahri_temperatures:
-                self.populate_iplv()
+                self.populate_iplv(performance_curve_data)
 
         # If capacity is hard-coded and PLR Rated is n/a or 1
         elif (
@@ -752,20 +735,34 @@ class Chiller(BaseNode):
             self.rated_capacity = self.try_float(
                 self.get_inp(BDL_ChillerKeywords.CAPACITY)
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+            self.efficiency_metric_values.append(
+                1 / self.try_float(self.get_inp(self.input_ratio_keyword))
             )
-            self.efficiency_metric_values.append(1 / user_defined_input_ratio)
             self.efficiency_metric_types.append(
                 ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
             )
 
             # Check that performance curves are normalized to 1 at ahri temperatures
             if are_curve_outputs_all_equal_to_one_at_ahri_temperatures:
-                self.populate_iplv()
+                self.populate_iplv(performance_curve_data)
 
         #  If capacity is auto-sized and Rated is n/a or 1
         else:
+            # Obtain results of curves at 100% load and design temperature conditions
+            curve_results_at_design_conditions_and_100_percent_load = (
+                curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
+                    performance_curve_data,
+                    self.design_leaving_evaporator_temperature,
+                    self.design_entering_condenser_temperature,
+                    1,
+                )
+            )
+            cap_f_t_result_design = (
+                curve_results_at_design_conditions_and_100_percent_load[
+                    "cap_f_t_result"
+                ]
+            )
+
             autosized_design_capacity = self.try_float(
                 output_data.get("Primary Equipment (Chillers) - Capacity (Btu/hr)")
             )
@@ -773,20 +770,19 @@ class Chiller(BaseNode):
             self.rated_capacity = autosized_design_capacity * (
                 cap_f_t_result / cap_f_t_result_design
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+            self.efficiency_metric_values.append(
+                1 / self.try_float(self.get_inp(self.input_ratio_keyword))
             )
-            self.efficiency_metric_values.append(1 / user_defined_input_ratio)
             self.efficiency_metric_types.append(
                 ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
             )
 
             # Check that performance curves are normalized to 1 at ahri temperatures
             if are_curve_outputs_all_equal_to_one_at_ahri_temperatures:
-                self.populate_iplv()
+                self.populate_iplv(performance_curve_data)
 
     def populate_efficiency_when_user_defined_rated_temps_dont_match_ahri(
-        self, output_data
+        self, performance_curve_data, output_data
     ):
         # The curves are used to adjust values (cap and eff) to AHRI conditions so rated temps are set to AHRI temperatures even though these were not entered in the UI.
         self.rated_leaving_evaporator_temperature = AHRI_550_590_2023_EVAP_LEAVING_T
@@ -795,36 +791,30 @@ class Chiller(BaseNode):
                 self.get_inp(BDL_ChillerKeywords.CONDENSER_TYPE)
             )
         )
-
         user_defined_rated_plr = (
             self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_PLR)) or 1
         )
 
-        performance_curve_data = self.get_performance_curve_data()
-
         # Obtain results of curves at 100% load and entered rated (non AHRI) temperature conditions
-        curve_results_at_entered_conditions_and_100_percent_load = (
-            self.get_output_of_curves_at_temperature_and_load_conditions(
+        curve_results_at_user_defined_conditions_and_full_load = (
+            curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
+                performance_curve_data,
                 self.rated_leaving_evaporator_temperature,
                 self.rated_entering_condenser_temperature,
                 1,
             )
         )
-        eff_f_t_result_entered = (
-            curve_results_at_entered_conditions_and_100_percent_load["eff_f_t_result"]
+        # Obtain results of curves at 100% load and design temperature conditions
+        curve_results_at_design_conditions_and_full_load = (
+            curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
+                performance_curve_data,
+                self.design_leaving_evaporator_temperature,
+                self.design_entering_condenser_temperature,
+                1,
+            )
         )
-        eff_f_plr_result_entered = (
-            curve_results_at_entered_conditions_and_100_percent_load["eff_f_plr_result"]
-        )
-        part_load_ratio_entered = (
-            curve_results_at_entered_conditions_and_100_percent_load["part_load_ratio"]
-        )
-        cap_f_t_result_entered = (
-            curve_results_at_entered_conditions_and_100_percent_load["cap_f_t_result"]
-        )
-
         # Obtain results of efficiency curves (not capacity curves) by plugging the user defined rated part load ratio into the curves equations
-        efficiency_curve_results_at_user_defined_part_load_rating = (
+        curve_results_at_user_defined_part_load_rating = (
             curve_funcs.calculate_efficiency_at_part_load_ratio(
                 self.rated_leaving_evaporator_temperature,
                 self.rated_entering_condenser_temperature,
@@ -832,22 +822,9 @@ class Chiller(BaseNode):
                 user_defined_rated_plr,
             )
         )
-        eff_f_t_result_at_user_defined_part_load_rating = (
-            efficiency_curve_results_at_user_defined_part_load_rating["eff_f_t_result"]
-        )
-        eff_f_plr_result_at_user_defined_part_load_rating = (
-            efficiency_curve_results_at_user_defined_part_load_rating[
-                "eff_f_plr_result"
-            ]
-        )
 
-        # Obtain results of curves at 100% load and design temperature conditions
-        curve_results_at_design_conditions_and_full_load = (
-            self.get_output_of_curves_at_temperature_and_load_conditions(
-                self.design_leaving_evaporator_temperature,
-                self.design_entering_condenser_temperature,
-                1,
-            )
+        cap_f_t_result_user_defined_temps_full_load = (
+            curve_results_at_user_defined_conditions_and_full_load["cap_f_t_result"]
         )
         cap_f_t_result_design = curve_results_at_design_conditions_and_full_load[
             "cap_f_t_result"
@@ -858,26 +835,18 @@ class Chiller(BaseNode):
             self.try_float(self.get_inp(BDL_ChillerKeywords.CAPACITY))
             and user_defined_rated_plr != 1
         ):
-            entered_capacity = self.try_float(
+            user_defined_capacity = self.try_float(
                 self.get_inp(BDL_ChillerKeywords.CAPACITY)
             )
-            self.rated_capacity = curve_funcs.adjust_capacity_for_entered_plr(
-                user_defined_rated_plr, entered_capacity, cap_f_t_result_entered
+            self.rated_capacity = curve_funcs.adjust_capacity_for_user_defined_plr(
+                user_defined_rated_plr,
+                user_defined_capacity,
+                cap_f_t_result_user_defined_temps_full_load,
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+            self.populate_full_load_efficiency(
+                curve_results_at_user_defined_part_load_rating
             )
-            rated_full_load_cop = (
-                eff_f_t_result_at_user_defined_part_load_rating
-                * eff_f_plr_result_at_user_defined_part_load_rating
-                / (user_defined_input_ratio * user_defined_rated_plr)
-            )
-
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
-            self.populate_iplv()
+            self.populate_iplv(performance_curve_data)
 
         # If capacity is auto-sized and PLR RATED is entered (not n/a). (This is the same as used above for when it is at AHRI)
         elif (
@@ -893,19 +862,10 @@ class Chiller(BaseNode):
                 * cap_f_t_result_design
                 / user_defined_rated_plr
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+            self.populate_full_load_efficiency(
+                curve_results_at_user_defined_part_load_rating
             )
-            rated_full_load_cop = (
-                eff_f_t_result_at_user_defined_part_load_rating
-                * eff_f_plr_result_at_user_defined_part_load_rating
-                / (user_defined_input_ratio * user_defined_rated_plr)
-            )
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
-            self.populate_iplv()
+            self.populate_iplv(performance_curve_data)
 
         # If capacity is hard-coded and PLR Rated is n/a or 1 (Differs from AHRI section above. It may be because curves = 1 at ahri so it may actually be the same)
         elif (
@@ -914,21 +874,13 @@ class Chiller(BaseNode):
         ):
             self.rated_capacity = (
                 self.try_float(self.get_inp(BDL_ChillerKeywords.CAPACITY))
-                / cap_f_t_result_entered
+                / cap_f_t_result_user_defined_temps_full_load
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+
+            self.populate_full_load_efficiency(
+                curve_results_at_user_defined_conditions_and_full_load
             )
-            rated_full_load_cop = (
-                eff_f_t_result_entered
-                * eff_f_plr_result_entered
-                / (user_defined_input_ratio * part_load_ratio_entered)
-            )
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
-            self.populate_iplv()
+            self.populate_iplv(performance_curve_data)
 
         #  If capacity is auto-sized and Rated is n/a or 1
         else:
@@ -937,25 +889,9 @@ class Chiller(BaseNode):
             )
             # Adjusts from design to rated conditions. (Differs from AHRI section above. It may be because curves = 1 at ahri so it may actually be the same)
             self.rated_capacity = autosized_design_capacity * (
-                cap_f_t_result_entered / cap_f_t_result_design
+                cap_f_t_result_user_defined_temps_full_load / cap_f_t_result_design
             )
-            user_defined_input_ratio = self.try_float(
-                self.get_inp(self.input_ratio_keyword)
+            self.populate_full_load_efficiency(
+                curve_results_at_user_defined_conditions_and_full_load
             )
-            rated_full_load_cop = (
-                eff_f_t_result_entered
-                * eff_f_plr_result_entered
-                / (user_defined_input_ratio * part_load_ratio_entered)
-            )
-
-            self.efficiency_metric_values.append(rated_full_load_cop)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.FULL_LOAD_EFFICIENCY_RATED
-            )
-
-            iplv_value = self.populate_iplv()
-            if iplv_value:
-                self.efficiency_metric_values.append(iplv_value)
-            self.efficiency_metric_types.append(
-                ChillerEfficiencyMetricOptions.INTEGRATED_PART_LOAD_VALUE
-            )
+            self.populate_iplv(performance_curve_data)

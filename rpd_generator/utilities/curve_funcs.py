@@ -125,8 +125,8 @@ def execute_calculations(
     eff_f_plr_curve_type,
     load_percent,
 ):
-    # Calculate with "entered" variables
-    entered_results = calculate_results_of_performance_curves(
+    # Calculate with "user defined" variables
+    user_defined_results = calculate_results_of_performance_curves(
         performance_curve_data,
         data_starting_condition["evap_leaving_temp"],
         data_starting_condition["condenser_entering_temp"],
@@ -144,7 +144,10 @@ def execute_calculations(
     )
 
     # Return a dictionary of all results
-    return {"entered_results": entered_results, "rated_results": rated_results}
+    return {
+        "user_defined_results": user_defined_results,
+        "rated_results": rated_results,
+    }
 
 
 def are_curve_outputs_all_equal_to_a_value_of_one(
@@ -194,7 +197,7 @@ def is_within_margin(value, target, percent_margin):
     return lower_bound <= value <= upper_bound
 
 
-def adjust_capacity_for_entered_plr(
+def adjust_capacity_for_user_defined_plr(
     plr_rated: float, capacity: float, capft_result: float
 ):
     """Function adjusts capacity for the situation when part load ratio rated in defined.
@@ -205,6 +208,28 @@ def adjust_capacity_for_entered_plr(
     capacity_adj = capacity * (1 / capft_result) * (1 / plr_rated)
 
     return capacity_adj
+
+
+def get_output_of_curves_at_temperature_and_load_conditions(
+    performance_curve_data,
+    evap_leaving_temp: float,
+    cond_entering_temp: float,
+    load: float,
+):
+    """Returns the results of the Cap_f_t curve given the temperatures and % load sent to the function."""
+
+    cap_f_t = performance_curve_data["performance_curves"]["cap_f_t"]
+    cap_f_t_curve_type = cap_f_t.get_inp(BDL_CurveFitKeywords.TYPE)
+
+    results = calculate_results_of_performance_curves(
+        performance_curve_data,
+        evap_leaving_temp,
+        cond_entering_temp,
+        cap_f_t_curve_type,
+        load,
+    )
+
+    return results
 
 
 def calculate_efficiency_at_part_load_ratio(
