@@ -23,16 +23,18 @@ class ZonesView(BaseView):
         self.directions_label = ctk.CTkLabel(
             self.directions_frame,
             text="Directions: ",
+            anchor="e",
+            justify="left",
             font=STANDARD_FONT,
         )
         self.directions_widget = ctk.CTkLabel(
             self.directions_frame,
-            text=" Directions: Assign all Zones in your model to the Building Areas created on the previous tab. This can be done by Floor, or more granularly by Zone. If any zones in the model \n"
-            " represent multiple zones in the design, provide the quantity of aggregated zones. If a zone's infiltration in the Proposed model is based on a measured infiltration rate, \n"
-            " declare so here. If a zone contains more than 1 space, define additional spaces as necessary by clicking the quantity in the Child Spaces column to open the Child Spaces \n"
-            " window. Child Spaces should be created as necessary to represent the entirety of the Zone, e.g. an aggregated zone that is in reality 3 zones where each zone has 2 spaces \n"
-            " should have 6 Child Spaces total.",
-            font=("Arial", 14),
+            text="Assign all Zones in your model to the Building Areas created on the previous tab. This can be done by Floor, or more granularly by Zone. If any zones in the \n"
+            "model represent multiple zones in the design, provide the quantity of aggregated zones. If a zone's infiltration in the Proposed model is based on a \n"
+            "measured infiltration rate declare so here. If a zone contains more than 1 space, define additional spaces as necessary by clicking the quantity in the Child \n"
+            "Spaces column to open the Child Spaces window. Child Spaces should be created as necessary to represent the entirety of the Zone, e.g. an aggregated \n"
+            "zone that is in reality 3 zones where each zone has 2 spaces should have 6 Child Spaces total.",
+            font=("Arial", 14, "bold"),
         )
 
     def __repr__(self):
@@ -49,8 +51,10 @@ class ZonesView(BaseView):
 
         # Directions
         self.directions_frame.grid(row=0, column=0, sticky="nsew", padx=50, pady=20)
-        self.directions_label.grid(row=0, column=0)
-        self.directions_widget.grid(row=0, column=1)
+        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
+        self.directions_widget.grid(
+            row=0, column=1, columnspan=8, sticky="new", padx=5, pady=20
+        )
 
         # Subview frame
         self.view_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=PAD20)
