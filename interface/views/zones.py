@@ -1,5 +1,3 @@
-import tkinter
-
 import customtkinter as ctk
 from PIL import Image
 
@@ -40,7 +38,7 @@ class ZonesView(BaseView):
         return "ZonesView"
 
     def open_view(self):
-        self.toggle_active_button("Surfaces")
+        self.toggle_active_button("Zones")
         self.grid_propagate(False)
 
         """2 rows in the main surface view structure. View frame (row 2, index 1) has a weight to make it fill up
@@ -58,9 +56,9 @@ class ZonesView(BaseView):
         self.view_frame.grid_rowconfigure(0, weight=1)
         self.view_frame.grid_columnconfigure(0, weight=1)
 
-        zone_view = ZoneSubview(self.view_frame)
-        zone_view.grid(row=0, column=0, sticky="nsew")
-        zone_view.open_view()
+        zones_view = ZonesSubview(self.view_frame)
+        zones_view.grid(row=0, column=0, sticky="nsew")
+        zones_view.open_view()
 
     @staticmethod
     def validate_entry(arg):
@@ -70,7 +68,7 @@ class ZonesView(BaseView):
             return False
 
 
-class ZoneSubview(CTkXYFrame):
+class ZonesSubview(CTkXYFrame):
     def __init__(self, view_frame):
         super().__init__(view_frame)
         self.zones_view = view_frame.master
@@ -80,7 +78,7 @@ class ZoneSubview(CTkXYFrame):
         self.child_space_window = None
 
     def __repr__(self):
-        return "ZoneSubview"
+        return "ZonesSubview"
 
     def open_view(self):
         self.populate_subview() if not self.is_view_populated else None
