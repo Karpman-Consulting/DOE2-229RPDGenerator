@@ -9,6 +9,7 @@ STANDARD_FONT = ("Arial", 16, "bold")
 READONLY = "readonly"
 LEFT = "left"
 W = "w"
+PAD20 = (0, 20)
 
 
 class ZonesView(BaseView):
@@ -52,7 +53,7 @@ class ZonesView(BaseView):
         self.directions_widget.grid(row=0, column=1)
 
         # Subview frame
-        self.view_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0, 20))
+        self.view_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=PAD20)
         self.view_frame.grid_rowconfigure(0, weight=1)
         self.view_frame.grid_columnconfigure(0, weight=1)
 
@@ -106,25 +107,25 @@ class ZonesSubview(CTkXYFrame):
 
     def add_column_headers(self):
         zone_floor_label = ctk.CTkLabel(self, text="Floor/Zone", font=STANDARD_FONT)
-        zone_floor_label.grid(row=0, column=0, padx=(0, 20), pady=5)
+        zone_floor_label.grid(row=0, column=0, padx=PAD20, pady=5)
         building_area_label = ctk.CTkLabel(
             self, text="Building Area", font=STANDARD_FONT
         )
-        building_area_label.grid(row=0, column=1, padx=(0, 20), pady=5)
+        building_area_label.grid(row=0, column=1, padx=PAD20, pady=5)
         aggregated_zone_quantity_label = ctk.CTkLabel(
             self, text="Aggregated Zone Qty", font=STANDARD_FONT
         )
-        aggregated_zone_quantity_label.grid(row=0, column=2, padx=(0, 20), pady=5)
+        aggregated_zone_quantity_label.grid(row=0, column=2, padx=PAD20, pady=5)
         measured_infiltration_rate_label = ctk.CTkLabel(
             self, text="Measured Infiltration Rate?", font=STANDARD_FONT
         )
-        measured_infiltration_rate_label.grid(row=0, column=3, padx=(0, 20), pady=5)
+        measured_infiltration_rate_label.grid(row=0, column=3, padx=PAD20, pady=5)
         child_spaces_label = ctk.CTkLabel(self, text="Child Spaces", font=STANDARD_FONT)
-        child_spaces_label.grid(row=0, column=4, padx=(0, 20), pady=5)
+        child_spaces_label.grid(row=0, column=4, padx=PAD20, pady=5)
 
     def add_main_row(self, i, floor_name):
         floor_label = ctk.CTkLabel(self, text=f"{floor_name}")
-        floor_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        floor_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
         building_area_combo = ctk.CTkComboBox(
             self,
             # TODO: Placeholder for Building Areas tab data
@@ -132,11 +133,11 @@ class ZonesSubview(CTkXYFrame):
             state=READONLY,
         )
         building_area_combo._entry.configure(justify=LEFT)
-        building_area_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        building_area_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
 
     def add_row(self, i, floor_name):
         floor_label = ctk.CTkLabel(self, text=f"{floor_name}")
-        floor_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
+        floor_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
         building_area_combo = ctk.CTkComboBox(
             self,
             # TODO: Placeholder for Building Areas tab data
@@ -144,19 +145,17 @@ class ZonesSubview(CTkXYFrame):
             state=READONLY,
         )
         building_area_combo._entry.configure(justify=LEFT)
-        building_area_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
+        building_area_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
         aggregated_zone_qty_input = ctk.CTkEntry(
             self,
             width=125,
             validate="all",
             validatecommand=(self.validate_command, "%P"),
         )
-        aggregated_zone_qty_input.grid(
-            row=(i + 1), column=2, padx=(0, 20), pady=(0, 20)
-        )
+        aggregated_zone_qty_input.grid(row=(i + 1), column=2, padx=PAD20, pady=PAD20)
         measured_infiltration_rate_checkbox = ctk.CTkCheckBox(self, text="", width=30)
         measured_infiltration_rate_checkbox.grid(
-            row=(i + 1), column=3, padx=(0, 20), pady=(0, 20)
+            row=(i + 1), column=3, padx=PAD20, pady=PAD20
         )
         image = ctk.CTkImage(
             light_image=Image.open("interface/assets/white_plus.png"),
@@ -172,7 +171,7 @@ class ZonesSubview(CTkXYFrame):
             corner_radius=10,
             command=self.open_child_space_window,
         )
-        add_child_space_button.grid(row=(i + 1), column=4, padx=(0, 20), pady=(0, 20))
+        add_child_space_button.grid(row=(i + 1), column=4, padx=PAD20, pady=PAD20)
 
     def open_child_space_window(self):
         if (
