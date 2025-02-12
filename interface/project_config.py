@@ -343,10 +343,11 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
-        # If there are no errors, generate RMDs and open the Main Application Window
+        # If there are no errors, generate RMDs
         if len(self.main_app.data.errors) == 0:
             self.save_configuration_data()
             self.main_app.data.generate_rmds()
+            # Run model checks to populate additional errors and warnings
             self.run_model_checks()
             if len(self.main_app.data.errors) == 0:
                 self.main_app.project_config_complete()
@@ -385,7 +386,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         return True
 
-    # TODO: Magic string dictionary values in config data. Should we make enums for these?
     def save_configuration_data(self):
         self.main_app.data.configuration_data.update(
             self.main_app.data.ruleset_model_file_paths
