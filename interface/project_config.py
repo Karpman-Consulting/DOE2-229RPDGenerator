@@ -343,12 +343,16 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                     f"The '{model_type}' model is missing and is required to evaluate the ASHRAE 90.1-2019 ruleset."
                 )
 
-        # If there are no errors, generate RMDs and open the Main Application Window
+        # If there are no errors, generate RMDs
         if len(self.main_app.data.errors) == 0:
             self.save_configuration_data()
             self.main_app.data.generate_rmds()
-            self.main_app.project_config_complete()
-
+            # Run model checks to populate additional errors and warnings
+            self.run_model_checks()
+            if len(self.main_app.data.errors) == 0:
+                self.main_app.project_config_complete()
+            else:
+                self.raise_error_window("\n".join(self.main_app.data.errors))
         else:
             self.raise_error_window("\n".join(self.main_app.data.errors))
 
@@ -382,7 +386,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         return True
 
-    # TODO: Magic string dictionary values in config data. Should we make enums for these?
     def save_configuration_data(self):
         self.main_app.data.configuration_data.update(
             self.main_app.data.ruleset_model_file_paths
@@ -390,3 +393,103 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.main_app.data.configuration_data["new_construction"] = bool(
             self.new_construction_checkbox.get()
         )
+
+    def run_model_checks(self):
+        spaces_zones_set = set()
+        spaces_zones_list = []
+        surfaces_set = set()
+        surfaces_list = []
+
+        # Save rmd data to check
+        for rmd in self.main_app.data.rmds:
+            rmd_spaces_zones_list = []
+            rmd_surfaces_list = []
+
+            # Check for DOE version 2.3 - error
+            if not rmd.doe2_version.startswith("DOE-2.3"):
+                self.main_app.data.errors.append(
+                    f"'{rmd.type}' model does not use DOE-2.3"
+                )
+
+            if rmd.type in ["Baseline 90", "Baseline 180", "Baseline 270", "Proposed"]:
+                rmd_spaces_zones_list.append(len(rmd.zone_names))
+                for space in rmd.space_map:
+                    rmd_spaces_zones_list.append(space)
+                    rmd_spaces_zones_list.append(rmd.space_map[space].u_name)
+                    rmd_surfaces_list.append(len(rmd.space_map[space].surfaces))
+                    for surface in rmd.space_map[space].surfaces:
+                        rmd_surfaces_list.append(surface["classification"])
+                        if surface.get("area"):
+                            rmd_surfaces_list.append(surface["area"])
+                    surfaces_list.append(rmd_surfaces_list)
+                spaces_zones_list.append(rmd_spaces_zones_list)
+
+            """Errors: Verify that ZONE-TYPE keyword is not PLENUM for all spaces
+            Errors: Verify that the LTG-SPEC-METHOD is POWER-DEFINITION for all spaces"""
+            for space in rmd.space_map:
+                space_obj = rmd.get_obj(space)
+                if space_obj.keyword_value_pairs["ZONE-TYPE"] == "PLENUM":
+                    self.main_app.data.errors.append(
+                        f"Error: '{rmd.type}' model, space '{space}' has a plenum zone type"
+                    )
+                if (
+                    space_obj.keyword_value_pairs["LTG-SPEC-METHOD"]
+                    != "POWER-DEFINITION"
+                ):
+                    self.main_app.data.errors.append(
+                        f"Error: '{rmd.type}' model, does not have a power definition lighting specification method"
+                    )
+
+            """Errors: Verify that TYPE keyword is not PLENUM for all zones"""
+            for zone in rmd.zone_names:
+                zone_obj = rmd.get_obj(zone)
+                if zone_obj.keyword_value_pairs["TYPE"] == "PLENUM":
+                    self.main_app.data.errors.append(
+                        f"Error: '{rmd.type}' model, zone '{zone}' has a plenum zone type"
+                    )
+
+            """Warnings: Verify that any/all Boilers, Domestic Water Heaters, and Systems have 
+            values > 0 for HEAT-INPUT-RATIO, HEAT-INPUT-RATIO, and FURNACE-HIR respectively"""
+            for boiler in rmd.boiler_names:
+                boiler_obj = rmd.get_obj(boiler)
+                heat_input_ratio = boiler_obj.keyword_value_pairs.get(
+                    "HEAT-INPUT-RATIO"
+                )
+                if heat_input_ratio and float(heat_input_ratio) <= 0.0:
+                    self.main_app.data.errors.append(
+                        f"Warning: '{rmd.type}' model, boiler '{boiler}' has a heat input ratio of {heat_input_ratio}"
+                    )
+            for domestic_water_heater in rmd.domestic_water_heater_names:
+                domestic_water_heater_obj = rmd.get_obj(domestic_water_heater)
+                heat_input_ratio = domestic_water_heater_obj.keyword_value_pairs.get(
+                    "HEAT-INPUT-RATIO"
+                )
+                if heat_input_ratio and float(heat_input_ratio) <= 0.0:
+                    self.main_app.data.errors.append(
+                        f"Warning: '{rmd.type}' model, domestic water heater '{domestic_water_heater}' "
+                        f"has a heat input ratio of {heat_input_ratio}"
+                    )
+            # TODO: Circle back to this. Not finding "FURNACE-HIR" keyword
+            # for system in rmd.system_names:
+            #     system_obj = rmd.get_obj(system)
+            #     furnace_hir = float(system_obj.keyword_value_pairs["FURNACE-HIR"])
+            #     if furnace_hir <= 0.0:
+            #         print("Add warning")
+
+        """Warnings: Verify that Baseline (90, 180, 270) and Proposed have the same number of zones and 
+        that the IDs of all zones and spaces match between models"""
+        for i in spaces_zones_list:
+            spaces_zones_set.add(tuple(i))
+        if len(spaces_zones_set) > 1:
+            self.main_app.data.errors.append(
+                f"Warning: Space or zone identifiers do not match between models"
+            )
+
+        """Warnings: Verify that every space has the same quantity, types, and areas of surfaces between 
+        Baseline (90, 180, 270) and Proposed."""
+        for i in surfaces_list:
+            surfaces_set.add(tuple(i))
+        if len(surfaces_set) > 1:
+            self.main_app.data.errors.append(
+                f"Warning: Surface identifiers do not match between models"
+            )
