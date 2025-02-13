@@ -167,10 +167,8 @@ class Chiller(BaseNode):
                 self.energy_source_type = self.get_loop_energy_source(hw_loop)
 
         chw_loop = self.get_obj(self.cooling_loop)
-        self.design_leaving_evaporator_temperature = (
-            self.try_float(chw_loop.get_inp(BDL_CirculationLoopKeywords.DESIGN_COOL_T))
-            if chw_loop
-            else None
+        self.design_leaving_evaporator_temperature = self.try_float(
+            chw_loop.get_inp(BDL_CirculationLoopKeywords.DESIGN_COOL_T)
         )
 
         # This says ARI but appears to report out the design condenser water temperature
@@ -471,8 +469,8 @@ class Chiller(BaseNode):
         coefficients = {}
         min_outputs = {}
         max_outputs = {}
-        for key, obj in perf_curves.items():
-            input_type = obj.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
+        for curve_name, curve in perf_curves.items():
+            input_type = curve.get_inp(BDL_CurveFitKeywords.INPUT_TYPE)
             if input_type == BDL_CurveFitInputTypes.DATA:
                 return {
                     "performance_curves": perf_curves,
@@ -481,14 +479,14 @@ class Chiller(BaseNode):
                     "max_outputs": {},
                 }
 
-            coefficients[f"{key}_coeffs"] = list(
-                map(float, obj.get_inp(BDL_CurveFitKeywords.COEF))
+            coefficients[f"{curve_name}_coeffs"] = list(
+                map(float, curve.get_inp(BDL_CurveFitKeywords.COEF))
             )
-            min_outputs[f"{key}_min_output"] = float(
-                obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
+            min_outputs[f"{curve_name}_min_output"] = float(
+                curve.get_inp(BDL_CurveFitKeywords.OUTPUT_MIN)
             )
-            max_outputs[f"{key}_max_output"] = float(
-                obj.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
+            max_outputs[f"{curve_name}_max_output"] = float(
+                curve.get_inp(BDL_CurveFitKeywords.OUTPUT_MAX)
             )
 
         return {

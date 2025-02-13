@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-import os
 
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
@@ -23,12 +22,6 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.rmd.file_path = os.path.abspath(
-            os.path.join(
-                script_dir, "../../full_rpd_test/E-2/229 Test Case E-2 (CHW VAV)"
-            )
-        )
         self.master_meter = MasterMeters("Master Meters", self.rmd)
         self.fuel_meter = FuelMeter("Test Fuel Meter", self.rmd)
         self.boiler = Boiler("Boiler 1", self.rmd)

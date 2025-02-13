@@ -2,7 +2,11 @@ import unittest
 from unittest.mock import patch
 
 from rpd_generator.bdl_structure.bdl_commands.boiler import Boiler
-from rpd_generator.bdl_structure.bdl_commands.chiller import Chiller
+from rpd_generator.bdl_structure.bdl_commands.chiller import (
+    Chiller,
+    BDL_ChillerTypes,
+    BDL_CondenserTypes,
+)
 from rpd_generator.bdl_structure.bdl_commands.ground_loop_hx import GroundLoopHX
 from rpd_generator.bdl_structure.bdl_commands.heat_rejection import HeatRejection
 from rpd_generator.bdl_structure.bdl_commands.pump import (
@@ -18,6 +22,10 @@ from rpd_generator.bdl_structure.bdl_commands.schedule import (
     BDL_WeekScheduleKeywords,
     Schedule,
     BDL_ScheduleKeywords,
+)
+from rpd_generator.bdl_structure.bdl_commands.curve_fit import (
+    CurveFit,
+    BDL_CurveFitKeywords,
 )
 from rpd_generator.bdl_structure.bdl_commands.zone import (
     Zone,
@@ -50,12 +58,13 @@ class TestCHWLoop(unittest.TestCase):
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.run_period = RunPeriod("Run Period 1", self.rmd)
         self.holidays = Holidays("Holidays 1", self.rmd)
-
         self.circulation_loop = CirculationLoop("Circulation Loop 1", self.rmd)
         self.pump = Pump("Pump 1", self.rmd)
         self.system = System("System 1", self.rmd)
         self.zone = Zone("Zone 1", self.system, self.rmd)
-        self.chiller = Chiller("Chiller 1", self.rmd)
+        self.eir_f_t = CurveFit("EIR-fT Curve", self.rmd)
+        self.eir_f_plr = CurveFit("EIR-fPLR Curve", self.rmd)
+        self.cap_f_t = CurveFit("CAP-fT Curve", self.rmd)
 
         # Create Chilled Water/Hot Water Temperature Reset Schedules
         self.temp_reset_day_schedule = DaySchedulePD(
@@ -124,6 +133,48 @@ class TestCHWLoop(unittest.TestCase):
         }
         self.system.keyword_value_pairs = {
             BDL_SystemKeywords.FAN_SCHEDULE: "Fan Annual Schedule"
+        }
+        self.eir_f_t.keyword_value_pairs = {
+            BDL_CurveFitKeywords.COEF: [
+                "-0.38924539",
+                "-0.02195141",
+                "-0.00027343",
+                "0.04974775",
+                "-0.00053441",
+                "0.00067295",
+            ],
+            BDL_CurveFitKeywords.TYPE: "BI-QUADRATIC-T",
+            BDL_CurveFitKeywords.INPUT_TYPE: "COEFFICIENTS",
+            BDL_CurveFitKeywords.OUTPUT_MIN: "-1000000.0000",
+            BDL_CurveFitKeywords.OUTPUT_MAX: "1000000.0000",
+        }
+        self.eir_f_plr.keyword_value_pairs = {
+            BDL_CurveFitKeywords.COEF: [
+                "0.14703037",
+                "-0.00349667",
+                "1.01161313",
+                "-0.00359697",
+                "0.00027167",
+                "-0.01164471",
+            ],
+            BDL_CurveFitKeywords.TYPE: "BI-QUADRATIC-RATIO&DT",
+            BDL_CurveFitKeywords.INPUT_TYPE: "COEFFICIENTS",
+            BDL_CurveFitKeywords.OUTPUT_MIN: "               -1000000.0000",
+            BDL_CurveFitKeywords.OUTPUT_MAX: "                1000000.0000",
+        }
+        self.cap_f_t.keyword_value_pairs = {
+            BDL_CurveFitKeywords.COEF: [
+                "-0.38924539",
+                "-0.02195141",
+                "-0.00027343",
+                "0.04974775",
+                "-0.00053441",
+                "0.00067295",
+            ],
+            BDL_CurveFitKeywords.TYPE: "BI-QUADRATIC-T",
+            BDL_CurveFitKeywords.INPUT_TYPE: "COEFFICIENTS",
+            BDL_CurveFitKeywords.OUTPUT_MIN: "               -1000000.0000",
+            BDL_CurveFitKeywords.OUTPUT_MAX: "                1000000.0000",
         }
 
     @patch("rpd_generator.bdl_structure.base_node.BaseNode.get_output_data")
@@ -266,6 +317,7 @@ class TestCHWLoop(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Pump - Flow (gal/min)": 300,
             "Pump - Power (kW)": 15,
+            "Normalized (ARI) Entering Condenser Water Temperature (°F)": 70.0,
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.LOOP_PUMP: "Pump 1",
@@ -773,13 +825,25 @@ class TestCHWLoop(unittest.TestCase):
             - TYPE CHW
             - Chiller CHW-FLOW-CTRL VARIABLE-FLOW
         """
-        mock_get_output_data.return_value = {}
+        self.chiller = Chiller("Chiller 1", self.rmd)
+        mock_get_output_data.return_value = {
+            "Normalized (ARI) Entering Condenser Water Temperature (°F)": 85.0,
+            "Primary Equipment (Chillers) - Capacity (Btu/hr)": 118000.0,
+        }
         self.chiller.keyword_value_pairs = {
+            BDL_ChillerKeywords.TYPE: BDL_ChillerTypes.ELEC_OPEN_CENT,
+            BDL_ChillerKeywords.CONDENSER_TYPE: BDL_CondenserTypes.WATER_COOLED,
             BDL_ChillerKeywords.CHW_LOOP: "Circulation Loop 1",
+            BDL_ChillerKeywords.EIR_FT: "EIR-fT Curve",
+            BDL_ChillerKeywords.EIR_FPLR: "EIR-fPLR Curve",
+            BDL_ChillerKeywords.CAPACITY_FT: "CAP-fT Curve",
+            BDL_ChillerKeywords.ELEC_INPUT_RATIO: "0.16",
+            BDL_ChillerKeywords.MIN_RATIO: "0.25",
             BDL_ChillerKeywords.CHW_FLOW_CTRL: BDL_FlowControlOptions.VARIABLE_FLOW,
         }
         self.circulation_loop.keyword_value_pairs = {
-            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW
+            BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
+            BDL_CirculationLoopKeywords.DESIGN_COOL_T: "50",
         }
 
         self.rmd.populate_rmd_data(testing=True)
