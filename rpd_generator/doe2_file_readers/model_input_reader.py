@@ -130,9 +130,6 @@ class ModelInputReader:
             multiline_value = []
 
             for line in bdl_file:
-                # Skip comment lines or initial declarations of library-entries (subsequent line with $LIBRARY-ENTRY will be read)
-                if line[12:15] == " $ " or " LIBRARY-ENTRY" in line:
-                    continue
 
                 # Skip empty lines
                 if not line.strip():
@@ -198,65 +195,41 @@ class ModelInputReader:
                 elif special_read_flag:
                     active_command_dict = file_commands.get(unique_name)
 
-                    # If we're in the middle of accumulating a multiline value, handle that first.
-                    if multiline_key is not None:
-
-                        # Append current line (starting at col 15) to the accumulator.
-                        multiline_value += line[15:].rstrip()
-
-                        # Check if there is a closing parenthesis.
-                        if ")" in multiline_value:
-                            # Finalize the multiline value.
-                            final_value = multiline_value
-                            special_data[multiline_key] = (
-                                self._parse_parentheses_values(final_value)
-                            )
-
-                            # Reset multiline accumulators.
-                            multiline_key = None
-                            multiline_value = ""
-
-                        # Skip further processing of this line.
-                        continue
-
-                    # Process a new line from the special block.
-                    keywords_values = re.split(
-                        r"\s+(?![^(]*\))|=", line[15:].split("$", 1)[0]
-                    )
-
-                    # If any item contains "(", combine everything from its first occurrence onward.
+                    # Parse keyword-value pairs
+                    keywords_values = re.split(r"\s+(?![^(]*\))|=", line[15:])
                     if any("(" in item for item in keywords_values):
+                        # Combine all parts starting from the "("
                         paren_idx = next(
                             i for i, item in enumerate(keywords_values) if "(" in item
                         )
-
                         keywords_values = keywords_values[:paren_idx] + [
                             " ".join(keywords_values[paren_idx:])
                         ]
 
-                    # Remove empty strings and the placeholder ".."
+                    # filter out empty strings and ".."
                     keywords_values = [
                         item for item in keywords_values if item and item != ".."
                     ]
 
+                    if multiline_key:
+                        keywords_values.insert(0, multiline_key)
+                        multiline_value += line[15:].split(")")[0] + ")"
+                        keywords_values[1] = multiline_value
+                        multiline_key = None
+
                     for i in range(0, len(keywords_values), 2):
                         key = keywords_values[i]
                         value = keywords_values[i + 1]
-
-                        # If an opening parenthesis appears without a closing one, start accumulating a multiline value.
-                        if "(" in value and ")" not in value:
-                            multiline_key = key
-                            multiline_value = value
-
+                        if "(" in value:
+                            special_data[key] = self._parse_parentheses_values(value)
                         else:
-                            if "(" in value and ")" in value:
-                                special_data[key] = self._parse_parentheses_values(
-                                    value
-                                )
-                            else:
-                                special_data[key] = value
+                            special_data[key] = value
 
-                    # End special read block when ".." is encountered.
+                    if "(" in line and ")" not in line:
+                        multiline_key = keywords_values[-2]
+                        multiline_value = keywords_values[-1]
+
+                    # End special read block at `..`
                     if ".." in line:
                         special_read_flag = False
                         if active_command_dict and "COEF" in special_data:
