@@ -130,6 +130,7 @@ class ModelInputReader:
             multiline_value = []
 
             for line in bdl_file:
+
                 # Skip comment lines or initial declarations of library-entries (subsequent line with $LIBRARY-ENTRY will be read)
                 if line[12:15] == " $ " or " LIBRARY-ENTRY" in line:
                     continue
@@ -215,6 +216,12 @@ class ModelInputReader:
                             # Reset multiline accumulators.
                             multiline_key = None
                             multiline_value = ""
+
+                        if ".." in line:
+                            special_read_flag = False
+                            if active_command_dict and "COEF" in special_data:
+                                active_command_dict["COEF"] = special_data["COEF"]
+                            special_data = {}
 
                         # Skip further processing of this line.
                         continue
