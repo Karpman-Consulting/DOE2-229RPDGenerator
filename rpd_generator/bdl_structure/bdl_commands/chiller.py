@@ -167,7 +167,9 @@ class Chiller(BaseNode):
                 self.energy_source_type = self.get_loop_energy_source(hw_loop)
 
         if self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))):
-            self.design_leaving_evaporator_temperature = self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T)))
+            self.design_leaving_evaporator_temperature = self.try_float(
+                self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))
+            )
         else:
             self.design_leaving_evaporator_temperature = self.try_float(
                 output_data.get(
@@ -175,8 +177,12 @@ class Chiller(BaseNode):
                 )
             )
         # This says ARI but appears to report out the design condenser water temperature
-        if self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T))):
-            self.design_entering_condenser_temperature = self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T)))
+        if self.try_float(
+            self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T))
+        ):
+            self.design_entering_condenser_temperature = self.try_float(
+                self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T))
+            )
         else:
             self.design_entering_condenser_temperature = self.try_float(
                 output_data.get(
