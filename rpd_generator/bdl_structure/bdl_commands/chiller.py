@@ -166,18 +166,23 @@ class Chiller(BaseNode):
             if hw_loop:
                 self.energy_source_type = self.get_loop_energy_source(hw_loop)
 
-        chw_loop = self.get_obj(self.cooling_loop)
-        self.design_leaving_evaporator_temperature = self.try_float(
-            chw_loop.get_inp(BDL_CirculationLoopKeywords.DESIGN_COOL_T)
-        )
-
-        # This says ARI but appears to report out the design condenser water temperature
-        # TODO Test what this reports when the condenser type is air source or remote, hopefully it still reports a condenser temp
-        self.design_entering_condenser_temperature = self.try_float(
-            output_data.get(
-                "Normalized (ARI) Entering Condenser Water Temperature (°F)"
+        if self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))):
+            self.design_leaving_evaporator_temperature = self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T)))
+        else:
+            self.design_leaving_evaporator_temperature = self.try_float(
+                output_data.get(
+                    "Normalized (ARI) Leaving Chilled Water Temperature (°F)"
+                )
             )
-        )
+        # This says ARI but appears to report out the design condenser water temperature
+        if self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T))):
+            self.design_entering_condenser_temperature = self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T)))
+        else:
+            self.design_entering_condenser_temperature = self.try_float(
+                output_data.get(
+                    "Normalized (ARI) Entering Condenser Water Temperature (°F)"
+                )
+            )
 
         self.design_capacity = self.try_float(
             output_data.get("Design Parameters - Capacity")
