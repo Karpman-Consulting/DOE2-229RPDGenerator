@@ -76,6 +76,12 @@ class ZonesSubview(CTkXYFrame):
         self.main_app_data = self.zones_view.window.main_app.data
         self.is_view_populated = False
         self.child_space_window = None
+        self.zones_by_floor = {}
+        self.floor_comboboxes = {}
+        self.zone_comboboxes = {}
+        self.zone_widgets = {}
+
+        self.get_zones_by_floors()
 
     def __repr__(self):
         return "ZonesSubview"
@@ -86,77 +92,116 @@ class ZonesSubview(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        # Key is floor name, value is list of zones on that floor
-        zones_by_floors = {}
-        for zone in self.main_app_data.rmds[0].zone_names:
-            zone_obj = self.main_app_data.rmds[0].get_obj(zone)
-            if zones_by_floors.get(zone_obj.floor_name):
-                zones_by_floors[zone_obj.floor_name].append(zone)
-            else:
-                zones_by_floors[zone_obj.floor_name] = [zone]
-
         main_row = 0
-        for floor, zones in zones_by_floors.items():
+        for floor, zones in self.zones_by_floor.items():
             self.add_main_row(main_row, floor)
-            for i, zone in enumerate(zones):
-                self.add_row((main_row + 1 + i), zone)
-            main_row += len(zones)
+            main_row += 1
+            for zone in zones:
+                self.add_row(main_row, zone)
+                main_row += 1
 
         self.is_view_populated = True
 
     def add_column_headers(self):
+        collapse_expand_label = ctk.CTkLabel(self, text="", font=STANDARD_FONT)
+        collapse_expand_label.grid(row=0, column=0, padx=PAD20, pady=5)
+
         zone_floor_label = ctk.CTkLabel(self, text="Floor/Zone", font=STANDARD_FONT)
-        zone_floor_label.grid(row=0, column=0, padx=PAD20, pady=5)
+        zone_floor_label.grid(row=0, column=1, padx=PAD20, pady=5)
         building_area_label = ctk.CTkLabel(
             self, text="Building Area", font=STANDARD_FONT
         )
-        building_area_label.grid(row=0, column=1, padx=PAD20, pady=5)
+        building_area_label.grid(row=0, column=2, padx=PAD20, pady=5)
         aggregated_zone_quantity_label = ctk.CTkLabel(
             self, text="Aggregated Zone Qty", font=STANDARD_FONT
         )
-        aggregated_zone_quantity_label.grid(row=0, column=2, padx=PAD20, pady=5)
+        aggregated_zone_quantity_label.grid(row=0, column=3, padx=PAD20, pady=5)
         measured_infiltration_rate_label = ctk.CTkLabel(
             self, text="Measured Infiltration Rate?", font=STANDARD_FONT
         )
-        measured_infiltration_rate_label.grid(row=0, column=3, padx=PAD20, pady=5)
+        measured_infiltration_rate_label.grid(row=0, column=4, padx=PAD20, pady=5)
         child_spaces_label = ctk.CTkLabel(self, text="Child Spaces", font=STANDARD_FONT)
-        child_spaces_label.grid(row=0, column=4, padx=PAD20, pady=5)
+        child_spaces_label.grid(row=0, column=5, padx=PAD20, pady=5)
 
     def add_main_row(self, i, floor_name):
-        print(self.columnconfigure(0)["minsize"])
-        main_row_frame = ctk.CTkFrame(self)
-        main_row_frame.grid(row=(i + 1), column=0, columnspan=5, sticky="ew")
-        floor_label = ctk.CTkLabel(
-            main_row_frame, text=f"{floor_name}", width=135, anchor=W
-        )
-        floor_label.grid(row=0, column=0, padx=20, pady=PAD20, sticky=W)
-        building_area_combo = ctk.CTkComboBox(
-            main_row_frame,
-            # TODO: Placeholder for Building Areas tab data
-            values=["Building Area 1", "Placeholder"],
-            state=READONLY,
-        )
-        building_area_combo._entry.configure(justify=LEFT)
-        building_area_combo.grid(row=0, column=1, padx=PAD20, pady=PAD20)
+        # Frame spanning all columns with a different background color
+        main_row_frame = ctk.CTkFrame(self, fg_color="gray30")
+        main_row_frame.grid(row=(i + 1), column=0, columnspan=6, sticky="ew")
 
-    def add_row(self, i, floor_name):
-        floor_label = ctk.CTkLabel(self, text=f"{floor_name}")
-        floor_label.grid(row=(i + 1), column=0, padx=20, pady=PAD20, sticky=W)
+        collapse_button = ctk.CTkButton(
+            self,
+            text="−",  # Default to expanded state
+            width=30,
+            height=30,
+            corner_radius=10,
+            command=lambda: self.toggle_zone_visibility(floor_name, collapse_button),
+            bg_color="gray30",  # Same color as the frame
+        )
+        collapse_button.grid(row=(i + 1), column=0, padx=(5, 0))
+
+        # Ensure the frame stretches across all columns
+        for col in range(5):
+            main_row_frame.grid_columnconfigure(col, weight=1)
+
+        floor_label = ctk.CTkLabel(
+            self,
+            text=f"{floor_name}",
+            width=135,
+            anchor=W,
+            font=("Arial", 14, "bold"),  # Larger, bold font
+            text_color="white",
+            bg_color="gray30",  # Same color as the frame
+        )
+        floor_label.grid(row=(i + 1), column=1, padx=20, pady=10, sticky=W)
+
+        # Place the Building Area ComboBox in `self` (not inside `main_row_frame`) to align properly
         building_area_combo = ctk.CTkComboBox(
             self,
             # TODO: Placeholder for Building Areas tab data
-            values=["Building Area 1", "Placeholder"],
+            values=["Building Area 1"],
+            state=READONLY,
+            fg_color="#5B9BD5",
+            border_color="#5B9BD5",
+            button_color="#3A7EBF",
+            dropdown_fg_color="#5B9BD5",
+            dropdown_hover_color="lightblue",
+            bg_color="gray30",  # Same color as the frame
+            command=lambda value, floor=floor_name: self.set_default_value_by_floor(
+                floor, value
+            ),
+        )
+        building_area_combo.set("Building Area 1")
+        building_area_combo._entry.configure(justify=LEFT)
+        building_area_combo.grid(row=(i + 1), column=2, padx=PAD20, pady=10)
+
+        self.floor_comboboxes[floor_name] = building_area_combo
+
+        # Add empty labels in `main_row_frame` for spacing
+        ctk.CTkLabel(main_row_frame, text="").grid(row=0, column=3, padx=PAD20, pady=10)
+        ctk.CTkLabel(main_row_frame, text="").grid(row=0, column=4, padx=PAD20, pady=10)
+
+    def add_row(self, i, zone_name):
+        floor_label = ctk.CTkLabel(self, text=f"{zone_name}")
+        floor_label.grid(row=(i + 1), column=1, padx=20, pady=PAD20, sticky=W)
+        building_area_combo = ctk.CTkComboBox(
+            self,
+            # TODO: Placeholder for Building Areas tab data
+            values=["Building Area 1"],
             state=READONLY,
         )
+        building_area_combo.set("Building Area 1")
         building_area_combo._entry.configure(justify=LEFT)
-        building_area_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
+        building_area_combo.grid(row=(i + 1), column=2, padx=PAD20, pady=PAD20)
+
+        self.zone_comboboxes[zone_name] = building_area_combo
+        # TODO: Apply numerical entry validation
         aggregated_zone_qty_spinbox = cw.IntSpinbox(self, width=125, default_value=1)
         aggregated_zone_qty_spinbox.grid(
-            row=(i + 1), column=2, padx=PAD20, pady=PAD20, sticky="nsew"
+            row=(i + 1), column=3, padx=PAD20, pady=PAD20, sticky="nsew"
         )
         measured_infiltration_rate_checkbox = ctk.CTkCheckBox(self, text="", width=30)
         measured_infiltration_rate_checkbox.grid(
-            row=(i + 1), column=3, padx=PAD20, pady=PAD20
+            row=(i + 1), column=4, padx=PAD20, pady=PAD20
         )
         image = ctk.CTkImage(
             light_image=Image.open("interface/static/white_plus.png"),
@@ -172,7 +217,51 @@ class ZonesSubview(CTkXYFrame):
             corner_radius=10,
             command=self.open_child_space_window,
         )
-        add_child_space_button.grid(row=(i + 1), column=4, padx=PAD20, pady=PAD20)
+        add_child_space_button.grid(row=(i + 1), column=5, padx=PAD20, pady=PAD20)
+
+        self.zone_widgets[zone_name] = [
+            floor_label,
+            building_area_combo,
+            aggregated_zone_qty_spinbox,
+            measured_infiltration_rate_checkbox,
+            add_child_space_button,
+        ]
+
+    def get_zones_by_floors(self):
+        for zone_name in self.main_app_data.rmds[0].zone_names:
+            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+            if self.zones_by_floor.get(zone_obj.floor_name):
+                self.zones_by_floor[zone_obj.floor_name].append(zone_name)
+            else:
+                self.zones_by_floor[zone_obj.floor_name] = [zone_name]
+
+    def set_default_value_by_floor(self, floor_name, selected_value):
+        """Update all zones under a floor with the selected value from the floor's combobox"""
+        for zone_name in self.main_app_data.rmds[0].zone_names:
+            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+            if zone_obj.floor_name == floor_name:
+                if zone_name in self.zone_comboboxes:
+                    self.zone_comboboxes[zone_name].set(selected_value)
+
+    def toggle_zone_visibility(self, floor_name, button):
+        """Toggles visibility of all zone rows under a given floor"""
+        if floor_name in self.zones_by_floor:
+            first_zone = self.zones_by_floor[floor_name][0]
+            is_visible = self.zone_widgets[first_zone][
+                0
+            ].winfo_ismapped()  # Check if first zone widget is visible
+            new_state = "hide" if is_visible else "show"
+
+            for zone_name in self.zones_by_floor[floor_name]:
+                if zone_name in self.zone_widgets:
+                    for widget in self.zone_widgets[zone_name]:
+                        if new_state == "hide":
+                            widget.grid_remove()
+                        else:
+                            widget.grid()
+
+            # Change button text accordingly
+            button.configure(text="+" if new_state == "hide" else "−")
 
     def open_child_space_window(self):
         if (
