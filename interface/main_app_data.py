@@ -190,3 +190,10 @@ class MainAppData:
         if is_all_new_construction:
             return True
         return False
+
+    @staticmethod
+    def validate_entry(arg):
+        if str.isdigit(arg) or arg == "":
+            return True
+        else:
+            return False

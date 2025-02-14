@@ -740,6 +740,7 @@ class TestZones(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Zone 1",
+            "floor_name": "Floor 1",
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
@@ -796,6 +797,7 @@ class TestZones(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Zone 1",
+            "floor_name": "Floor 1",
             "infiltration": {
                 "id": "Space 1 Infil",
                 "modeling_method": "WEATHER_DRIVEN",
