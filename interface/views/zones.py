@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import interface.custom_widgets as cw
 from PIL import Image
 
 from interface.ctk_xyframe import CTkXYFrame
@@ -67,13 +68,6 @@ class ZonesView(BaseView):
         zones_view.grid(row=0, column=0, sticky="nsew")
         zones_view.open_view()
 
-    @staticmethod
-    def validate_entry(arg):
-        if str.isdigit(arg) or arg == "":
-            return True
-        else:
-            return False
-
 
 class ZonesSubview(CTkXYFrame):
     def __init__(self, view_frame):
@@ -81,7 +75,6 @@ class ZonesSubview(CTkXYFrame):
         self.zones_view = view_frame.master
         self.main_app_data = self.zones_view.window.main_app.data
         self.is_view_populated = False
-        self.validate_command = self.register(self.zones_view.validate_entry)
         self.child_space_window = None
 
     def __repr__(self):
@@ -130,20 +123,25 @@ class ZonesSubview(CTkXYFrame):
         child_spaces_label.grid(row=0, column=4, padx=PAD20, pady=5)
 
     def add_main_row(self, i, floor_name):
-        floor_label = ctk.CTkLabel(self, text=f"{floor_name}")
-        floor_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
+        print(self.columnconfigure(0)["minsize"])
+        main_row_frame = ctk.CTkFrame(self)
+        main_row_frame.grid(row=(i + 1), column=0, columnspan=5, sticky="ew")
+        floor_label = ctk.CTkLabel(
+            main_row_frame, text=f"{floor_name}", width=135, anchor=W
+        )
+        floor_label.grid(row=0, column=0, padx=20, pady=PAD20, sticky=W)
         building_area_combo = ctk.CTkComboBox(
-            self,
+            main_row_frame,
             # TODO: Placeholder for Building Areas tab data
             values=["Building Area 1", "Placeholder"],
             state=READONLY,
         )
         building_area_combo._entry.configure(justify=LEFT)
-        building_area_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
+        building_area_combo.grid(row=0, column=1, padx=PAD20, pady=PAD20)
 
     def add_row(self, i, floor_name):
         floor_label = ctk.CTkLabel(self, text=f"{floor_name}")
-        floor_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
+        floor_label.grid(row=(i + 1), column=0, padx=20, pady=PAD20, sticky=W)
         building_area_combo = ctk.CTkComboBox(
             self,
             # TODO: Placeholder for Building Areas tab data
@@ -152,19 +150,16 @@ class ZonesSubview(CTkXYFrame):
         )
         building_area_combo._entry.configure(justify=LEFT)
         building_area_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
-        aggregated_zone_qty_input = ctk.CTkEntry(
-            self,
-            width=125,
-            validate="all",
-            validatecommand=(self.validate_command, "%P"),
+        aggregated_zone_qty_spinbox = cw.IntSpinbox(self, width=125, default_value=1)
+        aggregated_zone_qty_spinbox.grid(
+            row=(i + 1), column=2, padx=PAD20, pady=PAD20, sticky="nsew"
         )
-        aggregated_zone_qty_input.grid(row=(i + 1), column=2, padx=PAD20, pady=PAD20)
         measured_infiltration_rate_checkbox = ctk.CTkCheckBox(self, text="", width=30)
         measured_infiltration_rate_checkbox.grid(
             row=(i + 1), column=3, padx=PAD20, pady=PAD20
         )
         image = ctk.CTkImage(
-            light_image=Image.open("interface/assets/white_plus.png"),
+            light_image=Image.open("interface/static/white_plus.png"),
             dark_image=None,
             size=(20, 20),
         )
