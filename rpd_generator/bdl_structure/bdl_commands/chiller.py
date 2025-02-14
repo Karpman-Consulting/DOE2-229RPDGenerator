@@ -268,6 +268,7 @@ class Chiller(BaseNode):
                 self.populate_efficiency_when_user_defined_rated_temps_dont_match_ahri(
                     performance_curve_data, output_data
                 )
+        x =1
 
     def get_output_requests(self):
         """Get output data requests for chiller object."""
@@ -558,6 +559,7 @@ class Chiller(BaseNode):
             iplv_part_load_efficiencies[plr] = eff_result_cop
 
         iplv = 0
+        #TODO modify so it says percent load not parload ratio
         for plr in IPLV_PART_LOAD_PCT_TIME:
             weighted_eff_load = (
                 IPLV_PART_LOAD_PCT_TIME[plr] * iplv_part_load_efficiencies[plr]
