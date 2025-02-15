@@ -42,7 +42,7 @@ TYPICAL_IPLV_COND_ENTERING_T_BY_CONDENSER_TYPE = {
 ABSORP_ENG_IPLV_COND_ENTERING_T = {0.25: 70, 0.50: 70, 0.75: 75, 1.00: 85}
 
 # Percent of time at each PLR 25%, 50%, 75%, 100%
-IPLV_PART_LOAD_PCT_TIME = {0.25: 0.01, 0.50: 0.42, 0.75: 0.45, 1.00: 0.12}
+IPLV_PART_LOAD_PCT_TIME = {0.25: 0.12, 0.50: 0.45, 0.75: 0.42, 1.00: 0.01}
 ERROR_MARGIN = 0.015
 MIN_AHRI_PART_LOAD = 0.25
 
@@ -268,7 +268,7 @@ class Chiller(BaseNode):
                 self.populate_efficiency_when_user_defined_rated_temps_dont_match_ahri(
                     performance_curve_data, output_data
                 )
-        x =1
+        x = 1
 
     def get_output_requests(self):
         """Get output data requests for chiller object."""
@@ -537,15 +537,16 @@ class Chiller(BaseNode):
 
         # Dictionary of rated part-load ratio as the key, and efficiency result as the value. 0.0 as placeholder
         iplv_part_load_efficiencies = {plr: 0.0 for plr in IPLV_PART_LOAD_PCT_TIME}
-        for plr in iplv_part_load_efficiencies:
-            cond_entering_temp = iplv_condenser_temp_conditions[plr]
+        iplv = 0
+        for percent_load in iplv_part_load_efficiencies:
+            cond_entering_temp = iplv_condenser_temp_conditions[percent_load]
 
             results = curve_funcs.calculate_results_of_performance_curves(
                 performance_curve_data,
                 ahri_evaporator_leaving_t,
                 cond_entering_temp,
                 eff_f_t_curve_type,
-                plr,
+                percent_load,
             )
 
             eff_f_t_result = results["eff_f_t_result"]
@@ -556,14 +557,7 @@ class Chiller(BaseNode):
                 eff_f_t_result * eff_f_plr_result / full_load_efficiency_rated
             )
 
-            iplv_part_load_efficiencies[plr] = eff_result_cop
-
-        iplv = 0
-        #TODO modify so it says percent load not parload ratio
-        for plr in IPLV_PART_LOAD_PCT_TIME:
-            weighted_eff_load = (
-                IPLV_PART_LOAD_PCT_TIME[plr] * iplv_part_load_efficiencies[plr]
-            )
+            weighted_eff_load = IPLV_PART_LOAD_PCT_TIME[percent_load] * eff_result_cop
             iplv = iplv + weighted_eff_load
 
         if iplv:
