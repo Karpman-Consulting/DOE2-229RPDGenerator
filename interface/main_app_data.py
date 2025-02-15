@@ -80,6 +80,12 @@ class MainAppData:
     LightingSpaceDescriptions2019ASHRAE901TG37 = SchemaEnums.schema_descriptions[
         "LightingSpaceOptions2019ASHRAE901TG37"
     ]
+    LightingOccupancyControlOptions = SchemaEnums.schema_descriptions[
+        "LightingOccupancyControlOptions"
+    ]
+    LightingDaylightingControlOptions = SchemaEnums.schema_descriptions[
+        "LightingDaylightingControlOptions"
+    ]
     OutputSchemaDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
         "OutputSchemaOptions2019ASHRAE901"
     ]

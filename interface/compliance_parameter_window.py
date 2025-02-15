@@ -2,6 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 from tkinter import Menu
 
+from interface.views.spaces import SpacesView
 from interface.views.test import TestView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
@@ -46,6 +47,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings": BuildingsView(self),
             "Building Areas": BuildingAreasView(self),
             "Zones": ZonesView(self),
+            "Spaces": SpacesView(self),
             "Surfaces": SurfacesView(self),
             "Systems": SystemsView(self),
             "Ext. Lighting": ExteriorLightingView(self),
@@ -131,6 +133,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings",
             "Building Areas",
             "Zones",
+            "Spaces",
             "Surfaces",
             "Systems",
             "Ext. Lighting",
@@ -155,6 +158,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings": lambda: self.show_view("Buildings"),
             "Building Areas": lambda: self.show_view("Building Areas"),
             "Zones": lambda: self.show_view("Zones"),
+            "Spaces": lambda: self.show_view("Spaces"),
             "Surfaces": lambda: self.show_view("Surfaces"),
             "Systems": lambda: self.show_view("Systems"),
             "Ext. Lighting": lambda: self.show_view("Ext. Lighting"),
