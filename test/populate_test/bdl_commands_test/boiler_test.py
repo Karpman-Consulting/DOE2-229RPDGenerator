@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-import os
 
 from rpd_generator.config import Config
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
@@ -23,12 +22,6 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd = RulesetModelDescription("Test RMD")
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.rmd.file_path = os.path.abspath(
-            os.path.join(
-                script_dir, "../../full_rpd_test/E-2/229 Test Case E-2 (CHW VAV)"
-            )
-        )
         self.master_meter = MasterMeters("Master Meters", self.rmd)
         self.fuel_meter = FuelMeter("Test Fuel Meter", self.rmd)
         self.boiler = Boiler("Boiler 1", self.rmd)
@@ -63,6 +56,7 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": 'The equations in the ANSI/ASHRAE/IES Standard 90.1-2019 Performance Rating Method Reference Manual Section 3.8.1 under the "Boiler Efficiency" descriptor for converting from boiler thermal efficiency to combustion efficiency and AFUE were used to populate combustion efficiency and AFUE.',
             "draft_type": "NATURAL",
             "energy_source_type": "OTHER",
             "output_validation_points": [],
@@ -73,8 +67,8 @@ class TestFuelBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.188203578125,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.900009000090001],
-            "efficiency_metrics": ["THERMAL"],
+            "efficiency_metric_values": [0.900009000090001],
+            "efficiency_metric_types": ["THERMAL"],
         }
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
@@ -106,6 +100,7 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": 'The equations in the ANSI/ASHRAE/IES Standard 90.1-2019 Performance Rating Method Reference Manual Section 3.8.1 under the "Boiler Efficiency" descriptor for converting from boiler thermal efficiency to combustion efficiency and AFUE were used to populate combustion efficiency and AFUE.',
             "draft_type": "FORCED",
             "energy_source_type": "NATURAL_GAS",
             "output_validation_points": [],
@@ -116,8 +111,8 @@ class TestFuelBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.188203578125,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.900009000090001],
-            "efficiency_metrics": ["THERMAL"],
+            "efficiency_metric_values": [0.900009000090001],
+            "efficiency_metric_types": ["THERMAL"],
         }
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
@@ -166,8 +161,8 @@ class TestElectricBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.8822398124999999,
             "minimum_load_ratio": 0.33,
-            "efficiency": [0.9803921568627451],
-            "efficiency_metrics": ["THERMAL"],
+            "efficiency_metric_values": [0.9803921568627451],
+            "efficiency_metric_types": ["THERMAL"],
         }
         self.assertDictEqual(expected_data_structure, self.boiler.boiler_data_structure)
 
@@ -191,6 +186,7 @@ class TestElectricBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": "Electric boiler efficiency appears to be unregulated and so the impact of jacket losses on boiler thermal efficiency are unknown. As a simplification, where the modeler entered an electric input ratio of 1.0 it is assumed that the combustion and AFUE efficiency are also 1.0. This neglects the impact of jacket losses on efficiency.",
             "draft_type": "NATURAL",
             "energy_source_type": "ELECTRICITY",
             "output_validation_points": [],
@@ -201,7 +197,7 @@ class TestElectricBoiler(unittest.TestCase):
             "operation_lower_limit": 0,
             "operation_upper_limit": 0.8822398124999999,
             "minimum_load_ratio": 0.33,
-            "efficiency": [1, 1],
-            "efficiency_metrics": ["THERMAL", "COMBUSTION"],
+            "efficiency_metric_values": [1, 1],
+            "efficiency_metric_types": ["THERMAL", "COMBUSTION"],
         }
         self.assertDictEqual(self.boiler.boiler_data_structure, expected_data_structure)
