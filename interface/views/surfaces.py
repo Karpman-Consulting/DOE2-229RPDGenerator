@@ -77,9 +77,13 @@ class SurfacesView(BaseView):
         self.subview_frame.grid_rowconfigure(0, weight=1)
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
+        if self.subview_buttons:
+            # Open the first subview available
+            self.show_subview(next(iter(self.subview_buttons)))
+
     def create_subbutton_bar(self):
         callback_methods = {}
-        if not self.window.main_app.data.is_all_new_construction():
+        if not self.app_data.is_all_new_construction:
             callback_methods.update(
                 {
                     "Exterior": lambda: self.show_subview("Exterior"),

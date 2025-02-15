@@ -21,8 +21,8 @@ class SystemsView(BaseView):
         self.current_subview = None
 
         self.subviews = {
-            "Heat Rejection": HeatRejectionView(self.subview_frame),
             "HVAC Systems": HVACSystemView(self.subview_frame),
+            "Heat Rejection": HeatRejectionView(self.subview_frame),
             "Zonal Exhaust": ZonalExhaustView(self.subview_frame),
         }
 
@@ -73,19 +73,25 @@ class SystemsView(BaseView):
         self.subview_frame.grid_rowconfigure(0, weight=1)
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
+        if self.subview_buttons:
+            # Open the first subview available
+            self.show_subview(next(iter(self.subview_buttons)))
+
     def create_subbutton_bar(self):
-        # TODO: Check for empty subviews
-        if not self.window.main_app.data.is_all_new_construction():
-            callback_methods = {
-                "Heat Rejection": lambda: self.show_subview("Heat Rejection"),
-                "HVAC Systems": lambda: self.show_subview("HVAC Systems"),
-                "Zonal Exhaust": lambda: self.show_subview("Zonal Exhaust"),
-            }
-        else:
-            callback_methods = {
-                "Heat Rejection": lambda: self.show_subview("Heat Rejection"),
-                "HVAC Systems": lambda: self.show_subview("HVAC Systems"),
-            }
+        callback_methods = {}
+        if len(self.app_data.rmds[0].heat_rejection_names) > 0:
+            callback_methods["Heat Rejection"] = lambda: self.show_subview(
+                "Heat Rejection"
+            )
+        if len(self.app_data.rmds[0].system_names) > 0:
+            callback_methods["HVAC Systems"] = lambda: self.show_subview("HVAC Systems")
+        if (
+            len(self.app_data.rmds[0].zonal_exh_fan_names) > 0
+            and not self.app_data.is_all_new_construction
+        ):
+            callback_methods["Zonal Exhaust"] = lambda: self.show_subview(
+                "Zonal Exhaust"
+            )
 
         for name in callback_methods:
             # Create the button to go inside this button frame
@@ -149,10 +155,6 @@ class HeatRejectionView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        if len(self.main_app_data.rmds[0].heat_rejection_names) == 0:
-            # TODO: No heat rejection data, hide tab
-            return
-
         for i, heat_rejection_name in enumerate(
             self.main_app_data.rmds[0].heat_rejection_names
         ):
@@ -203,7 +205,7 @@ class HVACSystemView(ctk.CTkFrame):
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=ARIAL_16_BOLD)
         name_label.grid(row=0, column=0, padx=PAD20, pady=5)
-        if not self.main_app_data.is_all_new_construction():
+        if not self.main_app_data.is_all_new_construction:
             status_label = ctk.CTkLabel(self, text="Status", font=ARIAL_16_BOLD)
             status_label.grid(row=0, column=1, padx=PAD20, pady=5)
         dehumidification_type_label = ctk.CTkLabel(
@@ -222,7 +224,7 @@ class HVACSystemView(ctk.CTkFrame):
     def add_row(self, i, hvac_system_name):
         system_label = ctk.CTkLabel(self, text=f"{hvac_system_name}")
         system_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
-        if not self.main_app_data.is_all_new_construction():
+        if not self.main_app_data.is_all_new_construction:
             status_combo = ctk.CTkComboBox(
                 self,
                 values=self.main_app_data.StatusDescriptions.get_list(),
@@ -264,10 +266,6 @@ class ZonalExhaustView(ctk.CTkFrame):
     def populate_subview(self):
         zonal_exhaust_fans = self.get_zonal_exhaust_fans()
 
-        if len(zonal_exhaust_fans) == 0:
-            # TODO: No zonal exhaust fans, hide tab
-            return
-
         self.add_column_headers()
 
         for i, exhaust_fan_dict in enumerate(zonal_exhaust_fans):
@@ -276,7 +274,7 @@ class ZonalExhaustView(ctk.CTkFrame):
         self.is_subview_populated = True
 
     def get_zonal_exhaust_fans(self):
-        # TODO: Review this approach..may be problematic once we are trying to set data back to the rmds
+        # TODO: Review this approach..may be tough once we are trying to set data back to the rmds
         zonal_exhaust_fans = []
         for zone_name in self.main_app_data.rmds[0].zone_names:
             zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)

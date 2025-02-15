@@ -21,6 +21,7 @@ ctk.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme(
     "dark-blue"
 )  # Themes: "blue" (standard), "green", "dark-blue"
+ICON_SIZE = (30, 30)
 
 
 class ComplianceParameterWindow(ctk.CTkToplevel):
@@ -84,11 +85,14 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             ),
         )
         self.continue_button = ctk.CTkButton(
+            self, text="Continue", width=100, corner_radius=12
+        )
+        self.generate_RPD_button = ctk.CTkButton(
             self,
-            text="Continue",
+            text="Generate RPD",
             width=100,
-            corner_radius=12,
-            command=self.raise_error_window("\n".join(self.main_app.data.errors)),
+            fg_color="green",
+            hover_color="#006400",
         )
 
         self.license_window = None
@@ -169,20 +173,21 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
         }
 
         for index, (name, icon_path) in enumerate(zip(button_names, icon_paths)):
-            # Load and recolor the icon for the button
+            # Load and resize the icon
             icon = Image.open(f"interface/static/{icon_path}").convert("RGBA")
+            icon = icon.resize(ICON_SIZE, Image.LANCZOS)  # Resize icon
 
             r, g, b, alpha = icon.split()
-            white_icon = Image.merge(
-                "RGBA", (alpha, alpha, alpha, alpha)
-            )  # Merge all channels into alpha to keep transparency
-            icon_image = ctk.CTkImage(white_icon)
+            white_icon = Image.merge("RGBA", (alpha, alpha, alpha, alpha))
 
-            # Create a frame for each button that will act as the border
+            # Create a CTkImage with the new size
+            icon_image = ctk.CTkImage(light_image=white_icon, size=ICON_SIZE)
+
+            # Create a frame for each button
             button_frame = ctk.CTkFrame(self, width=144, height=36, corner_radius=0)
             button_frame.grid(row=0, column=index, sticky="nsew")
 
-            # Then create the button inside this frame with the icon
+            # Create the button inside the frame
             button = ctk.CTkButton(
                 button_frame,
                 image=icon_image,
@@ -197,43 +202,14 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             button.place(relx=0.5, rely=0.5, anchor="center")
             self.navbar_buttons[name] = button
 
-            # Keep a reference to the image to prevent garbage collection
+            # Keep a reference to the image
             button.image = icon_image
 
     def create_nav_bar(self):
-        warnings_button = ctk.CTkButton(
-            self,
-            text="Warnings",
-            width=90,
-            fg_color="orange",
-            hover_color="#FF8C00",
-            corner_radius=12,
-            command=lambda: self.raise_error_window(
-                "\n".join(self.main_app.data.warnings)
-            ),
-        )
-        errors_button = ctk.CTkButton(
-            self,
-            text="Errors",
-            width=90,
-            fg_color="red",
-            hover_color="#E60000",
-            corner_radius=12,
-            command=lambda: self.raise_error_window(
-                "\n".join(self.main_app.data.errors)
-            ),
-        )
-        continue_button = ctk.CTkButton(
-            self, text="Continue", width=100, corner_radius=12
-        )
-
-        warnings_button.grid(row=2, column=0, pady=5)
-        errors_button.grid(row=2, column=1, pady=5)
-        continue_button.grid(row=2, column=3, columnspan=3, pady=5)
-
-        self.continue_button = continue_button
-        self.warnings_button = warnings_button
-        self.errors_button = errors_button
+        self.warnings_button.grid(row=2, column=0, pady=5)
+        self.errors_button.grid(row=2, column=1, pady=5)
+        self.continue_button.grid(row=2, column=3, columnspan=3, pady=5)
+        self.generate_RPD_button.grid(row=2, column=8, pady=5)
 
     def show_view(self, view_name):
         # Clear previous view

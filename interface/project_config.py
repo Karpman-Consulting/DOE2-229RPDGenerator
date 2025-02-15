@@ -18,20 +18,18 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         self.ruleset_model_row_widgets = {}
 
-        self.selected_ruleset = ctk.StringVar()
-        self.selected_ruleset.set("ASHRAE 90.1-2019")
-
         # Initialize Widgets
-        self.new_construction_checkbox = None
         self.new_construction_checkbox = ctk.CTkCheckBox(
             self,
             text="All new construction?",
             font=("Arial", 14),
+            variable=self.main_app.data.is_all_new_construction,
         )
         self.rotation_exception_checkbox = ctk.CTkCheckBox(
             self,
             text="Meets 90.1-2019 Table G3.1(5) Baseline Building Performance (a) Exceptions",
             font=("Arial", 14),
+            variable=self.main_app.data.has_rotation_exception,
             command=self.toggle_baseline_rotations,
         )
         self.directions_label = ctk.CTkLabel(
@@ -60,13 +58,12 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.ruleset_label = ctk.CTkLabel(
             self, text="Energy Code/Program:", font=("Arial", 14, "bold"), anchor="e"
         )
-        self.ruleset_models_frame = ctk.CTkFrame(self, width=800, height=250)
+        self.ruleset_models_frame = ctk.CTkFrame(self, width=800)
         self.ruleset_dropdown = ctk.CTkOptionMenu(
             self,
             values=["ASHRAE 90.1-2019", "None"],
-            command=lambda selection: self.update_ruleset_model_frame(
-                self.ruleset_models_frame, selection
-            ),
+            variable=self.main_app.data.selected_ruleset,
+            command=self.update_ruleset_model_frame,
         )
         self.ruleset_models_label = ctk.CTkLabel(
             self,
@@ -144,53 +141,39 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
         )
         self.new_construction_checkbox.grid(
-            row=2, column=3, sticky="w", padx=5, pady=10
+            row=2, column=4, sticky="w", padx=5, pady=10
         )
         # Row 3 Placeholder for the rotation exception checkbox
         # Row 4
         self.ruleset_models_label.grid(row=4, column=0, sticky="ew", padx=5, pady=20)
 
-        self.show_ruleset_models(self.ruleset_models_frame)
+        self.show_ruleset_models()
         self.ruleset_models_frame.grid(row=4, column=1, columnspan=6, sticky="nsew")
 
-    def update_ruleset_model_frame(self, ruleset_models_frame, selected_ruleset):
-        self.selected_ruleset.set(selected_ruleset)
+    def update_ruleset_model_frame(self, selected_ruleset):
         self.rotation_exception_checkbox.grid_remove()
         self.clear_ruleset_models_frame()
-        self.show_ruleset_models(ruleset_models_frame)
+        self.show_ruleset_models()
 
-    def show_ruleset_models(self, parent_frame):
+    def show_ruleset_models(self):
         # Main logic
-        if self.selected_ruleset.get() == "ASHRAE 90.1-2019":
+        if self.main_app.data.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
-                row=3, column=3, columnspan=4, sticky="w", padx=5, pady=10
+                row=3, column=1, columnspan=4, sticky="w", padx=5, pady=10
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
-            """PH stands for Placeholder. Used to fill a UI gap when the rotation exception checkbox is checked.
-            Label will not be displayed and other widgets in the row will not be created."""
             if not self.rotation_exception_checkbox.get():
-                labels.extend(
-                    [
-                        "Baseline 90: ",
-                        "Baseline 180: ",
-                        "Baseline 270: ",
-                        "PH Baseline 90: ",
-                        "PH Baseline 180: ",
-                        "PH Baseline 270: ",
-                    ]
-                )
+                labels.extend(["Baseline 90: ", "Baseline 180: ", "Baseline 270: "])
         else:
             labels = ["Design: "]
 
         # Create and place rows based on the selected ruleset
-        self.create_model_rows(parent_frame, labels)
+        self.create_model_rows(labels)
 
-    def create_model_rows(self, parent_frame, labels):
+    def create_model_rows(self, labels):
         """Create and place rows for ruleset model path widgets."""
         for row_num, label_text in enumerate(labels):
-            label, path_entry, select_button = self.create_file_row(
-                parent_frame, label_text
-            )
+            label, path_entry, select_button = self.create_file_row(label_text)
 
             # Place widgets using grid
             label.grid(row=row_num, column=0, sticky="ew", padx=5, pady=5)
@@ -199,14 +182,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             )
             select_button.grid(row=row_num, column=8, sticky="ew", padx=5, pady=5)
 
-            # If the label is a placeholder, do not place the widgets. Only place blank label.
-            if label_text in [
-                "PH Baseline 90: ",
-                "PH Baseline 180: ",
-                "PH Baseline 270: ",
-            ]:
-                label.grid_remove()
-
             # Store created widgets for reuse
             self.ruleset_model_row_widgets[label_text.split(":")[0]] = (
                 label,
@@ -214,17 +189,18 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 select_button,
             )
 
+            if len(labels) == 1:
+                self.ruleset_models_frame.grid_rowconfigure(
+                    0, weight=1
+                )  # Center first row
+            else:
+                for i in range(len(labels)):
+                    self.ruleset_models_frame.grid_rowconfigure(i, weight=0)
+
     def clear_ruleset_models_frame(self):
         for row_widgets in self.ruleset_model_row_widgets.values():
             for widget in row_widgets:
                 widget.grid_remove()
-
-    """To avoid the jarring experience of the UI elements shifting around when the rotation exception checkbox
-     is checked, I made blank placeholder rows for each of the 3 baseline rotations. There is a little bit of 
-     movement when the checkbox is toggled, but it is much less noticeable. I think the best solution for this
-     would be to disable the baseline rotation rows when the exception checkbox is checked. Tkinter does not handle
-     disabling input fields very well, so I went with this solution instead. I could be very easily convinced to
-     change my mind here either way."""
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
@@ -233,7 +209,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 "Baseline 90: ",
                 "Baseline 180: ",
                 "Baseline 270: ",
-                "",
             ]:
                 if row_widgets[0].winfo_ismapped():
                     # If visible, hide them
@@ -244,19 +219,14 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                     for widget in row_widgets:
                         widget.grid()
 
-    def create_file_row(self, parent_frame, label_text):
+    def create_file_row(self, label_text):
         """Create a row of widgets without placing them using grid()."""
         if self.ruleset_model_row_widgets.get(label_text.split(":")[0]):
             return self.ruleset_model_row_widgets[label_text.split(":")[0]]
 
-        # If the label is a placeholder, do not place the widgets. Only place blank label.
-        if label_text in ["PH Baseline 90: ", "PH Baseline 180: ", "PH Baseline 270: "]:
-            label = ctk.CTkLabel(parent_frame, text="")
-            return label, label, label
-
         # Create label
         label = ctk.CTkLabel(
-            parent_frame,
+            self.ruleset_models_frame,
             text=label_text,
             font=("Arial", 14),
             width=90,
@@ -264,7 +234,9 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         )
 
         # Create entry
-        path_entry = ctk.CTkEntry(parent_frame, width=700, font=("Arial", 12))
+        path_entry = ctk.CTkEntry(
+            self.ruleset_models_frame, width=700, font=("Arial", 12)
+        )
 
         # File select button
         def select_file():
@@ -290,7 +262,11 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 ] = file_path
 
         select_button = ctk.CTkButton(
-            parent_frame, text="Select", command=select_file, width=80, height=30
+            self.ruleset_models_frame,
+            text="Select",
+            command=select_file,
+            width=80,
+            height=30,
         )
 
         return label, path_entry, select_button
@@ -345,7 +321,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         # If there are no errors, generate RMDs and open the Main Application Window
         if len(self.main_app.data.errors) == 0:
-            self.save_configuration_data()
             self.main_app.data.generate_rmds()
             self.main_app.project_config_complete()
 
@@ -381,12 +356,3 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 return False
 
         return True
-
-    # TODO: Magic string dictionary values in config data. Should we make enums for these?
-    def save_configuration_data(self):
-        self.main_app.data.configuration_data.update(
-            self.main_app.data.ruleset_model_file_paths
-        )
-        self.main_app.data.configuration_data["new_construction"] = bool(
-            self.new_construction_checkbox.get()
-        )

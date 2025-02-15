@@ -107,6 +107,7 @@ class RulesetModelDescription(Base):
         self.elec_generator_names = []
         self.system_names = []
         self.zone_names = []
+        self.zonal_exh_fan_names = []
         self.ext_wall_names = []
         self.int_wall_names = []
         self.undg_wall_names = []

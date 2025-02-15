@@ -122,7 +122,7 @@ class MainAppData:
 
         # Config data
         self.installation_path = ctk.StringVar()
-        self.user_lib_path = None
+        self.user_lib_path = ctk.StringVar()
         self.files_verified = False
 
         # Test data
@@ -131,6 +131,8 @@ class MainAppData:
         # Project data
         self.selected_ruleset = ctk.StringVar()
         self.selected_ruleset.set("ASHRAE 90.1-2019")
+        self.has_rotation_exception = ctk.BooleanVar()
+        self.is_all_new_construction = ctk.BooleanVar()
         self.ruleset_model_file_paths = {}
 
         self.rmds = []
@@ -138,7 +140,6 @@ class MainAppData:
         self.errors = []
 
         self.installation_path.set(Config.EQUEST_INSTALL_PATH)
-        self.configuration_data = {}
 
     @staticmethod
     def verify_associated_files(file_path: str) -> bool:
