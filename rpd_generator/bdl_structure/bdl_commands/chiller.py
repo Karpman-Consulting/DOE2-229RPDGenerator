@@ -799,8 +799,12 @@ class Chiller(BaseNode):
             self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_PLR)) or 1
         )
 
-        user_defined_leaving_evaporator_temperature = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_CHW_T))
-        user_defined_entering_condenser_temperature = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_COND_T))
+        user_defined_leaving_evaporator_temperature = self.try_float(
+            self.get_inp(BDL_ChillerKeywords.RATED_CHW_T)
+        )
+        user_defined_entering_condenser_temperature = self.try_float(
+            self.get_inp(BDL_ChillerKeywords.RATED_COND_T)
+        )
 
         # Obtain results of curves at 100% load and entered rated (non AHRI) temperature conditions
         curve_results_at_user_defined_conditions_and_full_load = (
