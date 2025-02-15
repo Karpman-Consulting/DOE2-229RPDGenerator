@@ -799,13 +799,19 @@ class Chiller(BaseNode):
         user_defined_rated_plr = (
             self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_PLR)) or 1
         )
+        user_defined_leaving_evaporator_temperature = (
+            self.rated_leaving_evaporator_temperature
+        ) = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_CHW_T))
+        user_defined_entering_condenser_temperature = (
+            self.rated_entering_condenser_temperature
+        ) = self.try_float(self.get_inp(BDL_ChillerKeywords.RATED_COND_T))
 
         # Obtain results of curves at 100% load and entered rated (non AHRI) temperature conditions
         curve_results_at_user_defined_conditions_and_full_load = (
             curve_funcs.get_output_of_curves_at_temperature_and_load_conditions(
                 performance_curve_data,
-                self.rated_leaving_evaporator_temperature,
-                self.rated_entering_condenser_temperature,
+                user_defined_leaving_evaporator_temperature,
+                user_defined_entering_condenser_temperature,
                 1,
             )
         )
@@ -821,8 +827,8 @@ class Chiller(BaseNode):
         # Obtain results of efficiency curves (not capacity curves) by plugging the user defined rated part load ratio into the curves equations
         curve_results_at_user_defined_part_load_rating = (
             curve_funcs.calculate_efficiency_at_part_load_ratio(
-                self.rated_leaving_evaporator_temperature,
-                self.rated_entering_condenser_temperature,
+                user_defined_leaving_evaporator_temperature,
+                user_defined_entering_condenser_temperature,
                 performance_curve_data["performance_curves"],
                 user_defined_rated_plr,
             )
