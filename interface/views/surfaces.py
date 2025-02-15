@@ -84,20 +84,20 @@ class SurfacesView(BaseView):
     def create_subbutton_bar(self):
         callback_methods = {}
         if not self.app_data.is_all_new_construction:
-            callback_methods.update(
-                {
-                    "Exterior": lambda: self.show_subview("Exterior"),
-                    "Interior": lambda: self.show_subview("Interior"),
-                    "Underground": lambda: self.show_subview("Underground"),
-                }
-            )
-        callback_methods.update(
-            {
-                "Windows": lambda: self.show_subview("Windows"),
-                "Skylights": lambda: self.show_subview("Skylights"),
-                "Doors": lambda: self.show_subview("Doors"),
-            }
-        )
+            if len(self.app_data.rmds[0].ext_wall_names) > 0:
+                callback_methods["Exterior"] = lambda: self.show_subview("Exterior")
+            if len(self.app_data.rmds[0].int_wall_names) > 0:
+                callback_methods["Interior"] = lambda: self.show_subview("Interior")
+            if len(self.app_data.rmds[0].undg_wall_names) > 0:
+                callback_methods["Underground"] = lambda: self.show_subview(
+                    "Underground"
+                )
+        if len(self.app_data.rmds[0].door_names) > 0:
+            callback_methods["Doors"] = lambda: self.show_subview("Doors")
+        if len(self.app_data.rmds[0].window_names) > 0:
+            callback_methods["Windows"] = lambda: self.show_subview("Windows")
+        if len(self.app_data.rmds[0].skylight_names) > 0:
+            callback_methods["Skylights"] = lambda: self.show_subview("Skylights")
 
         for index, name in enumerate(callback_methods):
             # Create the button to go inside this button frame
@@ -278,25 +278,12 @@ class WindowSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        vertical_window_names = self.get_vertical_windows_subset()
-
         self.add_column_headers()
 
-        for i, window_name in enumerate(vertical_window_names):
+        for i, window_name in enumerate(self.main_app_data.rmds[0].window_names):
             self.add_row(i, window_name)
 
         self.is_subview_populated = True
-
-    def get_vertical_windows_subset(self):
-        vertical_window_names = []
-        for window_name in self.main_app_data.rmds[0].window_names:
-            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
-            if (
-                window_obj.classification
-                != self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
-            ):
-                vertical_window_names.append(window_name)
-        return vertical_window_names
 
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
@@ -367,25 +354,12 @@ class SkylightSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        skylight_names = self.get_skylights_subset()
-
         self.add_column_headers()
 
-        for i, skylight_name in enumerate(skylight_names):
+        for i, skylight_name in enumerate(self.main_app_data.rmds[0].skylight_names):
             self.add_row(i, skylight_name)
 
         self.is_subview_populated = True
-
-    def get_skylights_subset(self):
-        skylight_names = []
-        for window_name in self.main_app_data.rmds[0].window_names:
-            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
-            if (
-                window_obj.classification
-                == self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
-            ):
-                skylight_names.append(window_name)
-        return skylight_names
 
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)

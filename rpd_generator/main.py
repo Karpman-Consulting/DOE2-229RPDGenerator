@@ -44,7 +44,7 @@ def write_rpd_json_from_inp(inp_path_str):
             str(temp_inp_path.parent) + "\\",
             temp_inp_path.name,
         )
-
+        shutil.copy(str(bdl_path), inp_path.parent)
         # Generate the RPD json file in the temporary directory
         write_rpd_json_from_bdl(str(bdl_path), str(json_path))
 
@@ -56,7 +56,7 @@ def write_rpd_json_from_bdl(bdl_path: str, json_file_path: str):
     bdl_input_reader = ModelInputReader()
     RulesetProjectDescription.bdl_command_dict = bdl_input_reader.bdl_command_dict
     rpd = RulesetProjectDescription()
-    rmd = generate_rmds_from_bdls(bdl_input_reader, [bdl_path])[0]
+    rmd = generate_rmd_structures_from_bdls(bdl_input_reader, [bdl_path])[0]
     # Add the RPD object to the bdl_obj_instances dictionary
     rmd.bdl_obj_instances["ASHRAE 229"] = rpd
     # Populate 229 data structures associated with the BDL objects
@@ -73,7 +73,25 @@ def write_rpd_json_from_bdl(bdl_path: str, json_file_path: str):
     print(f"RPD JSON file created.")
 
 
-def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models: list):
+def write_rpd_json_from_rmds(
+    rpd: RulesetProjectDescription, rmds: list, json_file_path: str
+):
+    for rmd in rmds:
+        rmd.insert_to_rpd(rpd)
+    rpd.populate_data_group()
+
+    ensure_valid_rpd.make_ids_unique(rpd.rpd_data_structure)
+    unit_converter.convert_to_schema_units(rpd.rpd_data_structure)
+
+    with open(json_file_path, "w") as json_file:
+        json.dump(rpd.rpd_data_structure, json_file, indent=4)
+
+    print(f"RPD JSON file created.")
+
+
+def generate_rmd_structures_from_bdls(
+    bdl_input_reader: ModelInputReader, selected_models: list
+):
     rmds = []
     for model_path_str in selected_models:
         model_path = Path(model_path_str)
@@ -114,7 +132,9 @@ def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models:
     return rmds
 
 
-def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory):
+def generate_rmd_structure_from_inp(
+    inp_path_str: str, processing_dir: TemporaryDirectory
+):
     inp_path = Path(inp_path_str)
     temp_dir = processing_dir.name
 
@@ -140,7 +160,7 @@ def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory)
 
     # Generate the RMD object from the BDL file in the temporary directory
     bdl_input_reader = ModelInputReader()
-    rmd = generate_rmds_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
+    rmd = generate_rmd_structures_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
 
     return rmd
 

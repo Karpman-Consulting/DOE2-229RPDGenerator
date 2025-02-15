@@ -21,7 +21,7 @@ ctk.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme(
     "dark-blue"
 )  # Themes: "blue" (standard), "green", "dark-blue"
-ICON_SIZE = (30, 30)
+ICON_SIZE = (36, 36)
 
 
 class ComplianceParameterWindow(ctk.CTkToplevel):
@@ -29,7 +29,9 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
         super().__init__()
         self.main_app = main_app
 
-        self.title("eQUEST 229 RPD Generator")
+        self.title(
+            f"eQUEST 229 RPD Generator - {self.main_app.data.project_name.get()}"
+        )
         self.geometry(f"{1300}x{700}")
         self.minsize(1300, 350)
         self.grid_propagate(False)
@@ -184,7 +186,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             icon_image = ctk.CTkImage(light_image=white_icon, size=ICON_SIZE)
 
             # Create a frame for each button
-            button_frame = ctk.CTkFrame(self, width=144, height=36, corner_radius=0)
+            button_frame = ctk.CTkFrame(self, width=144, height=50, corner_radius=0)
             button_frame.grid(row=0, column=index, sticky="nsew")
 
             # Create the button inside the frame
@@ -194,7 +196,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
                 text=name,
                 font=("Arial", 12),
                 width=140,
-                height=30,
+                height=46,
                 corner_radius=0,
                 compound="left",
                 command=callback_methods[name],

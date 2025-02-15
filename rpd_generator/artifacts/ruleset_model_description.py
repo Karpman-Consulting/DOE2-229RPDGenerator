@@ -112,6 +112,7 @@ class RulesetModelDescription(Base):
         self.int_wall_names = []
         self.undg_wall_names = []
         self.window_names = []
+        self.skylight_names = []
         self.door_names = []
         self.circulation_loop_names = []
         self.boiler_names = []

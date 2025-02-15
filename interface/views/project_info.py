@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import filedialog
+from pathlib import Path
 
 from interface.base_view import BaseView
 
@@ -11,12 +12,6 @@ class ProjectInfoView(BaseView):
         self.ruleset_model_row_widgets = {}
 
         # Initialize Widgets
-        self.rotation_exception_checkbox = ctk.CTkCheckBox(
-            self,
-            text="Meets 90.1-2019 Table G3.1(5) Baseline Building Performance (a) Exceptions",
-            font=("Arial", 14),
-            command=self.toggle_baseline_rotations,
-        )
         self.directions_label = ctk.CTkLabel(
             self,
             text="Directions: ",
@@ -40,6 +35,15 @@ class ProjectInfoView(BaseView):
         self.note = ctk.CTkLabel(
             self, text=note_text, anchor="w", justify="left", font=("Arial", 14)
         )
+        self.project_name_label = ctk.CTkLabel(
+            self, text="Project Name: ", font=("Arial", 14, "bold"), anchor="e"
+        )
+        self.project_name_entry = ctk.CTkEntry(
+            self,
+            font=("Arial", 14),
+            textvariable=self.app_data.project_name,
+            state="readonly",
+        )
         self.ruleset_label = ctk.CTkLabel(
             self, text="Energy Code/Program:", font=("Arial", 14, "bold"), anchor="e"
         )
@@ -50,12 +54,34 @@ class ProjectInfoView(BaseView):
             command=lambda selection: self.update_ruleset_model_frame(selection),
         )
         self.ruleset_dropdown.set(self.app_data.selected_ruleset.get())
+        self.rotation_exception_checkbox = ctk.CTkCheckBox(
+            self,
+            text="Baseline Rotation Exempt? (90.1-2019 Table G3.1(5) Baseline Building Performance (a))",
+            font=("Arial", 14),
+            variable=self.app_data.has_rotation_exception,
+            command=self.toggle_baseline_rotations,
+        )
         self.ruleset_models_label = ctk.CTkLabel(
             self,
             text="Models: ",
             anchor="e",
             justify="left",
             font=("Arial", 14, "bold"),
+        )
+        self.output_dir_label = ctk.CTkLabel(
+            self, text="Output Directory:", font=("Arial", 14, "bold"), anchor="e"
+        )
+        self.output_dir_entry = ctk.CTkEntry(
+            self,
+            font=("Arial", 14),
+            width=500,
+            textvariable=self.app_data.output_directory,
+        )
+        self.output_dir_button = ctk.CTkButton(
+            self,
+            text="Select",
+            command=self.select_output_directory,
+            width=80,
         )
 
     def __repr__(self):
@@ -64,6 +90,7 @@ class ProjectInfoView(BaseView):
     def open_view(self):
         # Overwrite behavior of the continue button
         self.window.continue_button.configure(command=self.view_continue)
+
         # Update the errors and warnings button formatting
         self.update_warnings_errors()
 
@@ -72,24 +99,43 @@ class ProjectInfoView(BaseView):
 
         # Place widgets
         # Row 0
-        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
+        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=(20, 5))
         self.directions.grid(
-            row=0, column=1, columnspan=8, sticky="new", padx=5, pady=20
+            row=0, column=1, columnspan=8, sticky="new", padx=5, pady=(20, 5)
         )
+
         # Row 1
-        self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=20)
-        self.note.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=20)
+        self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=5)
+        self.note.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=5)
+
         # Row 2
-        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=5, pady=10)
-        self.ruleset_dropdown.grid(
-            row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
+        self.project_name_label.grid(row=2, column=0, sticky="e", padx=5, pady=(50, 10))
+        self.project_name_entry.grid(
+            row=2, column=1, columnspan=3, sticky="ew", padx=5, pady=(50, 10)
         )
-        # Row 3 Placeholder for the rotation exception checkbox
-        # Row 4
-        self.ruleset_models_label.grid(row=4, column=0, sticky="ew", padx=5, pady=20)
+
+        # Row 3
+        self.ruleset_label.grid(row=3, column=0, sticky="e", padx=5, pady=5)
+        self.ruleset_dropdown.grid(
+            row=3, column=1, columnspan=2, sticky="ew", padx=5, pady=5
+        )
+
+        # Row 4 Placeholder for the rotation exception checkbox
+
+        # Row 5
+        self.ruleset_models_label.grid(row=5, column=0, sticky="ew", padx=5, pady=5)
 
         self.show_ruleset_models()
-        self.ruleset_models_frame.grid(row=4, column=1, columnspan=8, sticky="nsew")
+        self.ruleset_models_frame.grid(row=5, column=1, columnspan=8, sticky="nsew")
+
+        # Row 6
+        self.output_dir_label.grid(
+            row=6, column=0, sticky="e", padx=(20, 5), pady=(15, 5)
+        )
+        self.output_dir_entry.grid(
+            row=6, column=1, columnspan=5, sticky="ew", padx=5, pady=(15, 5)
+        )
+        self.output_dir_button.grid(row=6, column=6, sticky="ew", padx=5, pady=(15, 5))
 
     def update_ruleset_model_frame(self, selected_ruleset):
         self.app_data.selected_ruleset.set(selected_ruleset)
@@ -101,7 +147,7 @@ class ProjectInfoView(BaseView):
         # Main logic
         if self.app_data.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
-                row=3, column=1, columnspan=4, sticky="w", padx=5, pady=10
+                row=4, column=1, columnspan=4, sticky="w", padx=5, pady=(15, 5)
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
             if not self.rotation_exception_checkbox.get():
@@ -124,13 +170,6 @@ class ProjectInfoView(BaseView):
             )
             select_button.grid(row=row_num, column=8, sticky="ew", padx=5, pady=5)
 
-            # Store created widgets for reuse
-            self.ruleset_model_row_widgets[label_text.split(":")[0]] = (
-                label,
-                path_entry,
-                select_button,
-            )
-
             if len(labels) == 1:
                 self.ruleset_models_frame.grid_rowconfigure(
                     0, weight=1
@@ -146,8 +185,6 @@ class ProjectInfoView(BaseView):
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
-        self.app_data.has_rotation_exception = self.rotation_exception_checkbox.get()
-
         for row_widgets in self.ruleset_model_row_widgets.values():
             if row_widgets[0].cget("text") in [
                 "Baseline 90: ",
@@ -165,8 +202,10 @@ class ProjectInfoView(BaseView):
 
     def create_file_row(self, label_text):
         """Create a row of widgets without placing them using grid()."""
-        if self.ruleset_model_row_widgets.get(label_text.split(":")[0]):
-            return self.ruleset_model_row_widgets[label_text.split(":")[0]]
+        model_text = label_text.split(":")[0]
+
+        if model_text in self.ruleset_model_row_widgets:
+            return self.ruleset_model_row_widgets[model_text]
 
         # Create label
         label = ctk.CTkLabel(
@@ -182,42 +221,21 @@ class ProjectInfoView(BaseView):
             self.ruleset_models_frame, width=700, font=("Arial", 12)
         )
         model_type = label_text.split(":")[0].replace("Design", "User")
-        # Model Type may not exist in the dictionary if the user did not select a file for it or the user changed the ruleset after selecting files
-        if model_type in self.app_data.ruleset_model_file_paths:
-            file_path = self.app_data.ruleset_model_file_paths[model_type]
-            parts = file_path.rsplit("/", 2)
-            if len(parts) > 1:
-                parent_dir = parts[-2]
-                filename = parts[-1]
-                trimmed_path = f"{parent_dir}/{filename}"
-            else:
-                trimmed_path = file_path
 
-            # Update the entry with the trimmed path
-            path_entry.insert(0, trimmed_path)
+        # Model Type may not exist in the dictionary if the user did not select a file for it or the user changed the ruleset after selecting files
+        file_path = self.app_data.ruleset_model_file_paths.get(model_type, "")
+        if file_path:
+            path_entry.insert(0, self._get_trimmed_path(file_path))
 
         # File select button
         def select_file():
-            file_path = filedialog.askopenfilename(
+            selected_path = filedialog.askopenfilename(
                 filetypes=[("eQUEST Input Files", "*.inp")]
             )
-            if file_path:
-                # Extract parent directory and filename using string parsing
-                parts = file_path.rsplit("/", 2)
-                if len(parts) > 1:
-                    parent_dir = parts[-2]
-                    filename = parts[-1]
-                    trimmed_path = f"{parent_dir}/{filename}"
-                else:
-                    trimmed_path = file_path
-
-                # Update the entry with the trimmed path
+            if selected_path:
                 path_entry.delete(0, "end")
-                path_entry.insert(0, trimmed_path)
-
-                self.app_data.ruleset_model_file_paths[
-                    label_text.split(":")[0].replace("Design", "User")
-                ] = file_path
+                path_entry.insert(0, self._get_trimmed_path(selected_path))
+                self.app_data.ruleset_model_file_paths[model_type] = selected_path
 
         select_button = ctk.CTkButton(
             self.ruleset_models_frame,
@@ -225,6 +243,13 @@ class ProjectInfoView(BaseView):
             command=select_file,
             width=80,
             height=30,
+        )
+
+        # Store created widgets for reuse
+        self.ruleset_model_row_widgets[model_text] = (
+            label,
+            path_entry,
+            select_button,
         )
 
         return label, path_entry, select_button
@@ -285,3 +310,19 @@ class ProjectInfoView(BaseView):
 
     def view_continue(self):
         self.window.show_view("Buildings")
+
+    def select_output_directory(self):
+        """Opens a directory selection dialog and updates the entry field."""
+        directory = filedialog.askdirectory()
+        if directory:
+            self.output_dir_entry.delete(0, "end")
+            self.output_dir_entry.insert(0, directory)
+            self.app_data.output_directory.set(directory)
+
+    @staticmethod
+    def _get_trimmed_path(file_path: str) -> str:
+        """Helper function to extract parent directory and filename from a file path using pathlib."""
+        path = Path(file_path)
+        if path.parent:
+            return f"{path.parent.name}/{path.name}"
+        return path.name

@@ -1,6 +1,5 @@
 import atexit
 import tempfile
-
 import customtkinter as ctk
 from pathlib import Path
 
@@ -129,11 +128,13 @@ class MainAppData:
         self.test_inp_path = ctk.StringVar()
 
         # Project data
+        self.project_name = ctk.StringVar()
         self.selected_ruleset = ctk.StringVar()
         self.selected_ruleset.set("ASHRAE 90.1-2019")
         self.has_rotation_exception = ctk.BooleanVar()
         self.is_all_new_construction = ctk.BooleanVar()
         self.ruleset_model_file_paths = {}
+        self.output_directory = ctk.StringVar()
 
         self.rmds = []
         self.warnings = []
@@ -174,7 +175,7 @@ class MainAppData:
     def generate_rmds(self):
         for ruleset_model_type, file_path in self.ruleset_model_file_paths.items():
             if file_path:
-                rmd = rpd_generator.generate_rmd_from_inp(
+                rmd = rpd_generator.generate_rmd_structure_from_inp(
                     file_path, self.processing_dir
                 )
                 rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
@@ -186,11 +187,11 @@ class MainAppData:
     def call_write_rpd_json_from_inp(self):
         rpd_generator.write_rpd_json_from_inp(str(self.test_inp_path.get()))
 
-    def is_all_new_construction(self):
-        is_all_new_construction = self.configuration_data.get("new_construction")
-        if is_all_new_construction:
-            return True
-        return False
+    def call_write_rpd_json_from_rmds(self):
+        rpd_generator.write_rpd_json_from_rmds(
+            self.rpd,
+            self.rmds,
+        )
 
     @staticmethod
     def validate_entry(arg):
