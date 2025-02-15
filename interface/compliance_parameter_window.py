@@ -95,6 +95,7 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             width=100,
             fg_color="green",
             hover_color="#006400",
+            command=self.main_app.data.call_write_rpd_json_from_rmds,
         )
 
         self.license_window = None

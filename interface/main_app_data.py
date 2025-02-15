@@ -191,6 +191,7 @@ class MainAppData:
         rpd_generator.write_rpd_json_from_rmds(
             self.rpd,
             self.rmds,
+            str(Path(self.output_directory.get()) / f"{self.project_name.get()}.json"),
         )
 
     @staticmethod
