@@ -268,7 +268,6 @@ class Chiller(BaseNode):
                 self.populate_efficiency_when_user_defined_rated_temps_dont_match_ahri(
                     performance_curve_data, output_data
                 )
-        x = 1
 
     def get_output_requests(self):
         """Get output data requests for chiller object."""

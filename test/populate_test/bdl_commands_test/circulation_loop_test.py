@@ -829,6 +829,7 @@ class TestCHWLoop(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Normalized (ARI) Entering Condenser Water Temperature (°F)": 85.0,
             "Primary Equipment (Chillers) - Capacity (Btu/hr)": 118000.0,
+            "Normalized (ARI) Leaving Chilled Water Temperature (°F)": 44.0,
         }
         self.chiller.keyword_value_pairs = {
             BDL_ChillerKeywords.TYPE: BDL_ChillerTypes.ELEC_OPEN_CENT,
@@ -840,6 +841,8 @@ class TestCHWLoop(unittest.TestCase):
             BDL_ChillerKeywords.ELEC_INPUT_RATIO: "0.16",
             BDL_ChillerKeywords.MIN_RATIO: "0.25",
             BDL_ChillerKeywords.CHW_FLOW_CTRL: BDL_FlowControlOptions.VARIABLE_FLOW,
+            BDL_ChillerKeywords.RATED_CHW_T: "44",
+            BDL_ChillerKeywords.RATED_COND_T: "85",
         }
         self.circulation_loop.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,

@@ -122,10 +122,11 @@ class TestElectricChillers(unittest.TestCase):
             "cooling_loop": "Chilled Water Loop (Primary)",
             "condensing_loop": "Condenser Water Loop",
             "design_entering_condenser_temperature": 70.0,
-            "design_leaving_evaporator_temperature": 50.0,
+            "design_leaving_evaporator_temperature": 44.0,
             "rated_entering_condenser_temperature": 85.0,
             "rated_leaving_evaporator_temperature": 44.0,
-            "rated_capacity": 0.12009233593749999,
+            "minimum_load_ratio": 0.25,
+            "rated_capacity": 0.11413995708727058,
             "design_capacity": 0.151941078125,
             "design_flow_condenser": 36.10254669189453,
             "design_flow_evaporator": 28.88204002380371,
@@ -133,8 +134,11 @@ class TestElectricChillers(unittest.TestCase):
             "is_condenser_water_pump_interlocked": False,
             "capacity_validation_points": [],
             "power_validation_points": [],
-            "part_load_efficiency": [],
-            "part_load_efficiency_metrics": [],
+            "efficiency_metric_types": [
+                "FULL_LOAD_EFFICIENCY_RATED",
+                "INTEGRATED_PART_LOAD_VALUE",
+            ],
+            "efficiency_metric_values": [6.25, 8.559346620012636],
         }
         self.assertEqual(expected_data_structure, self.chiller.chiller_data_structure)
 
@@ -237,10 +241,11 @@ class TestEngineChillers(unittest.TestCase):
             "cooling_loop": "Chilled Water Loop (Primary)",
             "condensing_loop": "Condenser Water Loop",
             "energy_source_type": "NATURAL_GAS",
-            "design_entering_condenser_temperature": 70.0,
-            "design_leaving_evaporator_temperature": 50.0,
+            "design_entering_condenser_temperature": 85.0,
+            "design_leaving_evaporator_temperature": 44.0,
             "rated_entering_condenser_temperature": 85.0,
             "rated_leaving_evaporator_temperature": 44.0,
+            "minimum_load_ratio": 0.25,
             "rated_capacity": 0.12009233593749999,
             "design_capacity": 0.151941078125,
             "design_flow_condenser": 35.50693130493164,
@@ -249,7 +254,10 @@ class TestEngineChillers(unittest.TestCase):
             "is_condenser_water_pump_interlocked": False,
             "capacity_validation_points": [],
             "power_validation_points": [],
-            "part_load_efficiency": [],
-            "part_load_efficiency_metrics": [],
+            "efficiency_metric_types": [
+                "FULL_LOAD_EFFICIENCY_RATED",
+                "INTEGRATED_PART_LOAD_VALUE",
+            ],
+            "efficiency_metric_values": [6.25, 8.009551132788362],
         }
         self.assertEqual(expected_data_structure, self.chiller.chiller_data_structure)

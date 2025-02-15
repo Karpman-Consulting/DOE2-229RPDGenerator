@@ -69,7 +69,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 10.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -117,7 +116,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 10.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -167,7 +165,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 10.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -213,7 +210,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 1.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -260,7 +256,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 0.8,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -307,7 +302,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 1.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -354,7 +348,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 65.0,
-            "thermal_efficiency": 0.8,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -402,7 +395,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 0.8333333333333334,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure
@@ -455,7 +447,6 @@ class TestDomesticWaterHeater(unittest.TestCase):
             "distribution_system": "Loop 1",
             "rated_capacity": 123.456789,
             "setpoint_temperature": 70.2,
-            "thermal_efficiency": 2.0,
         }
         self.assertEqual(
             expected_data_structure, self.domestic_water_heater.data_structure

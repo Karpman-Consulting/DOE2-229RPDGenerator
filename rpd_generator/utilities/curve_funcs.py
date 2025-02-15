@@ -118,38 +118,6 @@ def calculate_results_of_performance_curves(
     return results
 
 
-def execute_calculations(
-    performance_curve_data,
-    data_starting_condition,
-    data_new_condition,
-    eff_f_plr_curve_type,
-    load_percent,
-):
-    # Calculate with "user defined" variables
-    user_defined_results = calculate_results_of_performance_curves(
-        performance_curve_data,
-        data_starting_condition["evap_leaving_temp"],
-        data_starting_condition["condenser_entering_temp"],
-        eff_f_plr_curve_type,
-        load_percent,
-    )
-
-    # Calculate with "rated" variables
-    rated_results = calculate_results_of_performance_curves(
-        performance_curve_data,
-        data_new_condition["evap_leaving_temp"],
-        data_new_condition["condenser_entering_temp"],
-        eff_f_plr_curve_type,
-        load_percent,
-    )
-
-    # Return a dictionary of all results
-    return {
-        "user_defined_results": user_defined_results,
-        "rated_results": rated_results,
-    }
-
-
 def are_curve_outputs_all_equal_to_a_value_of_one(
     performance_curve_data: dict,
     evap_leaving_temp: float,

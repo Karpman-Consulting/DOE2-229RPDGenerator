@@ -225,6 +225,7 @@ class TestPumps(unittest.TestCase):
         mock_get_output_data.return_value = {
             "Normalized (ARI) Entering Condenser Water Temperature (°F)": 70.0,
             "Primary Equipment (Chillers) - Capacity (Btu/hr)": 120092.3359375,
+            "Normalized (ARI) Leaving Chilled Water Temperature (°F)": 44.0,
         }
         self.chiller = Chiller("Chiller 1", self.rmd)
         self.f_t = CurveFit("fT Curve", self.rmd)
@@ -243,6 +244,8 @@ class TestPumps(unittest.TestCase):
             BDL_ChillerKeywords.CAPACITY_FT: "CAP-fT Curve",
             BDL_ChillerKeywords.ELEC_INPUT_RATIO: "0.16",
             BDL_ChillerKeywords.MIN_RATIO: "0.25",
+            BDL_ChillerKeywords.RATED_CHW_T: "44.0",
+            BDL_ChillerKeywords.RATED_COND_T: "95.0",
         }
         self.loop_chw.keyword_value_pairs = {
             BDL_CirculationLoopKeywords.TYPE: BDL_CirculationLoopTypes.CHW,
