@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import interface.custom_widgets as cw
 
 from interface.ctk_xyframe import CTkXYFrame
 from interface.base_view import BaseView
@@ -132,13 +133,6 @@ class SystemsView(BaseView):
                     font=("Arial", 11, "bold"),
                 )
 
-    @staticmethod
-    def validate_entry(arg):
-        if str.isdigit(arg) or arg == "":
-            return True
-        else:
-            return False
-
 
 class HeatRejectionView(CTkXYFrame):
     def __init__(self, subview_frame):
@@ -190,7 +184,6 @@ class HVACSystemView(ctk.CTkFrame):
         self.systems_view = subview_frame.master
         self.main_app_data = self.systems_view.window.main_app.data
         self.is_subview_populated = False
-        self.validate_command = self.register(self.systems_view.validate_entry)
 
     def __repr__(self):
         return "HVACSystemView"
@@ -246,13 +239,12 @@ class HVACSystemView(ctk.CTkFrame):
         dehumidification_type_combo.grid(row=(i + 1), column=2, padx=PAD20, pady=PAD20)
         ducted_supply_checkbox = ctk.CTkCheckBox(self, text="", width=30)
         ducted_supply_checkbox.grid(row=(i + 1), column=3, padx=PAD20, pady=PAD20)
-        air_filter_merv_rating_input = ctk.CTkEntry(
-            self,
-            width=125,
-            validate="all",
-            validatecommand=(self.validate_command, "%arg"),
+        air_filter_merv_rating_spinbox = cw.IntSpinbox(
+            self, width=125, minimum_value=1, maximum_value=16, default_value=8
         )
-        air_filter_merv_rating_input.grid(row=(i + 1), column=4, padx=PAD20, pady=PAD20)
+        air_filter_merv_rating_spinbox.grid(
+            row=(i + 1), column=4, padx=PAD20, pady=PAD20
+        )
 
 
 class ZonalExhaustView(ctk.CTkFrame):

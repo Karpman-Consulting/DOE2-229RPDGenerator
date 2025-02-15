@@ -6,6 +6,9 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 ComponentLocationOptions = SchemaEnums.schema_enums["ComponentLocationOptions"]
 StatusOptions = SchemaEnums.schema_enums["StatusOptions"]
+ServiceWaterHeatingEfficiencyMetricOptions = SchemaEnums.schema_enums[
+    "ServiceWaterHeatingEfficiencyMetricOptions"
+]
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
 BDL_DWHeaterKeywords = BDLEnums.bdl_enums["DomesticWaterHeaterKeywords"]
 BDL_DWHeaterTypes = BDLEnums.bdl_enums["DomesticWaterHeaterTypes"]
@@ -42,10 +45,9 @@ class DomesticWaterHeater(BaseNode):
         # data elements with no children
         self.heater_fuel_type = None
         self.distribution_system = None
-        self.energy_factor = None
-        self.thermal_efficiency = None
-        self.standby_loss_fraction = None
-        self.uniform_energy_factor = None
+        self.efficiency_metric_types = []
+        self.efficiency_metric_values = []
+        self.draw_pattern = None
         self.first_hour_rating = None
         self.input_power = None
         self.rated_capacity = None
@@ -132,12 +134,21 @@ class DomesticWaterHeater(BaseNode):
             self.get_inp(BDL_DWHeaterKeywords.LOCATION)
         )
         self.location_zone = self.get_inp(BDL_DWHeaterKeywords.ZONE_NAME)
-        self.thermal_efficiency = 1 / (
-            (self.try_float(self.get_inp(BDL_DWHeaterKeywords.HEAT_INPUT_RATIO)) or 1.0)
-            * (
-                self.try_float(self.get_inp(BDL_DWHeaterKeywords.ELEC_INPUT_RATIO))
-                or 1.0
+        self.efficiency_metric_values.append(
+            1
+            / (
+                (
+                    self.try_float(self.get_inp(BDL_DWHeaterKeywords.HEAT_INPUT_RATIO))
+                    or 1.0
+                )
+                * (
+                    self.try_float(self.get_inp(BDL_DWHeaterKeywords.ELEC_INPUT_RATIO))
+                    or 1.0
+                )
             )
+        )
+        self.efficiency_metric_types.append(
+            ServiceWaterHeatingEfficiencyMetricOptions.THERMAL_EFFICIENCY
         )
 
     def get_output_requests(self):
@@ -199,10 +210,8 @@ class DomesticWaterHeater(BaseNode):
             "notes",
             "heater_fuel_type",
             "distribution_system",
-            "energy_factor",
-            "thermal_efficiency",
-            "standby_loss_fraction",
-            "uniform_energy_factor",
+            "efficiency_metric_types",
+            "efficiency_metric_values",
             "first_hour_rating",
             "input_power",
             "rated_capacity",
