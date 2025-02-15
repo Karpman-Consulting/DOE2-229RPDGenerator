@@ -2,6 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 from tkinter import Menu
 
+from interface.views.spaces import SpacesView
 from interface.views.test import TestView
 from interface.views.project_info import ProjectInfoView
 from interface.views.buildings import BuildingsView
@@ -9,7 +10,8 @@ from interface.views.building_areas import BuildingAreasView
 from interface.views.zones import ZonesView
 from interface.views.surfaces import SurfacesView
 from interface.views.systems import SystemsView
-from interface.views.ext_lighting import ExteriorLightingView
+
+# from interface.views.ext_lighting import ExteriorLightingView
 from interface.views.miscellaneous import MiscellaneousView
 from interface.views.results import ResultsView
 from interface.disclaimer_window import DisclaimerWindow
@@ -46,9 +48,10 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings": BuildingsView(self),
             "Building Areas": BuildingAreasView(self),
             "Zones": ZonesView(self),
+            "Spaces": SpacesView(self),
             "Surfaces": SurfacesView(self),
             "Systems": SystemsView(self),
-            "Ext. Lighting": ExteriorLightingView(self),
+            # "Ext. Lighting": ExteriorLightingView(self),
             "Misc.": MiscellaneousView(self),
             "Results": ResultsView(self),
         }
@@ -131,9 +134,10 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings",
             "Building Areas",
             "Zones",
+            "Spaces",
             "Surfaces",
             "Systems",
-            "Ext. Lighting",
+            # "Ext. Lighting",
             "Misc.",
             "Results",
         ]
@@ -143,10 +147,11 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "menu.png",
             "buildings.png",
             "building_areas.png",
+            "square.png",
             "spaces.png",
             "surfaces.png",
             "systems.png",
-            "ext_lighting.png",
+            # "ext_lighting.png",
             "misc.png",
             "results.png",
         ]
@@ -155,9 +160,10 @@ class ComplianceParameterWindow(ctk.CTkToplevel):
             "Buildings": lambda: self.show_view("Buildings"),
             "Building Areas": lambda: self.show_view("Building Areas"),
             "Zones": lambda: self.show_view("Zones"),
+            "Spaces": lambda: self.show_view("Spaces"),
             "Surfaces": lambda: self.show_view("Surfaces"),
             "Systems": lambda: self.show_view("Systems"),
-            "Ext. Lighting": lambda: self.show_view("Ext. Lighting"),
+            # "Ext. Lighting": lambda: self.show_view("Ext. Lighting"),
             "Misc.": lambda: self.show_view("Misc."),
             "Results": lambda: self.show_view("Results"),
         }
