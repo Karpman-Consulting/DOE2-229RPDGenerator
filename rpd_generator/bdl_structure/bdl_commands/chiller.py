@@ -166,16 +166,16 @@ class Chiller(BaseNode):
             if hw_loop:
                 self.energy_source_type = self.get_loop_energy_source(hw_loop)
 
-        if self.try_float(self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))):
-            self.design_leaving_evaporator_temperature = self.try_float(
-                self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))
+        chw_loop = self.get_obj(self.cooling_loop)
+
+        self.design_leaving_evaporator_temperature = (
+            self.try_float(self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T))
+            if self.get_inp(BDL_ChillerKeywords.DESIGN_CHW_T)
+            else self.try_float(
+                chw_loop.get_inp(BDL_CirculationLoopKeywords.DESIGN_COOL_T)
             )
-        else:
-            self.design_leaving_evaporator_temperature = self.try_float(
-                output_data.get(
-                    "Normalized (ARI) Leaving Chilled Water Temperature (°F)"
-                )
-            )
+        )
+
         # This says ARI but appears to report out the design condenser water temperature
         if self.try_float(
             self.get_obj(self.get_inp(BDL_ChillerKeywords.DESIGN_COND_T))
