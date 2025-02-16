@@ -144,7 +144,7 @@ class HeatRejectionView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.systems_view = subview_frame.master
-        self.main_app_data = self.systems_view.window.main_app.data
+        self.app_data = self.systems_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -156,7 +156,7 @@ class HeatRejectionView(CTkXYFrame):
 
     def populate_subview(self):
         for i, heat_rejection_name in enumerate(
-            self.main_app_data.rmds[0].heat_rejection_names
+            self.app_data.rmds[0].heat_rejection_names
         ):
             self.add_row(i, heat_rejection_name)
 
@@ -184,7 +184,7 @@ class HVACSystemView(ctk.CTkFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.systems_view = subview_frame.master
-        self.main_app_data = self.systems_view.window.main_app.data
+        self.app_data = self.systems_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -197,7 +197,7 @@ class HVACSystemView(ctk.CTkFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, hvac_system_name in enumerate(self.main_app_data.rmds[0].system_names):
+        for i, hvac_system_name in enumerate(self.app_data.rmds[0].system_names):
             self.add_row(i, hvac_system_name)
 
         self.is_subview_populated = True
@@ -205,7 +205,7 @@ class HVACSystemView(ctk.CTkFrame):
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=ARIAL_16_BOLD)
         name_label.grid(row=0, column=0, padx=PAD20, pady=5)
-        if not self.main_app_data.is_all_new_construction:
+        if not self.app_data.is_all_new_construction:
             status_label = ctk.CTkLabel(self, text="Status", font=ARIAL_16_BOLD)
             status_label.grid(row=0, column=1, padx=PAD20, pady=5)
         dehumidification_type_label = ctk.CTkLabel(
@@ -224,17 +224,17 @@ class HVACSystemView(ctk.CTkFrame):
     def add_row(self, i, hvac_system_name):
         system_label = ctk.CTkLabel(self, text=f"{hvac_system_name}")
         system_label.grid(row=(i + 1), column=0, padx=PAD20, pady=PAD20, sticky=W)
-        if not self.main_app_data.is_all_new_construction:
+        if not self.app_data.is_all_new_construction:
             status_combo = ctk.CTkComboBox(
                 self,
-                values=self.main_app_data.StatusDescriptions.get_list(),
+                values=self.app_data.StatusDescriptions,
                 state=READONLY,
             )
             status_combo._entry.configure(justify=LEFT)
             status_combo.grid(row=(i + 1), column=1, padx=PAD20, pady=PAD20)
         dehumidification_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.DehumidificationDescriptions.get_list(),
+            values=self.app_data.DehumidificationDescriptions,
             state=READONLY,
         )
         dehumidification_type_combo._entry.configure(justify=LEFT)
@@ -253,7 +253,7 @@ class ZonalExhaustView(ctk.CTkFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.systems_view = subview_frame.master
-        self.main_app_data = self.systems_view.window.main_app.data
+        self.app_data = self.systems_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -276,8 +276,8 @@ class ZonalExhaustView(ctk.CTkFrame):
     def get_zonal_exhaust_fans(self):
         # TODO: Review this approach..may be tough once we are trying to set data back to the rmds
         zonal_exhaust_fans = []
-        for zone_name in self.main_app_data.rmds[0].zone_names:
-            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+        for zone_name in self.app_data.rmds[0].zone_names:
+            zone_obj = self.app_data.rmds[0].get_obj(zone_name)
             if zone_obj.zonal_exhaust_fan:
                 zonal_exhaust_fans.append(zone_obj.zonal_exhaust_fan)
         return zonal_exhaust_fans
@@ -295,7 +295,7 @@ class ZonalExhaustView(ctk.CTkFrame):
         )
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)

@@ -10,105 +10,9 @@ from rpd_generator.schema.schema_enums import SchemaEnums
 
 
 class MainAppData:
-    SubsurfaceClassificationOptions = SchemaEnums.schema_enums[
-        "SubsurfaceClassificationOptions"
-    ]
-    CommonConstructionClassificationDescriptions = SchemaEnums.schema_descriptions[
-        "CommonConstructionClassificationOptions"
-    ]
-    CommonRulesetModelDescriptions = SchemaEnums.schema_descriptions[
-        "CommonRulesetModelOptions"
-    ]
-    ComponentLocationDescriptions = SchemaEnums.schema_descriptions[
-        "ComponentLocationOptions"
-    ]
-    CoolingDesignDayDescriptions = SchemaEnums.schema_descriptions[
-        "CoolingDesignDayOptions"
-    ]
-    DehumidificationDescriptions = SchemaEnums.schema_descriptions[
-        "DehumidificationOptions"
-    ]
-    DrawPatternDescriptions = SchemaEnums.schema_descriptions["DrawPatternOptions"]
-    HeatRejectionFanDescriptions = SchemaEnums.schema_descriptions[
-        "HeatRejectionFanOptions"
-    ]
-    HeatingDesignDayDescriptions = SchemaEnums.schema_descriptions[
-        "HeatingDesignDayOptions"
-    ]
-    MiscellaneousEquipmentDescriptions = SchemaEnums.schema_descriptions[
-        "MiscellaneousEquipmentOptions"
-    ]
-    SpaceFunctionDescriptions = SchemaEnums.schema_descriptions["SpaceFunctionOptions"]
-    StatusDescriptions = SchemaEnums.schema_descriptions["StatusOptions"]
-    WeatherFileDataSourceDescriptions = SchemaEnums.schema_descriptions[
-        "WeatherFileDataSourceOptions"
-    ]
-    ClimateZoneDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "ClimateZoneOptions2019ASHRAE901"
-    ]
-    CompliancePathDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "CompliancePathOptions2019ASHRAE901"
-    ]
-    ConstructionClassificationDescriptions2019ASHRAE901 = (
-        SchemaEnums.schema_descriptions[
-            "ConstructionClassificationOptions2019ASHRAE901"
-        ]
-    )
-    EnvelopeSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "EnvelopeSpaceOptions2019ASHRAE901"
-    ]
-    ExteriorLightingZoneDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "ExteriorLightingZoneOptions2019ASHRAE901"
-    ]
-    HeatingVentilatingAirConditioningBuildingAreaDescriptions2019ASHRAE901 = (
-        SchemaEnums.schema_descriptions[
-            "HeatingVentilatingAirConditioningBuildingAreaOptions2019ASHRAE901"
-        ]
-    )
-    LightingBuildingAreaDescriptions2019ASHRAE901T951TG38 = (
-        SchemaEnums.schema_descriptions[
-            "LightingBuildingAreaOptions2019ASHRAE901T951TG38"
-        ]
-    )
-    LightingPurposeDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "LightingPurposeOptions2019ASHRAE901"
-    ]
-    LightingSpaceDescriptions2019ASHRAE901TG37 = SchemaEnums.schema_descriptions[
-        "LightingSpaceOptions2019ASHRAE901TG37"
-    ]
-    LightingOccupancyControlOptions = SchemaEnums.schema_descriptions[
-        "LightingOccupancyControlOptions"
-    ]
-    LightingDaylightingControlOptions = SchemaEnums.schema_descriptions[
-        "LightingDaylightingControlOptions"
-    ]
-    OutputSchemaDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "OutputSchemaOptions2019ASHRAE901"
-    ]
-    RulesetModelDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "RulesetModelOptions2019ASHRAE901"
-    ]
-    ServiceWaterHeatingSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "ServiceWaterHeatingSpaceOptions2019ASHRAE901"
-    ]
-    SubsurfaceFrameDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "SubsurfaceFrameOptions2019ASHRAE901"
-    ]
-    SubsurfaceSubclassificationDescriptions2019ASHRAE901 = (
-        SchemaEnums.schema_descriptions[
-            "SubsurfaceSubclassificationOptions2019ASHRAE901"
-        ]
-    )
-    VentilationSpaceDescriptions2019ASHRAE901 = SchemaEnums.schema_descriptions[
-        "VentilationSpaceOptions2019ASHRAE901"
-    ]
-    VerticalFenestrationBuildingAreaDescriptions2019ASHRAE901 = (
-        SchemaEnums.schema_descriptions[
-            "VerticalFenestrationBuildingAreaOptions2019ASHRAE901"
-        ]
-    )
 
     def __init__(self):
+        self.set_enumeration_data()
         self.processing_dir = tempfile.TemporaryDirectory()
         atexit.register(self.processing_dir.cleanup)
 
@@ -188,6 +92,50 @@ class MainAppData:
             self.rmds,
             str(Path(self.output_directory.get()) / f"{self.project_name.get()}.json"),
         )
+
+    def set_enumeration_data(self):
+        enumerators = [
+            "SubsurfaceClassificationOptions",
+            "CommonConstructionClassificationOptions",
+            "CommonRulesetModelOptions",
+            "ComponentLocationOptions",
+            "CoolingDesignDayOptions",
+            "DehumidificationOptions",
+            "DrawPatternOptions",
+            "HeatRejectionFanOptions",
+            "HeatingDesignDayOptions",
+            "MiscellaneousEquipmentOptions",
+            "SpaceFunctionOptions",
+            "StatusOptions",
+            "WeatherFileDataSourceOptions",
+            "ClimateZoneOptions2019ASHRAE901",
+            "CompliancePathOptions2019ASHRAE901",
+            "ConstructionClassificationOptions2019ASHRAE901",
+            "EnvelopeSpaceOptions2019ASHRAE901",
+            "ExteriorLightingZoneOptions2019ASHRAE901",
+            "HeatingVentilatingAirConditioningBuildingAreaOptions2019ASHRAE901",
+            "LightingBuildingAreaOptions2019ASHRAE901T951TG38",
+            "LightingPurposeOptions2019ASHRAE901",
+            "LightingSpaceOptions2019ASHRAE901TG37",
+            "LightingOccupancyControlOptions",
+            "LightingDaylightingControlOptions",
+            "OutputSchemaOptions2019ASHRAE901",
+            "RulesetModelOptions2019ASHRAE901",
+            "ServiceWaterHeatingSpaceOptions2019ASHRAE901",
+            "SubsurfaceFrameOptions2019ASHRAE901",
+            "SubsurfaceSubclassificationOptions2019ASHRAE901",
+            "VentilationSpaceOptions2019ASHRAE901",
+            "VerticalFenestrationBuildingAreaOptions2019ASHRAE901",
+        ]
+        for enumerator in enumerators:
+            schema_enums = SchemaEnums.schema_enums[enumerator]
+            schema_descriptions = SchemaEnums.schema_descriptions[enumerator]
+            setattr(self, enumerator, schema_enums.get_list())
+            setattr(
+                self,
+                f"{enumerator.replace('Options', 'Descriptions')}",
+                schema_descriptions.get_list(),
+            )
 
     @staticmethod
     def validate_entry(arg):
