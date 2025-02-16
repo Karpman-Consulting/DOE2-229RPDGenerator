@@ -192,12 +192,15 @@ class RulesetModelDescription(Base):
         self.output_instance_building_peak_cooling_load = None
         self.output_instance_annual_end_use_results = []
 
-    def populate_all_child_data_elements(self):
+    def populate_all_child_data_elements(self, testing=False):
         sorted_commands = self.sort_commands()
         for obj_instance in sorted_commands:
-            if isinstance(
-                obj_instance, (BaseNode, RulesetModelDescription, BaseDefinition)
-            ):
+            instance_filter = (
+                (BaseNode, BaseDefinition)
+                if testing
+                else (BaseNode, RulesetModelDescription, BaseDefinition)
+            )
+            if isinstance(obj_instance, instance_filter):
                 obj_instance.populate_data_elements()
 
     def populate_all_data_groups(self):
@@ -219,7 +222,7 @@ class RulesetModelDescription(Base):
                 obj_instance.insert_to_rpd()
 
     def populate_rmd_data(self, testing=False):
-        self.populate_all_child_data_elements()
+        self.populate_all_child_data_elements(testing)
         self.populate_all_data_groups()
 
         if not testing:

@@ -348,7 +348,7 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-        self.circulation_loop_2.insert_to_rpd(self.rmd)
+        self.circulation_loop_2.insert_to_rpd()
         expected_data_structure = {
             "id": "Circulation Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -700,7 +700,7 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-        circulation_loop_2.insert_to_rpd(self.rmd)
+        circulation_loop_2.insert_to_rpd()
         expected_data_structure = {
             "id": "Circulation Loop 1",
             "design_supply_temperature": 160.0,
