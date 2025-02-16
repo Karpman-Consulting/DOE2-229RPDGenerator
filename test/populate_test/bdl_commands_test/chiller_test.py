@@ -43,12 +43,12 @@ class TestElectricChillers(unittest.TestCase):
         }
         self.f_t.keyword_value_pairs = {
             BDL_CurveFitKeywords.COEF: [
-                "-0.38924539",
-                "-0.02195141",
-                "-0.00027343",
-                "0.04974775",
-                "-0.00053441",
-                "0.00067295",
+                "1.42868233",
+                "-0.08227751",
+                "0.00030243",
+                "0.03622194",
+                "-0.00029211",
+                "0.00043788",
             ],
             BDL_CurveFitKeywords.TYPE: "BI-QUADRATIC-T",
             BDL_CurveFitKeywords.INPUT_TYPE: "COEFFICIENTS",
@@ -138,7 +138,7 @@ class TestElectricChillers(unittest.TestCase):
                 "FULL_LOAD_EFFICIENCY_RATED",
                 "INTEGRATED_PART_LOAD_VALUE",
             ],
-            "efficiency_metric_values": [6.25, 8.559346620012636],
+            "efficiency_metric_values": [6.25, 10.801636635546025],
         }
         self.assertEqual(expected_data_structure, self.chiller.chiller_data_structure)
 
