@@ -4,6 +4,9 @@ from pathlib import Path
 
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
 
 
 class ProjectConfigWindow(ctk.CTkToplevel):
@@ -353,7 +356,10 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         # If there are no errors, generate RMDs and open the Main Application Window
         if len(self.main_app.data.errors) == 0:
-            self.main_app.data.generate_rmds()
+            self.main_app.data.rpd = RulesetProjectDescription(
+                self.main_app.data.project_name.get()
+            )
+            self.main_app.data.generate_rmd_data(self.main_app.data.rpd)
             self.main_app.project_config_complete()
 
         else:

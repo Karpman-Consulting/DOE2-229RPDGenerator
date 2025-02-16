@@ -2,6 +2,9 @@ import unittest
 from unittest.mock import patch
 
 from rpd_generator.config import Config
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.floor import Floor
 from rpd_generator.bdl_structure.bdl_commands.construction import Construction
@@ -18,7 +21,9 @@ class TestWindows(unittest.TestCase):
     @patch("rpd_generator.bdl_structure.bdl_commands.space.Space")
     def setUp(self, MockSpace):
         self.maxDiff = None
-        self.rmd = RulesetModelDescription("Test RMD")
+
+        self.rpd = RulesetProjectDescription("Test RPD")
+        self.rmd = RulesetModelDescription("Test RMD", self.rpd)
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.floor = Floor("Floor 1", self.rmd)

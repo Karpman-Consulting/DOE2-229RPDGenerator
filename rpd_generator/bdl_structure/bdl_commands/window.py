@@ -215,7 +215,7 @@ class Window(ChildNode):
             if value is not None:
                 self.window_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
         surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.window_data_structure)

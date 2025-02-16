@@ -47,9 +47,8 @@ from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescri
 class TestZones(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        self.rpd = RulesetProjectDescription()
-        self.rmd = RulesetModelDescription("Test RMD")
-        self.rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
+        self.rpd = RulesetProjectDescription("Test RPD")
+        self.rmd = RulesetModelDescription("Test RMD", self.rpd)
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.run_period = RunPeriod("Run Period 1", self.rmd)

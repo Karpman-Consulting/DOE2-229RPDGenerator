@@ -1095,7 +1095,7 @@ class Zone(ChildNode):
 
         return requests
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert zone object into the rpd data structure."""
         self.parent_building_segment.zones.append(self.zone_data_structure)
 

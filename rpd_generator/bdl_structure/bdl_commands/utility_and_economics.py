@@ -144,8 +144,8 @@ class SteamMeter(BaseNode):
             if value is not None:
                 self.data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
-        rmd.external_fluid_sources.append(self.data_structure)
+    def insert_to_rpd(self):
+        self.rmd.external_fluid_sources.append(self.data_structure)
 
 
 class CHWMeter(BaseNode):

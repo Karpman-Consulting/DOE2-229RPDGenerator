@@ -297,6 +297,6 @@ class Schedule(BaseNode):
             if value is not None:
                 self.schedule_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
-        rmd.schedules.append(self.schedule_data_structure)
+        self.rmd.schedules.append(self.schedule_data_structure)

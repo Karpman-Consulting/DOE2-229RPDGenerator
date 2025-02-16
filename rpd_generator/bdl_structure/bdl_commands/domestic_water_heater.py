@@ -235,6 +235,6 @@ class DomesticWaterHeater(BaseNode):
             if value is not None:
                 self.data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
-        rmd.service_water_heating_equipment.append(self.data_structure)
+        self.rmd.service_water_heating_equipment.append(self.data_structure)

@@ -1,15 +1,12 @@
-from rpd_generator.bdl_structure.base_definition import BaseDefinition
-
-
-class Building(BaseDefinition):
+class Building:
     """
     This class is used to describe a building. The building object is created once per project by default, but user can
     add/delete Buildings and assign DOE-2 FLOORs (eQUEST Shells) to them through the eQUEST 229RPDGenerator App UI.
     """
 
     def __init__(self, u_name, rmd):
-        super().__init__(u_name, rmd)
-
+        self.rmd = rmd
+        self.u_name = u_name
         self.building_data_structure = {}
 
         # data elements with children
@@ -51,6 +48,6 @@ class Building(BaseDefinition):
             if value is not None:
                 self.building_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert building object into the rpd data structure."""
-        rmd.buildings.append(self.building_data_structure)
+        self.rmd.buildings.append(self.building_data_structure)

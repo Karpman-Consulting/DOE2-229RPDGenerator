@@ -153,7 +153,7 @@ class Space(ChildNode, ParentNode):
             if value is not None:
                 self.space_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert space object into the rpd data structure."""
         # find the zone that has the "SPACE" attribute value equal to the space object's u_name
         self.zone.spaces.append(self.space_data_structure)

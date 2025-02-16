@@ -8,19 +8,12 @@ class RulesetProjectDescription:
     This class is used to represent the RulesetProjectDescription object in the 229 schema. It also stores additional project-level data.
     """
 
-    # BDL Command Dictionary maps BDL commands to their corresponding class in the bdl_commands package
-    bdl_command_dict = None
-
-    def __init__(self):
-
+    def __init__(self, project_name):
+        self.project_name = project_name
         self.rpd_data_structure = {}
 
         # data elements with children
         self.ruleset_model_descriptions = []
-        self.calendar = {
-            "is_leap_year": False,  # even if the year is a leap year, eQUEST skips Feb 29
-        }
-        self.weather = {}
         self.ground_temperature_schedule = None
         self.file_name = None
         self.data_source_type = None
@@ -41,10 +34,8 @@ class RulesetProjectDescription:
         Populate the RPD data group (only data elements directly under the RPD Data Group)
         """
         self.rpd_data_structure = {
-            "id": "ASHRAE 229",
+            "id": f"{self.project_name}",
             "ruleset_model_descriptions": self.ruleset_model_descriptions,
-            "calendar": self.calendar,
-            "weather": self.weather,
         }
 
         no_children_attributes = [

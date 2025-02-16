@@ -15,13 +15,13 @@ def _get_bdl_commands_for_rpd() -> dict:
     for _, name, _ in pkgutil.iter_modules(bdl_commands.__path__, prefix):
         module = importlib.import_module(name)
         # iterate through the classes in each module
-        for _, obj in inspect.getmembers(module, inspect.isclass):
+        for _, cls in inspect.getmembers(module, inspect.isclass):
             # if the class is a subclass of BaseNode or BaseDefinition
-            if issubclass(obj, (BaseNode, BaseDefinition)):
+            if issubclass(cls, (BaseNode, BaseDefinition)):
                 # get the bdl_command attribute
-                bdl_command = getattr(obj, "bdl_command", None)
+                bdl_command = getattr(cls, "bdl_command", None)
                 # insert the bdl_command and class object into the dictionary to facilitate instantiation
-                commands_dict[bdl_command] = obj
+                commands_dict[bdl_command] = cls
     return commands_dict
 
 

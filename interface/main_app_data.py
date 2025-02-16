@@ -4,9 +4,6 @@ import customtkinter as ctk
 from pathlib import Path
 
 from rpd_generator import main as rpd_generator
-from rpd_generator.artifacts.ruleset_project_description import (
-    RulesetProjectDescription,
-)
 from rpd_generator.doe2_file_readers.model_input_reader import ModelInputReader
 from rpd_generator.config import Config
 from rpd_generator.schema.schema_enums import SchemaEnums
@@ -116,8 +113,7 @@ class MainAppData:
         atexit.register(self.processing_dir.cleanup)
 
         self.bdl_reader = ModelInputReader()
-        RulesetProjectDescription.bdl_command_dict = self.bdl_reader.bdl_command_dict
-        self.rpd = RulesetProjectDescription()
+        self.rpd = None
 
         # Config data
         self.installation_path = ctk.StringVar()
@@ -172,15 +168,14 @@ class MainAppData:
 
         return True
 
-    def generate_rmds(self):
+    def generate_rmd_data(self, rpd):
         for ruleset_model_type, file_path in self.ruleset_model_file_paths.items():
             if file_path:
                 rmd = rpd_generator.generate_rmd_structure_from_inp(
-                    file_path, self.processing_dir
+                    rpd, file_path, self.processing_dir
                 )
-                rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
 
-                rmd.populate_rmd_data()
+                rmd.populate_all_child_data_elements()
                 rmd.type = ruleset_model_type
                 self.rmds.append(rmd)
 
@@ -188,7 +183,7 @@ class MainAppData:
         rpd_generator.write_rpd_json_from_inp(str(self.test_inp_path.get()))
 
     def call_write_rpd_json_from_rmds(self):
-        rpd_generator.write_rpd_json_from_rmds(
+        rpd_generator.write_rpd_json_from_rpd(
             self.rpd,
             self.rmds,
             str(Path(self.output_directory.get()) / f"{self.project_name.get()}.json"),

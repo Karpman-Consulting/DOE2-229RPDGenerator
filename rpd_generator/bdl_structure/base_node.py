@@ -133,7 +133,7 @@ class BaseNode(Base):
         """This method will be overridden by each child class"""
         return None
 
-    def insert_to_rpd(self, container):
+    def insert_to_rpd(self):
         """This method will be overridden by each child class"""
         return None
 

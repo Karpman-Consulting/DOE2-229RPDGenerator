@@ -303,10 +303,10 @@ class ProjectInfoView(BaseView):
 
         self.update_warnings_errors()
         # If there are no errors, reload the model files and refresh the GUI data
-        self.reload_model_files()
+        # self.reload_model_files()
 
-    def reload_model_files(self):
-        self.app_data.generate_rmds()
+    # def reload_model_files(self):
+    #     self.app_data.generate_rmds()
 
     def view_continue(self):
         self.window.show_view("Buildings")
