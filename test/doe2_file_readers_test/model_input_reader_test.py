@@ -1,8 +1,6 @@
 import unittest
 from pathlib import Path
-from rpd_generator.artifacts.ruleset_project_description import (
-    RulesetProjectDescription,
-)
+
 from rpd_generator.doe2_file_readers.model_input_reader import ModelInputReader
 
 
@@ -11,9 +9,6 @@ class TestModelInputReader(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         self.model_input_reader = ModelInputReader()
-        RulesetProjectDescription.bdl_command_dict = (
-            self.model_input_reader.bdl_command_dict
-        )
 
         self.test_file = str(
             Path(__file__).parents[2]

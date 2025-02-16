@@ -926,7 +926,7 @@ class System(ParentNode):
                 }
             )
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert system data structure into the rpd data structure."""
         if self.omit:
             return

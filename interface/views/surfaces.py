@@ -77,23 +77,27 @@ class SurfacesView(BaseView):
         self.subview_frame.grid_rowconfigure(0, weight=1)
         self.subview_frame.grid_columnconfigure(0, weight=1)
 
+        if self.subview_buttons:
+            # Open the first subview available
+            self.show_subview(next(iter(self.subview_buttons)))
+
     def create_subbutton_bar(self):
         callback_methods = {}
-        if not self.window.main_app.data.is_all_new_construction():
-            callback_methods.update(
-                {
-                    "Exterior": lambda: self.show_subview("Exterior"),
-                    "Interior": lambda: self.show_subview("Interior"),
-                    "Underground": lambda: self.show_subview("Underground"),
-                }
-            )
-        callback_methods.update(
-            {
-                "Windows": lambda: self.show_subview("Windows"),
-                "Skylights": lambda: self.show_subview("Skylights"),
-                "Doors": lambda: self.show_subview("Doors"),
-            }
-        )
+        if not self.app_data.is_all_new_construction:
+            if len(self.app_data.rmds[0].ext_wall_names) > 0:
+                callback_methods["Exterior"] = lambda: self.show_subview("Exterior")
+            if len(self.app_data.rmds[0].int_wall_names) > 0:
+                callback_methods["Interior"] = lambda: self.show_subview("Interior")
+            if len(self.app_data.rmds[0].undg_wall_names) > 0:
+                callback_methods["Underground"] = lambda: self.show_subview(
+                    "Underground"
+                )
+        if len(self.app_data.rmds[0].door_names) > 0:
+            callback_methods["Doors"] = lambda: self.show_subview("Doors")
+        if len(self.app_data.rmds[0].window_names) > 0:
+            callback_methods["Windows"] = lambda: self.show_subview("Windows")
+        if len(self.app_data.rmds[0].skylight_names) > 0:
+            callback_methods["Skylights"] = lambda: self.show_subview("Skylights")
 
         for index, name in enumerate(callback_methods):
             # Create the button to go inside this button frame
@@ -143,7 +147,7 @@ class ExteriorSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -156,7 +160,7 @@ class ExteriorSurfaceView(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, ext_wall_name in enumerate(self.main_app_data.rmds[0].ext_wall_names):
+        for i, ext_wall_name in enumerate(self.app_data.rmds[0].ext_wall_names):
             self.add_row(i, ext_wall_name)
 
         self.is_subview_populated = True
@@ -172,7 +176,7 @@ class ExteriorSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
@@ -183,7 +187,7 @@ class InteriorSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -196,7 +200,7 @@ class InteriorSurfaceView(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, int_wall_name in enumerate(self.main_app_data.rmds[0].int_wall_names):
+        for i, int_wall_name in enumerate(self.app_data.rmds[0].int_wall_names):
             self.add_row(i, int_wall_name)
 
         self.is_subview_populated = True
@@ -212,7 +216,7 @@ class InteriorSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
@@ -223,7 +227,7 @@ class UndergroundSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -236,7 +240,7 @@ class UndergroundSurfaceView(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, undg_wall_name in enumerate(self.main_app_data.rmds[0].undg_wall_names):
+        for i, undg_wall_name in enumerate(self.app_data.rmds[0].undg_wall_names):
             self.add_row(i, undg_wall_name)
 
         self.is_subview_populated = True
@@ -252,7 +256,7 @@ class UndergroundSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
@@ -263,7 +267,7 @@ class WindowSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -274,25 +278,12 @@ class WindowSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        vertical_window_names = self.get_vertical_windows_subset()
-
         self.add_column_headers()
 
-        for i, window_name in enumerate(vertical_window_names):
+        for i, window_name in enumerate(self.app_data.rmds[0].window_names):
             self.add_row(i, window_name)
 
         self.is_subview_populated = True
-
-    def get_vertical_windows_subset(self):
-        vertical_window_names = []
-        for window_name in self.main_app_data.rmds[0].window_names:
-            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
-            if (
-                window_obj.classification
-                != self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
-            ):
-                vertical_window_names.append(window_name)
-        return vertical_window_names
 
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
@@ -319,21 +310,21 @@ class WindowSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
         status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
         classification_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901,
             state=READONLY,
         )
         classification_combo._entry.configure(justify=LEFT)
         classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
         framing_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901,
             state=READONLY,
         )
         framing_type_combo._entry.configure(justify=LEFT)
@@ -352,7 +343,7 @@ class SkylightSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -363,25 +354,12 @@ class SkylightSurfaceView(CTkXYFrame):
         self.populate_subview() if not self.is_subview_populated else None
 
     def populate_subview(self):
-        skylight_names = self.get_skylights_subset()
-
         self.add_column_headers()
 
-        for i, skylight_name in enumerate(skylight_names):
+        for i, skylight_name in enumerate(self.app_data.rmds[0].skylight_names):
             self.add_row(i, skylight_name)
 
         self.is_subview_populated = True
-
-    def get_skylights_subset(self):
-        skylight_names = []
-        for window_name in self.main_app_data.rmds[0].window_names:
-            window_obj = self.main_app_data.rmds[0].get_obj(window_name)
-            if (
-                window_obj.classification
-                == self.main_app_data.SubsurfaceClassificationOptions.SKYLIGHT
-            ):
-                skylight_names.append(window_name)
-        return skylight_names
 
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
@@ -408,21 +386,21 @@ class SkylightSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
         status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
         classification_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901,
             state=READONLY,
         )
         classification_combo._entry.configure(justify=LEFT)
         classification_combo.grid(row=(i + 1), column=2, padx=(0, 20), pady=(0, 20))
         framing_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.SubsurfaceFrameDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.SubsurfaceFrameDescriptions2019ASHRAE901,
             state=READONLY,
         )
         framing_type_combo._entry.configure(justify=LEFT)
@@ -441,7 +419,7 @@ class DoorSurfaceView(CTkXYFrame):
     def __init__(self, subview_frame):
         super().__init__(subview_frame)
         self.surfaces_view = subview_frame.master
-        self.main_app_data = self.surfaces_view.window.main_app.data
+        self.app_data = self.surfaces_view.window.main_app.data
         self.is_subview_populated = False
 
     def __repr__(self):
@@ -454,7 +432,7 @@ class DoorSurfaceView(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, door_name in enumerate(self.main_app_data.rmds[0].door_names):
+        for i, door_name in enumerate(self.app_data.rmds[0].door_names):
             self.add_row(i, door_name)
 
         self.is_subview_populated = True
@@ -474,14 +452,14 @@ class DoorSurfaceView(CTkXYFrame):
         surface_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
         status_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.StatusDescriptions.get_list(),
+            values=self.app_data.StatusDescriptions,
             state=READONLY,
         )
         status_combo._entry.configure(justify=LEFT)
         status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
         classification_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.SubsurfaceSubclassificationDescriptions2019ASHRAE901,
             state=READONLY,
         )
         classification_combo._entry.configure(justify=LEFT)

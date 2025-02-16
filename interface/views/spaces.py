@@ -60,7 +60,7 @@ class SpacesSubview(CTkXYFrame):
     def __init__(self, view_frame):
         super().__init__(view_frame)
         self.spaces_view = view_frame.master
-        self.main_app_data = self.spaces_view.window.main_app.data
+        self.app_data = self.spaces_view.app_data
         self.is_view_populated = False
 
     def __repr__(self):
@@ -72,7 +72,7 @@ class SpacesSubview(CTkXYFrame):
     def populate_subview(self):
         self.add_column_headers()
 
-        for i, space_name in enumerate(self.main_app_data.rmds[0].space_map.keys()):
+        for i, space_name in enumerate(self.app_data.rmds[0].space_map.keys()):
             self.add_row(i, space_name)
 
         self.is_view_populated = True
@@ -80,7 +80,7 @@ class SpacesSubview(CTkXYFrame):
     def add_column_headers(self):
         name_label = ctk.CTkLabel(self, text="Name", font=STANDARD_FONT)
         name_label.grid(row=0, column=0, padx=(0, 20), pady=5)
-        if not self.main_app_data.is_all_new_construction():
+        if not self.app_data.is_all_new_construction:
             status_label = ctk.CTkLabel(self, text="Status", font=STANDARD_FONT)
             status_label.grid(row=0, column=1, padx=(0, 20), pady=5)
         lighting_space_type_label = ctk.CTkLabel(
@@ -123,17 +123,17 @@ class SpacesSubview(CTkXYFrame):
     def add_row(self, i, space_name):
         name_label = ctk.CTkLabel(self, text=f"{space_name}")
         name_label.grid(row=(i + 1), column=0, padx=(0, 20), pady=(0, 20), sticky=W)
-        if not self.main_app_data.is_all_new_construction():
+        if not self.app_data.is_all_new_construction:
             status_combo = ctk.CTkComboBox(
                 self,
-                values=self.main_app_data.StatusDescriptions.get_list(),
+                values=self.app_data.StatusDescriptions,
                 state=READONLY,
             )
             status_combo._entry.configure(justify=LEFT)
             status_combo.grid(row=(i + 1), column=1, padx=(0, 20), pady=(0, 20))
         lighting_space_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.LightingSpaceDescriptions2019ASHRAE901TG37.get_list(),
+            values=self.app_data.LightingSpaceDescriptions2019ASHRAE901TG37,
             state=READONLY,
         )
         lighting_space_type_combo._entry.configure(justify=LEFT)
@@ -142,7 +142,7 @@ class SpacesSubview(CTkXYFrame):
         )
         envelope_space_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.EnvelopeSpaceDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.EnvelopeSpaceDescriptions2019ASHRAE901,
             state=READONLY,
         )
         envelope_space_type_combo._entry.configure(justify=LEFT)
@@ -151,7 +151,7 @@ class SpacesSubview(CTkXYFrame):
         )
         ventilation_space_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.VentilationSpaceDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.VentilationSpaceDescriptions2019ASHRAE901,
             state=READONLY,
         )
         ventilation_space_type_combo._entry.configure(justify=LEFT)
@@ -160,14 +160,14 @@ class SpacesSubview(CTkXYFrame):
         )
         swh_space_type_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.ServiceWaterHeatingSpaceDescriptions2019ASHRAE901.get_list(),
+            values=self.app_data.ServiceWaterHeatingSpaceDescriptions2019ASHRAE901,
             state=READONLY,
         )
         swh_space_type_combo._entry.configure(justify=LEFT)
         swh_space_type_combo.grid(row=(i + 1), column=5, padx=(0, 20), pady=(0, 20))
         lighting_occ_controls_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.LightingOccupancyControlOptions.get_list(),
+            values=self.app_data.LightingOccupancyControlOptions,
             state=READONLY,
         )
         lighting_occ_controls_combo._entry.configure(justify=LEFT)
@@ -176,7 +176,7 @@ class SpacesSubview(CTkXYFrame):
         )
         daylighting_controls_combo = ctk.CTkComboBox(
             self,
-            values=self.main_app_data.LightingDaylightingControlOptions.get_list(),
+            values=self.app_data.LightingDaylightingControlOptions,
             state=READONLY,
         )
         daylighting_controls_combo._entry.configure(justify=LEFT)

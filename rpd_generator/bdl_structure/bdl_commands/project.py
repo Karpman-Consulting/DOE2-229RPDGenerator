@@ -17,7 +17,7 @@ class SiteParameters(BaseDefinition):
 
     def __init__(self, u_name, rmd):
         super().__init__(u_name, rmd)
-        rmd.site_parameter_name = u_name
+        self.rmd.site_parameter_name = u_name
         self.rmd.bdl_obj_instances[u_name] = self
 
     def __repr__(self):
@@ -25,8 +25,7 @@ class SiteParameters(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate schema structure for site parameters object."""
-        rpd = self.get_obj("ASHRAE 229")
-        rpd.calendar.setdefault(
+        self.rmd.calendar.setdefault(
             "has_daylight_saving_time",
             self.boolean_map.get(
                 self.get_inp(BDL_SiteParameterKeywords.DAYLIGHT_SAVINGS)
@@ -34,12 +33,12 @@ class SiteParameters(BaseDefinition):
         )
         monthly_ground_temps = self.get_inp(BDL_SiteParameterKeywords.GROUND_T)
         if monthly_ground_temps:
-            rpd.weather.setdefault(
+            self.rmd.weather.setdefault(
                 "ground_temperature_schedule", "Ground Temperature Schedule"
             )
             self.create_ground_temp_schedule(monthly_ground_temps)
 
-        rpd.weather.setdefault("file_name", self.get_single_string_output(1101006))
+        self.rmd.weather.setdefault("file_name", self.get_single_string_output(1101006))
 
     def create_ground_temp_schedule(self, monthly_ground_temps):
         """Create ground temperature schedule."""
@@ -83,10 +82,9 @@ class RunPeriod(BaseDefinition):
 
     def populate_data_elements(self):
         """Populate schema structure for site parameters object."""
-        rpd = self.get_obj("ASHRAE 229")
         year = int(float(self.get_inp(BDL_RunPeriodKeywords.END_YEAR)))
         jan_1_day = schedule_funcs.get_day_of_week_jan_1(year)
-        rpd.calendar.setdefault(
+        self.rmd.calendar.setdefault(
             "day_of_week_for_january_1",
             jan_1_day,
         )

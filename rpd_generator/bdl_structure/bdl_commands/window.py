@@ -33,7 +33,6 @@ class Window(ChildNode):
 
     def __init__(self, u_name, parent, rmd):
         super().__init__(u_name, parent, rmd)
-        self.rmd.window_names.append(u_name)
         self.rmd.bdl_obj_instances[u_name] = self
 
         self.window_data_structure = {}
@@ -92,8 +91,10 @@ class Window(ChildNode):
             == BDL_WallLocationOptions.TOP
         ):
             self.classification = SubsurfaceClassificationOptions.SKYLIGHT
+            self.rmd.skylight_names.append(self.u_name)
         else:
             self.classification = SubsurfaceClassificationOptions.WINDOW
+            self.rmd.window_names.append(self.u_name)
 
         if self.try_float(
             self.get_inp(BDL_WindowKeywords.LEFT_FIN_D)
@@ -214,7 +215,7 @@ class Window(ChildNode):
             if value is not None:
                 self.window_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
         surface = self.get_obj(self.parent.u_name)
         surface.subsurfaces.append(self.window_data_structure)

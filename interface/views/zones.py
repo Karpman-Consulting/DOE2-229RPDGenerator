@@ -73,7 +73,7 @@ class ZonesSubview(CTkXYFrame):
     def __init__(self, view_frame):
         super().__init__(view_frame)
         self.zones_view = view_frame.master
-        self.main_app_data = self.zones_view.window.main_app.data
+        self.app_data = self.zones_view.window.main_app.data
         self.is_view_populated = False
         self.child_space_window = None
         self.zones_by_floor = {}
@@ -228,8 +228,8 @@ class ZonesSubview(CTkXYFrame):
         ]
 
     def get_zones_by_floors(self):
-        for zone_name in self.main_app_data.rmds[0].zone_names:
-            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+        for zone_name in self.app_data.rmds[0].zone_names:
+            zone_obj = self.app_data.rmds[0].get_obj(zone_name)
             if self.zones_by_floor.get(zone_obj.floor_name):
                 self.zones_by_floor[zone_obj.floor_name].append(zone_name)
             else:
@@ -237,8 +237,8 @@ class ZonesSubview(CTkXYFrame):
 
     def set_default_value_by_floor(self, floor_name, selected_value):
         """Update all zones under a floor with the selected value from the floor's combobox"""
-        for zone_name in self.main_app_data.rmds[0].zone_names:
-            zone_obj = self.main_app_data.rmds[0].get_obj(zone_name)
+        for zone_name in self.app_data.rmds[0].zone_names:
+            zone_obj = self.app_data.rmds[0].get_obj(zone_name)
             if zone_obj.floor_name == floor_name:
                 if zone_name in self.zone_comboboxes:
                     self.zone_comboboxes[zone_name].set(selected_value)

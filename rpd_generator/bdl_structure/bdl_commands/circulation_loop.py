@@ -311,10 +311,10 @@ class CirculationLoop(BaseNode):
                 if value is not None:
                     self.data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
 
         if self.circulation_loop_type == "FluidLoop":
-            rmd.fluid_loops.append(self.data_structure)
+            self.rmd.fluid_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "SecondaryFluidLoop":
             primary_loop = self.get_obj(
@@ -323,7 +323,9 @@ class CirculationLoop(BaseNode):
             primary_loop.child_loops.append(self.data_structure)
 
         elif self.circulation_loop_type == "ServiceWaterHeatingDistributionSystem":
-            rmd.service_water_heating_distribution_systems.append(self.data_structure)
+            self.rmd.service_water_heating_distribution_systems.append(
+                self.data_structure
+            )
 
         elif self.circulation_loop_type == "ServiceWaterPiping":
             primary_loop = self.get_obj(

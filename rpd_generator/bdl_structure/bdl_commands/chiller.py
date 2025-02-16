@@ -289,12 +289,12 @@ class Chiller(BaseNode):
             if value is not None:
                 self.chiller_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert chiller object into the rpd data structure."""
         if self.omit:
             return
 
-        rmd.chillers.append(self.chiller_data_structure)
+        self.rmd.chillers.append(self.chiller_data_structure)
 
     def get_loop_energy_source(self, hot_water_loop):
         """Get the energy source type for the loop. Used for absorption chillers to populate the energy_source_type."""

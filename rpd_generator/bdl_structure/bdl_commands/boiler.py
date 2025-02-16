@@ -237,8 +237,8 @@ class Boiler(BaseNode):
             if value is not None:
                 self.boiler_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
-        rmd.boilers.append(self.boiler_data_structure)
+    def insert_to_rpd(self):
+        self.rmd.boilers.append(self.boiler_data_structure)
 
     def populate_operation_limits(self):
         requests = {}

@@ -147,6 +147,6 @@ class HeatRejection(BaseNode):
             if value is not None:
                 self.heat_rejection_data_structure[attr] = value
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
-        rmd.heat_rejections.append(self.heat_rejection_data_structure)
+        self.rmd.heat_rejections.append(self.heat_rejection_data_structure)

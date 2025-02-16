@@ -4,6 +4,8 @@ from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.base_node import Base, BaseNode
 from rpd_generator.bdl_structure.base_definition import BaseDefinition
+from rpd_generator.artifacts.building_segment import BuildingSegment
+from rpd_generator.artifacts.building import Building
 
 EnergySourceOptions = SchemaEnums.schema_enums["EnergySourceOptions"]
 EndUseOptions = SchemaEnums.schema_enums["EndUseOptions"]
@@ -84,13 +86,14 @@ class RulesetModelDescription(Base):
         "UTILITY-RATE",
     ]
 
-    def __init__(self, obj_id):
+    def __init__(self, obj_id, rpd):
         self.file_path = None
         self.doe2_version = None
         self.doe2_data_path = None
 
+        self.rpd = rpd
         # store BDL objects for the model associated with the RMD
-        self.bdl_obj_instances = {}
+        self.bdl_obj_instances = {self.rpd.project_name: self.rpd, obj_id: self}
         # store space names mapped to their zone objects for quick access
         self.space_map = {}
 
@@ -107,10 +110,12 @@ class RulesetModelDescription(Base):
         self.elec_generator_names = []
         self.system_names = []
         self.zone_names = []
+        self.zonal_exh_fan_names = []
         self.ext_wall_names = []
         self.int_wall_names = []
         self.undg_wall_names = []
         self.window_names = []
+        self.skylight_names = []
         self.door_names = []
         self.circulation_loop_names = []
         self.boiler_names = []
@@ -126,6 +131,10 @@ class RulesetModelDescription(Base):
         self.has_site_shading = False
 
         # data elements with children
+        self.calendar = {
+            "is_leap_year": False,  # even if the year is a leap year, eQUEST skips Feb 29
+        }
+        self.weather = {}
         self.transformers = []
         self.buildings = []
         self.schedules = []
@@ -183,39 +192,58 @@ class RulesetModelDescription(Base):
         self.output_instance_building_peak_cooling_load = None
         self.output_instance_annual_end_use_results = []
 
-    def populate_rmd_data(self, testing=False):
+    def populate_all_child_data_elements(self, testing=False):
         sorted_commands = self.sort_commands()
         for obj_instance in sorted_commands:
-            if isinstance(obj_instance, (BaseNode, BaseDefinition)):
+            instance_filter = (
+                (BaseNode, BaseDefinition)
+                if testing
+                else (BaseNode, RulesetModelDescription, BaseDefinition)
+            )
+            if isinstance(obj_instance, instance_filter):
                 obj_instance.populate_data_elements()
 
+    def populate_all_data_groups(self):
         # Repopulate the sorted commands in case objects were added during the populate_data_elements method
         sorted_commands = self.sort_commands()
         for obj_instance in sorted_commands:
-            if isinstance(obj_instance, BaseNode):
+            if isinstance(
+                obj_instance,
+                (BaseNode, RulesetModelDescription, Building, BuildingSegment),
+            ):
                 obj_instance.populate_data_group()
-                if not testing:
-                    obj_instance.insert_to_rpd(self)
+
+    def insert_all_to_rpd(self):
+        for obj_instance in self.bdl_obj_instances.values():
+            if isinstance(
+                obj_instance,
+                (BaseNode, RulesetModelDescription, Building, BuildingSegment),
+            ):
+                obj_instance.insert_to_rpd()
+
+    def populate_rmd_data(self, testing=False):
+        self.populate_all_child_data_elements(testing)
+        self.populate_all_data_groups()
 
         if not testing:
-            self.bdl_obj_instances["Default Building Segment"].populate_data_group()
-            self.bdl_obj_instances["Default Building Segment"].insert_to_rpd()
-            self.bdl_obj_instances["Default Building"].populate_data_group()
-            self.bdl_obj_instances["Default Building"].insert_to_rpd(self)
-            self.populate_data_elements()
-            self.populate_data_group()
+            self.insert_all_to_rpd()
 
     def sort_commands(self):
-        command_tuples = [
-            (obj.bdl_command, obj)
-            for obj in self.bdl_obj_instances.values()
-            if isinstance(obj, (BaseNode, BaseDefinition))
-        ]
+        command_tuples = []
+        additional_objs = []
+
+        # Add all objects with a bdl_command attribute to the list
+        for obj in self.bdl_obj_instances.values():
+            if isinstance(obj, (BaseNode, BaseDefinition)):
+                command_tuples.append((obj.bdl_command, obj))
+            elif isinstance(obj, (RulesetModelDescription, Building, BuildingSegment)):
+                additional_objs.append(obj)
+
         order_map = {cmd: i for i, cmd in enumerate(self.COMMAND_PROCESSING_ORDER)}
         sorted_tuples = sorted(
             command_tuples, key=lambda x: order_map.get(x[0], float("inf"))
         )
-        return [t[1] for t in sorted_tuples]
+        return [t[1] for t in sorted_tuples] + additional_objs
 
     def get_obj(self, u_name):
         """
@@ -1991,6 +2019,9 @@ class RulesetModelDescription(Base):
             key: value
             for key, value in {
                 "id": self.obj_id,
+                "type": self.type,
+                "measured_infiltration_pressure_difference": self.measured_infiltration_pressure_difference,
+                "is_measured_infiltration_based_on_test": self.is_measured_infiltration_based_on_test,
                 "altitude": self.altitude,
                 "buildings": self.buildings,
                 "schedules": self.schedules,
@@ -2007,9 +2038,9 @@ class RulesetModelDescription(Base):
             if value is not None
         }
 
-    def insert_to_rpd(self, rpd):
+    def insert_to_rpd(self):
         """Insert RMD object into the RPD data structure."""
-        rpd.ruleset_model_descriptions.append(self.rmd_data_structure)
+        self.rpd.ruleset_model_descriptions.append(self.rmd_data_structure)
 
     def populate_energy_source_end_use_results(
         self, source_results, energy_source_type

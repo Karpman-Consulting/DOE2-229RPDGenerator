@@ -28,7 +28,7 @@ def write_rpd_json_from_inp(inp_path_str):
         temp_file_path = prepare_inp(inp_path, Path(temp_dir))
 
         # Copy the model output files to the temporary directory (.erp, .lrp, .srp, .nhk)
-        copy_files_to_temp_dir(inp_path, Path(temp_dir))
+        _copy_files_to_temp_dir(inp_path, Path(temp_dir))
 
         # Set the paths for the inp file, json file, and the directories
         temp_inp_path = Path(temp_file_path)
@@ -44,42 +44,63 @@ def write_rpd_json_from_inp(inp_path_str):
             str(temp_inp_path.parent) + "\\",
             temp_inp_path.name,
         )
-
+        shutil.copy(str(bdl_path), inp_path.parent)
         # Generate the RPD json file in the temporary directory
-        write_rpd_json_from_bdl(str(bdl_path), str(json_path))
+        write_rpd_json_from_bdl(str(inp_path.stem), str(bdl_path), str(json_path))
 
         # Copy the json file from the temporary directory back to the project directory
         shutil.copy(str(json_path), inp_path.parent)
 
 
-def write_rpd_json_from_bdl(bdl_path: str, json_file_path: str):
+def write_rpd_json_from_bdl(project_name: str, bdl_path: str, json_file_path: str):
     bdl_input_reader = ModelInputReader()
-    RulesetProjectDescription.bdl_command_dict = bdl_input_reader.bdl_command_dict
-    rpd = RulesetProjectDescription()
-    rmd = generate_rmds_from_bdls(bdl_input_reader, [bdl_path])[0]
-    # Add the RPD object to the bdl_obj_instances dictionary
-    rmd.bdl_obj_instances["ASHRAE 229"] = rpd
-    # Populate 229 data structures associated with the BDL objects
-    rmd.populate_rmd_data()
-    # Insert the RMD data into the RPD data structure
-    rmd.insert_to_rpd(rpd)
+    rpd = RulesetProjectDescription(project_name)
+    rmds = generate_rmd_structures_from_bdls(rpd, bdl_input_reader, [bdl_path])
+    for rmd in rmds:
+        # Populate 229 data structures associated with the BDL objects
+        rmd.populate_rmd_data()
 
     rpd.populate_data_group()
     ensure_valid_rpd.make_ids_unique(rpd.rpd_data_structure)
     unit_converter.convert_to_schema_units(rpd.rpd_data_structure)
+
     with open(json_file_path, "w") as json_file:
         json.dump(rpd.rpd_data_structure, json_file, indent=4)
 
     print(f"RPD JSON file created.")
 
 
-def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models: list):
+def write_rpd_json_from_rpd(
+    rpd: RulesetProjectDescription,
+    rmds: list[RulesetModelDescription],
+    json_file_path: str,
+):
+    for rmd in rmds:
+        rmd.populate_all_data_groups()
+        rmd.insert_all_to_rpd()
+
+    rpd.populate_data_group()
+    ensure_valid_rpd.make_ids_unique(rpd.rpd_data_structure)
+    unit_converter.convert_to_schema_units(rpd.rpd_data_structure)
+
+    with open(json_file_path, "w") as json_file:
+        json.dump(rpd.rpd_data_structure, json_file, indent=4)
+
+    print(f"RPD JSON file created.")
+
+
+def generate_rmd_structures_from_bdls(
+    rpd: RulesetProjectDescription,
+    bdl_input_reader: ModelInputReader,
+    selected_models: list,
+):
     rmds = []
     for model_path_str in selected_models:
         model_path = Path(model_path_str)
-        rmd = RulesetModelDescription(model_path.stem)
+        rmd = RulesetModelDescription(model_path.stem, rpd)
         rmd.file_path = str(model_path.with_suffix(""))
 
+        # Create the default building and building segment objects to store data. (Can be renamed via GUI)
         default_building = Building("Default Building", rmd)
         default_building_segment = BuildingSegment(
             "Default Building Segment", default_building
@@ -97,6 +118,7 @@ def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models:
             )
 
         for command in rmd.COMMAND_PROCESSING_ORDER:
+            command_class = bdl_input_reader.bdl_command_dict[command]
             special_handling = {}
             if command == "ZONE":
                 special_handling["ZONE"] = (
@@ -107,6 +129,7 @@ def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models:
             _process_command_group(
                 command,
                 model_input_data["file_commands"],
+                command_class,
                 rmd,
                 special_handling,
             )
@@ -114,7 +137,9 @@ def generate_rmds_from_bdls(bdl_input_reader: ModelInputReader, selected_models:
     return rmds
 
 
-def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory):
+def generate_rmd_structure_from_inp(
+    rpd, inp_path_str: str, processing_dir: TemporaryDirectory
+):
     inp_path = Path(inp_path_str)
     temp_dir = processing_dir.name
 
@@ -122,7 +147,7 @@ def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory)
     temp_file_path = prepare_inp(inp_path, Path(temp_dir))
 
     # Copy the model output files to the temporary directory (.erp, .lrp, .srp, .nhk)
-    copy_files_to_temp_dir(inp_path, Path(temp_dir))
+    _copy_files_to_temp_dir(inp_path, Path(temp_dir))
 
     # Set the paths for the inp file, json file, and the directories
     temp_inp_path = Path(temp_file_path)
@@ -140,7 +165,7 @@ def generate_rmd_from_inp(inp_path_str: str, processing_dir: TemporaryDirectory)
 
     # Generate the RMD object from the BDL file in the temporary directory
     bdl_input_reader = ModelInputReader()
-    rmd = generate_rmds_from_bdls(bdl_input_reader, [str(bdl_path)])[0]
+    rmd = generate_rmd_structures_from_bdls(rpd, bdl_input_reader, [str(bdl_path)])[0]
 
     return rmd
 
@@ -180,7 +205,7 @@ def prepare_inp(model_path: Path, output_dir: Path = None) -> str:
     return str(temp_file_path)
 
 
-def copy_files_to_temp_dir(inp_path, temp_dir):
+def _copy_files_to_temp_dir(inp_path, temp_dir):
     file_extensions = [".erp", ".lrp", ".srp", ".nhk"]
     model_dir = inp_path.parent
     model_name = inp_path.stem
@@ -201,8 +226,7 @@ def copy_files_to_temp_dir(inp_path, temp_dir):
             print(f"File {model_file} not found in {model_dir}")
 
 
-def _create_obj_instance(u_name, command, command_dict, rmd):
-    command_class = RulesetProjectDescription.bdl_command_dict[command]
+def _create_obj_instance(u_name, command, command_dict, command_class, rmd):
     is_child = command in [
         "SPACE",
         "EXTERIOR-WALL",
@@ -228,12 +252,13 @@ def _create_obj_instance(u_name, command, command_dict, rmd):
 def _process_command_group(
     command_group: str,
     file_bdl_commands: dict,
+    cmd_class,
     rmd: RulesetModelDescription,
     special_handling=None,
 ):
     for u_name in file_bdl_commands.get(command_group, {}):
         cmd_dict = file_bdl_commands[command_group][u_name]
-        obj = _create_obj_instance(u_name, command_group, cmd_dict, rmd)
+        obj = _create_obj_instance(u_name, command_group, cmd_dict, cmd_class, rmd)
         if special_handling and command_group in special_handling:
             special_handling[command_group](obj, cmd_dict)
         obj.add_inputs(cmd_dict)

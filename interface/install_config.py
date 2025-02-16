@@ -32,7 +32,7 @@ class InstallConfigWindow(ctk.CTkToplevel):
         instruction_text = (
             "1) Use the buttons below to select and validate the path to your eQUEST 3-65-7175 installation directory. \n"
             "       a. If the path populated automatically, your installation path was located by the application. \n"
-            "       b. If the path did not populate automatically, you can manually enter the path or use the 'Browse' button "
+            "       b. If the path did not populate automatically, you can manually enter the path or use the 'Browse' button"
             "to find the folder that contains your eQUEST installation files\n"
             "2) Optionally, provide the path to your custom User Library file. This is only needed if your model uses "
             "references to custom library entries.\n"
@@ -154,14 +154,8 @@ class InstallConfigWindow(ctk.CTkToplevel):
         self.error_window.after(100, self.error_window.lift)
 
     def save_configuration_data(self):
-        if self.installation_path.get():
-            self.main_app.data.configuration_data["installation_path"] = (
-                self.installation_path.get()
-            )
-        if self.user_lib_path.get():
-            self.main_app.data.configuration_data["user_lib_path"] = (
-                self.user_lib_path.get()
-            )
+        self.main_app.data.installation_path = self.installation_path.get()
+        self.main_app.data.user_lib_path = self.user_lib_path.get()
 
     def select_install_directory(self):
         directory_path = filedialog.askdirectory(mustexist=True)

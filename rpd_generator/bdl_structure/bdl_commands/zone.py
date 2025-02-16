@@ -592,9 +592,9 @@ class Zone(ChildNode):
         zonal_exhaust_fan_data = self.populate_data_group_with_prefix(
             "zone_exhaust_fan_"
         )
-        self.zonal_exhaust_fan = (
-            zonal_exhaust_fan_data[0] if zonal_exhaust_fan_data else {}
-        )
+        if zonal_exhaust_fan_data:
+            self.zonal_exhaust_fan = zonal_exhaust_fan_data[0]
+            self.rmd.zonal_exh_fan_names.append(self.zonal_exhaust_fan["id"])
 
         # Populate the infiltration data structure
         infiltration_data = self.populate_data_group_with_prefix("infil_")
@@ -1095,7 +1095,7 @@ class Zone(ChildNode):
 
         return requests
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert zone object into the rpd data structure."""
         self.parent_building_segment.zones.append(self.zone_data_structure)
 

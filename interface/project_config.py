@@ -4,6 +4,9 @@ from pathlib import Path
 
 from interface.disclaimer_window import DisclaimerWindow
 from interface.error_window import ErrorWindow
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
 
 
 class ProjectConfigWindow(ctk.CTkToplevel):
@@ -18,22 +21,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         self.ruleset_model_row_widgets = {}
 
-        self.selected_ruleset = ctk.StringVar()
-        self.selected_ruleset.set("ASHRAE 90.1-2019")
-
         # Initialize Widgets
-        self.new_construction_checkbox = None
-        self.new_construction_checkbox = ctk.CTkCheckBox(
-            self,
-            text="All new construction?",
-            font=("Arial", 14),
-        )
-        self.rotation_exception_checkbox = ctk.CTkCheckBox(
-            self,
-            text="Meets 90.1-2019 Table G3.1(5) Baseline Building Performance (a) Exceptions",
-            font=("Arial", 14),
-            command=self.toggle_baseline_rotations,
-        )
         self.directions_label = ctk.CTkLabel(
             self,
             text="Directions: ",
@@ -41,7 +29,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             justify="left",
             font=("Arial", 16, "bold"),
         )
-
         directions_text = "Select the Energy Code or Above-Code Program for your project, then browse and select the eQUEST model input files (*.inp) \nassociated with each of the applicable models expected by the ruleset."
         self.directions = ctk.CTkLabel(
             self,
@@ -57,16 +44,34 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         self.note = ctk.CTkLabel(
             self, text=note_text, anchor="w", justify="left", font=("Arial", 14)
         )
+        self.project_name_label = ctk.CTkLabel(
+            self, text="Project Name: ", font=("Arial", 14, "bold"), anchor="e"
+        )
+        self.project_name_entry = ctk.CTkEntry(
+            self, font=("Arial", 14), textvariable=self.main_app.data.project_name
+        )
         self.ruleset_label = ctk.CTkLabel(
             self, text="Energy Code/Program:", font=("Arial", 14, "bold"), anchor="e"
         )
-        self.ruleset_models_frame = ctk.CTkFrame(self, width=800, height=250)
+        self.new_construction_checkbox = ctk.CTkCheckBox(
+            self,
+            text="All New Construction?",
+            font=("Arial", 14),
+            variable=self.main_app.data.is_all_new_construction,
+        )
+        self.rotation_exception_checkbox = ctk.CTkCheckBox(
+            self,
+            text="Baseline Rotation Exempt? (90.1-2019 Table G3.1(5) Baseline Building Performance (a))",
+            font=("Arial", 14),
+            variable=self.main_app.data.has_rotation_exception,
+            command=self.toggle_baseline_rotations,
+        )
+        self.ruleset_models_frame = ctk.CTkFrame(self, width=800)
         self.ruleset_dropdown = ctk.CTkOptionMenu(
             self,
             values=["ASHRAE 90.1-2019", "None"],
-            command=lambda selection: self.update_ruleset_model_frame(
-                self.ruleset_models_frame, selection
-            ),
+            variable=self.main_app.data.selected_ruleset,
+            command=self.update_ruleset_model_frame,
         )
         self.ruleset_models_label = ctk.CTkLabel(
             self,
@@ -75,7 +80,21 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             justify="left",
             font=("Arial", 14, "bold"),
         )
-
+        self.output_dir_label = ctk.CTkLabel(
+            self, text="Output Directory:", font=("Arial", 14, "bold"), anchor="e"
+        )
+        self.output_dir_entry = ctk.CTkEntry(
+            self,
+            font=("Arial", 14),
+            width=500,
+            textvariable=self.main_app.data.output_directory,
+        )
+        self.output_dir_button = ctk.CTkButton(
+            self,
+            text="Select",
+            command=self.select_output_directory,
+            width=80,
+        )
         self.continue_button = ctk.CTkButton(
             self,
             text="Continue",
@@ -83,6 +102,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             corner_radius=12,
             command=self.validate_project_info,
         )
+
         self.menubar = self.create_menu_bar()
         self.place_widgets()
         self.create_nav_bar()
@@ -92,7 +112,7 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
     def create_nav_bar(self):
         # Create the button to continue to the Buildings page
-        self.continue_button.grid(row=5, column=0, columnspan=9, pady=15)
+        self.continue_button.grid(row=7, column=0, columnspan=9, pady=15)
 
     def create_menu_bar(self):
         menubar = Menu(self)
@@ -131,66 +151,72 @@ class ProjectConfigWindow(ctk.CTkToplevel):
     def place_widgets(self):
         # Place widgets
         # Row 0
-        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=20)
-        self.directions.grid(row=0, column=1, columnspan=6, sticky="new", pady=20)
-        # Row 1
-        self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=20)
-        self.note.grid(
-            row=1, column=1, columnspan=8, sticky="ew", padx=(5, 20), pady=20
+        self.directions_label.grid(row=0, column=0, sticky="ew", padx=5, pady=(20, 5))
+        self.directions.grid(
+            row=0, column=1, columnspan=6, sticky="new", padx=5, pady=(20, 5)
         )
+        # Row 1
+        self.note_label.grid(row=1, column=0, sticky="new", padx=5, pady=5)
+        self.note.grid(row=1, column=1, columnspan=8, sticky="ew", padx=5, pady=5)
         # Row 2
-        self.ruleset_label.grid(row=2, column=0, sticky="e", padx=(20, 5), pady=10)
-        self.ruleset_dropdown.grid(
-            row=2, column=1, columnspan=2, sticky="ew", padx=5, pady=10
+        self.project_name_label.grid(
+            row=2, column=0, sticky="e", padx=(20, 5), pady=(50, 10)
+        )
+        self.project_name_entry.grid(
+            row=2, column=1, columnspan=3, sticky="ew", padx=5, pady=(50, 10)
         )
         self.new_construction_checkbox.grid(
-            row=2, column=3, sticky="w", padx=5, pady=10
+            row=2, column=5, sticky="w", padx=5, pady=(50, 10)
         )
-        # Row 3 Placeholder for the rotation exception checkbox
-        # Row 4
-        self.ruleset_models_label.grid(row=4, column=0, sticky="ew", padx=5, pady=20)
 
-        self.show_ruleset_models(self.ruleset_models_frame)
-        self.ruleset_models_frame.grid(row=4, column=1, columnspan=6, sticky="nsew")
+        # Row 3
+        self.ruleset_label.grid(row=3, column=0, sticky="e", padx=(20, 5), pady=5)
+        self.ruleset_dropdown.grid(
+            row=3, column=1, columnspan=2, sticky="ew", padx=5, pady=5
+        )
 
-    def update_ruleset_model_frame(self, ruleset_models_frame, selected_ruleset):
-        self.selected_ruleset.set(selected_ruleset)
+        # Row 4 Placeholder for the rotation exception checkbox
+        # Row 5
+        self.ruleset_models_label.grid(row=5, column=0, sticky="ew", padx=5, pady=5)
+
+        self.show_ruleset_models()
+        self.ruleset_models_frame.grid(
+            row=5, column=1, columnspan=6, sticky="nsew", padx=5
+        )
+
+        # Row 6
+        self.output_dir_label.grid(
+            row=6, column=0, sticky="e", padx=(20, 5), pady=(15, 5)
+        )
+        self.output_dir_entry.grid(
+            row=6, column=1, columnspan=5, sticky="ew", padx=5, pady=(15, 5)
+        )
+        self.output_dir_button.grid(row=6, column=6, sticky="ew", padx=5, pady=(15, 5))
+
+    def update_ruleset_model_frame(self, selected_ruleset):
         self.rotation_exception_checkbox.grid_remove()
         self.clear_ruleset_models_frame()
-        self.show_ruleset_models(ruleset_models_frame)
+        self.show_ruleset_models()
 
-    def show_ruleset_models(self, parent_frame):
+    def show_ruleset_models(self):
         # Main logic
-        if self.selected_ruleset.get() == "ASHRAE 90.1-2019":
+        if self.main_app.data.selected_ruleset.get() == "ASHRAE 90.1-2019":
             self.rotation_exception_checkbox.grid(
-                row=3, column=3, columnspan=4, sticky="w", padx=5, pady=10
+                row=4, column=1, columnspan=4, sticky="w", padx=5, pady=(15, 5)
             )
             labels = ["Design: ", "Proposed: ", "Baseline: "]
-            """PH stands for Placeholder. Used to fill a UI gap when the rotation exception checkbox is checked.
-            Label will not be displayed and other widgets in the row will not be created."""
             if not self.rotation_exception_checkbox.get():
-                labels.extend(
-                    [
-                        "Baseline 90: ",
-                        "Baseline 180: ",
-                        "Baseline 270: ",
-                        "PH Baseline 90: ",
-                        "PH Baseline 180: ",
-                        "PH Baseline 270: ",
-                    ]
-                )
+                labels.extend(["Baseline 90: ", "Baseline 180: ", "Baseline 270: "])
         else:
             labels = ["Design: "]
 
         # Create and place rows based on the selected ruleset
-        self.create_model_rows(parent_frame, labels)
+        self.create_model_rows(labels)
 
-    def create_model_rows(self, parent_frame, labels):
+    def create_model_rows(self, labels):
         """Create and place rows for ruleset model path widgets."""
         for row_num, label_text in enumerate(labels):
-            label, path_entry, select_button = self.create_file_row(
-                parent_frame, label_text
-            )
+            label, path_entry, select_button = self.create_file_row(label_text)
 
             # Place widgets using grid
             label.grid(row=row_num, column=0, sticky="ew", padx=5, pady=5)
@@ -199,32 +225,18 @@ class ProjectConfigWindow(ctk.CTkToplevel):
             )
             select_button.grid(row=row_num, column=8, sticky="ew", padx=5, pady=5)
 
-            # If the label is a placeholder, do not place the widgets. Only place blank label.
-            if label_text in [
-                "PH Baseline 90: ",
-                "PH Baseline 180: ",
-                "PH Baseline 270: ",
-            ]:
-                label.grid_remove()
-
-            # Store created widgets for reuse
-            self.ruleset_model_row_widgets[label_text.split(":")[0]] = (
-                label,
-                path_entry,
-                select_button,
-            )
+            if len(labels) == 1:
+                self.ruleset_models_frame.grid_rowconfigure(
+                    0, weight=1
+                )  # Center first row
+            else:
+                for i in range(len(labels)):
+                    self.ruleset_models_frame.grid_rowconfigure(i, weight=0)
 
     def clear_ruleset_models_frame(self):
         for row_widgets in self.ruleset_model_row_widgets.values():
             for widget in row_widgets:
                 widget.grid_remove()
-
-    """To avoid the jarring experience of the UI elements shifting around when the rotation exception checkbox
-     is checked, I made blank placeholder rows for each of the 3 baseline rotations. There is a little bit of 
-     movement when the checkbox is toggled, but it is much less noticeable. I think the best solution for this
-     would be to disable the baseline rotation rows when the exception checkbox is checked. Tkinter does not handle
-     disabling input fields very well, so I went with this solution instead. I could be very easily convinced to
-     change my mind here either way."""
 
     def toggle_baseline_rotations(self):
         """Add or remove Baseline rotation rows based on checkbox state."""
@@ -233,7 +245,6 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                 "Baseline 90: ",
                 "Baseline 180: ",
                 "Baseline 270: ",
-                "",
             ]:
                 if row_widgets[0].winfo_ismapped():
                     # If visible, hide them
@@ -244,19 +255,17 @@ class ProjectConfigWindow(ctk.CTkToplevel):
                     for widget in row_widgets:
                         widget.grid()
 
-    def create_file_row(self, parent_frame, label_text):
+    def create_file_row(self, label_text):
         """Create a row of widgets without placing them using grid()."""
-        if self.ruleset_model_row_widgets.get(label_text.split(":")[0]):
-            return self.ruleset_model_row_widgets[label_text.split(":")[0]]
+        model_text = label_text.split(":")[0]
 
-        # If the label is a placeholder, do not place the widgets. Only place blank label.
-        if label_text in ["PH Baseline 90: ", "PH Baseline 180: ", "PH Baseline 270: "]:
-            label = ctk.CTkLabel(parent_frame, text="")
-            return label, label, label
+        # Avoid recreating widgets if they already exist
+        if model_text in self.ruleset_model_row_widgets:
+            return self.ruleset_model_row_widgets[model_text]
 
         # Create label
         label = ctk.CTkLabel(
-            parent_frame,
+            self.ruleset_models_frame,
             text=label_text,
             font=("Arial", 14),
             width=90,
@@ -264,33 +273,35 @@ class ProjectConfigWindow(ctk.CTkToplevel):
         )
 
         # Create entry
-        path_entry = ctk.CTkEntry(parent_frame, width=700, font=("Arial", 12))
+        path_entry = ctk.CTkEntry(
+            self.ruleset_models_frame, width=700, font=("Arial", 12)
+        )
+
+        model_type = model_text.replace("Design", "User")
 
         # File select button
         def select_file():
-            file_path = filedialog.askopenfilename(
+            selected_path = filedialog.askopenfilename(
                 filetypes=[("eQUEST Input Files", "*.inp")]
             )
-            if file_path:
-                # Extract parent directory and filename using string parsing
-                parts = file_path.rsplit("/", 2)
-                if len(parts) > 1:
-                    parent_dir = parts[-2]
-                    filename = parts[-1]
-                    trimmed_path = f"{parent_dir}/{filename}"
-                else:
-                    trimmed_path = file_path
-
-                # Update the entry with the trimmed path
+            if selected_path:
                 path_entry.delete(0, "end")
-                path_entry.insert(0, trimmed_path)
-
-                self.main_app.data.ruleset_model_file_paths[
-                    label_text.split(":")[0].replace("Design", "User")
-                ] = file_path
+                path_entry.insert(0, self._get_trimmed_path(selected_path))
+                self.main_app.data.ruleset_model_file_paths[model_type] = selected_path
 
         select_button = ctk.CTkButton(
-            parent_frame, text="Select", command=select_file, width=80, height=30
+            self.ruleset_models_frame,
+            text="Select",
+            command=select_file,
+            width=80,
+            height=30,
+        )
+
+        # Store created widgets for reuse
+        self.ruleset_model_row_widgets[model_text] = (
+            label,
+            path_entry,
+            select_button,
         )
 
         return label, path_entry, select_button
@@ -345,8 +356,10 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         # If there are no errors, generate RMDs and open the Main Application Window
         if len(self.main_app.data.errors) == 0:
-            self.save_configuration_data()
-            self.main_app.data.generate_rmds()
+            self.main_app.data.rpd = RulesetProjectDescription(
+                self.main_app.data.project_name.get()
+            )
+            self.main_app.data.generate_rmd_data(self.main_app.data.rpd)
             self.main_app.project_config_complete()
 
         else:
@@ -382,11 +395,18 @@ class ProjectConfigWindow(ctk.CTkToplevel):
 
         return True
 
-    # TODO: Magic string dictionary values in config data. Should we make enums for these?
-    def save_configuration_data(self):
-        self.main_app.data.configuration_data.update(
-            self.main_app.data.ruleset_model_file_paths
-        )
-        self.main_app.data.configuration_data["new_construction"] = bool(
-            self.new_construction_checkbox.get()
-        )
+    def select_output_directory(self):
+        """Opens a directory selection dialog and updates the entry field."""
+        directory = filedialog.askdirectory()
+        if directory:
+            self.output_dir_entry.delete(0, "end")
+            self.output_dir_entry.insert(0, directory)
+            self.main_app.data.output_directory.set(directory)
+
+    @staticmethod
+    def _get_trimmed_path(file_path: str) -> str:
+        """Helper function to extract parent directory and filename from a file path using pathlib."""
+        path = Path(file_path)
+        if path.parent:
+            return f"{path.parent.name}/{path.name}"
+        return path.name

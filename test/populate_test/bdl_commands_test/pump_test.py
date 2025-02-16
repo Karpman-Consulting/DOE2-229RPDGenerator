@@ -18,6 +18,9 @@ from rpd_generator.bdl_structure.bdl_commands.circulation_loop import (
 )
 from rpd_generator.bdl_structure.bdl_commands.heat_rejection import HeatRejection
 from rpd_generator.config import Config
+from rpd_generator.artifacts.ruleset_project_description import (
+    RulesetProjectDescription,
+)
 from rpd_generator.artifacts.ruleset_model_description import RulesetModelDescription
 from rpd_generator.bdl_structure.bdl_commands.pump import *
 
@@ -25,7 +28,9 @@ from rpd_generator.bdl_structure.bdl_commands.pump import *
 class TestPumps(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        self.rmd = RulesetModelDescription("Test RMD")
+
+        self.rpd = RulesetProjectDescription("Test RPD")
+        self.rmd = RulesetModelDescription("Test RMD", self.rpd)
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.pump = Pump("Pump 1", self.rmd)

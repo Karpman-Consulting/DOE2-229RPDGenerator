@@ -130,6 +130,6 @@ class Pump(BaseNode):
                     pump_data_structure[attr] = value
             self.pump_data_structures.append(pump_data_structure)
 
-    def insert_to_rpd(self, rmd):
+    def insert_to_rpd(self):
         """Insert window object into the rpd data structure."""
-        rmd.pumps.extend(self.pump_data_structures)
+        self.rmd.pumps.extend(self.pump_data_structures)

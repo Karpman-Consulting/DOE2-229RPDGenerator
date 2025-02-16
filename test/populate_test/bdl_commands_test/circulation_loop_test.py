@@ -43,9 +43,8 @@ class TestCHWLoop(unittest.TestCase):
         self.maxDiff = None
 
         # Create objects for testing
-        self.rpd = RulesetProjectDescription()
-        self.rmd = RulesetModelDescription("Test RMD")
-        self.rmd.bdl_obj_instances["ASHRAE 229"] = self.rpd
+        self.rpd = RulesetProjectDescription("Test RPD")
+        self.rmd = RulesetModelDescription("Test RMD", self.rpd)
         self.rmd.doe2_version = "DOE-2.3"
         self.rmd.doe2_data_path = Config.DOE23_DATA_PATH
         self.run_period = RunPeriod("Run Period 1", self.rmd)
@@ -349,7 +348,7 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-        self.circulation_loop_2.insert_to_rpd(self.rmd)
+        self.circulation_loop_2.insert_to_rpd()
         expected_data_structure = {
             "id": "Circulation Loop 1",
             "cooling_or_condensing_design_and_control": {
@@ -701,7 +700,7 @@ class TestCHWLoop(unittest.TestCase):
         }
 
         self.rmd.populate_rmd_data(testing=True)
-        circulation_loop_2.insert_to_rpd(self.rmd)
+        circulation_loop_2.insert_to_rpd()
         expected_data_structure = {
             "id": "Circulation Loop 1",
             "design_supply_temperature": 160.0,

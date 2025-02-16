@@ -1,5 +1,4 @@
 from rpd_generator.bdl_structure.base_node import BaseNode
-from rpd_generator.schema.schema_enums import SchemaEnums
 from rpd_generator.bdl_structure.bdl_enumerations.bdl_enums import BDLEnums
 
 BDL_Commands = BDLEnums.bdl_enums["Commands"]
