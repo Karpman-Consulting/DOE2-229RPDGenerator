@@ -15,13 +15,13 @@ def _get_bdl_commands_for_rpd() -> dict:
     for _, name, _ in pkgutil.iter_modules(bdl_commands.__path__, prefix):
         module = importlib.import_module(name)
         # iterate through the classes in each module
-        for _, cls in inspect.getmembers(module, inspect.isclass):
+        for _, obj in inspect.getmembers(module, inspect.isclass):
             # if the class is a subclass of BaseNode or BaseDefinition
-            if issubclass(cls, (BaseNode, BaseDefinition)):
+            if issubclass(obj, (BaseNode, BaseDefinition)):
                 # get the bdl_command attribute
-                bdl_command = getattr(cls, "bdl_command", None)
+                bdl_command = getattr(obj, "bdl_command", None)
                 # insert the bdl_command and class object into the dictionary to facilitate instantiation
-                commands_dict[bdl_command] = cls
+                commands_dict[bdl_command] = obj
     return commands_dict
 
 
@@ -131,6 +131,10 @@ class ModelInputReader:
 
             for line in bdl_file:
 
+                # Skip comment lines or initial declarations of library-entries (subsequent line with $LIBRARY-ENTRY will be read)
+                if line[12:15] == " $ " or " LIBRARY-ENTRY" in line:
+                    continue
+
                 # Skip empty lines
                 if not line.strip():
                     record_data_for = False
@@ -195,41 +199,71 @@ class ModelInputReader:
                 elif special_read_flag:
                     active_command_dict = file_commands.get(unique_name)
 
-                    # Parse keyword-value pairs
-                    keywords_values = re.split(r"\s+(?![^(]*\))|=", line[15:])
+                    # If we're in the middle of accumulating a multiline value, handle that first.
+                    if multiline_key is not None:
+
+                        # Append current line (starting at col 15) to the accumulator.
+                        multiline_value += line[15:].rstrip()
+
+                        # Check if there is a closing parenthesis.
+                        if ")" in multiline_value:
+                            # Finalize the multiline value.
+                            final_value = multiline_value
+                            special_data[multiline_key] = (
+                                self._parse_parentheses_values(final_value)
+                            )
+
+                            # Reset multiline accumulators.
+                            multiline_key = None
+                            multiline_value = ""
+
+                        if ".." in line:
+                            special_read_flag = False
+                            if active_command_dict and "COEF" in special_data:
+                                active_command_dict["COEF"] = special_data["COEF"]
+                            special_data = {}
+
+                        # Skip further processing of this line.
+                        continue
+
+                    # Process a new line from the special block.
+                    keywords_values = re.split(
+                        r"\s+(?![^(]*\))|=", line[15:].split("$", 1)[0]
+                    )
+
+                    # If any item contains "(", combine everything from its first occurrence onward.
                     if any("(" in item for item in keywords_values):
-                        # Combine all parts starting from the "("
                         paren_idx = next(
                             i for i, item in enumerate(keywords_values) if "(" in item
                         )
+
                         keywords_values = keywords_values[:paren_idx] + [
                             " ".join(keywords_values[paren_idx:])
                         ]
 
-                    # filter out empty strings and ".."
+                    # Remove empty strings and the placeholder ".."
                     keywords_values = [
                         item for item in keywords_values if item and item != ".."
                     ]
 
-                    if multiline_key:
-                        keywords_values.insert(0, multiline_key)
-                        multiline_value += line[15:].split(")")[0] + ")"
-                        keywords_values[1] = multiline_value
-                        multiline_key = None
-
                     for i in range(0, len(keywords_values), 2):
                         key = keywords_values[i]
                         value = keywords_values[i + 1]
-                        if "(" in value:
-                            special_data[key] = self._parse_parentheses_values(value)
+
+                        # If an opening parenthesis appears without a closing one, start accumulating a multiline value.
+                        if "(" in value and ")" not in value:
+                            multiline_key = key
+                            multiline_value = value
+
                         else:
-                            special_data[key] = value
+                            if "(" in value and ")" in value:
+                                special_data[key] = self._parse_parentheses_values(
+                                    value
+                                )
+                            else:
+                                special_data[key] = value
 
-                    if "(" in line and ")" not in line:
-                        multiline_key = keywords_values[-2]
-                        multiline_value = keywords_values[-1]
-
-                    # End special read block at `..`
+                    # End special read block when ".." is encountered.
                     if ".." in line:
                         special_read_flag = False
                         if active_command_dict and "COEF" in special_data:
