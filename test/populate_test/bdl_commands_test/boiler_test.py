@@ -56,6 +56,7 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": 'The equations in the ANSI/ASHRAE/IES Standard 90.1-2019 Performance Rating Method Reference Manual Section 3.8.1 under the "Boiler Efficiency" descriptor for converting from boiler thermal efficiency to combustion efficiency and AFUE were used to populate combustion efficiency and AFUE.',
             "draft_type": "NATURAL",
             "energy_source_type": "OTHER",
             "output_validation_points": [],
@@ -99,6 +100,7 @@ class TestFuelBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": 'The equations in the ANSI/ASHRAE/IES Standard 90.1-2019 Performance Rating Method Reference Manual Section 3.8.1 under the "Boiler Efficiency" descriptor for converting from boiler thermal efficiency to combustion efficiency and AFUE were used to populate combustion efficiency and AFUE.',
             "draft_type": "FORCED",
             "energy_source_type": "NATURAL_GAS",
             "output_validation_points": [],
@@ -184,6 +186,7 @@ class TestElectricBoiler(unittest.TestCase):
         self.rmd.populate_rmd_data(testing=True)
         expected_data_structure = {
             "id": "Boiler 1",
+            "notes": "Electric boiler efficiency appears to be unregulated and so the impact of jacket losses on boiler thermal efficiency are unknown. As a simplification, where the modeler entered an electric input ratio of 1.0 it is assumed that the combustion and AFUE efficiency are also 1.0. This neglects the impact of jacket losses on efficiency.",
             "draft_type": "NATURAL",
             "energy_source_type": "ELECTRICITY",
             "output_validation_points": [],

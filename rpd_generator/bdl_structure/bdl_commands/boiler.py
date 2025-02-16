@@ -53,6 +53,7 @@ class Boiler(BaseNode):
         self.efficiency_metric_values = []
 
         # data elements with no children
+        self.notes = None
         self.loop = None
         self.design_capacity = None
         self.rated_capacity = None
@@ -139,7 +140,7 @@ class Boiler(BaseNode):
                 self.efficiency_metric_types.append(
                     BoilerEfficiencyMetricOptions.COMBUSTION
                 )
-
+                self.notes = "Electric boiler efficiency appears to be unregulated and so the impact of jacket losses on boiler thermal efficiency are unknown. As a simplification, where the modeler entered an electric input ratio of 1.0 it is assumed that the combustion and AFUE efficiency are also 1.0. This neglects the impact of jacket losses on efficiency."
         else:
             boiler_f_i_r = output_data.get(
                 "Boilers - Design Parameters - Fuel Input Ratio"
@@ -149,6 +150,7 @@ class Boiler(BaseNode):
                 self.efficiency_metric_types.append(
                     BoilerEfficiencyMetricOptions.THERMAL
                 )
+                self.notes = 'The equations in the ANSI/ASHRAE/IES Standard 90.1-2019 Performance Rating Method Reference Manual Section 3.8.1 under the "Boiler Efficiency" descriptor for converting from boiler thermal efficiency to combustion efficiency and AFUE were used to populate combustion efficiency and AFUE.'
                 # self.efficiency.append(1 / boiler_f_i_r + 0.02)
                 # self.efficiency_metrics.append(BoilerEfficiencyMetricOptions.COMBUSTION)
                 # # EQUATIONS DERIVED FROM PRM REFERENCE MANUAL

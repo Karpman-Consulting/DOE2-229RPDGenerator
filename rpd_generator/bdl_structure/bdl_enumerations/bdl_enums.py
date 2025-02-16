@@ -118,6 +118,42 @@ class BDLEnums:
                 "HW-FLOW-CTRL",
             ]
         ),
+        "CurveFitKeywords": _ListEnum(
+            [
+                "TYPE",
+                "INPUT-TYPE",
+                "OUTPUT-MIN",
+                "OUTPUT-MAX",
+                "INPUT-TYPE",
+                "COEFFICIENTS",
+                "COEF",
+            ]
+        ),
+        "CurveFitInputTypes": _ListEnum(
+            [
+                "DATA",
+                "COEFFICIENTS",
+            ]
+        ),
+        "CurveFitTypes": _ListEnum(
+            [
+                "LINEAR",
+                "BI-LINEAR",
+                "QUADRATIC",
+                "BI-QUADRATIC",
+                "CUBIC",
+                "BI-LINEAR-T",
+                "QUADRATIC-T",
+                "BI-QUADRATIC-T",
+                "BI-QUADRATIC-DT&T",
+                "BI-QUADRATIC-RATIO&T",
+                "CUBIC-T",
+                "BI-QUADRATIC-T&RATIO",
+                "QUADRATIC-DT",
+                "CUBIC-DT",
+                "BI-QUADRATIC-RATIO&dT",
+            ]
+        ),
         "ChillerTypes": _ListEnum(
             [
                 "ELEC-OPEN-CENT",
@@ -134,6 +170,14 @@ class BDLEnums:
                 "LOOP-TO-LOOP-HP",
                 "WATER-ECONOMIZER",
                 "STRAINER-CYCLE",
+            ]
+        ),
+        "CondenserTypes": _ListEnum(
+            [
+                "WATER-COOLED",
+                "AIR-COOLED",
+                "REMOTE-AIR-COOLED",
+                "REMOTE-EVAP-COOLED",
             ]
         ),
         "FlowControlOptions": _ListEnum(
@@ -162,6 +206,16 @@ class BDLEnums:
                 "CW-FLOW-CTRL",
                 "HW-FLOW-CTRL",
                 "HTREC-FLOW-CTRL",
+                "EIR-FT",
+                "EIR-FPLR",
+                "CAPACITY-FT",
+                "HIR-FT",
+                "HIR-FPLR",
+                "CONDENSER-TYPE",
+                "ELEC-INPUT-RATIO",
+                "HEAT-INPUT-RATIO",
+                "CAPACITY",
+                "RATED-PLR",
             ]
         ),
         "CirculationLoopTypes": _ListEnum(
